@@ -4,13 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="better docuemntation, overview of the planned research, wip. started to run the external eval and fix stuff from the external benchmark suites">
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/analised.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/reporter.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/reporter.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite27_contrapositive_negation/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite27_contrapositive_negation/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/prove/prove-goal-negation.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove/prove-goal-negation.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/negation-modus-tollens.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/negation-modus-tollens.test.mjs" afterDir="false" />
+    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="better docuemntation, overview of the planned research, wip. started to run the autidiscovery agent  stuff from the external benchmark suites">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/analised.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,15 +126,7 @@
       <workItem from="1766562947099" duration="21851000" />
       <workItem from="1766650266623" duration="6940000" />
       <workItem from="1767005469743" duration="10476000" />
-      <workItem from="1767083849618" duration="11908000" />
-    </task>
-    <task id="LOCAL-00046" summary="prearing to add new reasoning methods">
-      <option name="closed" value="true" />
-      <created>1766075366547</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1766075366547</updated>
+      <workItem from="1767083849618" duration="13109000" />
     </task>
     <task id="LOCAL-00047" summary="working to refactor the resonign engine for deeper semantic unification to make use of HDC properties better. wip">
       <option name="closed" value="true" />
@@ -523,7 +512,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767104387396</updated>
     </task>
-    <option name="localTasksCounter" value="95" />
+    <task id="LOCAL-00095" summary="better docuemntation, overview of the planned research, wip. started to run the autidiscovery agent  stuff from the external benchmark suites">
+      <option name="closed" value="true" />
+      <created>1767105060037</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1767105060037</updated>
+    </task>
+    <option name="localTasksCounter" value="96" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -542,7 +539,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="better documentation and project presentation" />
     <MESSAGE value="better documentation and project presentation, more tests for advcaed holographic reasoning" />
     <MESSAGE value=" tests for holographic reasoning" />
     <MESSAGE value=" implemented a new staregy (metric-afine), wip to improve the suite to show proofs everywhere and have deeper reasoning examples" />
@@ -567,6 +563,7 @@
     <MESSAGE value="trying to optimise teh hgraphic priority reasoning emgine" />
     <MESSAGE value="bug finixng, better stress evaluation suite to analyse the holografic properties of the startegies" />
     <MESSAGE value="better docuemntation, overview of the planned research, wip. started to run the external eval and fix stuff from the external benchmark suites" />
-    <option name="LAST_COMMIT_MESSAGE" value="better docuemntation, overview of the planned research, wip. started to run the external eval and fix stuff from the external benchmark suites" />
+    <MESSAGE value="better docuemntation, overview of the planned research, wip. started to run the autidiscovery agent  stuff from the external benchmark suites" />
+    <option name="LAST_COMMIT_MESSAGE" value="better docuemntation, overview of the planned research, wip. started to run the autidiscovery agent  stuff from the external benchmark suites" />
   </component>
 </project>

@@ -27,7 +27,7 @@
   <div class="section-intro" style="background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);">
     <h2 style="margin-top: 0;">What is AGISystem2?</h2>
     <p>AGISystem2 is an <strong>AI research platform</strong> inspired by the <em>System 2</em> concept from cognitive psychology&mdash;the slow, deliberate, logical mode of human reasoning (as opposed to System 1's fast, intuitive responses). Born from European research initiatives, the platform brings together formal verification, neural-symbolic hybrid reasoning, and hyperdimensional computing.</p>
-    <p>A key innovation is the introduction of a <strong>semantic programming language (DSL)</strong> that gives formal, machine-verifiable meaning to natural language. Instead of teaching humans to write in formal logic, we created a language that captures the semantic structure <em>implicit</em> in everyday language. The result is <strong>natural language with mathematical guarantees</strong>.</p>
+    <p>A key innovation is the introduction of a <strong>semantic programming language (DSL)</strong> that gives formal, machine-verifiable meaning to structured fragments of language. Instead of teaching humans to write in formal logic, we created a language that captures the semantic structure <em>implicit</em> in common reasoning patterns. The result is <strong>machine-checkable reasoning</strong> over <strong>formally modeled</strong> content (with proofs/traces and deterministic evaluation coverage).</p>
   </div>
 
   <div class="core-innovation" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 12px; margin: 20px 0;">
@@ -48,7 +48,7 @@
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0;">
     <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; border-left: 4px solid #4caf50;">
       <h3 style="margin-top: 0; color: #2e7d32;">1. Built-in NL2DSL Engine</h3>
-      <p>AGISystem2 includes a grammar-based translation engine that converts natural language to DSL automatically. Tested on academic benchmarks with <strong>100% translation success</strong> and up to <strong>99.5% reasoning accuracy</strong>.</p>
+      <p>AGISystem2 includes a grammar-based translation engine that converts natural language to DSL automatically for covered patterns. See <a href="research/benchmarks.html">Benchmarks</a> for measured results and reproducibility.</p>
       <p style="margin-bottom: 0;"><a href="theory/nl2dsl.html">Learn about NL2DSL →</a></p>
     </div>
     <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; border-left: 4px solid #1976d2;">
@@ -60,6 +60,10 @@
 
   <div class="alert alert-info" style="margin: 20px 0; padding: 15px 20px; background: #fff3e0; border-left: 4px solid #ff9800; border-radius: 4px;">
     <strong>Active Research:</strong> AGISystem2 is an open-source research project. We're continuously expanding coverage of natural language patterns and improving reasoning capabilities. The system works well for structured domains; open-ended conversation is outside scope.
+  </div>
+
+  <div class="discovery-box" style="background: #e3f2fd; border-left: 4px solid #1976d2; padding: 15px 20px; border-radius: 0 8px 8px 0; margin: 15px 0;">
+    <strong>Reproducibility:</strong> Validate current behavior with <code>node --test</code> and run end-to-end evaluation with <code>node evals/runFastEval.mjs --fast</code>. Capacity experiments live under <a href="research/saturationEvaluation.html">Saturation Evaluation</a>.
   </div>
 
   <h2>Why This Matters</h2>
@@ -190,55 +194,8 @@
 
   <p style="font-size: 12px; color: #666;">Run <code>npm run eval</code> (or <code>node evals/runFastEval.mjs</code>) to see current test coverage across all strategies and reasoning modes.</p>
 
-  <h2>Architecture Overview</h2>
-  <div style="max-width: 700px; margin: 20px auto;">
-    <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto;">
-      <!-- Background -->
-      <rect x="10" y="10" width="680" height="300" rx="15" fill="#f5f5f5" stroke="#ddd" stroke-width="2"/>
-
-      <!-- Layer 4: Application -->
-      <rect x="30" y="30" width="640" height="50" rx="8" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
-      <text x="350" y="50" text-anchor="middle" font-weight="bold" font-size="13" fill="#1565c0">Layer 4: Application</text>
-      <text x="350" y="68" text-anchor="middle" font-size="11" fill="#333">DSL Parser · Session API · Natural Language Output</text>
-
-      <!-- Layer 3: Reasoning -->
-      <rect x="30" y="90" width="640" height="50" rx="8" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
-      <text x="350" y="110" text-anchor="middle" font-weight="bold" font-size="13" fill="#2e7d32">Layer 3: Reasoning Engine</text>
-      <text x="350" y="128" text-anchor="middle" font-size="11" fill="#333">Query · Prove · Transitive Chains · Rule Inference</text>
-
-      <!-- Layer 2: Contract (bold separator) -->
-      <rect x="30" y="150" width="640" height="50" rx="8" fill="#fff3e0" stroke="#ff9800" stroke-width="3"/>
-      <text x="350" y="170" text-anchor="middle" font-weight="bold" font-size="13" fill="#e65100">Layer 2: HDC Operations Interface</text>
-      <text x="350" y="188" text-anchor="middle" font-size="11" fill="#333">bind() · unbind() · bundle() · similarity() · createFromName()</text>
-      <text x="670" y="175" text-anchor="end" font-size="10" fill="#ff9800" font-weight="bold">CONTRACT</text>
-
-      <!-- Separator line -->
-      <line x1="30" y1="210" x2="670" y2="210" stroke="#ff9800" stroke-width="4" stroke-dasharray="10,5"/>
-      <text x="350" y="223" text-anchor="middle" font-size="10" fill="#666">=== SWAPPABLE IMPLEMENTATION ===</text>
-
-      <!-- Layer 1: Strategies -->
-      <rect x="30" y="235" width="640" height="60" rx="8" fill="#fce4ec" stroke="#e91e63" stroke-width="2"/>
-      <text x="350" y="255" text-anchor="middle" font-weight="bold" font-size="13" fill="#c2185b">Layer 1: HDC Strategy Implementation</text>
-
-      <!-- Strategy boxes -->
-      <rect x="35" y="265" width="118" height="22" rx="4" fill="#1976d2" stroke="#0d47a1"/>
-      <text x="94" y="280" text-anchor="middle" font-size="9" fill="white" font-weight="bold">dense-binary</text>
-
-      <rect x="163" y="265" width="118" height="22" rx="4" fill="#4caf50" stroke="#2e7d32"/>
-      <text x="222" y="280" text-anchor="middle" font-size="9" fill="white" font-weight="bold">sparse-poly</text>
-
-      <rect x="291" y="265" width="118" height="22" rx="4" fill="#9c27b0" stroke="#7b1fa2"/>
-      <text x="350" y="280" text-anchor="middle" font-size="9" fill="white" font-weight="bold">metric-affine</text>
-
-      <rect x="419" y="265" width="118" height="22" rx="4" fill="#00897b" stroke="#00695c"/>
-      <text x="478" y="280" text-anchor="middle" font-size="9" fill="white" font-weight="bold">metric-elastic</text>
-
-      <rect x="547" y="265" width="118" height="22" rx="4" fill="#3f51b5" stroke="#283593"/>
-      <text x="606" y="280" text-anchor="middle" font-size="9" fill="white" font-weight="bold">exact (lossless)</text>
-
-      <text x="670" y="255" text-anchor="end" font-size="10" fill="#e91e63" font-weight="bold">SWAPPABLE</text>
-    </svg>
-  </div>
+  <h2>Architecture (Overview)</h2>
+  <p>AGISystem2 is built as a layered runtime (Session + DSL + reasoning engines) over a swappable HDC strategy contract. The full architecture description lives in <a href="architecture/index.html">Architecture</a>.</p>
 
   <h2>Documentation Sections</h2>
 
@@ -280,7 +237,7 @@
 
     <div class="section-card" style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);">
       <h3><a href="research/index.html">Research</a></h3>
-      <p>HDC strategy comparison, dual evaluation framework. <a href="research/benchmarks.html">External benchmarks</a>: 99.5% on ProntoQA, 75% on LogiQA, 63% on FOLIO. 100% translation success.</p>
+      <p>Reproducible experiments: multi-strategy comparisons, saturation/capacity evaluation, and research roadmaps (UTE, dynamic size, agentic loops). Start at <a href="research/index.html">Research Overview</a>.</p>
     </div>
 
     <div class="section-card" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);">
@@ -294,17 +251,29 @@
     </div>
   </div>
 
-  <h2>The Vision: Semantic Programming for Everyone</h2>
+  <h2>The Vision: Universal Theory Engine (UTE)</h2>
 
   <div style="background: linear-gradient(135deg, #f5f5f5 0%, #e8eaf6 100%); padding: 25px; border-radius: 12px; margin: 15px 0;">
-    <p style="margin-top: 0;">Imagine a world where:</p>
-    <ul style="margin-bottom: 20px;">
-      <li><strong>Domain experts</strong> define medical, legal, or scientific knowledge in near-natural language</li>
-      <li><strong>The system automatically reasons</strong> over that knowledge with mathematical precision</li>
-      <li><strong>Every conclusion is traceable</strong> back to the rules and facts that produced it</li>
-      <li><strong>LLMs and formal reasoning work together</strong>&mdash;fluency meets verification</li>
+    <p style="margin-top: 0;">
+      AGISystem2 is driven by a research hypothesis: a plausible route toward “real” AGI goes through the ability to represent and manipulate
+      <strong>theories as computational objects</strong>&mdash;compositional, queryable, checkable, and revisable.
+    </p>
+    <p>
+      We call this target <strong>Universal Theory Engine (UTE)</strong>: a platform where scientific and operational knowledge can be encoded as
+      executable theories, verified by proofs/traces, revised under new evidence, and used to plan experiments. This connects directly to the
+      project name: “System 2” as deliberate, auditable reasoning over explicit models.
+    </p>
+    <p style="margin-bottom: 12px;">
+      The practical goal is not a single monolithic super-agent. It is a family of <strong>domain-specialized agents</strong> (medicine, biology,
+      chemistry, law) that can review, argue, prove, and automate daily scientific work&mdash;with auditability. We are still far from that end state,
+      and we treat it as a long-horizon research program that must branch per domain, combining LLMs (as proposal engines) with formal models and
+      deterministic evaluation (as the judge).
+    </p>
+    <ul style="margin-bottom: 0;">
+      <li><strong>UTE capability stack:</strong> representation, generalized query/retrieval, provenance/evidence/contradictions, causal/mechanistic reasoning, uncertainty, numeric modeling, model revision, experiment planning</li>
+      <li><strong>Research roadmap:</strong> <a href="research/universal-theory-engine.html">UTE overview</a> (DS32–DS38)</li>
+      <li><strong>Agentic loops:</strong> <a href="research/agentic-code-generation.html">agentic code/theory synthesis</a> (AutoDiscovery-style workflows)</li>
     </ul>
-    <p style="margin-bottom: 0;">This is what AGISystem2 is building toward. We don't claim to have arrived, but the path is clear and the foundation is solid.</p>
   </div>
 
   <h2>Where We Are Today</h2>
@@ -313,31 +282,31 @@
     <div style="background: #e8f5e9; padding: 20px; border-radius: 10px;">
       <h4 style="margin-top: 0; color: #2e7d32;">✓ What Works Now</h4>
       <ul style="margin: 0; padding-left: 18px; font-size: 14px;">
-        <li>Taxonomic reasoning (IS_A hierarchies)</li>
-        <li>Rule-based inference with full traces</li>
-        <li>NL translation for structured sentences</li>
-        <li>LLM integration patterns</li>
-        <li>Academic benchmark validation</li>
+        <li>Deterministic reasoning over formalized theories (query/prove + traces)</li>
+        <li>Multi-strategy HDC (dense/sparse/metric/EMA/EXACT) under one contract</li>
+        <li>Evaluation harness for reproducible regressions (FastEval + unit tests)</li>
+        <li>Capacity experiments (Saturation Evaluation) for KB superposition stress tests</li>
+        <li>AutoDiscovery-style workflows for systematic bug discovery and hardening</li>
       </ul>
     </div>
     <div style="background: #fff3e0; padding: 20px; border-radius: 10px;">
       <h4 style="margin-top: 0; color: #e65100;">⚡ Active Development</h4>
       <ul style="margin: 0; padding-left: 18px; font-size: 14px;">
-        <li>Complex quantifier patterns</li>
-        <li>Proof-by-contradiction</li>
-        <li>Domain-specific semantic libraries</li>
-        <li>Self-improving learning loops</li>
-        <li>Deeper inference chains</li>
+        <li>Broader DSL coverage and richer Core semantic libraries</li>
+        <li>Reasoning scalability (strategy geometry, dynamic size, and decoding/cleanup)</li>
+        <li>More robust proofs and contradiction workflows</li>
+        <li>Higher-level Session APIs (proposed)</li>
+        <li>Agentic loops that propose patches/theories and validate with eval data</li>
       </ul>
     </div>
     <div style="background: #e3f2fd; padding: 20px; border-radius: 10px;">
       <h4 style="margin-top: 0; color: #1565c0;">🔭 Future Vision</h4>
       <ul style="margin: 0; padding-left: 18px; font-size: 14px;">
-        <li>Scientific domain libraries (medicine, law, physics)</li>
-        <li>LLM-driven theory discovery</li>
-        <li>Self-learning from observations</li>
-        <li>Integration with knowledge graphs</li>
-        <li>Real-time collaborative reasoning</li>
+        <li>Domain-specialized “scientist agents” that can review, prove, and argue</li>
+        <li>UTE capabilities: evidence-aware revision + mechanistic models + experiments</li>
+        <li>Probabilistic + numeric theory layers (with audit-grade traces)</li>
+        <li>Organized theory acquisition workflows (LLMs + evals as scientific loop)</li>
+        <li>Interoperability with external KBs/graphs (as sources, not as truth)</li>
       </ul>
     </div>
   </div>
@@ -439,7 +408,11 @@
         <ul style="margin: 0; padding: 0 0 0 16px; line-height: 1.8;">
           <li><a href="research/index.html">Research Overview</a></li>
           <li><a href="research/benchmarks.html">Benchmarks</a></li>
+          <li><a href="research/saturationEvaluation.html">Saturation Evaluation</a></li>
           <li><a href="research/roadmap.html">Roadmap</a></li>
+          <li><a href="research/universal-theory-engine.html">Universal Theory Engine (UTE)</a></li>
+          <li><a href="research/dynamic-size-representations.html">Dynamic Size Representations</a></li>
+          <li><a href="research/agentic-code-generation.html">Agentic Code Generation</a></li>
           <li><a href="research/directions/hdc-strategies.html">HDC Directions</a></li>
           <li><a href="research/directions/holographic-reasoning.html">Holographic R.</a></li>
           <li><a href="research/directions/nl2dsl-grammar.html">NL2DSL Grammar</a></li>
