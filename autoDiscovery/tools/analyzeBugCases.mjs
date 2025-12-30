@@ -7,12 +7,9 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { readJsonFileSafe } from '../libs/json.mjs';
 
 const ROOT = path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'bugCases');
-
-function readJson(file) {
-  return JSON.parse(fs.readFileSync(file, 'utf8'));
-}
 
 function listBugDirs() {
   if (!fs.existsSync(ROOT)) return [];
@@ -79,7 +76,8 @@ function main() {
     };
 
     for (const file of files) {
-      const data = readJson(file);
+      const data = readJsonFileSafe(file);
+      if (!data) continue;
       stats.total++;
       global.total++;
 

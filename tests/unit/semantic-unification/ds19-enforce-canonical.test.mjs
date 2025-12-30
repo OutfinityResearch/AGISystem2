@@ -42,7 +42,7 @@ describe('DS19: enforceCanonical (strict-by-default)', () => {
 
   test('prove() includes a canonical_rewrite step for primitive goals', () => {
     const session = new Session({ geometry: 2048, strictMode: true, enforceCanonical: true });
-    session.loadCore({ includeIndex: false });
+    session.loadCore({ includeIndex: true });
 
     session.learn('tell Alice Info Bob');
 

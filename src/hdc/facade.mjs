@@ -14,13 +14,39 @@
 import { getStrategy, getDefaultStrategy, listStrategies } from './strategies/index.mjs';
 
 const STRATEGY_INSTANCE_PROP = '__sys2StrategyInstance';
+const SESSION_PROP = '__sys2Session';
 
 function getAttachedStrategyInstance(vector) {
   if (!vector || typeof vector !== 'object') return null;
   return vector[STRATEGY_INSTANCE_PROP] || null;
 }
 
-function attachStrategyInstance(vector, strategy) {
+function getAttachedSession(vector) {
+  if (!vector || typeof vector !== 'object') return null;
+  return vector[SESSION_PROP] || null;
+}
+
+function inferSessionFromVectors(vectors = []) {
+  const sessions = [];
+  for (const v of vectors || []) {
+    const s = getAttachedSession(v);
+    if (s) sessions.push(s);
+  }
+  const unique = Array.from(new Set(sessions));
+  if (unique.length > 1) {
+    throw new Error('Mixed Sessions in one HDC operation (cross-session vector mix).');
+  }
+  return unique[0] || null;
+}
+
+function bumpSessionCounter(session, key, delta = 1) {
+  if (!session?.reasoningStats) return;
+  const d = Number(delta || 0);
+  if (!Number.isFinite(d) || d === 0) return;
+  session.reasoningStats[key] = (session.reasoningStats[key] || 0) + d;
+}
+
+function attachStrategyInstance(vector, strategy, session = null) {
   if (!vector || typeof vector !== 'object') return vector;
   try {
     if (!Object.isExtensible(vector)) return vector;
@@ -29,6 +55,13 @@ function attachStrategyInstance(vector, strategy) {
       enumerable: false,
       configurable: true
     });
+    if (session) {
+      Object.defineProperty(vector, SESSION_PROP, {
+        value: session,
+        enumerable: false,
+        configurable: true
+      });
+    }
   } catch {
     // Best-effort tagging.
   }
@@ -51,6 +84,9 @@ const ENV_STRATEGY = process.env.SYS2_HDC_STRATEGY || 'dense-binary';
  * Default: 32768
  */
 const ENV_GEOMETRY = parseInt(process.env.SYS2_GEOMETRY) || 32768;
+const ENV_ALLOW_SHAPE_INFERENCE =
+  process.env.SYS2_ALLOW_VECTOR_SHAPE_INFERENCE === '1' ||
+  process.env.SYS2_ALLOW_VECTOR_SHAPE_INFERENCE === 'true';
 
 // ============================================================================
 // GEOMETRY MANAGEMENT (Strategy Level)
@@ -102,10 +138,17 @@ export function initHDC(strategyId = ENV_STRATEGY) {
 function inferStrategyId(vector) {
   if (!vector) return null;
   if (typeof vector.strategyId === 'string' && vector.strategyId.trim() !== '') return vector.strategyId;
-  // Fallback heuristics (older vectors / test doubles)
-  if (vector.data instanceof Uint32Array) return 'dense-binary';
-  if (vector.data instanceof Uint8Array) return 'metric-affine';
-  if (vector.exponents instanceof Set) return 'sparse-polynomial';
+  const attached = getAttachedStrategyInstance(vector);
+  const attachedId = attached?.properties?.id || attached?.id || null;
+  if (typeof attachedId === 'string' && attachedId.trim() !== '') return attachedId;
+
+  // Legacy fallback heuristics (older vectors / test doubles).
+  // Disabled by default to avoid silent mis-dispatch; enable only for legacy tooling/tests.
+  if (ENV_ALLOW_SHAPE_INFERENCE) {
+    if (vector.data instanceof Uint32Array) return 'dense-binary';
+    if (vector.data instanceof Uint8Array) return 'metric-affine';
+    if (vector.exponents instanceof Set) return 'sparse-polynomial';
+  }
   return null;
 }
 
@@ -185,7 +228,7 @@ export { getStrategy };
  */
 export function createZero(geometry = defaultGeometry, strategyId = null) {
   const strategy = resolveStrategy({ strategyId });
-  return attachStrategyInstance(strategy.createZero(geometry), strategy);
+  return attachStrategyInstance(strategy.createZero(geometry), strategy, null);
 }
 
 /**
@@ -255,7 +298,9 @@ export function deserialize(serialized) {
  */
 export function bind(a, b) {
   const strategy = resolveStrategy({ vectors: [a, b] });
-  return attachStrategyInstance(strategy.bind(a, b), strategy);
+  const session = inferSessionFromVectors([a, b]);
+  bumpSessionCounter(session, 'hdcBindOps', 1);
+  return attachStrategyInstance(strategy.bind(a, b), strategy, session);
 }
 
 /**
@@ -265,7 +310,9 @@ export function bind(a, b) {
  */
 export function bindAll(...vectors) {
   const strategy = resolveStrategy({ vectors });
-  return attachStrategyInstance(strategy.bindAll(...vectors), strategy);
+  const session = inferSessionFromVectors(vectors);
+  bumpSessionCounter(session, 'hdcBindOps', Math.max(0, vectors.length - 1));
+  return attachStrategyInstance(strategy.bindAll(...vectors), strategy, session);
 }
 
 /**
@@ -277,7 +324,9 @@ export function bindAll(...vectors) {
  */
 export function bundle(vectors, tieBreaker = null) {
   const strategy = resolveStrategy({ vectors });
-  return attachStrategyInstance(strategy.bundle(vectors, tieBreaker), strategy);
+  const session = inferSessionFromVectors(vectors);
+  bumpSessionCounter(session, 'hdcBundleOps', 1);
+  return attachStrategyInstance(strategy.bundle(vectors, tieBreaker), strategy, session);
 }
 
 /**
@@ -299,7 +348,9 @@ export function similarity(a, b) {
  */
 export function unbind(composite, component) {
   const strategy = resolveStrategy({ vectors: [composite, component] });
-  return attachStrategyInstance(strategy.unbind(composite, component), strategy);
+  const session = inferSessionFromVectors([composite, component]);
+  bumpSessionCounter(session, 'hdcUnbindOps', 1);
+  return attachStrategyInstance(strategy.unbind(composite, component), strategy, session);
 }
 
 // ============================================================================
@@ -313,7 +364,8 @@ export function unbind(composite, component) {
  */
 export function clone(v) {
   const strategy = resolveStrategy({ vectors: [v] });
-  return attachStrategyInstance(strategy.clone(v), strategy);
+  const session = inferSessionFromVectors([v]);
+  return attachStrategyInstance(strategy.clone(v), strategy, session);
 }
 
 /**
@@ -343,7 +395,9 @@ export function serialize(v) {
  * @returns {Array<{name: string, similarity: number}>}
  */
 export function topKSimilar(query, vocabulary, k = 5, session = null) {
-  return resolveStrategy({ vectors: [query] }).topKSimilar(query, vocabulary, k, session);
+  const s = session || inferSessionFromVectors([query]);
+  bumpSessionCounter(s, 'topKSimilarCalls', 1);
+  return resolveStrategy({ vectors: [query] }).topKSimilar(query, vocabulary, k, s);
 }
 
 /**

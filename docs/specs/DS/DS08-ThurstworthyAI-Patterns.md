@@ -3,9 +3,11 @@
 # Chapter 8: Trustworthy AI Patterns
 
 **Document Version:** 1.0
-**Status:** Planned/Experimental
+**Status:** Exploratory (not implemented in runtime)
 
-> **Note:** The patterns in this document describe design approaches and best practices that are partially implemented or planned for future development. They serve as architectural guidance and may require additional implementation work.
+> **Note:** This chapter is **exploratory documentation**. It does not currently ship as a runnable Core/config theory set in the AGISystem2 runtime.
+>
+> Any DSL snippets here are examples/pattern sketches. If/when a pattern graduates to runtime, it must be moved into `config/` (or another loadable theory location) and covered by unit tests + eval suites.
 
 ---
 

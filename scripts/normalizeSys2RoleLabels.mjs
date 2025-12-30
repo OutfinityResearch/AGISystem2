@@ -16,7 +16,7 @@
  *
  * Usage:
  *   node scripts/normalizeSys2RoleLabels.mjs --stress [--write]
- *   node scripts/normalizeSys2RoleLabels.mjs --paths=evals/stress/logic.sys2,config/Anthropology/00-concepts.sys2 --write
+ *   node scripts/normalizeSys2RoleLabels.mjs --paths=evals/stress/logic.sys2,evals/domains/Anthropology/00-concepts.sys2 --write
  */
 
 import { readFile, writeFile } from 'node:fs/promises';

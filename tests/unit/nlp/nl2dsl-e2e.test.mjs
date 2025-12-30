@@ -18,7 +18,7 @@ function translateGoal(text, source = 'generic') {
 describe('translateNL2DSL + Session.learn/prove (smoke)', () => {
   test('proves a simple isA entailment from an all-quantified rule', () => {
     const session = new Session({ geometry: 1024, reasoningProfile: 'theoryDriven', reasoningPriority: 'symbolicPriority' });
-    const coreLoaded = session.loadCore({ includeIndex: false });
+    const coreLoaded = session.loadCore({ includeIndex: true });
     assert.equal(coreLoaded.success, true, JSON.stringify(coreLoaded.errors));
 
     const contextDsl = translateContext('All dogs are animals. Anne is a dog.', 'ruletaker');
@@ -31,7 +31,7 @@ describe('translateNL2DSL + Session.learn/prove (smoke)', () => {
 
   test('proves explicit Not(P) from a negated natural-language fact', () => {
     const session = new Session({ geometry: 1024, reasoningProfile: 'theoryDriven', reasoningPriority: 'symbolicPriority' });
-    const coreLoaded = session.loadCore({ includeIndex: false });
+    const coreLoaded = session.loadCore({ includeIndex: true });
     assert.equal(coreLoaded.success, true, JSON.stringify(coreLoaded.errors));
 
     const contextDsl = translateContext('Anne does not like Bob.', 'ruletaker');
@@ -45,7 +45,7 @@ describe('translateNL2DSL + Session.learn/prove (smoke)', () => {
 
   test('rejects unknown verbs/operators (does not invent fake relations)', () => {
     const session = new Session({ geometry: 1024, reasoningProfile: 'theoryDriven', reasoningPriority: 'symbolicPriority' });
-    const coreLoaded = session.loadCore({ includeIndex: false });
+    const coreLoaded = session.loadCore({ includeIndex: true });
     assert.equal(coreLoaded.success, true, JSON.stringify(coreLoaded.errors));
 
     const result = translateNL2DSL('Anne frobnicates Bob.', { source: 'generic', isQuestion: false });
@@ -56,7 +56,7 @@ describe('translateNL2DSL + Session.learn/prove (smoke)', () => {
 
   test('can auto-declare unknown operators for autoDiscovery-style testing', () => {
     const session = new Session({ geometry: 1024, reasoningProfile: 'theoryDriven', reasoningPriority: 'symbolicPriority' });
-    const coreLoaded = session.loadCore({ includeIndex: false });
+    const coreLoaded = session.loadCore({ includeIndex: true });
     assert.equal(coreLoaded.success, true, JSON.stringify(coreLoaded.errors));
 
     const contextResult = translateNL2DSL('Anne blicks Bob.', {

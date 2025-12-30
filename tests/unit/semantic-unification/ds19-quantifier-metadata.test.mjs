@@ -6,7 +6,7 @@ import { metadataToCanonicalDsl } from '../../../src/runtime/metadata-to-dsl.mjs
 describe('DS19: structured metadata for quantifiers', () => {
   test('stores Exists variable + body metadata and can reconstruct canonical DSL', () => {
     const session = new Session({ hdcStrategy: 'dense-binary', geometry: 256, strictMode: true, enforceCanonical: true });
-    const core = session.loadCore({ includeIndex: false });
+    const core = session.loadCore({ includeIndex: true });
     assert.equal(core.success, true);
 
     session.learn('@q Exists ?x (And (isA ?x Pet) (isA ?x Rabbit))');
@@ -22,4 +22,3 @@ describe('DS19: structured metadata for quantifiers', () => {
     assert.equal(metadataToCanonicalDsl(meta), 'Exists ?x (And (isA ?x Pet) (isA ?x Rabbit))');
   });
 });
-

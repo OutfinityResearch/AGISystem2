@@ -10,7 +10,7 @@ describe('HolographicProofEngine: ground-term modus ponens with Core macros', ()
       reasoningProfile: 'theoryDriven'
     });
 
-    const coreLoaded = session.loadCore({ includeIndex: false });
+    const coreLoaded = session.loadCore({ includeIndex: true });
     assert.equal(coreLoaded.success, true, JSON.stringify(coreLoaded.errors));
 
     session.learn(`
@@ -28,4 +28,3 @@ describe('HolographicProofEngine: ground-term modus ponens with Core macros', ()
     );
   });
 });
-

@@ -80,9 +80,11 @@ export function searchCompoundSolutions(session, operatorName, knowns, holes) {
 
   // Find all compound CSP solutions in KB
   session.reasoningStats.kbScans += session.kbFacts.length;
-  const compoundSolutions = session.kbFacts.filter(
-    f => f.metadata?.operator === 'cspSolution'
-  );
+  const compoundSolutions = [];
+  for (const f of session.kbFacts) {
+    session.reasoningStats.kbScans++;
+    if (f?.metadata?.operator === 'cspSolution') compoundSolutions.push(f);
+  }
 
   if (compoundSolutions.length === 0) {
     dbg('No compound solutions in KB');

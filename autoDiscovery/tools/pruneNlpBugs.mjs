@@ -17,6 +17,7 @@ import { join } from 'node:path';
 
 import { translateExample } from '../../src/nlp/nl2dsl.mjs';
 import { createSession, validateQuestionDsl } from '../discovery/session.mjs';
+import { readJsonFileSafe } from '../libs/json.mjs';
 
 const ROOT = join(process.cwd(), 'autoDiscovery', 'nlpBugs');
 
@@ -113,7 +114,12 @@ async function main() {
   const examplesByReason = {};
 
   for (const c of cases) {
-    const data = JSON.parse(fs.readFileSync(c.path, 'utf8'));
+    const data = readJsonFileSafe(c.path);
+    if (!data) {
+      still++;
+      byReason.invalid_json = (byReason.invalid_json || 0) + 1;
+      continue;
+    }
     const verdict = classifyWithCurrentCode(data);
     if (!verdict.ok) {
       still++;

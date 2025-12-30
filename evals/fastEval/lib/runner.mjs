@@ -18,6 +18,9 @@ function dbg(category, ...args) {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PROJECT_ROOT = path.resolve(__dirname, '../../../');
+const CONFIG_ROOT = path.join(PROJECT_ROOT, 'config');
+const DOMAIN_ROOT = path.join(PROJECT_ROOT, 'evals', 'domains');
+const CONFIG_SCOPES = new Set(['Core', 'Constraints', 'runtime']);
 
 // DEFAULTS
 const DEFAULT_TIMEOUTS = {
@@ -60,23 +63,32 @@ function loadCoreTheories(session) {
   console.log('[Runner] Loading Core Theories...');
   const corePath = path.join(PROJECT_ROOT, 'config', 'Core');
   if (!fs.existsSync(corePath)) return;
-
-  const files = fs
+  const coreFiles = fs
     .readdirSync(corePath)
-    .filter(f => f.endsWith('.sys2') && f !== 'index.sys2')
+    .filter(f => f.endsWith('.sys2'))
     .sort();
-
-  const loaded = new Set(files.map(f => path.join(corePath, f)));
+  const loaded = new Set(coreFiles.map(f => path.join(corePath, f)));
 
   try {
-    const startTime = Date.now();
-    const res = session.loadCore({
-      corePath,
-      includeIndex: false,
-      validate: true,
-      throwOnValidationError: false
-    });
-    const elapsed = Date.now() - startTime;
+    // `includeIndex: true` executes `@_ Load "./..."` statements inside `index.sys2`.
+    // Those loads resolve relative to the Session executor basePath, so temporarily
+    // set it to `corePath` to keep core loading stable regardless of how the runner is invoked.
+    const prevBasePath = session?.executor?.basePath;
+    let res = null;
+    let elapsed = 0;
+    try {
+      const startTime = Date.now();
+      if (session?.executor) session.executor.basePath = corePath;
+      res = session.loadCore({
+        corePath,
+        includeIndex: true,
+        validate: true,
+        throwOnValidationError: false
+      });
+      elapsed = Date.now() - startTime;
+    } finally {
+      if (session?.executor) session.executor.basePath = prevBasePath;
+    }
 
     if (!res?.success) {
       for (const err of res?.errors || []) {
@@ -96,10 +108,15 @@ function loadCoreTheories(session) {
 }
 
 function resolveConfigTheoryPath(entry) {
-  if (entry.includes('/')) {
-    return path.join(PROJECT_ROOT, 'config', entry);
+  if (!entry || typeof entry !== 'string') return null;
+  if (path.isAbsolute(entry)) return entry;
+  const cleaned = entry.replace(/^[.][/]/, '');
+  if (cleaned.includes('/')) {
+    const top = cleaned.split('/')[0];
+    if (CONFIG_SCOPES.has(top)) return path.join(CONFIG_ROOT, cleaned);
+    return path.join(DOMAIN_ROOT, cleaned);
   }
-  return path.join(PROJECT_ROOT, 'config', 'Core', entry);
+  return path.join(CONFIG_ROOT, 'Core', cleaned);
 }
 
 function loadDeclaredTheories(session, theories = [], loaded = new Set()) {
@@ -474,6 +491,29 @@ function coerceTranslationText(result) {
   return String(result ?? '');
 }
 
+function lintProofText(testCase, actualText) {
+  if (!testCase || (testCase.action !== 'query' && testCase.action !== 'prove')) return [];
+  if (typeof actualText !== 'string') return ['non_string_output'];
+
+  const issues = [];
+  const text = actualText;
+  const lower = text.toLowerCase();
+
+  // Heuristic 1: Internal search traces should not leak into user-facing proof.
+  if (/\bsearch:\b/i.test(text)) issues.push('contains_search_trace');
+
+  // Heuristic 2: Proof should not be empty/trivial when present.
+  const proofIdx = lower.indexOf('proof:');
+  if (proofIdx >= 0) {
+    const proofBody = text.slice(proofIdx + 'proof:'.length).trim();
+    if (proofBody.length < 12) issues.push('proof_too_short');
+  } else {
+    issues.push('missing_proof_prefix');
+  }
+
+  return issues;
+}
+
 function runDecoding(testCase, reasoningPhase, session, timeoutMs) {
   const proofValidation = validateProofExpectation(testCase);
   if (proofValidation) {
@@ -499,6 +539,7 @@ function runDecoding(testCase, reasoningPhase, session, timeoutMs) {
   }
 
   const actualText = coerceTranslationText(execution.result);
+  const lintIssues = lintProofText(testCase, actualText);
   const proofLengthCheck = validateProofLength(testCase, actualText);
   if (proofLengthCheck) {
     proofLengthCheck.durationMs = execution.duration;
@@ -510,6 +551,7 @@ function runDecoding(testCase, reasoningPhase, session, timeoutMs) {
     passed,
     actual: actualText,
     expected: testCase.expected_nl,
+    lintIssues,
     durationMs: execution.duration
   };
 }
@@ -924,6 +966,19 @@ export async function runSuite(suite, options = {}) {
   
   // Count "Partial Fixes" -> NL Failed but Reasoning Passed (using fallback)
   const brokenParser = results.filter(r => !r.phases.nlToDsl.passed && r.phases.reasoning.passed).length;
+  const proofLint = (() => {
+    let casesWithIssues = 0;
+    const byIssue = {};
+    for (const r of results) {
+      const issues = r?.phases?.dslToNl?.lintIssues;
+      if (!Array.isArray(issues) || issues.length === 0) continue;
+      casesWithIssues++;
+      for (const i of issues) {
+        byIssue[i] = (byIssue[i] || 0) + 1;
+      }
+    }
+    return { casesWithIssues, byIssue };
+  })();
 
   return {
     results,
@@ -933,6 +988,7 @@ export async function runSuite(suite, options = {}) {
       failed: total - passed,
       brokenParser, // Useful metric: logic works, language fails
       reasoningStats,
+      proofLint,
       results, // Include results for detailed reporting
       strategyId, // Include which strategy was used
       geometry, // Include geometry used

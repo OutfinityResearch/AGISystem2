@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formal Pragmatics - AGISystem2</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Formal Pragmatics (Meaning as Use)</h1>
+    <small>
+      <a href="../index.html">Home</a> &middot;
+      <a href="../architecture/index.html">Architecture</a> &middot;
+      <a href="../reasoning/index.html">Reasoning</a> &middot;
+      <a href="index.html">Theory</a> &middot;
+      <a href="../syntax/index.html">Syntax</a> &middot;
+      <a href="../api/index.html">APIs</a> &middot;
+      <a href="../wiki/index.html">Wiki</a> &middot;
+      <a href="../specs/matrix.html">Specs</a> &middot;
+      <a href="../research/index.html">Research</a>
+    </small>
+    <small>Why AGISystem2 treats “meaning” as an engineered contract</small>
+  </div>
+
+  <div class="section-intro">
+    <p>This page is a “Wikipedia-style” introduction to the design stance behind AGISystem2:</p>
+    <p><strong>Meaning is not a single fixed object.</strong> In practice, texts are used for different tasks (predict, explain, prove, design, critique, teach). AGISystem2 aims to formalize natural language into a DSL so those <em>uses</em> become explicit, testable, and composable.</p>
+  </div>
+
+  <h2>1) The Problem: One Text, Many Uses</h2>
+
+  <p>Scientific and technical writing mixes multiple layers:</p>
+  <ul>
+    <li><strong>Definitions</strong> (“X is defined as …”)</li>
+    <li><strong>Claims</strong> (“X causes Y under conditions C”)</li>
+    <li><strong>Models</strong> (variables, constraints, invariants)</li>
+    <li><strong>Method</strong> (procedures, protocols, evaluation)</li>
+    <li><strong>Norms</strong> (“should”, “must”, “safe”, “allowed”)</li>
+    <li><strong>Perspective</strong> (assumptions, scope, idealizations)</li>
+  </ul>
+
+  <p>A system that tries to map all of this into one universal semantics tends to fail on either usability (too rigid) or truthfulness (silently invents meaning). AGISystem2 treats meaning as a set of <strong>pragmatic contracts</strong> that can coexist.</p>
+
+  <h2>2) Formal Semantics vs. Formal Pragmatics</h2>
+
+  <div class="alert alert-info">
+    <strong>Working distinction:</strong>
+    <ul>
+      <li><strong>Formal semantics</strong> asks: “Given an expression, what is its truth-conditional content?”</li>
+      <li><strong>Formal pragmatics</strong> asks: “Given a context and a goal, how should an expression be used?”</li>
+    </ul>
+  </div>
+
+  <p>AGISystem2’s DSL can host both:</p>
+  <ul>
+    <li>Truth-conditional fragments (e.g., relations and rules)</li>
+    <li>Contextual/operational fragments (defaults, exceptions, priorities, constraints, and evaluation modes)</li>
+  </ul>
+
+  <h2>3) A Quick Map of “Formal Meaning” Traditions</h2>
+
+  <p>This is not a literature survey; it is a practical map of approaches people use when they say “formal meaning”.</p>
+
+  <div class="section-grid">
+    <div class="section-card">
+      <h3>Model-Theoretic</h3>
+      <p>Meaning as truth conditions in a model (classical logic, Montague-style compositional semantics).</p>
+    </div>
+    <div class="section-card">
+      <h3>Dynamic</h3>
+      <p>Meaning as context update (DRT, file change semantics; anaphora and discourse are first-class).</p>
+    </div>
+    <div class="section-card">
+      <h3>Type-Theoretic</h3>
+      <p>Meaning via types and dependent structure (type theory / proof assistants; “programs as proofs”).</p>
+    </div>
+    <div class="section-card">
+      <h3>Proof-Theoretic</h3>
+      <p>Meaning via inference rules and proofs (what you can derive matters as much as what is true).</p>
+    </div>
+    <div class="section-card">
+      <h3>Situation / Event</h3>
+      <p>Meaning grounded in situations and events (neo-Davidsonian event semantics, situation semantics).</p>
+    </div>
+    <div class="section-card">
+      <h3>Probabilistic</h3>
+      <p>Meaning with uncertainty (probabilistic logic, Bayesian semantics, probabilistic programming).</p>
+    </div>
+    <div class="section-card">
+      <h3>Graph / Ontology</h3>
+      <p>Meaning via structured schemas (knowledge graphs, RDF/OWL / description logics, constraint models).</p>
+    </div>
+    <div class="section-card">
+      <h3>Distributional / Vector</h3>
+      <p>Meaning via similarity in a vector space (distributional semantics, VSA/HDC as structured vectors).</p>
+    </div>
+  </div>
+
+  <h2>4) Related Attempts “in the Wild”</h2>
+
+  <ul>
+    <li><strong>Semantic parsing</strong> into logical forms, graphs, or programs (often task-specific).</li>
+    <li><strong>Controlled natural languages</strong> that restrict English to reduce ambiguity.</li>
+    <li><strong>Ontology engineering</strong> and knowledge graphs (explicit schemas; hard but interoperable).</li>
+    <li><strong>Proof assistants</strong> (strong guarantees; high authoring cost; limited NL interface).</li>
+    <li><strong>Executable specs</strong> (constraints, tests, simulators; “meaning” as behavior).</li>
+  </ul>
+
+  <p>AGISystem2 borrows from all of these, but keeps a pragmatic constraint: <strong>the same theory should remain useful even when only partially formalized</strong>.</p>
+
+  <h2>5) What AGISystem2 Builds (Pragmatic Contracts)</h2>
+
+  <p>AGISystem2 focuses on a small set of repeatable, inspectable contracts:</p>
+  <ul>
+    <li><strong>Learn:</strong> accept DSL statements and track what was added.</li>
+    <li><strong>Query:</strong> retrieve bindings and candidates; rank and explain.</li>
+    <li><strong>Prove:</strong> attempt derivations under explicit settings (e.g., closed-world assumption).</li>
+    <li><strong>Constraints:</strong> encode incompatibilities and invariants; detect contradictions.</li>
+    <li><strong>Strategy selection:</strong> run the same theory under multiple representation backends and compare behavior.</li>
+  </ul>
+
+  <div class="alert alert-warning">
+    <strong>Design stance:</strong> We intentionally avoid claiming a single “final meaning”. Instead we aim for a system that is useful for engineering and science: modular theories, explicit assumptions, reproducible runs, and measurable evaluation.
+  </div>
+
+  <h2>6) Research Topics & Current Status</h2>
+
+  <p>Active areas in the project include:</p>
+  <ul>
+    <li><strong>DSL design</strong> for theory modularity, constraints, and transparent loading.</li>
+    <li><strong>Reasoning profiles</strong> (symbolic vs. holographic priorities) and hybrid pipelines.</li>
+    <li><strong>Representation strategies</strong> (dense, sparse, metric, elastic, exact) under shared APIs.</li>
+    <li><strong>Evaluation suites</strong> for translation quality, query quality, and saturation behavior.</li>
+    <li><strong>Traceability</strong>: explanations, debugging hooks, and failure diagnosis.</li>
+  </ul>
+
+  <p>Project status is “research-engineering”: the system is usable and test-driven, but still evolving. The intent is to keep the platform honest—what works is measured, what fails is surfaced, and improvements are integrated incrementally.</p>
+
+  <h2>Further Reading</h2>
+  <ul>
+    <li><a href="index.html">Theory Index</a></li>
+    <li><a href="nl2dsl.html">NL2DSL Translation</a></li>
+    <li><a href="../reasoning/index.html">Reasoning Overview</a></li>
+    <li><a href="../research/index.html">Research Notes</a></li>
+  </ul>
+
+  <div class="footer-nav">
+    <p>Goal: make natural language theories usable—without pretending ambiguity does not exist.</p>
+  </div>
+  </div>
+</body>
+</html>
+

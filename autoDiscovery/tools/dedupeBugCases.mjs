@@ -13,6 +13,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { readJsonFileSafe } from '../libs/json.mjs';
 
 const ROOT = path.join(process.cwd(), 'autoDiscovery', 'bugCases');
 
@@ -53,10 +54,8 @@ let kept = 0;
 for (const bugDir of listBugFolders()) {
   const seen = new Map(); // key -> firstPath
   for (const file of listJsonCases(bugDir)) {
-    let obj;
-    try {
-      obj = JSON.parse(fs.readFileSync(file, 'utf8'));
-    } catch {
+    const obj = readJsonFileSafe(file);
+    if (!obj) {
       kept++;
       continue;
     }

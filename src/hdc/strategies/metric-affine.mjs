@@ -453,7 +453,10 @@ function similarity(a, b) {
   const l1 = a.l1Distance(b);
   const maxL1 = a.geometry * MAX_BYTE;
 
-  return 1 - (l1 / maxL1);
+  const sim = 1 - (l1 / maxL1);
+  if (sim <= 0) return 0;
+  if (sim >= 1) return 1;
+  return sim;
 }
 
 /**

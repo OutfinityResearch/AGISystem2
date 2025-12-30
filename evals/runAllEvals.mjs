@@ -20,6 +20,7 @@
  *   --strategy=dense    Dense: 128, 256, 512, 1024, 2048, 4096 bits
  *   --strategy=sparse   Sparse: k=1, 2, 3, 5, 8, 13
  *   --strategy=metric   Metric: 8, 16, 32, 64, 128, 256 bytes
+ *   --strategy=ema      EMA: 8, 16, 32, 64, 128, 256 bytes
  *   --strategy=exact    EXACT: 256 (placeholder; geometry ignored)
  */
 
@@ -62,6 +63,11 @@ const STRATEGY_CONFIGS = {
   },
   'metric': {
     name: 'metric-affine',
+    geometries: [8, 16, 32, 64, 128, 256],
+    unit: 'bytes'
+  },
+  'ema': {
+    name: 'metric-affine-elastic',
     geometries: [8, 16, 32, 64, 128, 256],
     unit: 'bytes'
   },
@@ -134,7 +140,7 @@ function printConsolidatedSummary(results, overallDuration, strategyArg, isFast)
   console.log(`${'─'.repeat(60)}`);
   if (isFast) {
     console.log(`  Mode:        ${COLORS.yellow}--fast${COLORS.reset}`);
-    console.log(`  Strategy:    ${COLORS.yellow}dense-binary${COLORS.reset}`);
+    console.log(`  Strategy:    ${COLORS.yellow}exact (UNBIND B)${COLORS.reset}`);
     console.log(`  Configs:     1 per phase`);
   } else if (strategyArg) {
     const config = STRATEGY_CONFIGS[strategyArg.toLowerCase()];
@@ -244,7 +250,7 @@ Options:
   --fast                  Quick run with single config
   --verbose, -v           Show detailed output
   --strategy=NAME         Run single strategy with all geometries
-                          NAME: dense, sparse, metric, exact
+                          NAME: dense, sparse, metric, ema, exact
   --priority=NAME         Run with specific reasoning priority
                           NAME: symbolicPriority, holographicPriority
 
@@ -252,6 +258,7 @@ Strategy Mode (runs single strategy with multiple geometries):
   --strategy=dense        Dense: 128, 256, 512, 1024, 2048, 4096 bits
   --strategy=sparse       Sparse: k=1, 2, 3, 4, 5, 6
   --strategy=metric       Metric: 8, 16, 32, 64, 128, 256 bytes
+  --strategy=ema          EMA: 8, 16, 32, 64, 128, 256 bytes
   --strategy=exact        EXACT: 256 (placeholder; geometry ignored)
 
 Examples:

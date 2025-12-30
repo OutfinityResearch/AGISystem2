@@ -18,12 +18,14 @@ import { bind, unbind, topKSimilar } from '../src/core/operations.mjs';
 import { getPositionVector } from '../src/core/position.mjs';
 import { getThresholds, REASONING_PRIORITY } from '../src/core/constants.mjs';
 import { getStrategy, listStrategies } from '../src/hdc/facade.mjs';
+import { ensureStresspediaBooks } from './saturation/ltools/gen-stresspedia-books.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 
 const BOOKS_DIR = path.join(PROJECT_ROOT, 'evals', 'saturation', 'books');
+const STRESSPEDIA_BOOKS_DIR = path.join(PROJECT_ROOT, 'evals', 'saturation', 'stresspedia-books');
 
 const FULL_CONFIGS = [
   { strategy: 'dense-binary', geometries: [128, 256, 512, 1024, 2048, 4096] },   // bits
@@ -95,6 +97,27 @@ const ANSI = {
 
 function stripAnsi(text) {
   return String(text).replace(/\x1B\[[0-9;]*m/g, '');
+}
+
+function terminalWidth() {
+  const n = Number(process.stdout?.columns);
+  return Number.isFinite(n) && n > 0 ? n : 120;
+}
+
+function wrapByWidth(items, maxWidth, { sep = '  ' } = {}) {
+  const lines = [];
+  let line = '';
+  for (const item of items) {
+    const next = line ? `${line}${sep}${item}` : item;
+    if (stripAnsi(next).length > maxWidth && line) {
+      lines.push(line);
+      line = item;
+    } else {
+      line = next;
+    }
+  }
+  if (line) lines.push(line);
+  return lines;
 }
 
 function padEndAnsi(text, width) {
@@ -243,7 +266,8 @@ function buildCandidatesForQuery(session, { ideaNames, bookPrefix, queryKey, exp
 
   const candidates = new Map();
   for (const name of candidateNames) {
-    candidates.set(name, session.vocabulary.getOrCreate(name));
+    const vec = session.scope?.has?.(name) ? session.scope.get(name) : session.vocabulary.getOrCreate(name);
+    candidates.set(name, vec);
   }
   return candidates;
 }
@@ -267,7 +291,8 @@ function buildCandidatesForKeyQuery(session, { keyNames, bookPrefix, queryIdea, 
 
   const candidates = new Map();
   for (const key of candidateKeys) {
-    candidates.set(key, session.vocabulary.getOrCreate(key));
+    const vec = session.scope?.has?.(key) ? session.scope.get(key) : session.vocabulary.getOrCreate(key);
+    candidates.set(key, vec);
   }
   return candidates;
 }
@@ -338,7 +363,9 @@ function decodeKeyFromBook(session, bookVec, query, candidates, options = {}) {
 
   const opVec = session.scope.get(query.op) || session.vocabulary.getOrCreate(query.op);
   const bookIdVec = session.vocabulary.getOrCreate(query.book);
-  const ideaVec = session.vocabulary.getOrCreate(query.idea);
+  const ideaVec = session.scope?.has?.(query.idea)
+    ? session.scope.get(query.idea)
+    : session.vocabulary.getOrCreate(query.idea);
 
   const pos1 = getPositionVector(1, geometry, strategyId, session);
   const pos2 = getPositionVector(2, geometry, strategyId, session);
@@ -387,8 +414,14 @@ function decodeKeyFromBook(session, bookVec, query, candidates, options = {}) {
   };
 }
 
-function discoverBooks() {
-  const files = readdirSync(BOOKS_DIR)
+function discoverBooks(booksDir = BOOKS_DIR) {
+  let entries = [];
+  try {
+    entries = readdirSync(booksDir);
+  } catch {
+    return [];
+  }
+  const files = entries
     .filter(f => /^book(?:[0-9]{2}|_.+)\.sys2$/.test(f))
     .sort((a, b) => {
       const an = a.match(/^book(\d{2})\.sys2$/)?.[1];
@@ -398,7 +431,7 @@ function discoverBooks() {
       if (ai !== bi) return ai - bi;
       return a.localeCompare(b);
     });
-  return files.map(f => path.join(BOOKS_DIR, f));
+  return files.map(f => path.join(booksDir, f));
 }
 
 function configInfo({ strategyId, geometry, priority, exactUnbindMode = null }) {
@@ -434,6 +467,61 @@ function configInfo({ strategyId, geometry, priority, exactUnbindMode = null }) 
 
 function configLabel(cfg) {
   return configInfo(cfg).label;
+}
+
+function abbreviateBookName(fullName, maxLen) {
+  const name = String(fullName || '').trim();
+  if (!name) return '';
+
+  const mPlain = name.match(/^book(\d+)$/i);
+  if (mPlain) return `b${mPlain[1]}`.slice(0, maxLen);
+
+  const parts = name.split('_').filter(Boolean);
+  if (parts.length === 0) return name.slice(0, maxLen);
+  if (String(parts[0]).toLowerCase() === 'book') parts.shift();
+
+  const abbrevPart = (p) => {
+    const low = String(p).toLowerCase();
+    if (low === 'stresspedia') return 'sp';
+    const dm = String(p).match(/^(\d+)([A-Za-z].*)$/);
+    if (dm) return `${dm[1]}${dm[2][0].toLowerCase()}`; // "10cap" -> "10c"
+    if (/^\d+$/.test(p)) return p; // keep digits
+    return String(p).slice(0, Math.min(3, String(p).length)).toLowerCase();
+  };
+
+  let out = parts.map(abbrevPart).join('_');
+  if (out.length > maxLen) out = out.replaceAll('_', '');
+  if (out.length > maxLen) out = out.slice(0, maxLen);
+  return out || name.slice(0, maxLen);
+}
+
+function makeUniqueBookHeaders(bookNames, { maxLen }) {
+  const used = new Map(); // abbrev -> count
+  const mapping = new Map(); // full -> abbrev
+
+  for (const full of bookNames) {
+    const base = abbreviateBookName(full, maxLen);
+    const current = used.get(base) || 0;
+    used.set(base, current + 1);
+
+    if (current === 0) {
+      mapping.set(full, base);
+      continue;
+    }
+
+    const suffix = String(current + 1);
+    const trimmed = base.slice(0, Math.max(1, maxLen - suffix.length));
+    mapping.set(full, `${trimmed}${suffix}`);
+  }
+
+  return mapping;
+}
+
+function fmtCellTime(ms) {
+  const n = Number(ms);
+  if (!Number.isFinite(n) || n < 0) return 'n/a';
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}s`;
+  return `${Math.round(n)}ms`;
 }
 
 function formatThresholds(thresholds) {
@@ -514,6 +602,9 @@ async function runOne(config, bookPath) {
   });
   const tSessionMs = nowMs() - t0;
 
+  // Make `@_ Load "./evals/..."` paths in books resolve consistently regardless of CWD.
+  if (session?.executor) session.executor.basePath = PROJECT_ROOT;
+
   const content = readFileSync(bookPath, 'utf8');
   const { pos, neg } = parseSatQueries(content);
   const ideaNames = extractIdeaNames(content, pos);
@@ -521,7 +612,7 @@ async function runOne(config, bookPath) {
   const bookPrefix = path.basename(bookPath, '.sys2').toUpperCase(); // BOOK01
 
   const tLearn0 = nowMs();
-  session.loadCore({ includeIndex: false });
+  session.loadCore({ includeIndex: true });
   const coreMs = nowMs() - tLearn0;
 
   const tLearn1 = nowMs();
@@ -679,7 +770,7 @@ async function runOne(config, bookPath) {
 
 async function main() {
   const args = process.argv.slice(2);
-  const allowedFlags = new Set(['--full', '--huge', '--extra-huge', '--small', '--details', '--no-color', '--help']);
+  const allowedFlags = new Set(['--full', '--huge', '--extra-huge', '--small', '--regenerate', '--details', '--no-color', '--help']);
   const allowedPrefixes = ['--strategies=', '--priority='];
   const unknownFlags = args.filter(a =>
     a.startsWith('-') &&
@@ -702,8 +793,10 @@ Options:
   --huge            Run huge geometry sweep
   --extra-huge      Run extra huge geometry sweep (skips sparse-polynomial)
   --small           Run smallest geometries (8-byte equivalents)
+  --regenerate      Overwrite generated stresspedia books (evals/saturation/stresspedia-books/)
   --strategies=...  Comma-separated strategy list
   --priority=...    symbolicPriority or holographicPriority
+  --details         Print per-book query details
   --no-color        Disable ANSI colors
 `);
     process.exit(0);
@@ -713,7 +806,8 @@ Options:
   const hugeMode = hasFlag('--huge');
   const extraHugeMode = hasFlag('--extra-huge');
   const smallMode = hasFlag('--small');
-  const details = true;
+  const regenerate = hasFlag('--regenerate');
+  const details = hasFlag('--details');
   const noColor = hasFlag('--no-color');
   const useColor = process.stdout.isTTY && !noColor;
   const strategiesArg = parseArg('--strategies');
@@ -761,13 +855,20 @@ Options:
     throw new Error('No configs selected after applying flags/filters.');
   }
 
-  const books = discoverBooks();
-  if (books.length === 0) {
-    throw new Error(`No books found in ${BOOKS_DIR}. Add at least one book*.sys2 file.`);
+  // Ensure domain-derived books exist (write only missing ones, unless --regenerate is provided).
+  const regenResult = ensureStresspediaBooks({ outDir: STRESSPEDIA_BOOKS_DIR, regenerate });
+  if (regenResult?.errors?.length) {
+    for (const e of regenResult.errors) {
+      process.stderr.write(`Warning: ${e}\n`);
+    }
   }
-  if (books.length !== 10) {
-    const msg = `Note: expected 10 books for the full suite; found ${books.length}. Running with available books.\n`;
-    process.stderr.write(msg);
+
+  const books = [
+    ...discoverBooks(BOOKS_DIR),
+    ...discoverBooks(STRESSPEDIA_BOOKS_DIR)
+  ];
+  if (books.length === 0) {
+    throw new Error('No books found. Ensure evals/saturation/books/ exists, or evals/stress/ exists for auto-generated stresspedia books.');
   }
 
   const intro = [
@@ -1236,9 +1337,21 @@ Options:
 
   const bookNames = books.map(b => path.basename(b, '.sys2'));
   const formattedByLabel = new Map(formatted.map(row => [stripAnsi(row.label), row.label]));
+
+  const maxHeaderLen = (() => {
+    // Keep PASS/FAIL visible and fit within the current terminal width.
+    const cols = terminalWidth();
+    const bookCount = Math.max(1, bookNames.length);
+    const reserved = 26; // Config + Time + separators buffer
+    const per = Math.floor((cols - reserved) / bookCount);
+    return Math.max(4, Math.min(8, per - 2));
+  })();
+  const bookHeaderMap = makeUniqueBookHeaders(bookNames, { maxLen: maxHeaderLen });
+  const legendPairs = bookNames.map(full => `${bookHeaderMap.get(full) || full}=${full}`);
+
   const makeStatusHeaders = (timeTitle) => ([
     { key: 'label', title: 'Config', align: 'left' },
-    ...bookNames.map(book => ({ key: book, title: book, align: 'left' })),
+    ...bookNames.map(book => ({ key: book, title: bookHeaderMap.get(book) || book, align: 'left' })),
     { key: 'time', title: timeTitle, align: 'right' }
   ]);
 
@@ -1261,9 +1374,13 @@ Options:
         continue;
       }
       const ok = mode === 'hdc' ? res.hdcPassed : res.queryPassed;
+      const cellMs = mode === 'query'
+        ? res.queryMs
+        : (res.learnMs + res.decodeMs);
+      const text = fmtCellTime(cellMs);
       row[book] = ok
-        ? colorize(useColor, ANSI.green, 'PASS')
-        : colorize(useColor, ANSI.red, 'FAIL');
+        ? colorize(useColor, ANSI.green, text)
+        : colorize(useColor, ANSI.red, text);
     }
     return row;
   });
@@ -1287,6 +1404,15 @@ Options:
 
     console.log();
     console.log(`${ANSI.bold}${title}${ANSI.reset}`);
+    const legendLines = wrapByWidth(legendPairs, terminalWidth() - 2, { sep: '  ' });
+    if (legendLines.length) {
+      const first = `Legend: ${legendLines[0]}  green=pass red=fail`;
+      console.log(useColor ? colorize(useColor, ANSI.dim, first) : first);
+      for (const extra of legendLines.slice(1)) {
+        const cont = `        ${extra}`;
+        console.log(useColor ? colorize(useColor, ANSI.dim, cont) : cont);
+      }
+    }
     const statusHeaderLine = statusHeaders.map((h, idx) => {
       const w = statusColW.get(h.key);
       const cell = padEndAnsi(h.title, w);
@@ -1307,8 +1433,8 @@ Options:
     console.log(useColor ? statusLine() : stripAnsi(statusLine()));
   };
 
-  renderStatusTable('Per-Book Results (HDC)', buildStatusRows('hdc'), { timeTitle: 'HDC' });
-  renderStatusTable('Per-Book Results (Query)', buildStatusRows('query'), { sortByTime: true, timeTitle: 'Query' });
+  renderStatusTable('HDC time by Book', buildStatusRows('hdc'), { timeTitle: 'HDC' });
+  renderStatusTable('Query time by Book', buildStatusRows('query'), { sortByTime: true, timeTitle: 'Query' });
 
   console.log();
   printSummaryTable();

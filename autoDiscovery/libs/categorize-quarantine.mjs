@@ -6,19 +6,12 @@ import { detectKnownBugPattern, detectNlpBugPattern, BUG_PATTERNS, NLP_BUG_PATTE
 import { runExample } from '../discovery/run-example.mjs';
 import { ensureDir } from '../discovery/fs-utils.mjs';
 import { writeBugCaseJson, writeNlpBugCaseJson } from '../discovery/write-cases.mjs';
+import { readJsonFileSafe } from './json.mjs';
 import { refreshFolderReport } from './reports.mjs';
 
 function listJsonFiles(dir) {
   if (!fs.existsSync(dir)) return [];
   return fs.readdirSync(dir).filter(f => f.endsWith('.json')).map(f => join(dir, f));
-}
-
-function readJsonSafe(file) {
-  try {
-    return JSON.parse(fs.readFileSync(file, 'utf8'));
-  } catch {
-    return null;
-  }
 }
 
 function extractExample(quarantineJson) {
@@ -57,7 +50,7 @@ export function categorizeQuarantine({
   };
 
   for (const file of files) {
-    const raw = readJsonSafe(file);
+    const raw = readJsonFileSafe(file);
     if (!raw) continue;
     const caseId = raw.caseId || file.split('/').pop()?.replace(/\\.json$/, '');
     const example = extractExample(raw);
@@ -120,4 +113,3 @@ export function categorizeQuarantine({
 
   return stats;
 }
-

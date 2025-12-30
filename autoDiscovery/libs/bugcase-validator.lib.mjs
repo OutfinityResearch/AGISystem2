@@ -16,6 +16,7 @@ import { Session } from '../../src/runtime/session.mjs';
 import { REASONING_PRIORITY } from '../../src/core/constants.mjs';
 import { validateQuestionDsl } from '../discovery/session.mjs';
 import { normalizeSessionConfigForSource } from '../discovery/semantics.mjs';
+import { readJsonFileSafe } from './json.mjs';
 
 function queryToBool(result) {
   if (!result) return false;
@@ -43,7 +44,7 @@ function extractQueryAnswers(queryResult) {
 }
 
 function loadCoreTheories(session) {
-  const result = session.loadCore({ includeIndex: false });
+  const result = session.loadCore({ includeIndex: true });
   if (result.success !== true) {
     const msg = result.errors?.map(e => `${e.file}: ${e.errors?.join('; ')}`).join(' | ') || 'unknown error';
     throw new Error(`loadCore failed: ${msg}`);
@@ -160,7 +161,10 @@ function parseClutrrPair(questionText) {
 }
 
 export async function validateOne(caseFile, { autoDeclareUnknownOperators = true } = {}) {
-  const raw = JSON.parse(fs.readFileSync(caseFile, 'utf8'));
+  const raw = readJsonFileSafe(caseFile);
+  if (!raw) {
+    return { ok: false, skipped: true, reason: 'invalid_json' };
+  }
   const { context, question } = extractNl(raw);
   if (!context || !question) {
     return { ok: false, skipped: true, reason: 'missing_nl' };

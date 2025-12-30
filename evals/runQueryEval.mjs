@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { readdirSync } from 'node:fs';
 import { Session } from '../src/runtime/session.mjs';
 import { REASONING_PRIORITY } from '../src/core/constants.mjs';
+import { listStrategies } from '../src/hdc/facade.mjs';
 import fs from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -19,6 +20,23 @@ const STRESS_QUERIES_ROOT = join(ROOT, 'evals', 'stress_queries');
 const STRESS_ROOT = join(ROOT, 'evals', 'stress');
 
 const STRESS_QUERY_SUITE_FILES = ['suite1.mjs', 'suite2.mjs'];
+
+// Strategy geometry configurations (mirrors evals/runFastEval.mjs)
+const STRATEGY_GEOMETRIES = {
+  dense: [128, 256, 512, 1024, 2048, 4096],       // bits
+  sparse: [1, 2, 3, 4, 5, 6],                      // k exponents
+  metric: [8, 16, 32, 64, 128, 256],               // bytes
+  ema: [8, 16, 32, 64, 128, 256],                  // bytes
+  exact: [256]                                     // placeholder (geometry ignored by EXACT)
+};
+
+const STRATEGY_FULL_NAMES = {
+  dense: 'dense-binary',
+  sparse: 'sparse-polynomial',
+  metric: 'metric-affine',
+  ema: 'metric-affine-elastic',
+  exact: 'exact'
+};
 
 /**
  * Load selected suite files from stress_queries/ directory.
@@ -104,6 +122,38 @@ function formatSummaryTable(rows, headers) {
     lines.push(row.map((cell, i) => pad(cell, widths[i])).join(' | '));
   }
   return lines.join('\n');
+}
+
+function shortStrategy(strategyId) {
+  return String(strategyId || '')
+    .replace('-binary', '')
+    .replace('-polynomial', '')
+    .replace('-affine', '');
+}
+
+function shortPriority(priorityId) {
+  if (!priorityId) return '';
+  return String(priorityId)
+    .replace('symbolicPriority', 'symb')
+    .replace('holographicPriority', 'holo')
+    .replace('Priority', '');
+}
+
+function configLabel({ hdcStrategy, geometry, reasoningPriority, exactUnbindMode = null }) {
+  const s = shortStrategy(hdcStrategy);
+  if (hdcStrategy === 'exact') {
+    const mode = String(exactUnbindMode || process.env.SYS2_EXACT_UNBIND_MODE || 'A').trim().toUpperCase();
+    return `${s}(${mode})+${shortPriority(reasoningPriority)}`;
+  }
+  if (hdcStrategy === 'dense-binary') {
+    const bytes = Number.isFinite(geometry) ? Math.ceil(geometry / 8) : geometry;
+    return `${s}(${bytes}B)+${shortPriority(reasoningPriority)}`;
+  }
+  if (hdcStrategy === 'sparse-polynomial') return `${s}(k${geometry})+${shortPriority(reasoningPriority)}`;
+  if (hdcStrategy === 'metric-affine' || hdcStrategy === 'metric-affine-elastic') {
+    return `${s}(${geometry}B)+${shortPriority(reasoningPriority)}`;
+  }
+  return `${s}(${geometry})+${shortPriority(reasoningPriority)}`;
 }
 
 /**
@@ -210,7 +260,14 @@ async function executeQuery(session, step, index, total, sessionId) {
 /**
  * Run a single suite in a fresh session
  */
-async function runSuiteSession(suite, sessionId, hdcStrategy = 'dense-binary', geometry = 256, reasoningPriority = REASONING_PRIORITY.SYMBOLIC, verbose = false, loadStress = false) {
+async function runSuiteSession(
+  suite,
+  sessionId,
+  hdcStrategy = 'dense-binary',
+  geometry = 256,
+  reasoningPriority = REASONING_PRIORITY.SYMBOLIC,
+  { verbose = false, loadStress = false, exactUnbindMode = null } = {}
+) {
   const startTime = performance.now();
   const sessionLabel = `Session${sessionId}`;
 
@@ -218,6 +275,7 @@ async function runSuiteSession(suite, sessionId, hdcStrategy = 'dense-binary', g
     geometry,
     hdcStrategy,
     reasoningPriority,
+    ...(exactUnbindMode ? { exactUnbindMode } : null),
     ...(suite?.sessionOptions || {})
   });
 
@@ -282,6 +340,11 @@ async function runSuiteSession(suite, sessionId, hdcStrategy = 'dense-binary', g
   const successful = results.filter(r => r.passed).length;
   const failed = results.filter(r => !r.passed).length;
 
+  const proveTotal = results.filter(r => r.action === 'prove').length;
+  const provePassed = results.filter(r => r.action === 'prove' && r.passed).length;
+  const queryTotal = results.filter(r => r.action === 'query').length;
+  const queryPassed = results.filter(r => r.action === 'query' && r.passed).length;
+
   return {
     sessionId,
     suiteName: suite.name,
@@ -292,6 +355,10 @@ async function runSuiteSession(suite, sessionId, hdcStrategy = 'dense-binary', g
     results,
     successful,
     failed,
+    proveTotal,
+    provePassed,
+    queryTotal,
+    queryPassed,
     totalDuration,
     factsLoaded,
     cases // Include cases for detailed reporting
@@ -333,8 +400,11 @@ async function workerMain() {
         config.hdcStrategy,
         config.geometry,
         config.reasoningPriority,
-        Boolean(config.verbose),
-        Boolean(config.loadStress)
+        {
+          verbose: Boolean(config.verbose),
+          loadStress: Boolean(config.loadStress),
+          exactUnbindMode: config.exactUnbindMode || null
+        }
       );
       suiteResults.push(suiteResult);
     }
@@ -353,17 +423,6 @@ async function workerMain() {
     fs.writeFileSync(outPath, JSON.stringify({ ok: false, error: error?.message || String(error) }), 'utf8');
     process.exit(1);
   }
-}
-
-function configLabel({ hdcStrategy, geometry, reasoningPriority }) {
-  const strategyShort = (hdcStrategy || '')
-    .replace('dense-binary', 'dense')
-    .replace('sparse-polynomial', 'sparse')
-    .replace('metric-affine', 'metric');
-  const priorityShort = (reasoningPriority || '')
-    .replace('symbolicPriority', 'symb')
-    .replace('holographicPriority', 'holo');
-  return `${strategyShort}(${geometry})+${priorityShort}`;
 }
 
 function normalizePriority(value) {
@@ -443,12 +502,16 @@ Usage:
 
 Options:
   --help, -h              Show this help message
-  --verbose, -v           Show detailed output
-  --fast                  Quick run with single config (dense/256/holo)
+  --verbose, -v           Show per-step details (for best successful config)
+  --fast                  Quick run with single config (exact/B/256/holo)
   --jobs=N                Number of parallel workers (default: min(6, cpus))
   --load-stress           Also load domain facts from evals/stress/*.sys2
-  --strategy=NAME         Run single strategy with all geometries
-                          NAME: dense, sparse, metric
+  --full                  Add a second geometry per strategy (except EXACT)
+  --small                 Use 8-byte equivalents (dense=64b, sparse=k1, metric=8B, ema=8B)
+  --big                   Use 32-byte equivalents (dense=256b, sparse=k4, metric=32B, ema=32B)
+  --huge                  Use 128-byte equivalents (dense=1024b, sparse=k16, metric=128B, ema=128B)
+  --strategy=NAME         Run single strategy with all geometries (sweep)
+                          NAME: dense, sparse, metric, ema, exact
   --priority=NAME         Run with specific reasoning priority
                           NAME: symbolicPriority, holographicPriority
 
@@ -456,17 +519,59 @@ Strategy Mode (runs single strategy with multiple geometries):
   --strategy=dense        Dense: 128, 256, 512, 1024, 2048, 4096 bits
   --strategy=sparse       Sparse: k=1, 2, 3, 4, 5, 6
   --strategy=metric       Metric: 8, 16, 32, 64, 128, 256 bytes
+  --strategy=ema          EMA: 8, 16, 32, 64, 128, 256 bytes
+  --strategy=exact        EXACT (placeholder geometry; runs UNBIND modes A/B)
+
+Geometry Parameters (for default mode):
+  --dense-dim=N           Dense binary vector dimension (default: 256)
+  --sparse-k=N            Sparse polynomial exponent count (default: 2)
+  --metric-dim=N          Metric affine byte channels (default: 16)
 
 Default Mode (no --strategy):
-  Runs 3 strategies × 2 geometries × 2 priorities = 12 configurations
+  Runs all strategies with configured geometries
 
 Examples:
-  node evals/runQueryEval.mjs                    # Run all 12 configs
+  node evals/runQueryEval.mjs                    # Run default configs
   node evals/runQueryEval.mjs --fast             # Quick single config
   node evals/runQueryEval.mjs --strategy=sparse  # Sparse sweep (6 geometries × 2 priorities)
   node evals/runQueryEval.mjs --verbose          # Show query details
 `);
     process.exit(0);
+  }
+
+  const knownFlags = new Set([
+    '--verbose', '-v',
+    '--fast',
+    '--full',
+    '--small',
+    '--big',
+    '--huge',
+    '--load-stress',
+    '--help', '-h'
+  ]);
+  const knownPrefixes = [
+    '--jobs=',
+    '--strategy=',
+    '--priority=',
+    '--dense-dim=',
+    '--sparse-k=',
+    '--metric-dim='
+  ];
+  for (const arg of args) {
+    if (!arg.startsWith('-')) continue;
+    if (knownFlags.has(arg)) continue;
+    if (knownPrefixes.some(prefix => arg.startsWith(prefix))) continue;
+    console.error(`${COLORS.red}Unknown option: ${arg}${COLORS.reset}`);
+    process.exit(1);
+  }
+
+  const fullMode = args.includes('--full');
+  const smallMode = args.includes('--small');
+  const bigMode = args.includes('--big');
+  const hugeMode = args.includes('--huge');
+  if ((smallMode && bigMode) || (smallMode && hugeMode) || (bigMode && hugeMode)) {
+    console.error(`${COLORS.red}Cannot combine --small, --big, or --huge.${COLORS.reset}`);
+    process.exit(1);
   }
 
   console.log(`${COLORS.bright}\n╔═══════════════════════════════════════════╗${COLORS.reset}`);
@@ -479,6 +584,36 @@ Examples:
   const jobs = jobsArg ? Number.parseInt(jobsArg, 10) : Math.max(1, Math.min(6, os.cpus().length));
   const strategyArg = getArgValue(args, '--strategy');
   const priorityArg = normalizePriority(getArgValue(args, '--priority'));
+
+  // Geometry parameters (for default mode)
+  const denseDimArg = getArgValue(args, '--dense-dim');
+  const sparseKArg = getArgValue(args, '--sparse-k');
+  const metricDimArg = getArgValue(args, '--metric-dim');
+
+  let denseDim = 256;
+  let sparseK = 2;
+  let metricDim = 16;
+  let elasticDim = metricDim;
+
+  if (smallMode) {
+    denseDim = 64;
+    sparseK = 1;
+    metricDim = 8;
+  }
+  if (bigMode) {
+    denseDim = 256;
+    sparseK = 4;
+    metricDim = 32;
+  }
+  if (hugeMode) {
+    denseDim = 1024;
+    sparseK = 16;
+    metricDim = 128;
+  }
+  if (denseDimArg) denseDim = Number.parseInt(denseDimArg, 10);
+  if (sparseKArg) sparseK = Number.parseInt(sparseKArg, 10);
+  if (metricDimArg) metricDim = Number.parseInt(metricDimArg, 10);
+  elasticDim = metricDim;
 
   // Load selected suite files from stress_queries/
   const { suites, suiteInfo } = await loadSuites();
@@ -500,30 +635,50 @@ Examples:
   // --fast alone: single quick test
   if (fastMode && !strategyArg) {
     configurations.push({
-      hdcStrategy: 'dense-binary',
+      hdcStrategy: 'exact',
       geometry: 256,
-      reasoningPriority: REASONING_PRIORITY.HOLOGRAPHIC
+      reasoningPriority: REASONING_PRIORITY.HOLOGRAPHIC,
+      exactUnbindMode: 'B'
     });
     console.log(`${COLORS.cyan}Fast mode: single config (${configLabel(configurations[0])})${COLORS.reset}`);
   } else if (strategyArg) {
     // --strategy=X: single strategy with ALL geometries (sweep mode)
-    const resolvedStrategy = STRATEGY_ALIASES[strategyArg.toLowerCase()] || strategyArg;
-    const geometries = GEOMETRY_SWEEP[resolvedStrategy];
+    const shortName = strategyArg.toLowerCase();
+    const resolvedStrategy = STRATEGY_FULL_NAMES[shortName] || strategyArg;
+    const geometries = STRATEGY_GEOMETRIES[shortName];
 
     if (!geometries) {
-      console.error(`${COLORS.red}Unknown strategy: ${strategyArg}. Available: dense, sparse, metric${COLORS.reset}`);
+      console.error(`${COLORS.red}Unknown strategy: ${strategyArg}. Available: dense, sparse, metric, ema, exact${COLORS.reset}`);
       process.exit(1);
     }
 
     // --strategy=X --fast: single geometry for quick test of that strategy
     if (fastMode) {
-      const defaultGeometry = geometries[Math.floor(geometries.length / 2)];
-      configurations.push({
-        hdcStrategy: resolvedStrategy,
-        geometry: defaultGeometry,
-        reasoningPriority: REASONING_PRIORITY.HOLOGRAPHIC
-      });
-      console.log(`${COLORS.cyan}Fast mode: single config (${configLabel(configurations[0])})${COLORS.reset}`);
+      const defaultGeometry = resolvedStrategy === 'metric-affine-elastic'
+        ? geometries[0]
+        : geometries[Math.floor(geometries.length / 2)];
+      if (resolvedStrategy === 'exact') {
+        configurations.push({
+          hdcStrategy: resolvedStrategy,
+          geometry: defaultGeometry,
+          reasoningPriority: REASONING_PRIORITY.HOLOGRAPHIC,
+          exactUnbindMode: 'A'
+        });
+        configurations.push({
+          hdcStrategy: resolvedStrategy,
+          geometry: defaultGeometry,
+          reasoningPriority: REASONING_PRIORITY.HOLOGRAPHIC,
+          exactUnbindMode: 'B'
+        });
+        console.log(`${COLORS.cyan}Fast mode: configs (${configLabel(configurations[0])}), (${configLabel(configurations[1])})${COLORS.reset}`);
+      } else {
+        configurations.push({
+          hdcStrategy: resolvedStrategy,
+          geometry: defaultGeometry,
+          reasoningPriority: REASONING_PRIORITY.HOLOGRAPHIC
+        });
+        console.log(`${COLORS.cyan}Fast mode: single config (${configLabel(configurations[0])})${COLORS.reset}`);
+      }
     } else {
       // --strategy=X: all geometries for that strategy
       const priorities = priorityArg
@@ -532,22 +687,49 @@ Examples:
 
       for (const geometry of geometries) {
         for (const reasoningPriority of priorities) {
-          configurations.push({ hdcStrategy: resolvedStrategy, geometry, reasoningPriority });
+          if (resolvedStrategy === 'exact') {
+            configurations.push({ hdcStrategy: resolvedStrategy, geometry, reasoningPriority, exactUnbindMode: 'A' });
+            configurations.push({ hdcStrategy: resolvedStrategy, geometry, reasoningPriority, exactUnbindMode: 'B' });
+          } else {
+            configurations.push({ hdcStrategy: resolvedStrategy, geometry, reasoningPriority });
+          }
         }
       }
       console.log(`${COLORS.cyan}Strategy sweep mode: ${resolvedStrategy} with geometries ${geometries.join(', ')}${COLORS.reset}`);
     }
   } else {
-    // Default mode: 12 configurations (3 strategies × 2 priorities × 2 geometries)
+    // Default mode: all strategies with configured geometries (mirrors evals/runFastEval.mjs)
     const priorities = priorityArg
       ? [priorityArg]
       : [REASONING_PRIORITY.SYMBOLIC, REASONING_PRIORITY.HOLOGRAPHIC];
-    const strategies = Object.keys(GEOMETRY_VARIANTS);
+    const strategies = listStrategies();
 
     for (const hdcStrategy of strategies) {
       for (const reasoningPriority of priorities) {
-        for (const geometry of GEOMETRY_VARIANTS[hdcStrategy]) {
-          configurations.push({ hdcStrategy, geometry, reasoningPriority });
+        const geometries = [];
+        if (hdcStrategy === 'sparse-polynomial') {
+          geometries.push(sparseK);
+          if (fullMode) geometries.push(sparseK * 2);
+        } else if (hdcStrategy === 'exact') {
+          geometries.push(denseDim);
+        } else if (hdcStrategy === 'metric-affine') {
+          geometries.push(metricDim);
+          if (fullMode) geometries.push(metricDim * 2);
+        } else if (hdcStrategy === 'metric-affine-elastic') {
+          geometries.push(elasticDim);
+          if (fullMode) geometries.push(elasticDim * 2);
+        } else {
+          geometries.push(denseDim);
+          if (fullMode) geometries.push(denseDim * 2);
+        }
+
+        for (const geometry of geometries) {
+          if (hdcStrategy === 'exact') {
+            configurations.push({ hdcStrategy, geometry, reasoningPriority, exactUnbindMode: 'A' });
+            configurations.push({ hdcStrategy, geometry, reasoningPriority, exactUnbindMode: 'B' });
+          } else {
+            configurations.push({ hdcStrategy, geometry, reasoningPriority });
+          }
         }
       }
     }
@@ -580,42 +762,26 @@ Examples:
   const failures = workerResults.filter(r => !r?.ok);
 
   // ========================================================================
-  // SUMMARY (stable, non-interleaved)
+  // DETAILS (stable, non-interleaved)
   // ========================================================================
-  console.log(`\n${COLORS.bright}=== Run Summary ===${COLORS.reset}`);
-
-  const rows = sessionResults
-    .map(s => {
-      const label = configLabel(s.config);
-      const successRate = ((s.successful / totalCases) * 100).toFixed(0);
-      return [label, `${s.successful}/${totalCases} (${successRate}%)`, formatDuration(s.totalDuration)];
-    })
+  const bestSession = sessionResults
+    .slice()
     .sort((a, b) => {
-      const aMs = sessionResults.find(s => configLabel(s.config) === a[0])?.totalDuration ?? 0;
-      const bMs = sessionResults.find(s => configLabel(s.config) === b[0])?.totalDuration ?? 0;
-      return aMs - bMs;
-    });
+      const ar = totalCases > 0 ? (a.successful / totalCases) : 0;
+      const br = totalCases > 0 ? (b.successful / totalCases) : 0;
+      if (br !== ar) return br - ar;
+      return (a.totalDuration || 0) - (b.totalDuration || 0);
+    })[0];
 
-  console.log(formatSummaryTable(rows, ['run', 'success', 'duration']));
-  console.log(`\nTotal wall time: ${COLORS.cyan}${formatDuration(totalWall)}${COLORS.reset}`);
-
-  if (failures.length > 0) {
-    console.log(`\n${COLORS.yellow}Worker failures:${COLORS.reset}`);
-    for (const f of failures) {
-      console.log(`  ${COLORS.red}•${COLORS.reset} ${configLabel(f.config)}: ${f.error}`);
-    }
-  }
-
-  // Show detailed query results from first successful session
-  const firstSession = sessionResults[0];
-  if (firstSession && firstSession.suiteResults) {
+  if (verbose && bestSession && bestSession.suiteResults) {
     console.log(`\n${COLORS.bright}=== Query Details ===${COLORS.reset}`);
+    console.log(`${COLORS.dim}Best config: ${configLabel(bestSession.config)}${COLORS.reset}`);
 
     let globalIndex = 0;
     let passCount = 0;
     let failCount = 0;
 
-    for (const suiteResult of firstSession.suiteResults) {
+    for (const suiteResult of bestSession.suiteResults) {
       console.log(`\n${COLORS.bright}${suiteResult.suiteName} (${suiteResult.suiteFile})${COLORS.reset}`);
       for (let i = 0; i < (suiteResult.results?.length || 0); i++) {
         globalIndex++;
@@ -652,29 +818,70 @@ Examples:
 
     console.log(`\n${COLORS.bright}Total: ${COLORS.green}${passCount} passed${COLORS.reset}, ${COLORS.red}${failCount} failed${COLORS.reset}`);
   }
+
+  if (failures.length > 0) {
+    console.log(`\n${COLORS.yellow}Worker failures:${COLORS.reset}`);
+    for (const f of failures) {
+      console.log(`  ${COLORS.red}•${COLORS.reset} ${configLabel(f.config)}: ${f.error}`);
+    }
+  }
+
+  console.log(`\nTotal wall time: ${COLORS.cyan}${formatDuration(totalWall)}${COLORS.reset}`);
+
+  // ========================================================================
+  // SUMMARY TABLES (stable, non-interleaved; printed last)
+  // ========================================================================
+  console.log(`\n${COLORS.bright}=== Run Summary ===${COLORS.reset}`);
+  const rows = sessionResults
+    .map(s => {
+      const label = configLabel(s.config);
+      const successRate = ((s.successful / totalCases) * 100).toFixed(0);
+      return [label, `${s.successful}/${totalCases} (${successRate}%)`, formatDuration(s.totalDuration)];
+    })
+    .sort((a, b) => {
+      const aMs = sessionResults.find(s => configLabel(s.config) === a[0])?.totalDuration ?? 0;
+      const bMs = sessionResults.find(s => configLabel(s.config) === b[0])?.totalDuration ?? 0;
+      return aMs - bMs;
+    });
+  console.log(formatSummaryTable(rows, ['run', 'success', 'duration']));
+
+  // Intermediate query quality: prove-only accuracy per suite (and overall)
+  const suiteColumns = suiteInfo.map(s => s.file);
+  const maxSuites = 6;
+  const suitesForTable = suiteColumns.slice(0, maxSuites);
+
+  const qualityHeaders = ['run', 'prove', ...suitesForTable.map(f => f.replace('.mjs', ''))];
+  const qualityRows = sessionResults
+    .map(s => {
+      const label = configLabel(s.config);
+      const provePassed = s.suiteResults.reduce((acc, sr) => acc + (sr.provePassed || 0), 0);
+      const proveTotal = s.suiteResults.reduce((acc, sr) => acc + (sr.proveTotal || 0), 0);
+      const provePct = proveTotal > 0 ? Math.round((provePassed / proveTotal) * 100) : 0;
+
+      const perSuite = new Map(
+        (s.suiteResults || []).map(sr => {
+          const pct = sr.proveTotal > 0 ? Math.round((sr.provePassed / sr.proveTotal) * 100) : 0;
+          return [sr.suiteFile, `${pct}%`];
+        })
+      );
+      return [label, `${provePct}%`, ...suitesForTable.map(f => perSuite.get(f) || '-')];
+    })
+    .sort((a, b) => {
+      const aSession = sessionResults.find(s => configLabel(s.config) === a[0]);
+      const bSession = sessionResults.find(s => configLabel(s.config) === b[0]);
+      const aPassed = aSession?.suiteResults?.reduce((acc, sr) => acc + (sr.provePassed || 0), 0) || 0;
+      const aTotal = aSession?.suiteResults?.reduce((acc, sr) => acc + (sr.proveTotal || 0), 0) || 0;
+      const bPassed = bSession?.suiteResults?.reduce((acc, sr) => acc + (sr.provePassed || 0), 0) || 0;
+      const bTotal = bSession?.suiteResults?.reduce((acc, sr) => acc + (sr.proveTotal || 0), 0) || 0;
+      const ar = aTotal > 0 ? aPassed / aTotal : 0;
+      const br = bTotal > 0 ? bPassed / bTotal : 0;
+      if (br !== ar) return br - ar;
+      return (aSession?.totalDuration || 0) - (bSession?.totalDuration || 0);
+    });
+
+  console.log(`\n${COLORS.bright}=== Intermediate Query Quality ===${COLORS.reset}`);
+  console.log(formatSummaryTable(qualityRows, qualityHeaders));
 }
-
-// Default geometries (for normal runs)
-const GEOMETRY_VARIANTS = {
-  'dense-binary': [256, 512],
-  'sparse-polynomial': [2, 4],
-  'metric-affine': [16, 32]
-};
-
-// Extended geometries (for --strategy sweep mode)
-const GEOMETRY_SWEEP = {
-  'dense-binary': [128, 256, 512, 1024, 2048, 4096],       // bits
-  'sparse-polynomial': [1, 2, 3, 4, 5, 6],                  // k exponents
-  'metric-affine': [8, 16, 32, 64, 128, 256],               // bytes
-  'exact': [256]                                             // placeholder (bits ignored by EXACT)
-};
-
-const STRATEGY_ALIASES = {
-  'dense': 'dense-binary',
-  'sparse': 'sparse-polynomial',
-  'metric': 'metric-affine',
-  'exact': 'exact'
-};
 
 function getArgValue(args, name) {
   const arg = args.find(a => a.startsWith(`${name}=`));

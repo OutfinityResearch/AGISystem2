@@ -776,8 +776,8 @@ Key concepts:
 
 - **HDC Tried**: how often an HDC-first / Master-Equation attempt was executed (candidate generation).
 - **HDC Valid**: how often HDC produced at least one acceptable candidate (validated or trusted).
-- **HDC Eq**: how often the **set of answers** produced by HDC matches the set produced by symbolic reasoning for the same query (when symbolic fallback/supplement runs).
-- **HDC Final**: how often the final returned method is HDC-based (method starts with `hdc*`). This can be lower than `HDC Eq` because symbolic results may be preferred due to method priority and richer proof traces.
+- **HDC Match**: how often the **set of answers** produced by HDC matches the set produced by symbolic reasoning for the same query **when we actually compare them** (i.e., when symbolic fallback/supplement runs). Reported as `hdcEquivalentOps / hdcComparedOps`.
+- **HDC Final**: how often the final returned method is HDC-based (method starts with `hdc*`). This can be lower than `HDC Match` because symbolic results may be preferred due to method priority and richer proof traces.
 
 ---
 

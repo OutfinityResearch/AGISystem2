@@ -1,0 +1,339 @@
+# STRESSPEDIA_BOOK_VERSION=2
+# book_stresspedia_sociology.sys2
+# Stresspedia domain: sociology
+# Source: evals/stress/sociology.sys2
+# Ideas extracted: 288 (using 288)
+# Single-chapter stresspedia (index entries only)
+
+# Dependencies (domain theory must be loaded before the stress theory)
+@_ Load "./evals/domains/Sociology/index.sys2"
+
+# Operator stubs for strict loading (auto-discovered)
+@affects:affects __Relation
+@determines:determines __Relation
+@develops:develops __Relation
+@drives:drives __Relation
+@emphasizes:emphasizes __Relation
+@experiences:experiences __Relation
+@faces:faces __Relation
+@follows:follows __Relation
+@includes:includes __Relation
+@increases:increases __Relation
+@influences:influences __Relation
+@involves:involves __Relation
+@learns:learns __Relation
+@maintains:maintains __Relation
+@offers:offers __Relation
+@operates:operates __Relation
+@performs:performs __Relation
+@produces:produces __Relation
+@promotes:promotes __Relation
+@provides:provides __Relation
+@rejects:rejects __Relation
+@represents:represents __Relation
+@shows:shows __Relation
+@studies:studies __Relation
+@targets:targets __Relation
+
+# Stress theory (loaded via DSL; domain theory already loaded above)
+@_ Load "./evals/stress/sociology.sys2"
+
+# SAT_QUERY_POS op=StresspediaEntry book=StresspediaSociology key=Key_SP_sociology_Core_EntityType_K expect=EntityType
+# SAT_QUERY_NEG op=StresspediaEntry book=StresspediaSociology key=Key_SP_sociology_Missing_Invented expect=none
+
+@StresspediaEntry:StresspediaEntry __Relation
+
+@B61_R0001:StresspediaEntry_B61_R0001 StresspediaEntry StresspediaSociology Key_SP_sociology_Core_EntityType_K EntityType
+@B61_R0002:StresspediaEntry_B61_R0002 StresspediaEntry StresspediaSociology Key_SP_sociology_I0001 attitude
+@B61_R0003:StresspediaEntry_B61_R0003 StresspediaEntry StresspediaSociology Key_SP_sociology_I0002 behavior
+@B61_R0004:StresspediaEntry_B61_R0004 StresspediaEntry StresspediaSociology Key_SP_sociology_I0003 centrality
+@B61_R0005:StresspediaEntry_B61_R0005 StresspediaEntry StresspediaSociology Key_SP_sociology_I0004 change
+@B61_R0006:StresspediaEntry_B61_R0006 StresspediaEntry StresspediaSociology Key_SP_sociology_I0005 class
+@B61_R0007:StresspediaEntry_B61_R0007 StresspediaEntry StresspediaSociology Key_SP_sociology_I0006 concept
+@B61_R0008:StresspediaEntry_B61_R0008 StresspediaEntry StresspediaSociology Key_SP_sociology_I0007 condition
+@B61_R0009:StresspediaEntry_B61_R0009 StresspediaEntry StresspediaSociology Key_SP_sociology_I0008 conflict
+@B61_R0010:StresspediaEntry_B61_R0010 StresspediaEntry StresspediaSociology Key_SP_sociology_I0009 control
+@B61_R0011:StresspediaEntry_B61_R0011 StresspediaEntry StresspediaSociology Key_SP_sociology_I0010 crime
+@B61_R0012:StresspediaEntry_B61_R0012 StresspediaEntry StresspediaSociology Key_SP_sociology_I0011 criteria
+@B61_R0013:StresspediaEntry_B61_R0013 StresspediaEntry StresspediaSociology Key_SP_sociology_I0012 culture
+@B61_R0014:StresspediaEntry_B61_R0014 StresspediaEntry StresspediaSociology Key_SP_sociology_I0013 curriculum
+@B61_R0015:StresspediaEntry_B61_R0015 StresspediaEntry StresspediaSociology Key_SP_sociology_I0014 density
+@B61_R0016:StresspediaEntry_B61_R0016 StresspediaEntry StresspediaSociology Key_SP_sociology_I0015 deviance
+@B61_R0017:StresspediaEntry_B61_R0017 StresspediaEntry StresspediaSociology Key_SP_sociology_I0016 dimension
+@B61_R0018:StresspediaEntry_B61_R0018 StresspediaEntry StresspediaSociology Key_SP_sociology_I0017 economy
+@B61_R0019:StresspediaEntry_B61_R0019 StresspediaEntry StresspediaSociology Key_SP_sociology_I0018 education
+@B61_R0020:StresspediaEntry_B61_R0020 StresspediaEntry StresspediaSociology Key_SP_sociology_I0019 factor
+@B61_R0021:StresspediaEntry_B61_R0021 StresspediaEntry StresspediaSociology Key_SP_sociology_I0020 family
+@B61_R0022:StresspediaEntry_B61_R0022 StresspediaEntry StresspediaSociology Key_SP_sociology_I0021 field
+@B61_R0023:StresspediaEntry_B61_R0023 StresspediaEntry StresspediaSociology Key_SP_sociology_I0022 function
+@B61_R0024:StresspediaEntry_B61_R0024 StresspediaEntry StresspediaSociology Key_SP_sociology_I0023 group
+@B61_R0025:StresspediaEntry_B61_R0025 StresspediaEntry StresspediaSociology Key_SP_sociology_I0024 groupIdentity
+@B61_R0026:StresspediaEntry_B61_R0026 StresspediaEntry StresspediaSociology Key_SP_sociology_I0025 inGroup
+@B61_R0027:StresspediaEntry_B61_R0027 StresspediaEntry StresspediaSociology Key_SP_sociology_I0026 individual
+@B61_R0028:StresspediaEntry_B61_R0028 StresspediaEntry StresspediaSociology Key_SP_sociology_I0027 institution
+@B61_R0029:StresspediaEntry_B61_R0029 StresspediaEntry StresspediaSociology Key_SP_sociology_I0028 issue
+@B61_R0030:StresspediaEntry_B61_R0030 StresspediaEntry StresspediaSociology Key_SP_sociology_I0029 measure
+@B61_R0031:StresspediaEntry_B61_R0031 StresspediaEntry StresspediaSociology Key_SP_sociology_I0030 migration
+@B61_R0032:StresspediaEntry_B61_R0032 StresspediaEntry StresspediaSociology Key_SP_sociology_I0031 mobility
+@B61_R0033:StresspediaEntry_B61_R0033 StresspediaEntry StresspediaSociology Key_SP_sociology_I0032 model
+@B61_R0034:StresspediaEntry_B61_R0034 StresspediaEntry StresspediaSociology Key_SP_sociology_I0033 movement
+@B61_R0035:StresspediaEntry_B61_R0035 StresspediaEntry StresspediaSociology Key_SP_sociology_I0034 norms
+@B61_R0036:StresspediaEntry_B61_R0036 StresspediaEntry StresspediaSociology Key_SP_sociology_I0035 organization
+@B61_R0037:StresspediaEntry_B61_R0037 StresspediaEntry StresspediaSociology Key_SP_sociology_I0036 pattern
+@B61_R0038:StresspediaEntry_B61_R0038 StresspediaEntry StresspediaSociology Key_SP_sociology_I0037 perspective
+@B61_R0039:StresspediaEntry_B61_R0039 StresspediaEntry StresspediaSociology Key_SP_sociology_I0038 political
+@B61_R0040:StresspediaEntry_B61_R0040 StresspediaEntry StresspediaSociology Key_SP_sociology_I0039 process
+@B61_R0041:StresspediaEntry_B61_R0041 StresspediaEntry StresspediaSociology Key_SP_sociology_I0040 racism
+@B61_R0042:StresspediaEntry_B61_R0042 StresspediaEntry StresspediaSociology Key_SP_sociology_I0041 resource
+@B61_R0043:StresspediaEntry_B61_R0043 StresspediaEntry StresspediaSociology Key_SP_sociology_I0042 socialization
+@B61_R0044:StresspediaEntry_B61_R0044 StresspediaEntry StresspediaSociology Key_SP_sociology_I0043 structure
+@B61_R0045:StresspediaEntry_B61_R0045 StresspediaEntry StresspediaSociology Key_SP_sociology_I0044 system
+@B61_R0046:StresspediaEntry_B61_R0046 StresspediaEntry StresspediaSociology Key_SP_sociology_I0045 Theory
+@B61_R0047:StresspediaEntry_B61_R0047 StresspediaEntry StresspediaSociology Key_SP_sociology_I0046 tie
+@B61_R0048:StresspediaEntry_B61_R0048 StresspediaEntry StresspediaSociology Key_SP_sociology_I0047 birth
+@B61_R0049:StresspediaEntry_B61_R0049 StresspediaEntry StresspediaSociology Key_SP_sociology_I0048 composition
+@B61_R0050:StresspediaEntry_B61_R0050 StresspediaEntry StresspediaSociology Key_SP_sociology_I0049 consumption
+@B61_R0051:StresspediaEntry_B61_R0051 StresspediaEntry StresspediaSociology Key_SP_sociology_I0050 death
+@B61_R0052:StresspediaEntry_B61_R0052 StresspediaEntry StresspediaSociology Key_SP_sociology_I0051 destination
+@B61_R0053:StresspediaEntry_B61_R0053 StresspediaEntry StresspediaSociology Key_SP_sociology_I0052 distribution
+@B61_R0054:StresspediaEntry_B61_R0054 StresspediaEntry StresspediaSociology Key_SP_sociology_I0053 economic
+@B61_R0055:StresspediaEntry_B61_R0055 StresspediaEntry StresspediaSociology Key_SP_sociology_I0054 environment
+@B61_R0056:StresspediaEntry_B61_R0056 StresspediaEntry StresspediaSociology Key_SP_sociology_I0055 environmental
+@B61_R0057:StresspediaEntry_B61_R0057 StresspediaEntry StresspediaSociology Key_SP_sociology_I0056 evaluation
+@B61_R0058:StresspediaEntry_B61_R0058 StresspediaEntry StresspediaSociology Key_SP_sociology_I0057 excess
+@B61_R0059:StresspediaEntry_B61_R0059 StresspediaEntry StresspediaSociology Key_SP_sociology_I0058 exponential
+@B61_R0060:StresspediaEntry_B61_R0060 StresspediaEntry StresspediaSociology Key_SP_sociology_I0059 factors
+@B61_R0061:StresspediaEntry_B61_R0061 StresspediaEntry StresspediaSociology Key_SP_sociology_I0060 fertility
+@B61_R0062:StresspediaEntry_B61_R0062 StresspediaEntry StresspediaSociology Key_SP_sociology_I0061 future
+@B61_R0063:StresspediaEntry_B61_R0063 StresspediaEntry StresspediaSociology Key_SP_sociology_I0062 gender
+@B61_R0064:StresspediaEntry_B61_R0064 StresspediaEntry StresspediaSociology Key_SP_sociology_I0063 geographic
+@B61_R0065:StresspediaEntry_B61_R0065 StresspediaEntry StresspediaSociology Key_SP_sociology_I0064 global
+@B61_R0066:StresspediaEntry_B61_R0066 StresspediaEntry StresspediaSociology Key_SP_sociology_I0065 growth
+@B61_R0067:StresspediaEntry_B61_R0067 StresspediaEntry StresspediaSociology Key_SP_sociology_I0066 health
+@B61_R0068:StresspediaEntry_B61_R0068 StresspediaEntry StresspediaSociology Key_SP_sociology_I0067 impact
+@B61_R0069:StresspediaEntry_B61_R0069 StresspediaEntry StresspediaSociology Key_SP_sociology_I0068 increase
+@B61_R0070:StresspediaEntry_B61_R0070 StresspediaEntry StresspediaSociology Key_SP_sociology_I0069 inequality
+@B61_R0071:StresspediaEntry_B61_R0071 StresspediaEntry StresspediaSociology Key_SP_sociology_I0070 integration
+@B61_R0072:StresspediaEntry_B61_R0072 StresspediaEntry StresspediaSociology Key_SP_sociology_I0071 interaction
+@B61_R0073:StresspediaEntry_B61_R0073 StresspediaEntry StresspediaSociology Key_SP_sociology_I0072 interdependence
+@B61_R0074:StresspediaEntry_B61_R0074 StresspediaEntry StresspediaSociology Key_SP_sociology_I0073 justice
+@B61_R0075:StresspediaEntry_B61_R0075 StresspediaEntry StresspediaSociology Key_SP_sociology_I0074 life
+@B61_R0076:StresspediaEntry_B61_R0076 StresspediaEntry StresspediaSociology Key_SP_sociology_I0075 limited
+@B61_R0077:StresspediaEntry_B61_R0077 StresspediaEntry StresspediaSociology Key_SP_sociology_I0076 malthus
+@B61_R0078:StresspediaEntry_B61_R0078 StresspediaEntry StresspediaSociology Key_SP_sociology_I0077 minorities
+@B61_R0079:StresspediaEntry_B61_R0079 StresspediaEntry StresspediaSociology Key_SP_sociology_I0078 mortality
+@B61_R0080:StresspediaEntry_B61_R0080 StresspediaEntry StresspediaSociology Key_SP_sociology_I0079 origin
+@B61_R0081:StresspediaEntry_B61_R0081 StresspediaEntry StresspediaSociology Key_SP_sociology_I0080 policy
+@B61_R0082:StresspediaEntry_B61_R0082 StresspediaEntry StresspediaSociology Key_SP_sociology_I0081 pollution
+@B61_R0083:StresspediaEntry_B61_R0083 StresspediaEntry StresspediaSociology Key_SP_sociology_I0082 population
+@B61_R0084:StresspediaEntry_B61_R0084 StresspediaEntry StresspediaSociology Key_SP_sociology_I0083 predictability
+@B61_R0085:StresspediaEntry_B61_R0085 StresspediaEntry StresspediaSociology Key_SP_sociology_I0084 pull
+@B61_R0086:StresspediaEntry_B61_R0086 StresspediaEntry StresspediaSociology Key_SP_sociology_I0085 push
+@B61_R0087:StresspediaEntry_B61_R0087 StresspediaEntry StresspediaSociology Key_SP_sociology_I0086 religion
+@B61_R0088:StresspediaEntry_B61_R0088 StresspediaEntry StresspediaSociology Key_SP_sociology_I0087 reproduction
+@B61_R0089:StresspediaEntry_B61_R0089 StresspediaEntry StresspediaSociology Key_SP_sociology_I0088 resources
+@B61_R0090:StresspediaEntry_B61_R0090 StresspediaEntry StresspediaSociology Key_SP_sociology_I0089 social
+@B61_R0091:StresspediaEntry_B61_R0091 StresspediaEntry StresspediaSociology Key_SP_sociology_I0090 society
+@B61_R0092:StresspediaEntry_B61_R0092 StresspediaEntry StresspediaSociology Key_SP_sociology_I0091 sustainability
+@B61_R0093:StresspediaEntry_B61_R0093 StresspediaEntry StresspediaSociology Key_SP_sociology_I0092 types
+@B61_R0094:StresspediaEntry_B61_R0094 StresspediaEntry StresspediaSociology Key_SP_sociology_I0093 unsustainable
+@B61_R0095:StresspediaEntry_B61_R0095 StresspediaEntry StresspediaSociology Key_SP_sociology_I0094 warming
+@B61_R0096:StresspediaEntry_B61_R0096 StresspediaEntry StresspediaSociology Key_SP_sociology_I0095 women
+@B61_R0097:StresspediaEntry_B61_R0097 StresspediaEntry StresspediaSociology Key_SP_sociology_I0096 accelerated_by
+@B61_R0098:StresspediaEntry_B61_R0098 StresspediaEntry StresspediaSociology Key_SP_sociology_I0097 accumulates
+@B61_R0099:StresspediaEntry_B61_R0099 StresspediaEntry StresspediaSociology Key_SP_sociology_I0098 acquired_through
+@B61_R0100:StresspediaEntry_B61_R0100 StresspediaEntry StresspediaSociology Key_SP_sociology_I0099 across
+@B61_R0101:StresspediaEntry_B61_R0101 StresspediaEntry StresspediaSociology Key_SP_sociology_I0100 adopts
+@B61_R0102:StresspediaEntry_B61_R0102 StresspediaEntry StresspediaSociology Key_SP_sociology_I0101 advocates
+@B61_R0103:StresspediaEntry_B61_R0103 StresspediaEntry StresspediaSociology Key_SP_sociology_I0102 affected_by
+@B61_R0104:StresspediaEntry_B61_R0104 StresspediaEntry StresspediaSociology Key_SP_sociology_I0103 aims_for
+@B61_R0105:StresspediaEntry_B61_R0105 StresspediaEntry StresspediaSociology Key_SP_sociology_I0104 analyzes
+@B61_R0106:StresspediaEntry_B61_R0106 StresspediaEntry StresspediaSociology Key_SP_sociology_I0105 aspiresToJoin
+@B61_R0107:StresspediaEntry_B61_R0107 StresspediaEntry StresspediaSociology Key_SP_sociology_I0106 associated_with
+@B61_R0108:StresspediaEntry_B61_R0108 StresspediaEntry StresspediaSociology Key_SP_sociology_I0107 assumes
+@B61_R0109:StresspediaEntry_B61_R0109 StresspediaEntry StresspediaSociology Key_SP_sociology_I0108 awards
+@B61_R0110:StresspediaEntry_B61_R0110 StresspediaEntry StresspediaSociology Key_SP_sociology_I0109 balances
+@B61_R0111:StresspediaEntry_B61_R0111 StresspediaEntry StresspediaSociology Key_SP_sociology_I0110 based_on
+@B61_R0112:StresspediaEntry_B61_R0112 StresspediaEntry StresspediaSociology Key_SP_sociology_I0111 basis_for
+@B61_R0113:StresspediaEntry_B61_R0113 StresspediaEntry StresspediaSociology Key_SP_sociology_I0112 carries
+@B61_R0114:StresspediaEntry_B61_R0114 StresspediaEntry StresspediaSociology Key_SP_sociology_I0113 changes
+@B61_R0115:StresspediaEntry_B61_R0115 StresspediaEntry StresspediaSociology Key_SP_sociology_I0114 changes_faster
+@B61_R0116:StresspediaEntry_B61_R0116 StresspediaEntry StresspediaSociology Key_SP_sociology_I0115 changes_slower
+@B61_R0117:StresspediaEntry_B61_R0117 StresspediaEntry StresspediaSociology Key_SP_sociology_I0116 characteristic_of
+@B61_R0118:StresspediaEntry_B61_R0118 StresspediaEntry StresspediaSociology Key_SP_sociology_I0117 characterized_by
+@B61_R0119:StresspediaEntry_B61_R0119 StresspediaEntry StresspediaSociology Key_SP_sociology_I0118 characterizes
+@B61_R0120:StresspediaEntry_B61_R0120 StresspediaEntry StresspediaSociology Key_SP_sociology_I0119 claims
+@B61_R0121:StresspediaEntry_B61_R0121 StresspediaEntry StresspediaSociology Key_SP_sociology_I0120 combined_with
+@B61_R0122:StresspediaEntry_B61_R0122 StresspediaEntry StresspediaSociology Key_SP_sociology_I0121 committed_by
+@B61_R0123:StresspediaEntry_B61_R0123 StresspediaEntry StresspediaSociology Key_SP_sociology_I0122 committed_in
+@B61_R0124:StresspediaEntry_B61_R0124 StresspediaEntry StresspediaSociology Key_SP_sociology_I0123 concerns
+@B61_R0125:StresspediaEntry_B61_R0125 StresspediaEntry StresspediaSociology Key_SP_sociology_I0124 confers
+@B61_R0126:StresspediaEntry_B61_R0126 StresspediaEntry StresspediaSociology Key_SP_sociology_I0125 conferspower
+@B61_R0127:StresspediaEntry_B61_R0127 StresspediaEntry StresspediaSociology Key_SP_sociology_I0126 connectsVia
+@B61_R0128:StresspediaEntry_B61_R0128 StresspediaEntry StresspediaSociology Key_SP_sociology_I0127 considered
+@B61_R0129:StresspediaEntry_B61_R0129 StresspediaEntry StresspediaSociology Key_SP_sociology_I0128 considers
+@B61_R0130:StresspediaEntry_B61_R0130 StresspediaEntry StresspediaSociology Key_SP_sociology_I0129 consistsOf
+@B61_R0131:StresspediaEntry_B61_R0131 StresspediaEntry StresspediaSociology Key_SP_sociology_I0130 constructs
+@B61_R0132:StresspediaEntry_B61_R0132 StresspediaEntry StresspediaSociology Key_SP_sociology_I0131 controls
+@B61_R0133:StresspediaEntry_B61_R0133 StresspediaEntry StresspediaSociology Key_SP_sociology_I0132 createsIdentity
+@B61_R0134:StresspediaEntry_B61_R0134 StresspediaEntry StresspediaSociology Key_SP_sociology_I0133 critiques
+@B61_R0135:StresspediaEntry_B61_R0135 StresspediaEntry StresspediaSociology Key_SP_sociology_I0134 define
+@B61_R0136:StresspediaEntry_B61_R0136 StresspediaEntry StresspediaSociology Key_SP_sociology_I0135 defines
+@B61_R0137:StresspediaEntry_B61_R0137 StresspediaEntry StresspediaSociology Key_SP_sociology_I0136 definesBoundary
+@B61_R0138:StresspediaEntry_B61_R0138 StresspediaEntry StresspediaSociology Key_SP_sociology_I0137 depends_on
+@B61_R0139:StresspediaEntry_B61_R0139 StresspediaEntry StresspediaSociology Key_SP_sociology_I0138 depletes
+@B61_R0140:StresspediaEntry_B61_R0140 StresspediaEntry StresspediaSociology Key_SP_sociology_I0139 determinedBy
+@B61_R0141:StresspediaEntry_B61_R0141 StresspediaEntry StresspediaSociology Key_SP_sociology_I0140 determined_by
+@B61_R0142:StresspediaEntry_B61_R0142 StresspediaEntry StresspediaSociology Key_SP_sociology_I0141 developed_by
+@B61_R0143:StresspediaEntry_B61_R0143 StresspediaEntry StresspediaSociology Key_SP_sociology_I0142 developsIdentity
+@B61_R0144:StresspediaEntry_B61_R0144 StresspediaEntry StresspediaSociology Key_SP_sociology_I0143 developsStereotypes
+@B61_R0145:StresspediaEntry_B61_R0145 StresspediaEntry StresspediaSociology Key_SP_sociology_I0144 displays
+@B61_R0146:StresspediaEntry_B61_R0146 StresspediaEntry StresspediaSociology Key_SP_sociology_I0145 distinct_from
+@B61_R0147:StresspediaEntry_B61_R0147 StresspediaEntry StresspediaSociology Key_SP_sociology_I0146 distinguishes
+@B61_R0148:StresspediaEntry_B61_R0148 StresspediaEntry StresspediaSociology Key_SP_sociology_I0147 dominated_by
+@B61_R0149:StresspediaEntry_B61_R0149 StresspediaEntry StresspediaSociology Key_SP_sociology_I0148 driven_by
+@B61_R0150:StresspediaEntry_B61_R0150 StresspediaEntry StresspediaSociology Key_SP_sociology_I0149 embedded_in
+@B61_R0151:StresspediaEntry_B61_R0151 StresspediaEntry StresspediaSociology Key_SP_sociology_I0150 encourages
+@B61_R0152:StresspediaEntry_B61_R0152 StresspediaEntry StresspediaSociology Key_SP_sociology_I0151 enforced_by
+@B61_R0153:StresspediaEntry_B61_R0153 StresspediaEntry StresspediaSociology Key_SP_sociology_I0152 enforced_with
+@B61_R0154:StresspediaEntry_B61_R0154 StresspediaEntry StresspediaSociology Key_SP_sociology_I0153 establishes
+@B61_R0155:StresspediaEntry_B61_R0155 StresspediaEntry StresspediaSociology Key_SP_sociology_I0154 evaluatesSelf
+@B61_R0156:StresspediaEntry_B61_R0156 StresspediaEntry StresspediaSociology Key_SP_sociology_I0155 exacerbates
+@B61_R0157:StresspediaEntry_B61_R0157 StresspediaEntry StresspediaSociology Key_SP_sociology_I0156 exceeds
+@B61_R0158:StresspediaEntry_B61_R0158 StresspediaEntry StresspediaSociology Key_SP_sociology_I0157 exercised_by
+@B61_R0159:StresspediaEntry_B61_R0159 StresspediaEntry StresspediaSociology Key_SP_sociology_I0158 exercised_through
+@B61_R0160:StresspediaEntry_B61_R0160 StresspediaEntry StresspediaSociology Key_SP_sociology_I0159 exercises
+@B61_R0161:StresspediaEntry_B61_R0161 StresspediaEntry StresspediaSociology Key_SP_sociology_I0160 exerts
+@B61_R0162:StresspediaEntry_B61_R0162 StresspediaEntry StresspediaSociology Key_SP_sociology_I0161 exists_between
+@B61_R0163:StresspediaEntry_B61_R0163 StresspediaEntry StresspediaSociology Key_SP_sociology_I0162 exists_on
+@B61_R0164:StresspediaEntry_B61_R0164 StresspediaEntry StresspediaSociology Key_SP_sociology_I0163 exploits
+@B61_R0165:StresspediaEntry_B61_R0165 StresspediaEntry StresspediaSociology Key_SP_sociology_I0164 exposes_to
+@B61_R0166:StresspediaEntry_B61_R0166 StresspediaEntry StresspediaSociology Key_SP_sociology_I0165 features
+@B61_R0167:StresspediaEntry_B61_R0167 StresspediaEntry StresspediaSociology Key_SP_sociology_I0166 feels
+@B61_R0168:StresspediaEntry_B61_R0168 StresspediaEntry StresspediaSociology Key_SP_sociology_I0167 final_stage
+@B61_R0169:StresspediaEntry_B61_R0169 StresspediaEntry StresspediaSociology Key_SP_sociology_I0168 focuses_on
+@B61_R0170:StresspediaEntry_B61_R0170 StresspediaEntry StresspediaSociology Key_SP_sociology_I0169 form_of
+@B61_R0171:StresspediaEntry_B61_R0171 StresspediaEntry StresspediaSociology Key_SP_sociology_I0170 forms
+@B61_R0172:StresspediaEntry_B61_R0172 StresspediaEntry StresspediaSociology Key_SP_sociology_I0171 from
+@B61_R0173:StresspediaEntry_B61_R0173 StresspediaEntry StresspediaSociology Key_SP_sociology_I0172 gains
+@B61_R0174:StresspediaEntry_B61_R0174 StresspediaEntry StresspediaSociology Key_SP_sociology_I0173 govern
+@B61_R0175:StresspediaEntry_B61_R0175 StresspediaEntry StresspediaSociology Key_SP_sociology_I0174 governed_by
+@B61_R0176:StresspediaEntry_B61_R0176 StresspediaEntry StresspediaSociology Key_SP_sociology_I0175 guides
+@B61_R0177:StresspediaEntry_B61_R0177 StresspediaEntry StresspediaSociology Key_SP_sociology_I0176 hasBoundary
+@B61_R0178:StresspediaEntry_B61_R0178 StresspediaEntry StresspediaSociology Key_SP_sociology_I0177 hasCentrality
+@B61_R0179:StresspediaEntry_B61_R0179 StresspediaEntry StresspediaSociology Key_SP_sociology_I0178 hasCharacteristic
+@B61_R0180:StresspediaEntry_B61_R0180 StresspediaEntry StresspediaSociology Key_SP_sociology_I0179 hasDensity
+@B61_R0181:StresspediaEntry_B61_R0181 StresspediaEntry StresspediaSociology Key_SP_sociology_I0180 hasDimension
+@B61_R0182:StresspediaEntry_B61_R0182 StresspediaEntry StresspediaSociology Key_SP_sociology_I0181 hasInteractionType_SP
+@B61_R0183:StresspediaEntry_B61_R0183 StresspediaEntry StresspediaSociology Key_SP_sociology_I0182 hasMember
+@B61_R0184:StresspediaEntry_B61_R0184 StresspediaEntry StresspediaSociology Key_SP_sociology_I0183 hasPurpose
+@B61_R0185:StresspediaEntry_B61_R0185 StresspediaEntry StresspediaSociology Key_SP_sociology_I0184 hasType_SP
+@B61_R0186:StresspediaEntry_B61_R0186 StresspediaEntry StresspediaSociology Key_SP_sociology_I0185 has_position
+@B61_R0187:StresspediaEntry_B61_R0187 StresspediaEntry StresspediaSociology Key_SP_sociology_I0186 idealizes
+@B61_R0188:StresspediaEntry_B61_R0188 StresspediaEntry StresspediaSociology Key_SP_sociology_I0187 imposes
+@B61_R0189:StresspediaEntry_B61_R0189 StresspediaEntry StresspediaSociology Key_SP_sociology_I0188 influenced_by
+@B61_R0190:StresspediaEntry_B61_R0190 StresspediaEntry StresspediaSociology Key_SP_sociology_I0189 intensifies
+@B61_R0191:StresspediaEntry_B61_R0191 StresspediaEntry StresspediaSociology Key_SP_sociology_I0190 internalize
+@B61_R0192:StresspediaEntry_B61_R0192 StresspediaEntry StresspediaSociology Key_SP_sociology_I0191 into
+@B61_R0193:StresspediaEntry_B61_R0193 StresspediaEntry StresspediaSociology Key_SP_sociology_I0192 judges_as
+@B61_R0194:StresspediaEntry_B61_R0194 StresspediaEntry StresspediaSociology Key_SP_sociology_I0193 lacks
+@B61_R0195:StresspediaEntry_B61_R0195 StresspediaEntry StresspediaSociology Key_SP_sociology_I0194 leads_to
+@B61_R0196:StresspediaEntry_B61_R0196 StresspediaEntry StresspediaSociology Key_SP_sociology_I0195 level
+@B61_R0197:StresspediaEntry_B61_R0197 StresspediaEntry StresspediaSociology Key_SP_sociology_I0196 maintainsBoundary
+@B61_R0198:StresspediaEntry_B61_R0198 StresspediaEntry StresspediaSociology Key_SP_sociology_I0197 manages
+@B61_R0199:StresspediaEntry_B61_R0199 StresspediaEntry StresspediaSociology Key_SP_sociology_I0198 manifests_in
+@B61_R0200:StresspediaEntry_B61_R0200 StresspediaEntry StresspediaSociology Key_SP_sociology_I0199 marginalizes
+@B61_R0201:StresspediaEntry_B61_R0201 StresspediaEntry StresspediaSociology Key_SP_sociology_I0200 mayCompeteWith
+@B61_R0202:StresspediaEntry_B61_R0202 StresspediaEntry StresspediaSociology Key_SP_sociology_I0201 measures
+@B61_R0203:StresspediaEntry_B61_R0203 StresspediaEntry StresspediaSociology Key_SP_sociology_I0202 motivated_by
+@B61_R0204:StresspediaEntry_B61_R0204 StresspediaEntry StresspediaSociology Key_SP_sociology_I0203 not_yet_affects
+@B61_R0205:StresspediaEntry_B61_R0205 StresspediaEntry StresspediaSociology Key_SP_sociology_I0204 occurs_during
+@B61_R0206:StresspediaEntry_B61_R0206 StresspediaEntry StresspediaSociology Key_SP_sociology_I0205 occurs_in
+@B61_R0207:StresspediaEntry_B61_R0207 StresspediaEntry StresspediaSociology Key_SP_sociology_I0206 occurs_through
+@B61_R0208:StresspediaEntry_B61_R0208 StresspediaEntry StresspediaSociology Key_SP_sociology_I0207 of
+@B61_R0209:StresspediaEntry_B61_R0209 StresspediaEntry StresspediaSociology Key_SP_sociology_I0208 often_characterized
+@B61_R0210:StresspediaEntry_B61_R0210 StresspediaEntry StresspediaSociology Key_SP_sociology_I0209 often_considered
+@B61_R0211:StresspediaEntry_B61_R0211 StresspediaEntry StresspediaSociology Key_SP_sociology_I0210 often_involves
+@B61_R0212:StresspediaEntry_B61_R0212 StresspediaEntry StresspediaSociology Key_SP_sociology_I0211 often_related
+@B61_R0213:StresspediaEntry_B61_R0213 StresspediaEntry StresspediaSociology Key_SP_sociology_I0212 often_viewed
+@B61_R0214:StresspediaEntry_B61_R0214 StresspediaEntry StresspediaSociology Key_SP_sociology_I0213 operates_through
+@B61_R0215:StresspediaEntry_B61_R0215 StresspediaEntry StresspediaSociology Key_SP_sociology_I0214 opposes
+@B61_R0216:StresspediaEntry_B61_R0216 StresspediaEntry StresspediaSociology Key_SP_sociology_I0215 organized_in
+@B61_R0217:StresspediaEntry_B61_R0217 StresspediaEntry StresspediaSociology Key_SP_sociology_I0216 organizes
+@B61_R0218:StresspediaEntry_B61_R0218 StresspediaEntry StresspediaSociology Key_SP_sociology_I0217 per
+@B61_R0219:StresspediaEntry_B61_R0219 StresspediaEntry StresspediaSociology Key_SP_sociology_I0218 perceivesDifference
+@B61_R0220:StresspediaEntry_B61_R0220 StresspediaEntry StresspediaSociology Key_SP_sociology_I0219 practices
+@B61_R0221:StresspediaEntry_B61_R0221 StresspediaEntry StresspediaSociology Key_SP_sociology_I0220 predicts
+@B61_R0222:StresspediaEntry_B61_R0222 StresspediaEntry StresspediaSociology Key_SP_sociology_I0221 prevalent_in
+@B61_R0223:StresspediaEntry_B61_R0223 StresspediaEntry StresspediaSociology Key_SP_sociology_I0222 privileges
+@B61_R0224:StresspediaEntry_B61_R0224 StresspediaEntry StresspediaSociology Key_SP_sociology_I0223 protects
+@B61_R0225:StresspediaEntry_B61_R0225 StresspediaEntry StresspediaSociology Key_SP_sociology_I0224 providesStandards
+@B61_R0226:StresspediaEntry_B61_R0226 StresspediaEntry StresspediaSociology Key_SP_sociology_I0225 punished_with
+@B61_R0227:StresspediaEntry_B61_R0227 StresspediaEntry StresspediaSociology Key_SP_sociology_I0226 reaches
+@B61_R0228:StresspediaEntry_B61_R0228 StresspediaEntry StresspediaSociology Key_SP_sociology_I0227 receives
+@B61_R0229:StresspediaEntry_B61_R0229 StresspediaEntry StresspediaSociology Key_SP_sociology_I0228 recognizes
+@B61_R0230:StresspediaEntry_B61_R0230 StresspediaEntry StresspediaSociology Key_SP_sociology_I0229 regarded_as
+@B61_R0231:StresspediaEntry_B61_R0231 StresspediaEntry StresspediaSociology Key_SP_sociology_I0230 regulates
+@B61_R0232:StresspediaEntry_B61_R0232 StresspediaEntry StresspediaSociology Key_SP_sociology_I0231 reinforces
+@B61_R0233:StresspediaEntry_B61_R0233 StresspediaEntry StresspediaSociology Key_SP_sociology_I0232 relatesTo
+@B61_R0234:StresspediaEntry_B61_R0234 StresspediaEntry StresspediaSociology Key_SP_sociology_I0233 relates_to
+@B61_R0235:StresspediaEntry_B61_R0235 StresspediaEntry StresspediaSociology Key_SP_sociology_I0234 requiresTrust
+@B61_R0236:StresspediaEntry_B61_R0236 StresspediaEntry StresspediaSociology Key_SP_sociology_I0235 results_from
+@B61_R0237:StresspediaEntry_B61_R0237 StresspediaEntry StresspediaSociology Key_SP_sociology_I0236 results_in
+@B61_R0238:StresspediaEntry_B61_R0238 StresspediaEntry StresspediaSociology Key_SP_sociology_I0237 risksOf
+@B61_R0239:StresspediaEntry_B61_R0239 StresspediaEntry StresspediaSociology Key_SP_sociology_I0238 seeks
+@B61_R0240:StresspediaEntry_B61_R0240 StresspediaEntry StresspediaSociology Key_SP_sociology_I0239 seeks_to
+@B61_R0241:StresspediaEntry_B61_R0241 StresspediaEntry StresspediaSociology Key_SP_sociology_I0240 sees
+@B61_R0242:StresspediaEntry_B61_R0242 StresspediaEntry StresspediaSociology Key_SP_sociology_I0241 shaped_by
+@B61_R0243:StresspediaEntry_B61_R0243 StresspediaEntry StresspediaSociology Key_SP_sociology_I0242 shapes
+@B61_R0244:StresspediaEntry_B61_R0244 StresspediaEntry StresspediaSociology Key_SP_sociology_I0243 shares
+@B61_R0245:StresspediaEntry_B61_R0245 StresspediaEntry StresspediaSociology Key_SP_sociology_I0244 shifts_to
+@B61_R0246:StresspediaEntry_B61_R0246 StresspediaEntry StresspediaSociology Key_SP_sociology_I0245 showsLoyalty
+@B61_R0247:StresspediaEntry_B61_R0247 StresspediaEntry StresspediaSociology Key_SP_sociology_I0246 socially_constructed
+@B61_R0248:StresspediaEntry_B61_R0248 StresspediaEntry StresspediaSociology Key_SP_sociology_I0247 socially_defined
+@B61_R0249:StresspediaEntry_B61_R0249 StresspediaEntry StresspediaSociology Key_SP_sociology_I0248 strains
+@B61_R0250:StresspediaEntry_B61_R0250 StresspediaEntry StresspediaSociology Key_SP_sociology_I0249 strongly_forbidden
+@B61_R0251:StresspediaEntry_B61_R0251 StresspediaEntry StresspediaSociology Key_SP_sociology_I0250 subject_to
+@B61_R0252:StresspediaEntry_B61_R0252 StresspediaEntry StresspediaSociology Key_SP_sociology_I0251 suspends
+@B61_R0253:StresspediaEntry_B61_R0253 StresspediaEntry StresspediaSociology Key_SP_sociology_I0252 takes
+@B61_R0254:StresspediaEntry_B61_R0254 StresspediaEntry StresspediaSociology Key_SP_sociology_I0253 teaches
+@B61_R0255:StresspediaEntry_B61_R0255 StresspediaEntry StresspediaSociology Key_SP_sociology_I0254 theorem
+@B61_R0256:StresspediaEntry_B61_R0256 StresspediaEntry StresspediaSociology Key_SP_sociology_I0255 theorized_by
+@B61_R0257:StresspediaEntry_B61_R0257 StresspediaEntry StresspediaSociology Key_SP_sociology_I0256 transforms
+@B61_R0258:StresspediaEntry_B61_R0258 StresspediaEntry StresspediaSociology Key_SP_sociology_I0257 transforms_from
+@B61_R0259:StresspediaEntry_B61_R0259 StresspediaEntry StresspediaSociology Key_SP_sociology_I0258 transforms_to
+@B61_R0260:StresspediaEntry_B61_R0260 StresspediaEntry StresspediaSociology Key_SP_sociology_I0259 transmits
+@B61_R0261:StresspediaEntry_B61_R0261 StresspediaEntry StresspediaSociology Key_SP_sociology_I0260 treats_as
+@B61_R0262:StresspediaEntry_B61_R0262 StresspediaEntry StresspediaSociology Key_SP_sociology_I0261 undergoes
+@B61_R0263:StresspediaEntry_B61_R0263 StresspediaEntry StresspediaSociology Key_SP_sociology_I0262 understands_in
+@B61_R0264:StresspediaEntry_B61_R0264 StresspediaEntry StresspediaSociology Key_SP_sociology_I0263 unequal_distribution
+@B61_R0265:StresspediaEntry_B61_R0265 StresspediaEntry StresspediaSociology Key_SP_sociology_I0264 usually_characterized
+@B61_R0266:StresspediaEntry_B61_R0266 StresspediaEntry StresspediaSociology Key_SP_sociology_I0265 views_as
+@B61_R0267:StresspediaEntry_B61_R0267 StresspediaEntry StresspediaSociology Key_SP_sociology_I0266 violates
+@B61_R0268:StresspediaEntry_B61_R0268 StresspediaEntry StresspediaSociology Key_SP_sociology_I0267 widely_shared
+@B61_R0269:StresspediaEntry_B61_R0269 StresspediaEntry StresspediaSociology Key_SP_sociology_I0268 works_within
+@B61_R0270:StresspediaEntry_B61_R0270 StresspediaEntry StresspediaSociology Key_SP_sociology_I0269 Society
+@B61_R0271:StresspediaEntry_B61_R0271 StresspediaEntry StresspediaSociology Key_SP_sociology_I0270 SocialGroup
+@B61_R0272:StresspediaEntry_B61_R0272 StresspediaEntry StresspediaSociology Key_SP_sociology_I0271 SocialInstitution
+@B61_R0273:StresspediaEntry_B61_R0273 StresspediaEntry StresspediaSociology Key_SP_sociology_I0272 SocialNorm
+@B61_R0274:StresspediaEntry_B61_R0274 StresspediaEntry StresspediaSociology Key_SP_sociology_I0273 SocialRole
+@B61_R0275:StresspediaEntry_B61_R0275 StresspediaEntry StresspediaSociology Key_SP_sociology_I0274 SocialStatus
+@B61_R0276:StresspediaEntry_B61_R0276 StresspediaEntry StresspediaSociology Key_SP_sociology_I0275 SocialNetwork
+@B61_R0277:StresspediaEntry_B61_R0277 StresspediaEntry StresspediaSociology Key_SP_sociology_I0276 SocialClass
+@B61_R0278:StresspediaEntry_B61_R0278 StresspediaEntry StresspediaSociology Key_SP_sociology_I0277 SocialPower
+@B61_R0279:StresspediaEntry_B61_R0279 StresspediaEntry StresspediaSociology Key_SP_sociology_I0278 SocialChange
+@B61_R0280:StresspediaEntry_B61_R0280 StresspediaEntry StresspediaSociology Key_SP_sociology_I0279 memberOf
+@B61_R0281:StresspediaEntry_B61_R0281 StresspediaEntry StresspediaSociology Key_SP_sociology_I0280 hasRole
+@B61_R0282:StresspediaEntry_B61_R0282 StresspediaEntry StresspediaSociology Key_SP_sociology_I0281 followsNorm
+@B61_R0283:StresspediaEntry_B61_R0283 StresspediaEntry StresspediaSociology Key_SP_sociology_I0282 partOfSociety
+@B61_R0284:StresspediaEntry_B61_R0284 StresspediaEntry StresspediaSociology Key_SP_sociology_I0283 interactsWith
+@B61_R0285:StresspediaEntry_B61_R0285 StresspediaEntry StresspediaSociology Key_SP_sociology_I0284 connectedTo
+@B61_R0286:StresspediaEntry_B61_R0286 StresspediaEntry StresspediaSociology Key_SP_sociology_I0285 hasStatus
+@B61_R0287:StresspediaEntry_B61_R0287 StresspediaEntry StresspediaSociology Key_SP_sociology_I0286 classOf
+@B61_R0288:StresspediaEntry_B61_R0288 StresspediaEntry StresspediaSociology Key_SP_sociology_I0287 exercisesPowerOver
+@B61_R0289:StresspediaEntry_B61_R0289 StresspediaEntry StresspediaSociology Key_SP_sociology_I0288 causesChange
+
+@Chapter01_Seq __Sequence [$B61_R0001, $B61_R0002, $B61_R0003, $B61_R0004, $B61_R0005, $B61_R0006, $B61_R0007, $B61_R0008, $B61_R0009, $B61_R0010, $B61_R0011, $B61_R0012, $B61_R0013, $B61_R0014, $B61_R0015, $B61_R0016, $B61_R0017, $B61_R0018, $B61_R0019, $B61_R0020, $B61_R0021, $B61_R0022, $B61_R0023, $B61_R0024, $B61_R0025, $B61_R0026, $B61_R0027, $B61_R0028, $B61_R0029, $B61_R0030, $B61_R0031, $B61_R0032, $B61_R0033, $B61_R0034, $B61_R0035, $B61_R0036, $B61_R0037, $B61_R0038, $B61_R0039, $B61_R0040, $B61_R0041, $B61_R0042, $B61_R0043, $B61_R0044, $B61_R0045, $B61_R0046, $B61_R0047, $B61_R0048, $B61_R0049, $B61_R0050, $B61_R0051, $B61_R0052, $B61_R0053, $B61_R0054, $B61_R0055, $B61_R0056, $B61_R0057, $B61_R0058, $B61_R0059, $B61_R0060, $B61_R0061, $B61_R0062, $B61_R0063, $B61_R0064, $B61_R0065, $B61_R0066, $B61_R0067, $B61_R0068, $B61_R0069, $B61_R0070, $B61_R0071, $B61_R0072, $B61_R0073, $B61_R0074, $B61_R0075, $B61_R0076, $B61_R0077, $B61_R0078, $B61_R0079, $B61_R0080, $B61_R0081, $B61_R0082, $B61_R0083, $B61_R0084, $B61_R0085, $B61_R0086, $B61_R0087, $B61_R0088, $B61_R0089, $B61_R0090, $B61_R0091, $B61_R0092, $B61_R0093, $B61_R0094, $B61_R0095, $B61_R0096, $B61_R0097, $B61_R0098, $B61_R0099, $B61_R0100, $B61_R0101, $B61_R0102, $B61_R0103, $B61_R0104, $B61_R0105, $B61_R0106, $B61_R0107, $B61_R0108, $B61_R0109, $B61_R0110, $B61_R0111, $B61_R0112, $B61_R0113, $B61_R0114, $B61_R0115, $B61_R0116, $B61_R0117, $B61_R0118, $B61_R0119, $B61_R0120, $B61_R0121, $B61_R0122, $B61_R0123, $B61_R0124, $B61_R0125, $B61_R0126, $B61_R0127, $B61_R0128, $B61_R0129, $B61_R0130, $B61_R0131, $B61_R0132, $B61_R0133, $B61_R0134, $B61_R0135, $B61_R0136, $B61_R0137, $B61_R0138, $B61_R0139, $B61_R0140, $B61_R0141, $B61_R0142, $B61_R0143, $B61_R0144, $B61_R0145, $B61_R0146, $B61_R0147, $B61_R0148, $B61_R0149, $B61_R0150, $B61_R0151, $B61_R0152, $B61_R0153, $B61_R0154, $B61_R0155, $B61_R0156, $B61_R0157, $B61_R0158, $B61_R0159, $B61_R0160, $B61_R0161, $B61_R0162, $B61_R0163, $B61_R0164, $B61_R0165, $B61_R0166, $B61_R0167, $B61_R0168, $B61_R0169, $B61_R0170, $B61_R0171, $B61_R0172, $B61_R0173, $B61_R0174, $B61_R0175, $B61_R0176, $B61_R0177, $B61_R0178, $B61_R0179, $B61_R0180, $B61_R0181, $B61_R0182, $B61_R0183, $B61_R0184, $B61_R0185, $B61_R0186, $B61_R0187, $B61_R0188, $B61_R0189, $B61_R0190, $B61_R0191, $B61_R0192, $B61_R0193, $B61_R0194, $B61_R0195, $B61_R0196, $B61_R0197, $B61_R0198, $B61_R0199, $B61_R0200, $B61_R0201, $B61_R0202, $B61_R0203, $B61_R0204, $B61_R0205, $B61_R0206, $B61_R0207, $B61_R0208, $B61_R0209, $B61_R0210, $B61_R0211, $B61_R0212, $B61_R0213, $B61_R0214, $B61_R0215, $B61_R0216, $B61_R0217, $B61_R0218, $B61_R0219, $B61_R0220, $B61_R0221, $B61_R0222, $B61_R0223, $B61_R0224, $B61_R0225, $B61_R0226, $B61_R0227, $B61_R0228, $B61_R0229, $B61_R0230, $B61_R0231, $B61_R0232, $B61_R0233, $B61_R0234, $B61_R0235, $B61_R0236, $B61_R0237, $B61_R0238, $B61_R0239, $B61_R0240, $B61_R0241, $B61_R0242, $B61_R0243, $B61_R0244, $B61_R0245, $B61_R0246, $B61_R0247, $B61_R0248, $B61_R0249, $B61_R0250, $B61_R0251, $B61_R0252, $B61_R0253, $B61_R0254, $B61_R0255, $B61_R0256, $B61_R0257, $B61_R0258, $B61_R0259, $B61_R0260, $B61_R0261, $B61_R0262, $B61_R0263, $B61_R0264, $B61_R0265, $B61_R0266, $B61_R0267, $B61_R0268, $B61_R0269, $B61_R0270, $B61_R0271, $B61_R0272, $B61_R0273, $B61_R0274, $B61_R0275, $B61_R0276, $B61_R0277, $B61_R0278, $B61_R0279, $B61_R0280, $B61_R0281, $B61_R0282, $B61_R0283, $B61_R0284, $B61_R0285, $B61_R0286, $B61_R0287, $B61_R0288, $B61_R0289]
+@Chapter01:Chapter01 bundle [$B61_R0001, $B61_R0002, $B61_R0003, $B61_R0004, $B61_R0005, $B61_R0006, $B61_R0007, $B61_R0008, $B61_R0009, $B61_R0010, $B61_R0011, $B61_R0012, $B61_R0013, $B61_R0014, $B61_R0015, $B61_R0016, $B61_R0017, $B61_R0018, $B61_R0019, $B61_R0020, $B61_R0021, $B61_R0022, $B61_R0023, $B61_R0024, $B61_R0025, $B61_R0026, $B61_R0027, $B61_R0028, $B61_R0029, $B61_R0030, $B61_R0031, $B61_R0032, $B61_R0033, $B61_R0034, $B61_R0035, $B61_R0036, $B61_R0037, $B61_R0038, $B61_R0039, $B61_R0040, $B61_R0041, $B61_R0042, $B61_R0043, $B61_R0044, $B61_R0045, $B61_R0046, $B61_R0047, $B61_R0048, $B61_R0049, $B61_R0050, $B61_R0051, $B61_R0052, $B61_R0053, $B61_R0054, $B61_R0055, $B61_R0056, $B61_R0057, $B61_R0058, $B61_R0059, $B61_R0060, $B61_R0061, $B61_R0062, $B61_R0063, $B61_R0064, $B61_R0065, $B61_R0066, $B61_R0067, $B61_R0068, $B61_R0069, $B61_R0070, $B61_R0071, $B61_R0072, $B61_R0073, $B61_R0074, $B61_R0075, $B61_R0076, $B61_R0077, $B61_R0078, $B61_R0079, $B61_R0080, $B61_R0081, $B61_R0082, $B61_R0083, $B61_R0084, $B61_R0085, $B61_R0086, $B61_R0087, $B61_R0088, $B61_R0089, $B61_R0090, $B61_R0091, $B61_R0092, $B61_R0093, $B61_R0094, $B61_R0095, $B61_R0096, $B61_R0097, $B61_R0098, $B61_R0099, $B61_R0100, $B61_R0101, $B61_R0102, $B61_R0103, $B61_R0104, $B61_R0105, $B61_R0106, $B61_R0107, $B61_R0108, $B61_R0109, $B61_R0110, $B61_R0111, $B61_R0112, $B61_R0113, $B61_R0114, $B61_R0115, $B61_R0116, $B61_R0117, $B61_R0118, $B61_R0119, $B61_R0120, $B61_R0121, $B61_R0122, $B61_R0123, $B61_R0124, $B61_R0125, $B61_R0126, $B61_R0127, $B61_R0128, $B61_R0129, $B61_R0130, $B61_R0131, $B61_R0132, $B61_R0133, $B61_R0134, $B61_R0135, $B61_R0136, $B61_R0137, $B61_R0138, $B61_R0139, $B61_R0140, $B61_R0141, $B61_R0142, $B61_R0143, $B61_R0144, $B61_R0145, $B61_R0146, $B61_R0147, $B61_R0148, $B61_R0149, $B61_R0150, $B61_R0151, $B61_R0152, $B61_R0153, $B61_R0154, $B61_R0155, $B61_R0156, $B61_R0157, $B61_R0158, $B61_R0159, $B61_R0160, $B61_R0161, $B61_R0162, $B61_R0163, $B61_R0164, $B61_R0165, $B61_R0166, $B61_R0167, $B61_R0168, $B61_R0169, $B61_R0170, $B61_R0171, $B61_R0172, $B61_R0173, $B61_R0174, $B61_R0175, $B61_R0176, $B61_R0177, $B61_R0178, $B61_R0179, $B61_R0180, $B61_R0181, $B61_R0182, $B61_R0183, $B61_R0184, $B61_R0185, $B61_R0186, $B61_R0187, $B61_R0188, $B61_R0189, $B61_R0190, $B61_R0191, $B61_R0192, $B61_R0193, $B61_R0194, $B61_R0195, $B61_R0196, $B61_R0197, $B61_R0198, $B61_R0199, $B61_R0200, $B61_R0201, $B61_R0202, $B61_R0203, $B61_R0204, $B61_R0205, $B61_R0206, $B61_R0207, $B61_R0208, $B61_R0209, $B61_R0210, $B61_R0211, $B61_R0212, $B61_R0213, $B61_R0214, $B61_R0215, $B61_R0216, $B61_R0217, $B61_R0218, $B61_R0219, $B61_R0220, $B61_R0221, $B61_R0222, $B61_R0223, $B61_R0224, $B61_R0225, $B61_R0226, $B61_R0227, $B61_R0228, $B61_R0229, $B61_R0230, $B61_R0231, $B61_R0232, $B61_R0233, $B61_R0234, $B61_R0235, $B61_R0236, $B61_R0237, $B61_R0238, $B61_R0239, $B61_R0240, $B61_R0241, $B61_R0242, $B61_R0243, $B61_R0244, $B61_R0245, $B61_R0246, $B61_R0247, $B61_R0248, $B61_R0249, $B61_R0250, $B61_R0251, $B61_R0252, $B61_R0253, $B61_R0254, $B61_R0255, $B61_R0256, $B61_R0257, $B61_R0258, $B61_R0259, $B61_R0260, $B61_R0261, $B61_R0262, $B61_R0263, $B61_R0264, $B61_R0265, $B61_R0266, $B61_R0267, $B61_R0268, $B61_R0269, $B61_R0270, $B61_R0271, $B61_R0272, $B61_R0273, $B61_R0274, $B61_R0275, $B61_R0276, $B61_R0277, $B61_R0278, $B61_R0279, $B61_R0280, $B61_R0281, $B61_R0282, $B61_R0283, $B61_R0284, $B61_R0285, $B61_R0286, $B61_R0287, $B61_R0288, $B61_R0289]
+@Book_Seq __Sequence [$Chapter01]
+@Book:Book bundle [$Chapter01]

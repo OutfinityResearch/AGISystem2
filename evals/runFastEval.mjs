@@ -14,7 +14,7 @@
  *
  * Strategy Mode (runs single strategy with multiple geometries):
  *   node evals/runFastEval.mjs --strategy=dense          # Dense: 128, 256, 512, 1024, 2048, 4096 bits
- *   node evals/runFastEval.mjs --strategy=sparse         # Sparse: k=1, 2, 3, 5, 8, 13
+ *   node evals/runFastEval.mjs --strategy=sparse         # Sparse: k=1, 2, 3, 4, 5, 6
  *   node evals/runFastEval.mjs --strategy=metric         # Metric: 8, 16, 32, 64, 128, 256 bytes
  *   node evals/runFastEval.mjs --strategy=ema            # EMA: 8, 16, 32, 64, 128, 256 bytes
  *   node evals/runFastEval.mjs --strategy=exact          # EXACT: 256 (placeholder; geometry ignored)
@@ -271,11 +271,12 @@ async function main() {
     // --fast alone: single quick test
     if (fastMode && !singleStrategy) {
       configurations.push({
-        strategy: 'dense-binary',
+        strategy: 'exact',
         priority: REASONING_PRIORITY.HOLOGRAPHIC,
-        geometry: 256
+        geometry: 256,
+        exactUnbindMode: 'B'
       });
-      console.log('Fast mode: single config (dense/256/holo)');
+      console.log('Fast mode: single config (exact/B/holo)');
     } else if (singleStrategy) {
       // --strategy=X: single strategy with ALL geometries (sweep mode)
       const shortName = singleStrategy.toLowerCase();

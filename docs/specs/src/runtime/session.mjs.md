@@ -1,6 +1,6 @@
 # Module Plan: src/runtime/session.mjs
 
-**Document Version:** 2.0
+**Document Version:** 2.1
 **Status:** Implemented
 **Traces To:** FS-25 to FS-33, URS-06, URS-07, URS-15
 
@@ -44,7 +44,7 @@ interface SessionOptions {
   // Core bootstrapping (non-DSL runtime policy)
   autoLoadCore?: boolean;              // Default: true (except under `node --test`)
   corePath?: string;                   // Default: './config/Core'
-  coreIncludeIndex?: boolean;          // Default: false
+  coreIncludeIndex?: boolean;          // Default: true (load only index.sys2)
 }
 ```
 
@@ -232,7 +232,11 @@ this.reasoningStats = {
   // HDC-specific
   hdcQueries: number,           // HDC Master Equation queries
   hdcSuccesses: number,         // Successful HDC queries
-  hdcBindings: number           // Bindings found via HDC
+  hdcBindings: number,          // Bindings found via HDC
+  hdcBindOps: number,           // bind() calls (counted at facade layer when session-attached)
+  hdcBundleOps: number,         // bundle() calls (counted at facade layer when session-attached)
+  hdcUnbindOps: number,         // unbind() calls (counted at facade layer when session-attached)
+  topKSimilarCalls: number      // topKSimilar() calls (counted at facade layer when session-attached)
 };
 ```
 
@@ -240,7 +244,10 @@ this.reasoningStats = {
 
 ## 4. Behavior Notes
 
-- Core theories are **not** auto-loaded. Call `session.loadCore()` explicitly.
+- Core theories are **auto-loaded by default** in normal runs.
+  - Default OFF under `node --test` to keep unit tests fast/stable.
+  - Opt-out via `new Session({ autoLoadCore: false })` or `SYS2_AUTO_LOAD_CORE=0`.
+- `loadCore({ includeIndex: true })` loads **only** `config/Core/index.sys2` (which orchestrates the rest).
 - `learn`, `query`, `prove`, `abduce`, and `findAll` validate DSL with `checkDSL` first; invalid DSL throws.
 - `checkDSLStrict(...)` rejects unknown operators/concepts not already loaded or declared.
 - `learn` is transactional. On any error (syntax, dependency, contradiction), the session rolls back.

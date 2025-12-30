@@ -102,3 +102,43 @@ end
     @result __Bundle $eid $act $f $c $ctx
     return $result
 end
+
+@learns:learns graph agent topic
+    @eid __Event
+    @act __Role Action learns
+    @a __Role Agent $agent
+    @t __Role Theme $topic
+    @ctx __Role Context Sociology
+    @result __Bundle $eid $act $a $t $ctx
+    return $result
+end
+
+@promotes:promotes graph agent goal
+    @eid __Event
+    @act __Role Action promotes
+    @a __Role Agent $agent
+    @g __Role Goal $goal
+    @ctx __Role Context Sociology
+    @result __Bundle $eid $act $a $g $ctx
+    return $result
+end
+
+@rejects:rejects graph agent idea
+    @eid __Event
+    @act __Role Action rejects
+    @a __Role Agent $agent
+    @i __Role Theme $idea
+    @ctx __Role Context Sociology
+    @result __Bundle $eid $act $a $i $ctx
+    return $result
+end
+
+@targets:targets graph agent target
+    @eid __Event
+    @act __Role Action targets
+    @a __Role Agent $agent
+    @t __Role Theme $target
+    @ctx __Role Context Sociology
+    @result __Bundle $eid $act $a $t $ctx
+    return $result
+end

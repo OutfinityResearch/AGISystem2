@@ -2,6 +2,26 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { validateCore } from './core-validator.mjs';
 
+function parseCoreIndexLoads(indexContent) {
+  const loads = [];
+  const seen = new Set();
+  const lines = String(indexContent || '').split('\n');
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed.startsWith('@_')) continue;
+    // Syntax used in Core: @_ Load "./00-types.sys2"
+    const m = trimmed.match(/^@_\s+Load\s+(['"])(.+?)\1\s*$/);
+    if (!m) continue;
+    let p = m[2] || '';
+    p = p.replace(/^\.\//, '').trim();
+    if (!p.endsWith('.sys2')) continue;
+    if (seen.has(p)) continue;
+    seen.add(p);
+    loads.push(p);
+  }
+  return loads;
+}
+
 /**
  * Load Core theories from `config/Core` into this session.
  * Convenience helper to make "theory-driven" behavior easy to enable.
@@ -12,10 +32,22 @@ export function loadCore(session, options = {}) {
   const validate = options.validate ?? true;
   const throwOnValidationError = options.throwOnValidationError ?? false;
 
-  const files = readdirSync(corePath)
+  const all = readdirSync(corePath)
     .filter(f => f.endsWith('.sys2'))
-    .filter(f => includeIndex || f !== 'index.sys2')
     .sort();
+
+  // Core policy:
+  // - `includeIndex: true` means "use index.sys2 as the load-order manifest".
+  //   We do NOT rely on runtime `@_ Load` resolving relative paths at parse-time.
+  // - `includeIndex: false` means "enumerate all *.sys2 except index.sys2" (legacy mode).
+  let files;
+  if (includeIndex && all.includes('index.sys2')) {
+    const indexContent = readFileSync(join(corePath, 'index.sys2'), 'utf8');
+    const ordered = parseCoreIndexLoads(indexContent);
+    files = ordered.length > 0 ? ordered : all.filter(f => f !== 'index.sys2');
+  } else {
+    files = all.filter(f => f !== 'index.sys2');
+  }
 
   const errors = [];
   for (const file of files) {

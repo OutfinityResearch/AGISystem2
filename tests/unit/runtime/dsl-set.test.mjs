@@ -9,7 +9,7 @@ describe('DSL @_: Set command', () => {
       reasoningPriority: 'symbolicPriority',
       reasoningProfile: 'theoryDriven'
     });
-    session.loadCore({ includeIndex: false });
+    session.loadCore({ includeIndex: true });
 
     assert.equal(session.closedWorldAssumption, false);
 
@@ -26,7 +26,7 @@ describe('DSL @_: Set command', () => {
       reasoningPriority: 'symbolicPriority',
       reasoningProfile: 'theoryDriven'
     });
-    session.loadCore({ includeIndex: false });
+    session.loadCore({ includeIndex: true });
 
     session.learn('hasProperty Bob big');
 
@@ -39,4 +39,3 @@ describe('DSL @_: Set command', () => {
     assert.equal(closedWorld.valid, true);
   });
 });
-

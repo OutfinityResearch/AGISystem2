@@ -93,10 +93,10 @@ function extractUsageContext(filePath, operatorName, maxExamples = 3) {
 }
 
 /**
- * Load domain concepts from config/
+ * Load domain concepts from evals/domains/
  */
 function loadDomainConcepts(domain) {
-    const conceptsPath = path.join(__dirname, '..', 'config', domain, '00-concepts.sys2');
+    const conceptsPath = path.join(__dirname, '..', 'evals', 'domains', domain, '00-concepts.sys2');
     if (!fs.existsSync(conceptsPath)) {
         return [];
     }
@@ -116,10 +116,10 @@ function loadDomainConcepts(domain) {
 }
 
 /**
- * Load domain relations from config/
+ * Load domain relations from evals/domains/
  */
 function loadDomainRelations(domain) {
-    const relationsPath = path.join(__dirname, '..', 'config', domain, '01-relations.sys2');
+    const relationsPath = path.join(__dirname, '..', 'evals', 'domains', domain, '01-relations.sys2');
     if (!fs.existsSync(relationsPath)) {
         return [];
     }

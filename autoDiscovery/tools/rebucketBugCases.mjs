@@ -15,6 +15,7 @@ import { runExample } from '../discovery/run-example.mjs';
 import { detectKnownBugPattern, BUG_PATTERNS } from '../discovery/patterns.mjs';
 import { ensureDir } from '../discovery/fs-utils.mjs';
 import { CATEGORY } from '../discovery/constants.mjs';
+import { readJsonFileSafe } from '../libs/json.mjs';
 
 const ROOT = path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'bugCases');
 
@@ -47,10 +48,6 @@ function listJsonFiles(dir) {
   return fs.readdirSync(dir)
     .filter(f => f.endsWith('.json'))
     .map(f => path.join(dir, f));
-}
-
-function readJson(file) {
-  return JSON.parse(fs.readFileSync(file, 'utf8'));
 }
 
 function writeJson(file, data) {
@@ -126,7 +123,11 @@ async function main() {
 
   for (const { dir, file } of allFiles) {
       const startOne = performance.now();
-      const raw = readJson(file);
+      const raw = readJsonFileSafe(file);
+      if (!raw) {
+        processed++;
+        continue;
+      }
       const example = extractExample(raw);
       const caseId = raw.caseId || path.basename(file, '.json');
 

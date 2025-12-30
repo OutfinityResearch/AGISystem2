@@ -1,17 +1,10 @@
 import fs from 'node:fs';
 import { join } from 'node:path';
+import { readJsonFileSafe } from './json.mjs';
 
 function listJsonFiles(dir) {
   if (!fs.existsSync(dir)) return [];
   return fs.readdirSync(dir).filter(f => f.endsWith('.json')).map(f => join(dir, f));
-}
-
-function readJsonSafe(file) {
-  try {
-    return JSON.parse(fs.readFileSync(file, 'utf8'));
-  } catch {
-    return null;
-  }
 }
 
 function textLen(s) {
@@ -79,7 +72,7 @@ export function capFolderCases(dir, { maxCases = 10 } = {}) {
   if (files.length <= maxCases) return { kept: files.length, deleted: 0 };
 
   const ranked = files
-    .map(f => ({ f, obj: readJsonSafe(f) }))
+    .map(f => ({ f, obj: readJsonFileSafe(f) }))
     .map(x => ({ f: x.f, obj: x.obj, score: caseSizeScore(x.obj) }))
     .sort((a, b) => (a.score - b.score) || a.f.localeCompare(b.f));
 
@@ -112,7 +105,7 @@ export function refreshFolderReport(dir, { id, title, description, maxCases = 10
 
   let shortest = null;
   for (const f of files) {
-    const obj = readJsonSafe(f);
+    const obj = readJsonFileSafe(f);
     if (!obj) continue;
     const score = caseSizeScore(obj);
     if (!shortest || score < shortest.score) shortest = { f, obj, score };

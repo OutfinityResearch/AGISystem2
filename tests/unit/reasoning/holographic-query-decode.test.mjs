@@ -22,8 +22,9 @@ import { Session } from '../../../src/runtime/session.mjs';
     const ops = session.reasoningStats.operations || {};
     assert.ok((ops.holo_domain_decode || 0) >= 1);
 
-    // We run symbolic supplement; with a single explicit fact, the HDC and symbolic sets should match.
-    assert.equal(session.reasoningStats.hdcEquivalentOps, 1);
+    // Decision D4: when HDC validates, holographicPriority query skips symbolic supplement.
+    assert.ok((ops.holo_skip_symbolic_supplement || 0) >= 1);
+    assert.equal(session.reasoningStats.hdcEquivalentOps, 0);
 
     // But method selection can still prefer symbolic (by priority), so HDC "final" may be 0 here.
     assert.ok(session.reasoningStats.hdcUsefulOps === 0 || session.reasoningStats.hdcUsefulOps === 1);

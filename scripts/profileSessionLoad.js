@@ -23,10 +23,15 @@ import { initHDC } from '../src/hdc/facade.mjs';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 const CONFIG_ROOT = join(ROOT, 'config');
+const DOMAIN_ROOT = join(ROOT, 'evals', 'domains');
 const STRESS_ROOT = join(ROOT, 'evals', 'stress');
 
 const CONFIG_ORDER = [
   'Core',
+  'Constraints'
+];
+
+const DOMAIN_ORDER = [
   'Anthropology',
   'Biology',
   'Geography',
@@ -132,6 +137,14 @@ async function buildConfigPlan() {
   const plan = [];
   for (const dirName of CONFIG_ORDER) {
     const dirPath = join(CONFIG_ROOT, dirName);
+    if (!existsSync(dirPath)) continue;
+    const files = (await loadIndexOrder(dirPath)) || (await listSys2Files(dirPath));
+    for (const file of files) {
+      plan.push(join(dirPath, file));
+    }
+  }
+  for (const dirName of DOMAIN_ORDER) {
+    const dirPath = join(DOMAIN_ROOT, dirName);
     if (!existsSync(dirPath)) continue;
     const files = (await loadIndexOrder(dirPath)) || (await listSys2Files(dirPath));
     for (const file of files) {
@@ -343,4 +356,3 @@ main().catch(err => {
   console.error('profileSessionLoad failed:', err?.message || err);
   process.exitCode = 1;
 });
-

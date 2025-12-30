@@ -6,6 +6,7 @@ import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { isVector, listStrategies } from '../../../src/hdc/facade.mjs';
 import { getStrategy } from '../../../src/hdc/strategies/index.mjs';
+import { Session } from '../../../src/runtime/session.mjs';
 
 describe('isVector - Multi-Strategy Support', () => {
   test('should detect dense-binary vectors', () => {
@@ -36,10 +37,17 @@ describe('isVector - Multi-Strategy Support', () => {
     const strategies = listStrategies();
 
     for (const strategyId of strategies) {
-      const strategy = getStrategy(strategyId);
-      const geometry = strategyId === 'sparse-polynomial' ? 4 :
-                       (strategyId === 'metric-affine' || strategyId === 'metric-affine-elastic') ? 32 : 2048;
-      const vec = strategy.createRandom(geometry);
+      let vec;
+      if (strategyId === 'exact') {
+        const session = new Session({ hdcStrategy: 'exact', geometry: 256, reasoningPriority: 'symbolicPriority', autoLoadCore: false });
+        vec = session.hdc.createFromName('Alice', 256, 'test');
+        session.close();
+      } else {
+        const strategy = getStrategy(strategyId);
+        const geometry = strategyId === 'sparse-polynomial' ? 4 :
+          (strategyId === 'metric-affine' || strategyId === 'metric-affine-elastic') ? 32 : 2048;
+        vec = strategy.createRandom(geometry);
+      }
 
       assert.ok(isVector(vec), `${strategyId} vector should be detected by isVector()`);
     }

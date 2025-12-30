@@ -10,8 +10,9 @@
 import { getStrategy } from './facade.mjs';
 
 const STRATEGY_INSTANCE_PROP = '__sys2StrategyInstance';
+const SESSION_PROP = '__sys2Session';
 
-function attachStrategyInstance(vector, strategy) {
+function attachStrategyInstance(vector, strategy, session = null) {
   if (!vector || typeof vector !== 'object') return vector;
   try {
     if (!Object.isExtensible(vector)) return vector;
@@ -21,6 +22,13 @@ function attachStrategyInstance(vector, strategy) {
       enumerable: false,
       configurable: true
     });
+    if (session) {
+      Object.defineProperty(vector, SESSION_PROP, {
+        value: session,
+        enumerable: false,
+        configurable: true
+      });
+    }
   } catch {
     // Best-effort tagging; some vectors may be non-extensible.
   }
@@ -48,22 +56,22 @@ export function createHDCContext({ strategyId, geometry, session = null } = {}) 
     strategy,
 
     // Factory
-    createZero: (geo = geometry) => attachStrategyInstance(strategy.createZero(geo), strategy),
-    createRandom: (geo = geometry, seed = null) => attachStrategyInstance(strategy.createRandom(geo, seed), strategy),
-    createFromName: (name, geo = geometry, theoryId = 'default') => attachStrategyInstance(strategy.createFromName(name, geo, theoryId), strategy),
-    deserialize: (serialized) => attachStrategyInstance(strategy.deserialize(serialized), strategy),
+    createZero: (geo = geometry) => attachStrategyInstance(strategy.createZero(geo), strategy, session),
+    createRandom: (geo = geometry, seed = null) => attachStrategyInstance(strategy.createRandom(geo, seed), strategy, session),
+    createFromName: (name, geo = geometry, theoryId = 'default') => attachStrategyInstance(strategy.createFromName(name, geo, theoryId), strategy, session),
+    deserialize: (serialized) => attachStrategyInstance(strategy.deserialize(serialized), strategy, session),
 
     // Ops
-    bind: (a, b) => attachStrategyInstance(strategy.bind(a, b), strategy),
-    bindAll: (...vectors) => attachStrategyInstance(strategy.bindAll(...vectors), strategy),
-    bundle: (vectors, tieBreaker = null) => attachStrategyInstance(strategy.bundle(vectors, tieBreaker), strategy),
-    unbind: (composite, component) => attachStrategyInstance(strategy.unbind(composite, component), strategy),
+    bind: (a, b) => attachStrategyInstance(strategy.bind(a, b), strategy, session),
+    bindAll: (...vectors) => attachStrategyInstance(strategy.bindAll(...vectors), strategy, session),
+    bundle: (vectors, tieBreaker = null) => attachStrategyInstance(strategy.bundle(vectors, tieBreaker), strategy, session),
+    unbind: (composite, component) => attachStrategyInstance(strategy.unbind(composite, component), strategy, session),
     similarity: (a, b) => strategy.similarity(a, b),
     distance: (a, b) => strategy.distance(a, b),
     topKSimilar: (query, vocabulary, k = 5) => strategy.topKSimilar(query, vocabulary, k, session),
 
     // Utils
-    clone: (v) => attachStrategyInstance(strategy.clone(v), strategy),
+    clone: (v) => attachStrategyInstance(strategy.clone(v), strategy, session),
     equals: (a, b) => strategy.equals(a, b),
     serialize: (v) => strategy.serialize(v),
     serializeKB: (facts) => strategy.serializeKB(facts),

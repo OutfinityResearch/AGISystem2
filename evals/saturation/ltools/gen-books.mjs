@@ -3,7 +3,7 @@
  * Generate saturation “books” with fixed chapter count and increasing
  * ideas-per-chapter / per-idea “metadata width”.
  *
- * Writes into: evals/saturation/books/
+ * Writes into: evals/saturation/books/ (this script lives in evals/saturation/ltools/)
  */
 
 import fs from 'node:fs';
@@ -155,4 +155,3 @@ function main() {
 }
 
 main();
-

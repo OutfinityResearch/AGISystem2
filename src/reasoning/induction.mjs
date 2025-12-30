@@ -80,8 +80,11 @@ export class InductionEngine {
    */
   findHierarchyPatterns(minExamples) {
     const patterns = [];
-    this.session.reasoningStats.kbScans += this.session.kbFacts.length;
-    const isaFacts = this.session.kbFacts.filter(f => f.metadata?.operator === 'isA');
+    const isaFacts = [];
+    for (const f of this.session.kbFacts) {
+      this.session.reasoningStats.kbScans++;
+      if (f?.metadata?.operator === 'isA') isaFacts.push(f);
+    }
 
     // Group by parent
     const parentGroups = new Map();
@@ -169,12 +172,12 @@ export class InductionEngine {
    */
   findPropertyPatterns(minExamples) {
     const patterns = [];
-    this.session.reasoningStats.kbScans += this.session.kbFacts.length;
-    const propertyFacts = this.session.kbFacts.filter(f =>
-      f.metadata?.operator === 'hasProperty' ||
-      f.metadata?.operator === 'can' ||
-      f.metadata?.operator === 'must'
-    );
+    const propertyFacts = [];
+    for (const f of this.session.kbFacts) {
+      this.session.reasoningStats.kbScans++;
+      const op = f?.metadata?.operator;
+      if (op === 'hasProperty' || op === 'can' || op === 'must') propertyFacts.push(f);
+    }
 
     // Group by property
     const propertyGroups = new Map();

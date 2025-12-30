@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import { join } from 'node:path';
 import { ensureDir } from './fs-utils.mjs';
 import { QUARANTINE_DIR, C } from './constants.mjs';
+import { readJsonFileSafe } from '../libs/json.mjs';
 
 export function analyzeQuarantine() {
   ensureDir(QUARANTINE_DIR);
@@ -13,7 +14,8 @@ export function analyzeQuarantine() {
 
   const stats = { total: files.length, byCategory: {}, bySource: {}, byReason: {} };
   for (const file of files) {
-    const data = JSON.parse(fs.readFileSync(join(QUARANTINE_DIR, file), 'utf8'));
+    const data = readJsonFileSafe(join(QUARANTINE_DIR, file));
+    if (!data) continue;
     stats.byCategory[data.category] = (stats.byCategory[data.category] || 0) + 1;
     const src = data.example?.source || 'unknown';
     stats.bySource[src] = (stats.bySource[src] || 0) + 1;
@@ -40,4 +42,3 @@ export function analyzeQuarantine() {
   }
   console.log();
 }
-

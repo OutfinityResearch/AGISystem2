@@ -118,6 +118,28 @@ describe('Parser', () => {
     });
   });
 
+  describe('graphs', () => {
+    test('should parse return with statement-style prefix call as Compound', () => {
+      const ast = parse(`
+        @G:G graph x
+          return And $x (Or $x $x)
+        end
+      `);
+      assert.equal(ast.statements.length, 1);
+      const g = ast.statements[0];
+      assert.equal(g.type, 'GraphDeclaration');
+      assert.ok(g.returnExpr);
+      assert.equal(g.returnExpr.type, 'Compound');
+      assert.equal(g.returnExpr.operator.type, 'Identifier');
+      assert.equal(g.returnExpr.operator.name, 'And');
+      assert.equal(g.returnExpr.args.length, 2);
+      assert.equal(g.returnExpr.args[0].type, 'Reference');
+      assert.equal(g.returnExpr.args[0].name, 'x');
+      assert.equal(g.returnExpr.args[1].type, 'Compound');
+      assert.equal(g.returnExpr.args[1].operator.name, 'Or');
+    });
+  });
+
   describe('references', () => {
     test('should parse $reference in expressions', () => {
       // $a is a reference to a stored variable

@@ -1,11 +1,14 @@
 import fs from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { readJsonFileSafe } from '../libs/json.mjs';
 
 function loadPatterns() {
   const __dirname = dirname(fileURLToPath(import.meta.url));
   const file = join(__dirname, 'patterns.json');
-  return JSON.parse(fs.readFileSync(file, 'utf8'));
+  const parsed = readJsonFileSafe(file, { maxBytes: 512 * 1024 });
+  if (!parsed) throw new Error(`Failed to load patterns.json: ${file}`);
+  return parsed;
 }
 
 const PATTERNS = loadPatterns();

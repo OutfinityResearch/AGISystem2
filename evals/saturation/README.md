@@ -13,7 +13,7 @@ fixed-size candidate pool (default 10):
 - POS queries compare mostly within in-book ideas (reverse index hit).
 - NEG queries compare against decoys only (reverse index miss).
 
-Run (default uses small geometries for a fast sweep and prints per-book details):
+Run (default uses a fast sweep; use `--details` for per-book query details):
 
 ```bash
 node evals/runSaturationEval.mjs
@@ -25,7 +25,9 @@ Useful options:
 node evals/runSaturationEval.mjs --full
 node evals/runSaturationEval.mjs --huge
 node evals/runSaturationEval.mjs --extra-huge
+node evals/runSaturationEval.mjs --regenerate
 node evals/runSaturationEval.mjs --strategies=dense-binary,metric-affine,metric-affine-elastic
+node evals/runSaturationEval.mjs --details
 node evals/runSaturationEval.mjs --no-color
 ```
 
@@ -36,9 +38,10 @@ Books:
 
 - Place runnable books in `evals/saturation/books/` and name them `bookNN.sys2`.
 - Start from `evals/saturation/example-book.sys2` as a template.
-- Generated stress books: `node evals/saturation/gen-books.mjs` writes `book_10cap_100.sys2` and `book_10cap_1000.sys2`.
+- Generated stress books: `node evals/saturation/ltools/gen-books.mjs` writes `book_10cap_100.sys2` and `book_10cap_1000.sys2`.
+- Domain-based stresspedia books live in `evals/saturation/stresspedia-books/` and are part of the normal suite. Missing domain books are generated automatically from `evals/stress/*.sys2` on first run; overwrite with `node evals/runSaturationEval.mjs --regenerate` (or run `node evals/saturation/ltools/gen-stresspedia-books.mjs --regenerate` directly).
 
-Each book file includes two marker lines used by the runner:
+Each book file includes two marker lines used by the runner (the `op=` value can be any declared relation; the template books use `Mentions`, while generated stresspedia books use `StresspediaEntry`):
 
 `# SAT_QUERY_POS op=Mentions book=BookXX key=... expect=...`
 

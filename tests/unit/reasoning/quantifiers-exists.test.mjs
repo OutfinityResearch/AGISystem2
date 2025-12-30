@@ -11,7 +11,7 @@ describe('Reasoning: Exists / Not(Exists) quantifiers', () => {
       closedWorldAssumption: false,
       rejectContradictions: false
     });
-    const core = session.loadCore({ includeIndex: false });
+    const core = session.loadCore({ includeIndex: true });
     assert.equal(core.success, true);
 
     session.learn(`
@@ -38,7 +38,7 @@ describe('Reasoning: Exists / Not(Exists) quantifiers', () => {
       closedWorldAssumption: false,
       rejectContradictions: false
     });
-    const core = session.loadCore({ includeIndex: false });
+    const core = session.loadCore({ includeIndex: true });
     assert.equal(core.success, true);
 
     session.learn(`
@@ -51,4 +51,3 @@ describe('Reasoning: Exists / Not(Exists) quantifiers', () => {
     assert.equal(res.method, 'exists_witness');
   });
 });
-

@@ -400,7 +400,7 @@ export class Parser {
       // Check for 'return' keyword
       if (this.check(TOKEN_TYPES.KEYWORD) && this.peek().value === 'return') {
         this.advance(); // consume 'return'
-        returnExpr = this.parseExpression();
+        returnExpr = this.parseReturnExpression();
         this.skipNewlines();
         continue;
       }
@@ -430,6 +430,33 @@ export class Parser {
       line,
       column
     );
+  }
+
+  /**
+   * Parse graph return expression.
+   *
+   * Historically, return lines were written either as:
+   *   return $x
+   * or (in many generated stress theories):
+   *   return And $x (And $y ...)
+   *
+   * The latter uses the statement-style prefix call syntax without parentheses.
+   * In graph bodies we allow that form specifically for `return`, by parsing
+   * the entire remainder of the line as a single Compound expression.
+   */
+  parseReturnExpression() {
+    const first = this.parseExpression();
+    if (!first) return null;
+
+    const args = [];
+    while (!this.isStatementEnd() && !this.isEof()) {
+      const arg = this.parseExpression();
+      if (!arg) break;
+      args.push(arg);
+    }
+
+    if (args.length === 0) return first;
+    return new Compound(first, args, first.line, first.column);
   }
 
   /**

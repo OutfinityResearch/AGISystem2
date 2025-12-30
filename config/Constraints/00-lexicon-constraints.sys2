@@ -1,0 +1,9 @@
+# Constraints - Lexicon
+# Value vocabulary for the Constraints layer.
+#
+# This file is intentionally a `00-lexicon*.sys2` module so the stress checker treats these
+# as allowed value-vocabulary atoms (not "atom soup").
+
+@Safe:Safe __State
+@Unsafe:Unsafe __State
+

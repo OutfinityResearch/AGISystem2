@@ -7,6 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { readJsonFileSafe } from '../libs/json.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const quarantineDir = join(__dirname, '..', 'quarantine');
@@ -56,14 +57,13 @@ function findShortestExample(bugDir) {
   let shortestLen = Infinity;
 
   for (const file of jsonFiles) {
-    try {
-      const data = JSON.parse(fs.readFileSync(join(bugDir, file), 'utf8'));
-      const contextLen = (data.example?.context || '').length;
-      if (contextLen < shortestLen && contextLen > 0) {
-        shortestLen = contextLen;
-        shortest = { file, data };
-      }
-    } catch (e) { /* skip */ }
+    const data = readJsonFileSafe(join(bugDir, file));
+    if (!data) continue;
+    const contextLen = (data.example?.context || '').length;
+    if (contextLen < shortestLen && contextLen > 0) {
+      shortestLen = contextLen;
+      shortest = { file, data };
+    }
   }
 
   return shortest;
@@ -144,7 +144,8 @@ let processed = 0;
 
 for (const file of files) {
   const filePath = join(quarantineDir, file);
-  const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  const data = readJsonFileSafe(filePath);
+  if (!data) continue;
   const classification = classifyCase(data);
 
   if (!classification) continue;

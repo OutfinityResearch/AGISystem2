@@ -10,7 +10,7 @@ describe('RuleTaker regressions (translator + reasoning)', () => {
       reasoningProfile: 'theoryDriven'
     });
 
-    const coreLoaded = session.loadCore({ includeIndex: false });
+    const coreLoaded = session.loadCore({ includeIndex: true });
     assert.equal(coreLoaded.success, true, JSON.stringify(coreLoaded.errors));
 
     session.learn(`
@@ -32,7 +32,7 @@ describe('RuleTaker regressions (translator + reasoning)', () => {
       closedWorldAssumption: true
     });
 
-    const coreLoaded = session.loadCore({ includeIndex: false });
+    const coreLoaded = session.loadCore({ includeIndex: true });
     assert.equal(coreLoaded.success, true, JSON.stringify(coreLoaded.errors));
 
     session.learn('hasProperty Bob big');
@@ -49,7 +49,7 @@ describe('RuleTaker regressions (translator + reasoning)', () => {
       reasoningProfile: 'theoryDriven'
     });
 
-    const coreLoaded = session.loadCore({ includeIndex: false });
+    const coreLoaded = session.loadCore({ includeIndex: true });
     assert.equal(coreLoaded.success, true, JSON.stringify(coreLoaded.errors));
 
     session.learn(`
@@ -74,7 +74,7 @@ describe('RuleTaker regressions (translator + reasoning)', () => {
       closedWorldAssumption: true
     });
 
-    const coreLoaded = session.loadCore({ includeIndex: false });
+    const coreLoaded = session.loadCore({ includeIndex: true });
     assert.equal(coreLoaded.success, true, JSON.stringify(coreLoaded.errors));
 
     session.learn(`
@@ -100,7 +100,7 @@ describe('RuleTaker regressions (translator + reasoning)', () => {
       reasoningProfile: 'theoryDriven'
     });
 
-    const coreLoaded = session.loadCore({ includeIndex: false });
+    const coreLoaded = session.loadCore({ includeIndex: true });
     assert.equal(coreLoaded.success, true, JSON.stringify(coreLoaded.errors));
 
     session.learn(`

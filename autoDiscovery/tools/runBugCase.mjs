@@ -18,6 +18,7 @@ import { translateExample, resetRefCounter } from '../../src/nlp/nl2dsl.mjs';
 import { Session } from '../../src/runtime/session.mjs';
 import { REASONING_PRIORITY } from '../../src/core/constants.mjs';
 import { validateQuestionDsl } from '../discovery/session.mjs';
+import { readJsonFileSafe } from '../libs/json.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..', '..');
@@ -37,7 +38,7 @@ const C = {
 };
 
 function loadCoreTheories(session) {
-  const result = session.loadCore({ includeIndex: false });
+  const result = session.loadCore({ includeIndex: true });
   if (result.success !== true) {
     const msg = result.errors?.map(e => `${e.file}: ${e.errors?.join('; ')}`).join(' | ') || 'unknown error';
     throw new Error(`loadCore failed: ${msg}`);
@@ -82,10 +83,9 @@ async function runBugCase(caseFile, options = {}) {
   }
 
   let bugCase;
-  try {
-    bugCase = JSON.parse(fs.readFileSync(caseFile, 'utf8'));
-  } catch (err) {
-    console.error(`${C.red}Error: Invalid JSON: ${err.message}${C.reset}`);
+  bugCase = readJsonFileSafe(caseFile);
+  if (!bugCase) {
+    console.error(`${C.red}Error: Invalid JSON (or too large): ${caseFile}${C.reset}`);
     return { success: false, error: 'invalid_json' };
   }
 

@@ -24,23 +24,26 @@ function loadCore(session) {
 }
 
 function loadDomainIndex(session, domainName) {
-  const domainPath = path.join('./config', domainName);
+  const domainPath = path.join('./evals/domains', domainName);
   const indexPath = path.join(domainPath, 'index.sys2');
   const index = fs.readFileSync(indexPath, 'utf8');
   const loadRegex = /@_\s+Load\s+"([^"]+)"/g;
   let match;
   while ((match = loadRegex.exec(index)) !== null) {
-    const rel = match[1].replace('./', '');
-    loadSys2File(session, path.join(domainPath, rel));
+    const raw = match[1];
+    const rel = raw.startsWith('./') ? raw.slice(2) : raw;
+    const resolved = rel.startsWith('evals/') || rel.startsWith('config/')
+      ? path.join('.', rel)
+      : path.join(domainPath, rel);
+    loadSys2File(session, resolved);
   }
 }
 
-describe('Config domain theory loading', () => {
-  test('All config domains load cleanly after Core', () => {
-    const domains = fs.readdirSync('./config')
-      .filter(d => fs.statSync(path.join('./config', d)).isDirectory())
-      .filter(d => d !== 'Core')
-      .filter(d => fs.existsSync(path.join('./config', d, 'index.sys2')))
+describe('Domain theory loading', () => {
+  test('All evals/domains load cleanly after Core', () => {
+    const domains = fs.readdirSync('./evals/domains')
+      .filter(d => fs.statSync(path.join('./evals/domains', d)).isDirectory())
+      .filter(d => fs.existsSync(path.join('./evals/domains', d, 'index.sys2')))
       .sort();
 
     for (const domain of domains) {

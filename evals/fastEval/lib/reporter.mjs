@@ -162,6 +162,15 @@ export function reportSuiteSummary(summary, cases = []) {
     console.log(`  ${colors.yellow}Partial:${colors.reset} ${partialPass}/${total}`);
   }
   console.log(`  ${colors.red}Failed:${colors.reset}  ${failed}/${total}`);
+  if (summary?.proofLint?.casesWithIssues > 0) {
+    const by = summary.proofLint.byIssue || {};
+    const parts = Object.entries(by)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 4)
+      .map(([k, v]) => `${k}=${v}`);
+    const detail = parts.length > 0 ? ` (${parts.join(', ')})` : '';
+    console.log(`  ${colors.yellow}Proof lint:${colors.reset} ${summary.proofLint.casesWithIssues}/${total}${detail}`);
+  }
   console.log();
 }
 
@@ -342,7 +351,7 @@ export function reportGlobalSummary(suiteResults) {
     aggregatedStats.hdcUsefulOps += stats.hdcUsefulOps || 0;
 
     const pct = suite.summary.total > 0
-      ? Math.floor((suite.summary.passed / suite.summary.total) * 100)
+      ? Math.round((suite.summary.passed / suite.summary.total) * 100)
       : 0;
 
     const statusColor = pct === 100 ? colors.green : pct >= 50 ? colors.yellow : colors.red;
@@ -366,7 +375,7 @@ export function reportGlobalSummary(suiteResults) {
 
     const hdcAsked = (stats.queries || 0) + (stats.proofs || 0);
     const hdcUsed = stats.hdcUsefulOps || 0;
-    const hdcPct = hdcAsked > 0 ? Math.floor((hdcUsed / hdcAsked) * 100) : 0;
+    const hdcPct = hdcAsked > 0 ? Math.round((hdcUsed / hdcAsked) * 100) : 0;
     const hdcStr = hdcAsked > 0 ? `${hdcPct}%` : '-';
     const hdcCountStr = hdcAsked > 0 ? `${hdcUsed}/${hdcAsked}` : '-';
 
@@ -396,7 +405,7 @@ export function reportGlobalSummary(suiteResults) {
   console.log(`${colors.dim}${'─'.repeat(142)}${colors.reset}`);
 
   // Totals row
-  const overallPct = totalCases > 0 ? Math.floor((totalPassed / totalCases) * 100) : 0;
+  const overallPct = totalCases > 0 ? Math.round((totalPassed / totalCases) * 100) : 0;
   const overallColor = overallPct === 100 ? colors.green : overallPct >= 50 ? colors.yellow : colors.red;
   const avgProofLen = aggregatedStats.proofs > 0
     ? (aggregatedStats.totalProofSteps / aggregatedStats.proofs).toFixed(1)
@@ -418,7 +427,7 @@ export function reportGlobalSummary(suiteResults) {
   }
 
   const totalHdcPct = aggregatedStats.hdcOps > 0
-    ? Math.floor((aggregatedStats.hdcUsefulOps / aggregatedStats.hdcOps) * 100)
+    ? Math.round((aggregatedStats.hdcUsefulOps / aggregatedStats.hdcOps) * 100)
     : 0;
   const totalHdcStr = aggregatedStats.hdcOps > 0 ? `${totalHdcPct}%` : '-';
   const totalHdcCountStr = aggregatedStats.hdcOps > 0
@@ -584,24 +593,26 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
   }
 
   // Aggregated stats per strategy for final comparison
-  const strategyTotals = {};
-  for (const strategyId of strategies) {
-    strategyTotals[strategyId] = {
-      passed: 0,
-      total: 0,
-      // HDC utilization metrics:
-      // - hdcTotal: total query+prove ops executed
-      // - hdcTried: ops where an HDC attempt was made (Master Equation / HDC-first engines)
-      // - hdcValidated: ops where HDC produced at least one acceptable result (validated or trusted)
-      // - hdcEquivalent: ops where HDC result set matches symbolic result set
-      // - hdcFinal: ops where the final chosen method was HDC-based (method starts with "hdc")
-      hdcTotal: 0,
-      hdcTried: 0,
-      hdcValidated: 0,
-      hdcEquivalent: 0,
-      hdcFinal: 0,
-      kbScans: 0,
-      simChecks: 0,
+	  const strategyTotals = {};
+	  for (const strategyId of strategies) {
+	    strategyTotals[strategyId] = {
+	      passed: 0,
+	      total: 0,
+	      // HDC utilization metrics:
+	      // - hdcTotal: total query+prove ops executed
+	      // - hdcTried: ops where an HDC attempt was made (Master Equation / HDC-first engines)
+	      // - hdcValidated: ops where HDC produced at least one acceptable result (validated or trusted)
+	      // - hdcCompared: ops where we compared HDC vs symbolic (only when both are available)
+	      // - hdcEquivalent: ops where HDC result set matches symbolic result set (subset of compared)
+	      // - hdcFinal: ops where the final chosen method was HDC-based (method starts with "hdc")
+	      hdcTotal: 0,
+	      hdcTried: 0,
+	      hdcValidated: 0,
+	      hdcCompared: 0,
+	      hdcEquivalent: 0,
+	      hdcFinal: 0,
+	      kbScans: 0,
+	      simChecks: 0,
       totalSteps: 0,
       totalMs: 0,
       // Failure breakdown by phase
@@ -626,18 +637,20 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
       const summary = suiteSummaries[suiteKey][strategyId];
       if (!summary) continue;
 
-      const stats = summary.reasoningStats || {};
-      const durationMs = summary.durationMs || 0;
-      const hdcFinal = stats.hdcUsefulOps || 0;
-      const hdcEq = stats.hdcEquivalentOps || 0;
-      const hdcTot = (stats.queries || 0) + (stats.proofs || 0);
-      const scans = stats.kbScans || 0;
+	      const stats = summary.reasoningStats || {};
+	      const durationMs = summary.durationMs || 0;
+	      const hdcFinal = stats.hdcUsefulOps || 0;
+	      const hdcEq = stats.hdcEquivalentOps || 0;
+	      const hdcCompared = stats.hdcComparedOps || 0;
+	      const hdcTot = (stats.queries || 0) + (stats.proofs || 0);
+	      const scans = stats.kbScans || 0;
 
       strategyTotals[strategyId].passed += summary.passed;
       strategyTotals[strategyId].total += summary.total;
-      strategyTotals[strategyId].hdcFinal += hdcFinal;
-      strategyTotals[strategyId].hdcTotal += hdcTot;
-      strategyTotals[strategyId].hdcEquivalent += hdcEq;
+	      strategyTotals[strategyId].hdcFinal += hdcFinal;
+	      strategyTotals[strategyId].hdcTotal += hdcTot;
+	      strategyTotals[strategyId].hdcEquivalent += hdcEq;
+	      strategyTotals[strategyId].hdcCompared += hdcCompared;
 
       // Tried/validated are counted from engine-specific stats.
       // Note: in symbolicPriority, QueryEngine may still attempt HDC Master Equation (hdcQueries/hdcSuccesses).
@@ -768,7 +781,7 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
           continue;
         }
 
-        const pct = summary.total > 0 ? Math.floor((summary.passed / summary.total) * 100) : 0;
+        const pct = summary.total > 0 ? Math.round((summary.passed / summary.total) * 100) : 0;
         const stats = summary.reasoningStats || {};
         const durationMs = summary.durationMs || 0;
 
@@ -800,16 +813,16 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
     return t.failedReasoning > 0 || t.failedNlTranslation > 0 || t.failedNlParsing > 0;
   });
 
-  const columns = [
-    { key: 'strategy', title: 'Strategy', align: 'left' },
-    { key: 'pass', title: 'Pass Rate', align: 'right' },
-    { key: 'hdcTried', title: 'HDC Tried', align: 'right' },
-    { key: 'hdcValid', title: 'HDC Valid', align: 'right' },
-    { key: 'hdcEq', title: 'HDC Eq', align: 'right' },
-    { key: 'hdcFinal', title: 'HDC Final', align: 'right' },
-    { key: 'hdcOps', title: 'HDC Ops', align: 'right' },
-    { key: 'kb', title: 'KB Scans', align: 'right' },
-    { key: 'sim', title: 'Sim Checks', align: 'right' },
+	  const columns = [
+	    { key: 'strategy', title: 'Strategy', align: 'left' },
+	    { key: 'pass', title: 'Pass Rate', align: 'right' },
+	    { key: 'hdcTried', title: 'HDC Tried', align: 'right' },
+	    { key: 'hdcValid', title: 'HDC Valid', align: 'right' },
+	    { key: 'hdcMatch', title: 'HDC Match', align: 'right' },
+	    { key: 'hdcFinal', title: 'HDC Final', align: 'right' },
+	    { key: 'hdcOps', title: 'HDC Ops', align: 'right' },
+	    { key: 'kb', title: 'KB Scans', align: 'right' },
+	    { key: 'sim', title: 'Sim Checks', align: 'right' },
     { key: 'time', title: 'Time', align: 'right' }
   ];
 
@@ -824,32 +837,33 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
   const rows = orderedStrategies.map(strategyId => {
     const totals = strategyTotals[strategyId];
 
-    const passPct = totals.total > 0 ? Math.floor((totals.passed / totals.total) * 100) : 0;
+    const passPct = totals.total > 0 ? Math.round((totals.passed / totals.total) * 100) : 0;
     const passColor = passPct === 100 ? colors.green : passPct >= 50 ? colors.yellow : colors.red;
     const passCell = `${passColor}${passPct}% (${totals.passed}/${totals.total})${colors.reset}`;
 
     const hasAsked = totals.hdcTotal > 0;
 
-    const triedPct = hasAsked ? Math.floor((totals.hdcTried / totals.hdcTotal) * 100) : 0;
+    const triedPct = hasAsked ? Math.round((totals.hdcTried / totals.hdcTotal) * 100) : 0;
     const triedColor = hasAsked && triedPct >= 50 ? colors.cyan : colors.dim;
     const triedCell = hasAsked
       ? `${triedColor}${triedPct}% (${totals.hdcTried}/${totals.hdcTotal})${colors.reset}`
       : `${colors.dim}-${colors.reset}`;
 
     const hasTried = totals.hdcTried > 0;
-    const validPct = hasTried ? Math.floor((totals.hdcValidated / totals.hdcTried) * 100) : 0;
+    const validPct = hasTried ? Math.round((totals.hdcValidated / totals.hdcTried) * 100) : 0;
     const validColor = hasTried && validPct >= 50 ? colors.cyan : colors.dim;
-    const validCell = hasTried
-      ? `${validColor}${validPct}% (${totals.hdcValidated}/${totals.hdcTried})${colors.reset}`
-      : `${colors.dim}-${colors.reset}`;
+	    const validCell = hasTried
+	      ? `${validColor}${validPct}% (${totals.hdcValidated}/${totals.hdcTried})${colors.reset}`
+	      : `${colors.dim}-${colors.reset}`;
+	
+	    const hasCompared = totals.hdcCompared > 0;
+	    const matchPct = hasCompared ? Math.round((totals.hdcEquivalent / totals.hdcCompared) * 100) : 0;
+	    const matchColor = hasCompared && matchPct >= 50 ? colors.cyan : colors.dim;
+	    const matchCell = hasCompared
+	      ? `${matchColor}${matchPct}% (${totals.hdcEquivalent}/${totals.hdcCompared})${colors.reset}`
+	      : `${colors.dim}-${colors.reset}`;
 
-    const eqPct = hasAsked ? Math.floor((totals.hdcEquivalent / totals.hdcTotal) * 100) : 0;
-    const eqColor = hasAsked && eqPct >= 50 ? colors.cyan : colors.dim;
-    const eqCell = hasAsked
-      ? `${eqColor}${eqPct}% (${totals.hdcEquivalent}/${totals.hdcTotal})${colors.reset}`
-      : `${colors.dim}-${colors.reset}`;
-
-    const finalPct = hasAsked ? Math.floor((totals.hdcFinal / totals.hdcTotal) * 100) : 0;
+    const finalPct = hasAsked ? Math.round((totals.hdcFinal / totals.hdcTotal) * 100) : 0;
     const finalColor = hasAsked && finalPct >= 50 ? colors.cyan : colors.dim;
     const finalCell = hasAsked
       ? `${finalColor}${finalPct}% (${totals.hdcFinal}/${totals.hdcTotal})${colors.reset}`
@@ -859,16 +873,16 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
       ? `${colors.cyan}${totals.totalMs}ms${colors.reset}`
       : `${totals.totalMs}ms`;
 
-    const base = {
-      strategy: shortStrategyName(strategyId),
-      pass: passCell,
-      hdcTried: triedCell,
-      hdcValid: validCell,
-      hdcEq: eqCell,
-      hdcFinal: finalCell,
-      hdcOps: hasAsked ? `${totals.hdcTotal}` : `${colors.dim}-${colors.reset}`,
-      kb: formatNum(totals.kbScans),
-      sim: formatNum(totals.simChecks),
+	    const base = {
+	      strategy: shortStrategyName(strategyId),
+	      pass: passCell,
+	      hdcTried: triedCell,
+	      hdcValid: validCell,
+	      hdcMatch: matchCell,
+	      hdcFinal: finalCell,
+	      hdcOps: hasAsked ? `${totals.hdcTotal}` : `${colors.dim}-${colors.reset}`,
+	      kb: formatNum(totals.kbScans),
+	      sim: formatNum(totals.simChecks),
       time: timeCell
     };
 
@@ -927,16 +941,16 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
 
   console.log(`${colors.dim}${'─'.repeat(totalWidth)}${colors.reset}`);
   console.log();
-  console.log(`${colors.dim}Legend (Configuration Totals):${colors.reset}`);
-  console.log(`${colors.dim}  HDC Ops:    Σ(queries + proofs) — total number of reasoning ops executed (query + prove).${colors.reset}`);
-  console.log(`${colors.dim}  HDC Tried:  Σ(hdcQueries + hdcUnbindAttempts + holographicProofs) — ops where an HDC attempt was made.${colors.reset}`);
-  console.log(`${colors.dim}  HDC Valid:  Σ(hdcSuccesses + holographicQueryHdcSuccesses + hdcProofSuccesses) — HDC attempts that produced at least one accepted result.${colors.reset}`);
-  console.log(`${colors.dim}  HDC Eq:     Σ(hdcEquivalentOps) — ops where the HDC result set matched the symbolic result set.${colors.reset}`);
-  console.log(`${colors.dim}  HDC Final:  Σ(hdcUsefulOps) — ops where the final chosen method was HDC-based (method starts with \"hdc\").${colors.reset}`);
-  console.log(`${colors.dim}  KB Scans:   Σ(kbScans) — number of KB scan/iteration steps performed by the engine.${colors.reset}`);
-  console.log(`${colors.dim}  Sim Checks: Σ(similarityChecks) — number of vector similarity computations performed.${colors.reset}`);
-  console.log(`${colors.dim}  Note: HDC Tried/Eq/Final are reported as % of HDC Ops; HDC Valid is reported as % of HDC Tried.${colors.reset}`);
-  console.log();
+	  console.log(`${colors.dim}Legend (Configuration Totals):${colors.reset}`);
+	  console.log(`${colors.dim}  HDC Ops:    Σ(queries + proofs) — total number of reasoning ops executed (query + prove).${colors.reset}`);
+	  console.log(`${colors.dim}  HDC Tried:  Σ(hdcQueries + hdcUnbindAttempts + holographicProofs) — ops where an HDC attempt was made.${colors.reset}`);
+	  console.log(`${colors.dim}  HDC Valid:  Σ(hdcSuccesses + holographicQueryHdcSuccesses + hdcProofSuccesses) — HDC attempts that produced at least one accepted result.${colors.reset}`);
+	  console.log(`${colors.dim}  HDC Match:  Σ(hdcEquivalentOps)/Σ(hdcComparedOps) — % of comparisons where HDC answer set matched the symbolic set (only when symbolic runs).${colors.reset}`);
+	  console.log(`${colors.dim}  HDC Final:  Σ(hdcUsefulOps) — ops where the final chosen method was HDC-based (method starts with \"hdc\").${colors.reset}`);
+	  console.log(`${colors.dim}  KB Scans:   Σ(kbScans) — number of KB scan/iteration steps performed by the engine.${colors.reset}`);
+	  console.log(`${colors.dim}  Sim Checks: Σ(similarityChecks) — number of vector similarity computations performed.${colors.reset}`);
+	  console.log(`${colors.dim}  Note: HDC Tried/Final are reported as % of HDC Ops; HDC Valid is reported as % of HDC Tried; HDC Match is reported as % of comparisons.${colors.reset}`);
+	  console.log();
 
   // Speed comparison
   const times = orderedStrategies.map(s => ({ id: s, ms: strategyTotals[s].totalMs }));

@@ -5,6 +5,7 @@ import { CATEGORY, QUARANTINE_DIR } from './constants.mjs';
 import { ensureDir } from './fs-utils.mjs';
 import { detectKnownBugPattern, detectNlpBugPattern } from './patterns.mjs';
 import { writeBugCaseJson, writeNlpBugCaseJson } from './write-cases.mjs';
+import { readJsonFileSafe } from '../libs/json.mjs';
 
 export function processQuarantine({ translatorOptions = { autoDeclareUnknownOperators: true } } = {}) {
   ensureDir(QUARANTINE_DIR);
@@ -13,10 +14,8 @@ export function processQuarantine({ translatorOptions = { autoDeclareUnknownOper
 
   for (const file of files) {
     const filePath = join(QUARANTINE_DIR, file);
-    let data;
-    try {
-      data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    } catch {
+    const data = readJsonFileSafe(filePath);
+    if (!data) {
       moved.skipped++;
       continue;
     }

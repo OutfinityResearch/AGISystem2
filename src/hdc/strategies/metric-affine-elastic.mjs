@@ -29,7 +29,10 @@ function l1SimilarityBytes(aBytes, bBytes) {
   const D = aBytes.length;
   let l1 = 0;
   for (let i = 0; i < D; i++) l1 += Math.abs(aBytes[i] - bBytes[i]);
-  return 1 - (l1 / (D * MAX_BYTE));
+  const sim = 1 - (l1 / (D * MAX_BYTE));
+  if (sim <= 0) return 0;
+  if (sim >= 1) return 1;
+  return sim;
 }
 
 function xorBytes(out, aBytes, bBytes) {

@@ -16,7 +16,7 @@ import { parse } from '../../../src/parser/parser.mjs';
 
 test('Not(statement) vector depends on inner compound args (even when inner operator is a graph)', () => {
   const session = new Session({ geometry: 256, hdcStrategy: 'dense-binary' });
-  const core = session.loadCore({ includeIndex: false });
+  const core = session.loadCore({ includeIndex: true });
   assert.equal(core.success, true);
 
   const stmtY = parse('@goal:goal Not (isA Stella Yumpus)').statements[0];
@@ -28,4 +28,3 @@ test('Not(statement) vector depends on inner compound args (even when inner oper
   assert.equal(vecY.geometry, vecT.geometry);
   assert.notDeepEqual(Array.from(vecY.data), Array.from(vecT.data));
 });
-

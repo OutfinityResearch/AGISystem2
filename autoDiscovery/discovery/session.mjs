@@ -13,7 +13,7 @@ export function createSession(sessionConfig = {}) {
     ...sessionConfig
   });
 
-  const coreLoaded = session.loadCore({ includeIndex: false });
+  const coreLoaded = session.loadCore({ includeIndex: true });
   if (coreLoaded.success !== true) {
     const msg = coreLoaded.errors?.map(e => `${e.file}: ${e.errors?.join('; ')}`).join(' | ') || 'unknown error';
     throw new Error(`loadCore failed: ${msg}`);

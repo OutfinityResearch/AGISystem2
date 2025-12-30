@@ -1,0 +1,18 @@
+# Physics Domain Theory Index
+# This file loads all Physics domain theory files in the correct order
+# Based on hardcoded_theory_analysis.md Section 8.2 and 8.13
+
+# Load fundamental concepts first (types, categories, hierarchies)
+@_ Load "./00-concepts.sys2"
+
+# Load fundamental relations (predicates and operators)
+@_ Load "./01-relations.sys2"
+
+# Future extensions:
+# - 02-laws.sys2        # Physical laws and equations
+# - 03-constants.sys2   # Physical constants
+# - 04-units.sys2       # Unit conversions and relationships
+# - 05-kinematics.sys2  # Motion and kinematics
+# - 06-dynamics.sys2    # Forces and dynamics
+# - 07-energy.sys2      # Energy transformations
+# - 08-fields.sys2      # Field theory

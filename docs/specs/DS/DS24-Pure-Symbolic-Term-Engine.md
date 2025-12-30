@@ -3,7 +3,7 @@
 # DS24: Pure Symbolic Term Engine (Baseline Backend)
 #
 # **Document Version:** 1.0
-# **Status:** Proposed (design spec)
+# **Status:** Exploratory (not planned for implementation)
 # **Audience:** Runtime/Reasoning developers, eval authors
 # **Related:** DS02 (DSL), DS03 (Architecture), DS05/DS06 (Reasoning), DS16 (CSP), DS17 (Priority modes), DS19 (Proof real)
 #
@@ -27,6 +27,8 @@ This backend is designed for:
 - **Ablation studies**: “HDC vs pure symbolic” under the same DSL and test harness (FastEval).
 - **Deterministic proofs**: proofs are native derivation objects (DS19), not “decoded from vectors”.
 - **Extensibility**: performance-critical operators can be accelerated via **JavaScript extensions** while keeping semantics and proofs consistent (“fastEval path”).
+
+**Note (project status):** This document is kept as an exploratory design reference. Implementing a fully separate symbolic-term backend is intentionally **not** planned in the near term due to high compatibility and maintenance costs (proof rendering, graph/macro execution parity, semantic drift risk). When we need a “pure symbolic” baseline for performance comparisons, the preferred approach is to add a *symbolic-only profile* to the existing engine (disable HDC candidate generation) rather than introducing a new backend.
 
 ---
 

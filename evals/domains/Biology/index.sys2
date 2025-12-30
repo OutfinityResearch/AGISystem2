@@ -7,5 +7,6 @@
 @_ Load "./00-lexicon-metabolism.sys2"
 @_ Load "./00-lexicon-ecology-evolution.sys2"
 @_ Load "./00-lexicon-physiology.sys2"
+@_ Load "./00-lexicon-type-markers.sys2"
 @_ Load "./00-concepts.sys2"
 @_ Load "./01-relations.sys2"

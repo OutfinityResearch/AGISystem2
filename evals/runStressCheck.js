@@ -5,14 +5,20 @@ import { fileURLToPath } from 'node:url';
 import { performance } from 'node:perf_hooks';
 import { spawn } from 'node:child_process';
 import { Session } from '../src/runtime/session.mjs';
+import { listStrategies } from '../src/hdc/facade.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 const CONFIG_ROOT = join(ROOT, 'config');
+const DOMAIN_ROOT = join(ROOT, 'evals', 'domains');
 const STRESS_ROOT = join(ROOT, 'evals', 'stress');
 
 const CONFIG_ORDER = [
   'Core',
+  'Constraints'
+];
+
+const DOMAIN_ORDER = [
   'Anthropology',
   'Biology',
   'Geography',
@@ -76,32 +82,21 @@ const BOOTSTRAP_OPERATORS = [
   'contradictsSameArgs'
 ];
 
-const HDC_STRATEGIES = [
-  'dense-binary',
-  'sparse-polynomial',
-  'metric-affine'
-];
-
-// Default geometries (for normal runs)
-const GEOMETRY_VARIANTS = {
-  'dense-binary': [256, 512],
-  'sparse-polynomial': [2, 4],
-  'metric-affine': [16, 32]
+// Strategy geometry configurations (mirrors evals/runFastEval.mjs)
+const STRATEGY_GEOMETRIES = {
+  dense: [128, 256, 512, 1024, 2048, 4096],       // bits
+  sparse: [1, 2, 3, 4, 5, 6],                      // k exponents
+  metric: [8, 16, 32, 64, 128, 256],               // bytes
+  ema: [8, 16, 32, 64, 128, 256],                  // bytes
+  exact: [256]                                     // placeholder (geometry ignored by EXACT)
 };
 
-// Extended geometries (for --strategy sweep mode)
-const GEOMETRY_SWEEP = {
-  'dense-binary': [128, 256, 512, 1024, 2048, 4096],       // bits
-  'sparse-polynomial': [1, 2, 3, 4, 5, 6],                  // k exponents
-  'metric-affine': [8, 16, 32, 64, 128, 256],               // bytes
-  'exact': [256]                                             // placeholder (bits ignored by EXACT)
-};
-
-const STRATEGY_ALIASES = {
-  'dense': 'dense-binary',
-  'sparse': 'sparse-polynomial',
-  'metric': 'metric-affine',
-  'exact': 'exact'
+const STRATEGY_FULL_NAMES = {
+  dense: 'dense-binary',
+  sparse: 'sparse-polynomial',
+  metric: 'metric-affine',
+  ema: 'metric-affine-elastic',
+  exact: 'exact'
 };
 
 const REASONING_PRIORITIES = [
@@ -152,7 +147,7 @@ const ATOMIC_DECL_POLICY = {
   //
   // Important: lexicon files should NOT introduce ad-hoc schema roles for `__Role` — domain theories
   // must still use Core semantic roles from `config/Core/09-roles.sys2`.
-  // Any `00-lexicon*.sys2` file under config/ is treated as a value-vocabulary module.
+  // Any `00-lexicon*.sys2` file under `config/` or `evals/domains/` is treated as a value-vocabulary module.
   // (We keep these modular to avoid huge single lexicon files.)
   isLexiconFile: (relPath) => /\/00-lexicon[^/]*\.sys2$/.test(relPath),
 
@@ -174,6 +169,7 @@ const ATOMIC_DECL_POLICY = {
     '__SymmetricRelation',
     '__ReflexiveRelation',
     '__InheritableProperty',
+    '__AssignmentRelation',
 
     // Typed constructors used as atomic markers in Core
     '__Entity',
@@ -201,20 +197,42 @@ const ATOMIC_DECL_POLICY = {
     '__TransitiveRelation',
     '__SymmetricRelation',
     '__ReflexiveRelation',
-    '__InheritableProperty'
+    '__InheritableProperty',
+    '___NewVector'
   ])
 };
 
-// Shorter config label for display
-function configLabel(strategyId, geometry, reasoningPriority) {
-  const strategyShort = (strategyId || '')
-    .replace('dense-binary', 'dense')
-    .replace('sparse-polynomial', 'sparse')
-    .replace('metric-affine', 'metric');
-  const priorityShort = (reasoningPriority || '')
+function shortStrategy(strategyId) {
+  return String(strategyId || '')
+    .replace('-binary', '')
+    .replace('-polynomial', '')
+    .replace('-affine', '');
+}
+
+function shortPriority(priorityId) {
+  if (!priorityId) return '';
+  return String(priorityId)
     .replace('symbolicPriority', 'symb')
-    .replace('holographicPriority', 'holo');
-  return `${strategyShort}(${geometry})+${priorityShort}`;
+    .replace('holographicPriority', 'holo')
+    .replace('Priority', '');
+}
+
+// Shorter config label for display (mirrors evals/runFastEval.mjs)
+function configLabel(strategyId, geometry, reasoningPriority, exactUnbindMode = null) {
+  const s = shortStrategy(strategyId);
+  if (strategyId === 'exact') {
+    const mode = String(exactUnbindMode || process.env.SYS2_EXACT_UNBIND_MODE || 'A').trim().toUpperCase();
+    return `${s}(${mode})+${shortPriority(reasoningPriority)}`;
+  }
+  if (strategyId === 'dense-binary') {
+    const bytes = Number.isFinite(geometry) ? Math.ceil(geometry / 8) : geometry;
+    return `${s}(${bytes}B)+${shortPriority(reasoningPriority)}`;
+  }
+  if (strategyId === 'sparse-polynomial') return `${s}(k${geometry})+${shortPriority(reasoningPriority)}`;
+  if (strategyId === 'metric-affine' || strategyId === 'metric-affine-elastic') {
+    return `${s}(${geometry}B)+${shortPriority(reasoningPriority)}`;
+  }
+  return `${s}(${geometry})+${shortPriority(reasoningPriority)}`;
 }
 
 const ARGV = process.argv.slice(2);
@@ -468,7 +486,7 @@ function printSummaryLegend() {
   console.log('- incomplete: graph definitions missing `end`');
   console.log('- other: uncategorized errors');
   console.log('- colors: green OK; red syntax/load; yellow missing-deps/contradiction/incomplete; gray = non-fatal observations');
-  console.log('- flags: --show-ok prints OK rows for Config/Stress (Core is always shown)');
+  console.log('- flags: --show-ok prints OK rows for Base/Stress (Core is always shown)');
   console.log('- flags: --stress-strict forces strict atom deps on Stress (expected to be very noisy)');
   console.log('');
 }
@@ -760,6 +778,18 @@ async function buildConfigPlan() {
       plan.push(join(dirPath, file));
     }
   }
+  for (const dirName of DOMAIN_ORDER) {
+    const dirPath = join(DOMAIN_ROOT, dirName);
+    if (!existsSync(dirPath)) continue;
+    let files = null;
+    files = await loadIndexOrder(dirPath);
+    if (!files) {
+      files = await listSys2Files(dirPath);
+    }
+    for (const file of files) {
+      plan.push(join(dirPath, file));
+    }
+  }
   return plan;
 }
 
@@ -790,15 +820,16 @@ function createReport() {
   };
 }
 
-async function runCombination(strategyId, reasoningPriority, geometry, basePlan, stressPlan, fileReports) {
-  const label = configLabel(strategyId, geometry, reasoningPriority);
+async function runCombination(strategyId, reasoningPriority, geometry, basePlan, stressPlan, fileReports, { exactUnbindMode = null } = {}) {
+  const label = configLabel(strategyId, geometry, reasoningPriority, exactUnbindMode);
 
   const session = new Session({
     hdcStrategy: strategyId,
     geometry,
     reasoningPriority,
     reasoningProfile: 'theoryDriven',
-    rejectContradictions: true
+    rejectContradictions: true,
+    ...(strategyId === 'exact' && exactUnbindMode ? { exactUnbindMode } : null)
   });
 
   for (const op of BOOTSTRAP_OPERATORS) {
@@ -815,8 +846,15 @@ async function runCombination(strategyId, reasoningPriority, geometry, basePlan,
   let prevInfo = null;
   for (let i = 0; i < basePlan.length; i++) {
     const filePath = basePlan[i];
-    const relToConfig = relative(CONFIG_ROOT, filePath);
-    const group = relToConfig.split('/')[0] || 'unknown';
+    const relPath = formatRelPath(filePath);
+    let group = 'unknown';
+    if (relPath.startsWith('config/')) {
+      group = relPath.split('/')[1] || 'config';
+    } else if (relPath.startsWith('evals/domains/')) {
+      group = relPath.split('/')[2] || 'domains';
+    } else {
+      group = relPath.split('/')[0] || 'unknown';
+    }
     if (!baseByGroup.has(group)) baseByGroup.set(group, { total: 0, loaded: 0 });
     baseByGroup.get(group).total += 1;
 
@@ -857,18 +895,103 @@ async function runCombination(strategyId, reasoningPriority, geometry, basePlan,
 }
 
 function buildCombos() {
+  const fullRun = ARGV.includes('--full');
+  const smallMode = ARGV.includes('--small');
+  const bigMode = ARGV.includes('--big');
+  const hugeMode = ARGV.includes('--huge');
+  if ((smallMode && bigMode) || (smallMode && hugeMode) || (bigMode && hugeMode)) {
+    console.error('Cannot combine --small, --big, or --huge.');
+    process.exit(1);
+  }
+
+  // Geometry parameters (for default mode; mirrors evals/runFastEval.mjs)
+  const denseDimArg = getArgValue('--dense-dim');
+  const sparseKArg = getArgValue('--sparse-k');
+  const metricDimArg = getArgValue('--metric-dim');
+
+  let denseDim = 256;
+  let sparseK = 2;
+  let metricDim = 16;
+  let elasticDim = metricDim;
+
+  if (smallMode) {
+    denseDim = 64;
+    sparseK = 1;
+    metricDim = 8;
+  }
+  if (bigMode) {
+    denseDim = 256;
+    sparseK = 4;
+    metricDim = 32;
+  }
+  if (hugeMode) {
+    denseDim = 1024;
+    sparseK = 16;
+    metricDim = 128;
+  }
+
+  if (denseDimArg) denseDim = parseInt(denseDimArg, 10);
+  if (sparseKArg) sparseK = parseInt(sparseKArg, 10);
+  if (metricDimArg) metricDim = parseInt(metricDimArg, 10);
+  elasticDim = metricDim;
+
+  function defaultGeometryForStrategy(strategyId) {
+    if (strategyId === 'sparse-polynomial') return sparseK;
+    if (strategyId === 'metric-affine') return metricDim;
+    if (strategyId === 'metric-affine-elastic') return elasticDim;
+    // exact + dense-binary + any future dense-like strategies use denseDim as the placeholder
+    return denseDim;
+  }
+
+  function resolveStrategyName(name) {
+    const raw = String(name || '').trim();
+    if (!raw) return null;
+    const lower = raw.toLowerCase();
+    if (STRATEGY_FULL_NAMES[lower]) {
+      return { strategyId: STRATEGY_FULL_NAMES[lower], shortName: lower, geometries: STRATEGY_GEOMETRIES[lower] };
+    }
+    const entry = Object.entries(STRATEGY_FULL_NAMES).find(([, full]) => full === raw);
+    if (entry) {
+      return { strategyId: raw, shortName: entry[0], geometries: STRATEGY_GEOMETRIES[entry[0]] };
+    }
+    return { strategyId: raw, shortName: null, geometries: null };
+  }
+
   const comboArg = getArgValue('--combo');
   if (comboArg) {
     const parts = comboArg.split('/');
     const strategyId = parts[0];
-    const geometry = parts.length === 3 ? parseInt(parts[1], 10) : null;
-    const reasoningPriority = parts.length === 3 ? parts[2] : parts[1];
+    if (strategyId === 'exact') {
+      if (parts.length === 4) {
+        const exactUnbindMode = parts[1];
+        const geometry = parseInt(parts[2], 10);
+        const reasoningPriority = parts[3];
+        return [{
+          strategyId,
+          exactUnbindMode,
+          reasoningPriority,
+          geometry: Number.isFinite(geometry) ? geometry : defaultGeometryForStrategy(strategyId)
+        }];
+      }
+      if (parts.length === 3) {
+        const exactUnbindMode = parts[1];
+        const reasoningPriority = parts[2];
+        return [{
+          strategyId,
+          exactUnbindMode,
+          reasoningPriority,
+          geometry: defaultGeometryForStrategy(strategyId)
+        }];
+      }
+    }
+
+    const geometry = parts.length >= 3 ? parseInt(parts[1], 10) : null;
+    const reasoningPriority = parts.length >= 3 ? parts[2] : parts[1];
     if (strategyId && reasoningPriority) {
-      const fallbackGeometry = GEOMETRY_VARIANTS[strategyId]?.[0] ?? null;
       return [{
         strategyId,
         reasoningPriority,
-        geometry: Number.isFinite(geometry) ? geometry : fallbackGeometry
+        geometry: Number.isFinite(geometry) ? geometry : defaultGeometryForStrategy(strategyId)
       }];
     }
   }
@@ -879,44 +1002,78 @@ function buildCombos() {
 
   // --fast alone: single quick test
   if (fastRun && !strategyArg) {
-    return [{ strategyId: 'dense-binary', reasoningPriority: 'holographicPriority', geometry: 256 }];
+    return [{ strategyId: 'exact', exactUnbindMode: 'B', reasoningPriority: 'holographicPriority', geometry: 256 }];
   }
 
   // --strategy=X: single strategy with ALL geometries (sweep mode)
   if (strategyArg && !strategyArg.includes(',')) {
-    const resolvedStrategy = STRATEGY_ALIASES[strategyArg.toLowerCase()] || strategyArg;
-    if (GEOMETRY_SWEEP[resolvedStrategy]) {
+    const resolved = resolveStrategyName(strategyArg);
+    if (resolved?.geometries && resolved.strategyId) {
       // --strategy=X --fast: single geometry for quick test of that strategy
       if (fastRun) {
-        const defaultGeometry = GEOMETRY_VARIANTS[resolvedStrategy]?.[0] || GEOMETRY_SWEEP[resolvedStrategy][0];
-        return [{ strategyId: resolvedStrategy, reasoningPriority: 'holographicPriority', geometry: defaultGeometry }];
+        const defaultGeometry = resolved.strategyId === 'metric-affine-elastic'
+          ? resolved.geometries[0]
+          : resolved.geometries[Math.floor(resolved.geometries.length / 2)];
+        if (resolved.strategyId === 'exact') {
+          return [
+            { strategyId: resolved.strategyId, exactUnbindMode: 'A', reasoningPriority: 'holographicPriority', geometry: defaultGeometry },
+            { strategyId: resolved.strategyId, exactUnbindMode: 'B', reasoningPriority: 'holographicPriority', geometry: defaultGeometry }
+          ];
+        }
+        return [{ strategyId: resolved.strategyId, reasoningPriority: 'holographicPriority', geometry: defaultGeometry }];
       }
       // --strategy=X: all geometries for that strategy
-      const geometries = GEOMETRY_SWEEP[resolvedStrategy];
+      const geometries = resolved.geometries;
       const priorityList = priorities || REASONING_PRIORITIES;
       const combos = [];
       for (const geometry of geometries) {
         for (const reasoningPriority of priorityList) {
-          combos.push({ strategyId: resolvedStrategy, reasoningPriority, geometry });
+          if (resolved.strategyId === 'exact') {
+            combos.push({ strategyId: resolved.strategyId, exactUnbindMode: 'A', reasoningPriority, geometry });
+            combos.push({ strategyId: resolved.strategyId, exactUnbindMode: 'B', reasoningPriority, geometry });
+          } else {
+            combos.push({ strategyId: resolved.strategyId, reasoningPriority, geometry });
+          }
         }
       }
       return combos;
     }
   }
 
-  // Default mode (no --strategy, no --fast): all 3 strategies × 2 geometries × 2 priorities
+  // Default mode (no --strategy, no --fast): all strategies with configured geometries
   const strategies = strategyArg ? parseList(strategyArg) : null;
+  const availableStrategies = listStrategies();
   const strategyList = strategies
-    ? strategies.map(s => STRATEGY_ALIASES[s.toLowerCase()] || s)
-    : HDC_STRATEGIES;
+    ? strategies.map(s => resolveStrategyName(s)?.strategyId).filter(Boolean)
+    : availableStrategies;
   const priorityList = priorities || REASONING_PRIORITIES;
 
   const combos = [];
   for (const strategyId of strategyList) {
-    const geometries = GEOMETRY_VARIANTS[strategyId] || [];
     for (const reasoningPriority of priorityList) {
+      const geometries = [];
+      if (strategyId === 'sparse-polynomial') {
+        geometries.push(sparseK);
+        if (fullRun) geometries.push(sparseK * 2);
+      } else if (strategyId === 'exact') {
+        geometries.push(denseDim);
+      } else if (strategyId === 'metric-affine') {
+        geometries.push(metricDim);
+        if (fullRun) geometries.push(metricDim * 2);
+      } else if (strategyId === 'metric-affine-elastic') {
+        geometries.push(elasticDim);
+        if (fullRun) geometries.push(elasticDim * 2);
+      } else {
+        geometries.push(denseDim);
+        if (fullRun) geometries.push(denseDim * 2);
+      }
       for (const geometry of geometries) {
-        combos.push({ strategyId, reasoningPriority, geometry });
+        if (strategyId === 'exact') {
+          combos.push({ strategyId, exactUnbindMode: 'A', reasoningPriority, geometry });
+          combos.push({ strategyId, exactUnbindMode: 'B', reasoningPriority, geometry });
+        } else {
+          combos.push({ strategyId, reasoningPriority, geometry });
+        }
       }
     }
   }
@@ -973,11 +1130,11 @@ async function runWorker() {
     process.exitCode = 1;
     return;
   }
-  const { strategyId, reasoningPriority, geometry } = combos[0];
+  const { strategyId, reasoningPriority, geometry, exactUnbindMode = null } = combos[0];
   const basePlan = await buildConfigPlan();
   const stressPlan = await buildStressPlan();
   const fileReports = new Map();
-  const result = await runCombination(strategyId, reasoningPriority, geometry, basePlan, stressPlan, fileReports);
+  const result = await runCombination(strategyId, reasoningPriority, geometry, basePlan, stressPlan, fileReports, { exactUnbindMode });
   const fileReportObj = REPORT_FILES ? Object.fromEntries([...fileReports.entries()]) : null;
   const serializeReport = (report) => ({
     loadedCount: report.loadedCount,
@@ -1007,6 +1164,15 @@ async function runWorker() {
   process.stdout.write(JSON.stringify(payload));
 }
 
+function formatComboArg(combo) {
+  if (!combo) return '';
+  if (combo.strategyId === 'exact') {
+    const mode = String(combo.exactUnbindMode || 'A').trim().toUpperCase();
+    return `${combo.strategyId}/${mode}/${combo.geometry}/${combo.reasoningPriority}`;
+  }
+  return `${combo.strategyId}/${combo.geometry}/${combo.reasoningPriority}`;
+}
+
 async function runParallel(combos) {
   const scriptPath = fileURLToPath(import.meta.url);
   const numWorkers = combos.length;
@@ -1017,7 +1183,7 @@ async function runParallel(combos) {
   // Create label to index mapping
   const labelToIdx = new Map();
   for (let i = 0; i < numWorkers; i++) {
-    const label = configLabel(combos[i].strategyId, combos[i].geometry, combos[i].reasoningPriority);
+    const label = configLabel(combos[i].strategyId, combos[i].geometry, combos[i].reasoningPriority, combos[i].exactUnbindMode);
     labelToIdx.set(label, i);
   }
 
@@ -1028,7 +1194,7 @@ async function runParallel(combos) {
   if (useInPlace) {
     console.log(`${COLORS.bold}${COLORS.bgBlue} Parallel Execution (${numWorkers} workers) ${COLORS.reset}\n`);
     for (let i = 0; i < numWorkers; i++) {
-      const label = configLabel(combos[i].strategyId, combos[i].geometry, combos[i].reasoningPriority);
+      const label = configLabel(combos[i].strategyId, combos[i].geometry, combos[i].reasoningPriority, combos[i].exactUnbindMode);
       workerLines[i] = `${COLORS.bold}${COLORS.cyan}[${label}]${COLORS.reset} ${COLORS.dim}starting...${COLORS.reset}`;
       console.log(workerLines[i]);
     }
@@ -1077,7 +1243,7 @@ async function runParallel(combos) {
         scriptPath,
         '--worker',
         '--combo',
-        `${combo.strategyId}/${combo.geometry}/${combo.reasoningPriority}`,
+        formatComboArg(combo),
         `--out=${outPath}`
       ];
       if (i === 0) args.push('--report-files');
@@ -1085,7 +1251,7 @@ async function runParallel(combos) {
       child.stderr.on('data', handleStderr);
       child.on('error', reject);
       child.on('close', code => {
-        const label = configLabel(combo.strategyId, combo.geometry, combo.reasoningPriority);
+        const label = configLabel(combo.strategyId, combo.geometry, combo.reasoningPriority, combo.exactUnbindMode);
         let raw = '';
         try {
           raw = readFileSync(outPath, 'utf8');
@@ -1244,7 +1410,7 @@ async function main() {
     console.log(`
 Stress Check - Theory Loading & Validation
 
-Validates theory files (config/ and evals/stress/) for syntax, dependencies,
+Validates theory files (config/, evals/domains/, and evals/stress/) for syntax, dependencies,
 and semantic issues across multiple HDC strategy configurations.
 
 Usage:
@@ -1252,12 +1418,17 @@ Usage:
 
 Options:
   --help, -h              Show this help message
-  --fast                  Quick run with single config (dense/256/holo)
+  --fast                  Quick run with single config (exact/B/256/holo)
+  --full                  Add a second geometry per strategy (except EXACT)
+  --small                 Use 8-byte equivalents (dense=64b, sparse=k1, metric=8B, ema=8B)
+  --big                   Use 32-byte equivalents (dense=256b, sparse=k4, metric=32B, ema=32B)
+  --huge                  Use 128-byte equivalents (dense=1024b, sparse=k16, metric=128B, ema=128B)
   --strategy=NAME         Run single strategy with all geometries
-                          NAME: dense, sparse, metric
+                          NAME: dense, sparse, metric, ema, exact
   --priority=NAME         Run with specific reasoning priority
                           NAME: symbolicPriority, holographicPriority
   --combo=S/G/P           Run specific combo (e.g., dense-binary/256/holographicPriority)
+  --combo=exact/M/G/P     Run EXACT combo (e.g., exact/A/256/holographicPriority)
   --show-ok               Show OK files in output (default: only show files with issues)
   --stress-strict         Force strict atom deps on Stress files (very noisy)
   --report-files          Include file reports in worker output
@@ -1267,9 +1438,16 @@ Strategy Mode (runs single strategy with multiple geometries):
   --strategy=dense        Dense: 128, 256, 512, 1024, 2048, 4096 bits
   --strategy=sparse       Sparse: k=1, 2, 3, 4, 5, 6
   --strategy=metric       Metric: 8, 16, 32, 64, 128, 256 bytes
+  --strategy=ema          EMA: 8, 16, 32, 64, 128, 256 bytes
+  --strategy=exact        EXACT (placeholder geometry; runs UNBIND modes A/B)
+
+Geometry Parameters (for default mode):
+  --dense-dim=N           Dense binary vector dimension (default: 256)
+  --sparse-k=N            Sparse polynomial exponent count (default: 2)
+  --metric-dim=N          Metric affine byte channels (default: 16)
 
 Default Mode (no --strategy):
-  Runs 3 strategies × 2 geometries × 2 priorities = 12 configurations
+  Runs all strategies with configured geometries
 
 Output:
   - Creates .errors files next to each .sys2 file with issues
@@ -1277,7 +1455,7 @@ Output:
   - Summary tables for speed, Core/Config load, and stress issues
 
 Examples:
-  node evals/runStressCheck.js                   # Run all 12 configs
+  node evals/runStressCheck.js                   # Run default configs
   node evals/runStressCheck.js --fast            # Quick single config
   node evals/runStressCheck.js --strategy=dense  # Dense sweep
   node evals/runStressCheck.js --show-ok         # Also show OK files
@@ -1414,7 +1592,7 @@ Examples:
       ));
     }
 
-    console.log('=== Config Files With Issues ===');
+    console.log('=== Base Theory Files With Issues ===');
     if (baseIssueRows.length === 0 && !SHOW_OK_FILES) {
       console.log('none');
     } else {

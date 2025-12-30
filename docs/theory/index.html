@@ -21,14 +21,90 @@
       <a href="../specs/matrix.html">Specs</a> &middot;
       <a href="../research/index.html">Research</a>
     </small>
-    <small>Hyperdimensional Computing for neuro-symbolic AI</small>
+    <small>Pragmatic meaning for natural language theories</small>
   </div>
 
   <div class="section-intro">
-    <p>AGISystem2 is built on <strong>Hyperdimensional Computing (HDC)</strong>, a computational paradigm that represents information as high-dimensional vectors. This foundation enables deterministic, explainable reasoning with mathematical guarantees.</p>
+    <p><strong>AGISystem2</strong> is a platform for exploring multiple strategies for representing and using knowledge extracted from natural language. The practical goal is to formalize scientific, technical, and creative “theories” into a small DSL so they can be <em>used</em>: queried, tested, compared, composed, audited, and revised.</p>
+    <p>We treat “meaning” as <strong>formal pragmatics</strong>—a family of engineered, context-sensitive interpretation modes—rather than assuming a single, final, universal semantics. The same text can support different tasks (explain vs. predict vs. verify vs. design), and the system is built to make those task contracts explicit.</p>
   </div>
 
-  <h2>Why Hyperdimensional Computing?</h2>
+  <div class="alert alert-info">
+    <strong>Terminology:</strong>
+    <ul>
+      <li><strong>VSA</strong> (Vector Symbolic Architectures) is the umbrella family: represent symbols and structure with high‑dimensional vectors and algebraic operations.</li>
+      <li><strong>HDC</strong> (Hyperdimensional Computing) is a closely related term, often used interchangeably in practice; many HDC systems are VSAs.</li>
+      <li><strong>HRR</strong> (Holographic Reduced Representations, Plate) is a classic VSA variant (e.g., circular convolution binding), historically influential for “holographic” composition and retrieval.</li>
+    </ul>
+    <p>AGISystem2 uses VSA/HDC ideas as one major axis, but the project is explicitly a <em>strategy lab</em>: different representation strategies (including lossless and hybrid approaches) can be swapped and evaluated under the same DSL and test suite.</p>
+  </div>
+
+  <h2>Quick Links</h2>
+
+  <div class="section-grid">
+    <div class="section-card">
+      <h3><a href="formal-pragmatics.html">Formal Pragmatics</a></h3>
+      <p>Why we treat meaning as engineered “use contracts”, not a single final semantics.</p>
+    </div>
+    <div class="section-card">
+      <h3><a href="nl2dsl.html">NL&rarr;DSL</a></h3>
+      <p>Translate natural language into DSL so theories become executable and testable.</p>
+    </div>
+    <div class="section-card">
+      <h3>Strategies</h3>
+      <p>Same DSL, different representations:</p>
+      <ul>
+        <li><a href="strategies/dense-binary.html">Dense-Binary</a></li>
+        <li><a href="strategies/sparse-polynomial.html">SPHDC</a></li>
+        <li><a href="strategies/metric-affine.html">Metric-Affine</a></li>
+        <li><a href="strategies/metric-affine-elastic.html">EMA</a></li>
+        <li><a href="strategies/exact.html">EXACT</a></li>
+      </ul>
+    </div>
+    <div class="section-card">
+      <h3><a href="hrr-comparison.html">HRR Comparison</a></h3>
+      <p>How our strategies relate (or don’t) to classic HRR/VSA formulations.</p>
+    </div>
+    <div class="section-card">
+      <h3><a href="holographic-representations.html">Holographic Notes</a></h3>
+      <p>Background on “distributed” representations and similarity-first retrieval.</p>
+    </div>
+    <div class="section-card">
+      <h3><a href="deterministic-vectors.html">Deterministic Vectors</a></h3>
+      <p>How names become vectors (hashing/PRNG), plus reproducibility and privacy notes.</p>
+    </div>
+    <div class="section-card">
+      <h3><a href="trustworthy-ai/index.html">Trustworthy AI</a></h3>
+      <p>Patterns for verification, explainability, compliance, and agent planning.</p>
+    </div>
+    <div class="section-card">
+      <h3><a href="grounding-problem.html">Grounding Problem</a></h3>
+      <p>Honest limitations and why we take a pragmatic, engineering-first stance.</p>
+    </div>
+  </div>
+
+  <h2>What This Project Tries To Do</h2>
+
+  <div class="section-grid">
+    <div class="section-card">
+      <h3>Formalize Theories</h3>
+      <p>Turn informal statements into compact DSL artifacts: relations, rules, constraints, and reusable “theory modules”.</p>
+    </div>
+    <div class="section-card">
+      <h3>Use Theories</h3>
+      <p>Support pragmatic tasks: ask queries, run proof attempts, detect contradictions, track assumptions, and generate structured explanations.</p>
+    </div>
+    <div class="section-card">
+      <h3>Compare Strategies</h3>
+      <p>Run the same workloads across multiple backends (vector‑symbolic, hybrid, exact) and measure quality, stability, and cost.</p>
+    </div>
+    <div class="section-card">
+      <h3>Engineer Trust</h3>
+      <p>Prefer deterministic behavior, reproducibility, and inspectable intermediate states over “mysterious” end‑to‑end predictions.</p>
+    </div>
+  </div>
+
+  <h2>Why Vector-Symbolic Methods?</h2>
 
   <div class="section-grid">
     <div class="section-card">
@@ -321,6 +397,7 @@ fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) -
   <h2>Further Reading</h2>
 
   <ul>
+    <li><a href="formal-pragmatics.html"><strong>Formal Pragmatics (Meaning as Use)</strong></a> - Why we avoid a “single final semantics” and what we build instead</li>
     <li><a href="nl2dsl.html"><strong>NL2DSL Translation</strong></a> - Natural language to DSL translation patterns and API</li>
     <li><a href="hrr-comparison.html"><strong>HRR Comparison</strong></a> - Are our strategies Holographic Reduced Representations? (Assessment)</li>
     <li><a href="grounding-problem.html">The Symbol Grounding Problem</a> - Honest limitations and the meta-rational approach</li>
@@ -342,7 +419,7 @@ fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) -
   </ul>
 
   <div class="footer-nav">
-    <p>HDC provides the mathematical foundation for deterministic, explainable AI with formal guarantees.</p>
+    <p>AGISystem2 explores multiple knowledge-representation strategies to make natural language theories usable as engineered artifacts.</p>
   </div>
   </div>
 </body>
