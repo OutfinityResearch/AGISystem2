@@ -16,6 +16,7 @@
 
 import { discoverSuites, loadSuite } from './lib/loader.mjs';
 import { parse } from '../../src/parser/index.mjs';
+import { NLTransformer } from '../../src/nlp/transformer.mjs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -45,6 +46,168 @@ const specificSuites = args.filter(a => !a.startsWith('-'));
 const REASONING_OPERATORS = new Set([
   'Implies', 'And', 'Or', 'Not', 'ForAll', 'Exists'
 ]);
+
+// --- NL ⇄ DSL roundtrip (supported NL) ---
+
+function collectStatementNodes(node, out = []) {
+  if (!node || typeof node !== 'object') return out;
+  if (Array.isArray(node)) {
+    for (const n of node) collectStatementNodes(n, out);
+    return out;
+  }
+  if (node.type === 'Program') return collectStatementNodes(node.statements || [], out);
+  if (node.type === 'TheoryDeclaration') return collectStatementNodes(node.statements || [], out);
+  if (node.type === 'GraphDeclaration') return collectStatementNodes(node.body || [], out);
+  if (node.type === 'SolveBlock') return collectStatementNodes(node.declarations || [], out);
+  if (node.type === 'RuleDeclaration') {
+    out.push(node);
+    return out;
+  }
+  if (node.type === 'ImportStatement') {
+    out.push(node);
+    return out;
+  }
+  if (node.type === 'Statement') {
+    out.push(node);
+    return out;
+  }
+  return out;
+}
+
+function getName(node) {
+  if (!node) return null;
+  if (typeof node === 'string') return node;
+  if (typeof node === 'object') return node.name || node.value || null;
+  return null;
+}
+
+function normalizeExprToProp(expr, env) {
+  if (!expr || typeof expr !== 'object') return { kind: 'atom', value: String(expr ?? '') };
+
+  if (expr.type === 'Identifier') return { kind: 'atom', value: expr.name };
+  if (expr.type === 'Hole') return { kind: 'atom', value: `?${expr.name}` };
+  if (expr.type === 'Literal') return { kind: 'atom', value: String(expr.value) };
+
+  if (expr.type === 'Reference') {
+    const resolved = env?.get?.(expr.name) || null;
+    if (resolved) return normalizeStatementLikeToProp(resolved, env);
+    return { kind: 'atom', value: `$${expr.name}` };
+  }
+
+  if (expr.type === 'Compound') return normalizeStatementLikeToProp(expr, env);
+
+  if (expr.type === 'List') {
+    const items = Array.isArray(expr.items) ? expr.items.map(i => normalizeExprToProp(i, env)) : [];
+    return { kind: 'atom', value: `[${items.map(stringifyProp).join(', ')}]` };
+  }
+
+  return { kind: 'atom', value: String(expr.value ?? '') };
+}
+
+function flattenBool(op, props) {
+  const out = [];
+  for (const p of props) {
+    if (p && p.kind === 'op' && p.op === op && Array.isArray(p.args)) out.push(...p.args);
+    else out.push(p);
+  }
+  return out;
+}
+
+function normalizeStatementLikeToProp(node, env) {
+  const operator = node?.type === 'Statement' ? node.operator : node.operator;
+  const argsRaw = Array.isArray(node?.args) ? node.args : [];
+  const op = getName(operator) || '';
+
+  if (op === 'Not') {
+    if (argsRaw.length === 1) {
+      const inner = normalizeExprToProp(argsRaw[0], env);
+      return { kind: 'op', op: 'Not', args: [inner] };
+    }
+    if (argsRaw.length >= 2) {
+      const innerOp = getName(argsRaw[0]) || stringifyProp(normalizeExprToProp(argsRaw[0], env));
+      const innerArgs = argsRaw.slice(1).map(a => normalizeExprToProp(a, env));
+      const inner = { kind: 'op', op: innerOp, args: innerArgs };
+      return { kind: 'op', op: 'Not', args: [inner] };
+    }
+  }
+
+  if (op === 'Implies' && argsRaw.length === 2) {
+    return {
+      kind: 'op',
+      op: 'Implies',
+      args: [
+        normalizeExprToProp(argsRaw[0], env),
+        normalizeExprToProp(argsRaw[1], env)
+      ]
+    };
+  }
+
+  if ((op === 'And' || op === 'Or') && argsRaw.length >= 2) {
+    const parts = argsRaw.map(a => normalizeExprToProp(a, env));
+    return { kind: 'op', op, args: flattenBool(op, parts) };
+  }
+
+  // Default relation/proposition
+  return { kind: 'op', op, args: argsRaw.map(a => normalizeExprToProp(a, env)) };
+}
+
+function stringifyProp(p) {
+  if (!p) return '';
+  if (p.kind === 'atom') return String(p.value ?? '');
+  if (p.kind !== 'op') return String(p.value ?? '');
+
+  if (p.op === 'Not' && Array.isArray(p.args) && p.args.length === 1) {
+    return `Not(${stringifyProp(p.args[0])})`;
+  }
+  if (p.op === 'Implies' && Array.isArray(p.args) && p.args.length === 2) {
+    return `Implies(${stringifyProp(p.args[0])})(${stringifyProp(p.args[1])})`;
+  }
+  if ((p.op === 'And' || p.op === 'Or') && Array.isArray(p.args) && p.args.length >= 2) {
+    return `${p.op}(${p.args.map(stringifyProp).join(')(')})`;
+  }
+
+  const args = Array.isArray(p.args) ? p.args : [];
+  const renderedArgs = args.map(a => {
+    const s = stringifyProp(a);
+    return a?.kind === 'op' ? `(${s})` : s;
+  }).join(' ');
+  return `${p.op} ${renderedArgs}`.trim();
+}
+
+function normalizeDslToStatements(dsl, { onlyPersistent = false } = {}) {
+  const trimmed = String(dsl || '').trim();
+  if (!trimmed) return [];
+
+  let ast;
+  try {
+    ast = parse(trimmed);
+  } catch {
+    return [];
+  }
+
+  const nodes = collectStatementNodes(ast, []);
+  const env = new Map();
+
+  for (const n of nodes) {
+    if (n?.type === 'Statement' && n.destination) env.set(n.destination, n);
+  }
+
+  const out = [];
+  for (const n of nodes) {
+    if (n?.type !== 'Statement') continue;
+
+    const op = getName(n.operator) || '';
+    if (!op) continue;
+    if (op === 'Load' || op === 'Unload' || op === 'Set') continue;
+
+    const shouldPersist = !n.destination || Boolean(n.persistName);
+    if (onlyPersistent && !shouldPersist) continue;
+
+    out.push(stringifyProp(normalizeStatementLikeToProp(n, env)));
+  }
+
+  return out;
+}
 
 /**
  * Get color based on percentage thresholds
@@ -542,6 +705,7 @@ async function analyzeSuite(suite) {
     actionCounts: { learn: 0, query: 0, prove: 0 },
     syntaxErrors: [],
     formatErrors: [],  // expected_nl format issues
+    nlRoundtripErrors: [],
     trivialCases: [],
     complexityMetrics: [],
     expectedNls: [],
@@ -549,6 +713,7 @@ async function analyzeSuite(suite) {
   };
 
   let allLearnedFacts = [];
+  const transformer = new NLTransformer({ strict: true });
 
   for (let i = 0; i < suite.cases.length; i++) {
     const testCase = suite.cases[i];
@@ -575,6 +740,55 @@ async function analyzeSuite(suite) {
     // Validate learn actions
     for (const issue of validateLearnAction(testCase)) {
       analysis.formatErrors.push({ case: caseNum, caseInfo, ...issue });
+    }
+
+    // Validate supported NL roundtrip (NLTransformer ↔ canonical DSL)
+    if (['learn', 'query', 'prove'].includes(testCase.action) && (testCase.input_dsl || testCase.query_dsl)) {
+      const supportedNl = testCase.input_nl_supported;
+      if (!supportedNl || typeof supportedNl !== 'string' || supportedNl.trim().length === 0) {
+        analysis.nlRoundtripErrors.push({
+          case: caseNum,
+          caseInfo,
+          type: 'error',
+          msg: 'Missing input_nl_supported (generated supported NL)'
+        });
+      } else {
+        const tr = transformer.transform(supportedNl);
+        if (!tr.success) {
+          const msg = (tr.errors || []).map(e => `${e.sentence}: ${e.error}`).slice(0, 2).join(' | ') || 'NL→DSL parse failed';
+          analysis.nlRoundtripErrors.push({ case: caseNum, caseInfo, type: 'error', msg: `Supported NL does not parse: ${msg}` });
+        } else {
+          const generated = normalizeDslToStatements(tr.dsl, { onlyPersistent: testCase.action === 'learn' });
+          const canonicalDsl = String(testCase.query_dsl || testCase.input_dsl || '').trim();
+          const expected = normalizeDslToStatements(canonicalDsl, { onlyPersistent: testCase.action === 'learn' });
+
+          if (testCase.action === 'learn') {
+            const a = new Set(expected);
+            const b = new Set(generated);
+            const missing = [...a].filter(x => !b.has(x));
+            const extra = [...b].filter(x => !a.has(x));
+            if (missing.length > 0 || extra.length > 0) {
+              analysis.nlRoundtripErrors.push({
+                case: caseNum,
+                caseInfo,
+                type: 'error',
+                msg: `Supported NL roundtrip mismatch (learn): missing=${missing.length}, extra=${extra.length}`
+              });
+            }
+          } else {
+            const exp = expected[expected.length - 1] || '';
+            const got = generated[generated.length - 1] || '';
+            if (!exp || !got || exp !== got) {
+              analysis.nlRoundtripErrors.push({
+                case: caseNum,
+                caseInfo,
+                type: 'error',
+                msg: `Supported NL roundtrip mismatch: expected "${exp}", got "${got}"`
+              });
+            }
+          }
+        }
+      }
     }
 
     // Collect learned facts
@@ -615,6 +829,9 @@ function printSuiteReport(analysis, verbose) {
   const fmtColor = analysis.formatErrors.length > 0 ? C.red : C.green;
   console.log(`  Format Errors: ${fmtColor}${analysis.formatErrors.length}${C.reset}`);
 
+  const nlColor = analysis.nlRoundtripErrors.length > 0 ? C.red : C.green;
+  console.log(`  NL Roundtrip Errors: ${nlColor}${analysis.nlRoundtripErrors.length}${C.reset}`);
+
   // Print syntax errors
   if (analysis.syntaxErrors.length > 0) {
     console.log();
@@ -629,6 +846,15 @@ function printSuiteReport(analysis, verbose) {
     console.log();
     console.log(`${C.red}${C.bold}Format Errors (expected_nl/proof_nl):${C.reset}`);
     for (const err of analysis.formatErrors) {
+      console.log(`  ${C.red}✗${C.reset} Case ${err.case}: ${err.msg}`);
+      if (verbose) console.log(`    ${C.dim}${err.caseInfo}${C.reset}`);
+    }
+  }
+
+  if (analysis.nlRoundtripErrors.length > 0) {
+    console.log();
+    console.log(`${C.red}${C.bold}Supported NL Roundtrip Errors:${C.reset}`);
+    for (const err of analysis.nlRoundtripErrors) {
       console.log(`  ${C.red}✗${C.reset} Case ${err.case}: ${err.msg}`);
       if (verbose) console.log(`    ${C.dim}${err.caseInfo}${C.reset}`);
     }
@@ -659,49 +885,55 @@ function printGlobalSummary(allAnalyses) {
   console.log();
 
   const maxSuiteLen = Math.max(12, ...allAnalyses.map(a => a.suiteName.length));
-  const header = `${'Suite'.padEnd(maxSuiteLen)}  Cases  SynErr  FmtErr  Health`;
+  const header = `${'Suite'.padEnd(maxSuiteLen)}  Cases  SynErr  FmtErr  NLErr  Health`;
   console.log(`${C.bold}${header}${C.reset}`);
   console.log(`${C.dim}${'─'.repeat(header.length + 5)}${C.reset}`);
 
-  let totalCases = 0, totalSynErr = 0, totalFmtErr = 0;
+  let totalCases = 0, totalSynErr = 0, totalFmtErr = 0, totalNlErr = 0;
 
   for (const analysis of allAnalyses) {
     const cases = analysis.caseCount;
     const synErr = analysis.syntaxErrors.length;
     const fmtErr = analysis.formatErrors.length;
-    const errTotal = synErr + fmtErr;
+    const nlErr = analysis.nlRoundtripErrors.length;
+    const errTotal = synErr + fmtErr + nlErr;
     const healthPct = cases > 0 ? Math.round(((cases - errTotal) / cases) * 100) : 100;
     const healthColor = getPctColor(healthPct);
 
     totalCases += cases;
     totalSynErr += synErr;
     totalFmtErr += fmtErr;
+    totalNlErr += nlErr;
 
     const synColor = synErr > 0 ? C.red : C.green;
     const fmtColor = fmtErr > 0 ? C.red : C.green;
+    const nlColor = nlErr > 0 ? C.red : C.green;
 
     console.log(
       `${analysis.suiteName.padEnd(maxSuiteLen)}  ` +
       `${String(cases).padStart(5)}  ` +
       `${synColor}${String(synErr).padStart(6)}${C.reset}  ` +
       `${fmtColor}${String(fmtErr).padStart(6)}${C.reset}  ` +
+      `${nlColor}${String(nlErr).padStart(5)}${C.reset}  ` +
       `${healthColor}${String(healthPct).padStart(5)}%${C.reset}`
     );
   }
 
   console.log(`${C.dim}${'─'.repeat(header.length + 5)}${C.reset}`);
 
-  const totalErrTotal = totalSynErr + totalFmtErr;
+  const totalErrTotal = totalSynErr + totalFmtErr + totalNlErr;
   const totalHealthPct = totalCases > 0 ? Math.round(((totalCases - totalErrTotal) / totalCases) * 100) : 100;
   const totalHealthColor = getPctColor(totalHealthPct);
   const totalSynColor = totalSynErr > 0 ? C.red : C.green;
   const totalFmtColor = totalFmtErr > 0 ? C.red : C.green;
+  const totalNlColor = totalNlErr > 0 ? C.red : C.green;
 
   console.log(`${C.bold}` +
     `${'TOTAL'.padEnd(maxSuiteLen)}  ` +
     `${String(totalCases).padStart(5)}  ` +
     `${totalSynColor}${String(totalSynErr).padStart(6)}${C.reset}  ` +
     `${totalFmtColor}${String(totalFmtErr).padStart(6)}${C.reset}  ` +
+    `${totalNlColor}${String(totalNlErr).padStart(5)}${C.reset}  ` +
     `${totalHealthColor}${String(totalHealthPct).padStart(5)}%${C.reset}`
   );
 
@@ -739,7 +971,7 @@ function printGlobalSummary(allAnalyses) {
   const healthColor = getPctColor(healthScore);
   console.log(`${C.bold}Overall Health: ${healthColor}${healthScore}%${C.reset}`);
 
-  if (totalSynErr > 0 || totalFmtErr > 0) {
+  if (totalSynErr > 0 || totalFmtErr > 0 || totalNlErr > 0) {
     console.log();
     console.log(`${C.cyan}Recommendations:${C.reset}`);
     if (totalSynErr > 0) {
@@ -747,6 +979,9 @@ function printGlobalSummary(allAnalyses) {
     }
     if (totalFmtErr > 0) {
       console.log(`  ${C.red}•${C.reset} Fix ${totalFmtErr} format error(s) (multiple Proof:, etc.)`);
+    }
+    if (totalNlErr > 0) {
+      console.log(`  ${C.red}•${C.reset} Fix ${totalNlErr} supported NL roundtrip error(s)`);
     }
 
     // Detailed actionable list for agents

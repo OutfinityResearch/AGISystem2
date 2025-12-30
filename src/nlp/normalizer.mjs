@@ -127,7 +127,19 @@ export function capitalize(word) {
  */
 export function capitalizeWord(word) {
   if (!word) return '';
-  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  const s = String(word);
+  if (/^\?[A-Za-z_][A-Za-z0-9_]*$/.test(s)) return s;
+
+  const first = s.charAt(0);
+  const rest = s.slice(1);
+
+  // If the token is a shouty ALLCAPS word ("HELLO"), normalize it to Titlecase ("Hello").
+  // If it's mixed/camel case ("LivingThing"), preserve internal caps.
+  const hasUpperInRest = /[A-Z]/.test(rest);
+  const restIsAllUpper = rest.length > 0 && rest.toUpperCase() === rest;
+
+  if (hasUpperInRest && !restIsAllUpper) return first.toUpperCase() + rest;
+  return first.toUpperCase() + rest.toLowerCase();
 }
 
 /**

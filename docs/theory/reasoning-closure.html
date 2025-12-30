@@ -158,6 +158,11 @@ interface StepOperator {
 
   <p>STAR/UNSTAR are meant as internal research primitives that can later support higher-level Session APIs (batch Q/A, proof-to-NL, RAG-style retrieval over theories), without forcing every task to fall back to fully symbolic search.</p>
 
+  <div class="definition">
+    <strong>Next step (engine integration)</strong>
+    <p>See <a href="../specsLoader.html?spec=DS/DS40-Holographic-Priority-Closure-Tactics-RESEARCH.md">DS40</a> for a proposal to integrate STAR/UNSTAR as <em>closure tactics</em> inside the existing HDC-first engine (budgets, caching, strategy-aware step operators), rather than creating a separate reasoning engine.</p>
+  </div>
+
   <div class="footer-nav">
     <p>
       <a href="index.html">&larr; Back to Theory</a> &middot;
@@ -167,4 +172,3 @@ interface StepOperator {
   </div>
 </body>
 </html>
-

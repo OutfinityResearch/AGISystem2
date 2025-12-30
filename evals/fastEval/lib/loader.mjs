@@ -6,8 +6,9 @@
  */
 
 import { readFile, readdir } from 'node:fs/promises';
-import { join, dirname } from 'node:path';
+import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { supportedNL } from '../supported-nl.generated.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -82,11 +83,23 @@ export async function loadSuiteCases(suiteDir) {
 
   try {
     const module = await import(casesPath);
+    const suiteName = basename(suiteDir);
+    const rawCases = module.steps || module.cases || [];
+    const enrichedCases = rawCases.map((c, i) => {
+      if (!c || typeof c !== 'object') return c;
+      const perSuite = supportedNL?.[suiteName];
+      const entry = Array.isArray(perSuite) ? perSuite[i] : null;
+      if (!entry) return c;
+      const supported = Array.isArray(entry) ? entry.join(' ') : String(entry);
+      const out = { ...c, input_nl_supported: supported };
+      if (!out.input_nl) out.input_nl = supported;
+      return out;
+    });
     return {
       name: module.name || 'Unknown Suite',
       description: module.description || '',
       // Support both new 'steps' and legacy 'cases' format
-      cases: module.steps || module.cases || [],
+      cases: enrichedCases,
       theories: module.theories || [],
       localTheories: module.localTheories || [],
       sessionOptions: module.sessionOptions || null,

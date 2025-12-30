@@ -41,12 +41,13 @@ import {
   sessionGenerateText,
   sessionElaborate,
   sessionFormatResult,
-  sessionDescribeResult,
-  sessionResolve,
-  sessionDump,
-  sessionFindAll,
-  sessionClose
-} from './session.impl.mjs';
+	  sessionDescribeResult,
+	  sessionDescribeDsl,
+	  sessionResolve,
+	  sessionDump,
+	  sessionFindAll,
+	  sessionClose
+	} from './session.impl.mjs';
 
 export class Session {
   constructor(options = {}) {
@@ -141,9 +142,13 @@ export class Session {
     return sessionFormatResult(this, result, type);
   }
 
-  describeResult(payload) {
-    return sessionDescribeResult(this, payload);
-  }
+	  describeResult(payload) {
+	    return sessionDescribeResult(this, payload);
+	  }
+
+	  describeDsl(dsl, options = {}) {
+	    return sessionDescribeDsl(this, dsl, options);
+	  }
 
   decode(vector) {
     return decodeVectorImpl(this, vector);
@@ -195,4 +200,3 @@ export class Session {
 }
 
 export default Session;
-

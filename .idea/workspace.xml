@@ -4,26 +4,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="better docuementation, overview of the planned research, wip. started to run the autidiscovery agent  stuff from the external benchmark suites">
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS39-Reasoning-Closure-STAR-UNSTAR-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/theory/reasoning-closure.html" afterDir="false" />
+    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="better documentation, new research directions">
+      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS40-Holographic-Priority-Closure-Tactics-RESEARCH.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS41-URK-Reasoning-Programs-IR-RESEARCH.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS42-URK-Fixpoint-Engine-MU-NU-RESEARCH.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS43-URK-Backends-EXACT-EMA-Dense-RESEARCH.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS44-URK-Extensions-Semiring-Constraints-Symbolic-Execution-RESEARCH.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS45-URK-Probabilistic-and-Mathematical-Reasoning-RESEARCH.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS46-Discrete-Phase-Lattice-Hologram-HDC-RESEARCH.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS47-Optical-Field-HDC-Strategy-OFHDC-RESEARCH.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/fastEval/supported-nl.generated.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/fastEval/tools/gen-supported-nl.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/fastEvalSupportedNL_suite27.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/runDslToNl.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/runFastEvalSupportedNL.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/runtime/dsl-to-nl.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/api/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/api/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/architecture/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/architecture/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/reasoning/holographic.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/reasoning/holographic.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS18-Metric-Affine-HDC.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS18-Metric-Affine-HDC.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS23-Elastic-Metric-Affine-HDC.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS23-Elastic-Metric-Affine-HDC.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/specs/matrix.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/matrix.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/deterministic-vectors.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/deterministic-vectors.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/holographic-representations.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/holographic-representations.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/hrr-comparison.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/hrr-comparison.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/theory/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/privacy-hdc.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/privacy-hdc.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/metric-affine-elastic.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/metric-affine-elastic.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/metric-affine.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/metric-affine.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/wiki/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/wiki/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEvalReview.md" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEvalReview.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/reasoning-closure.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/reasoning-closure.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/healthCheck.js" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/healthCheck.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/loader.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/loader.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/nlp/normalizer.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/normalizer.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nlp/patterns.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/patterns.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nlp/transformer.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/transformer.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/session.impl.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.impl.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,15 +148,7 @@
       <workItem from="1766562947099" duration="21851000" />
       <workItem from="1766650266623" duration="6940000" />
       <workItem from="1767005469743" duration="10476000" />
-      <workItem from="1767083849618" duration="15890000" />
-    </task>
-    <task id="LOCAL-00049" summary="working to refactor the reasoning engine for deeper semantic unification to make use of HDC properties better. wip">
-      <option name="closed" value="true" />
-      <created>1766164601560</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1766164601560</updated>
+      <workItem from="1767083849618" duration="17148000" />
     </task>
     <task id="LOCAL-00050" summary="added git ignore">
       <option name="closed" value="true" />
@@ -536,7 +534,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767108226004</updated>
     </task>
-    <option name="localTasksCounter" value="98" />
+    <task id="LOCAL-00098" summary="better documentation, new research directions">
+      <option name="closed" value="true" />
+      <created>1767130383402</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1767130383402</updated>
+    </task>
+    <option name="localTasksCounter" value="99" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -555,7 +561,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value=" tests for holographic reasoning" />
     <MESSAGE value=" implemented a new staregy (metric-afine), wip to improve the suite to show proofs everywhere and have deeper reasoning examples" />
     <MESSAGE value="prearing to add new reasoning methods" />
     <MESSAGE value="slowly trying to get back the evaluation suite do pass after introducing new reasonign capabilities" />
@@ -580,6 +585,7 @@
     <MESSAGE value="better docuemntation, overview of the planned research, wip. started to run the external eval and fix stuff from the external benchmark suites" />
     <MESSAGE value="better docuemntation, overview of the planned research, wip. started to run the autidiscovery agent  stuff from the external benchmark suites" />
     <MESSAGE value="better docuementation, overview of the planned research, wip. started to run the autidiscovery agent  stuff from the external benchmark suites" />
-    <option name="LAST_COMMIT_MESSAGE" value="better docuementation, overview of the planned research, wip. started to run the autidiscovery agent  stuff from the external benchmark suites" />
+    <MESSAGE value="better documentation, new research directions" />
+    <option name="LAST_COMMIT_MESSAGE" value="better documentation, new research directions" />
   </component>
 </project>

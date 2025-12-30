@@ -36,6 +36,7 @@ import { learn as learnImpl } from './session-learn.mjs';
 import { query as queryImpl } from './session-query.mjs';
 import { prove as proveImpl } from './session-prove.mjs';
 import { checkDSL as checkDSLImpl } from './session-check-dsl.mjs';
+import { dslToNl as dslToNlImpl } from './dsl-to-nl.mjs';
 import { beginTransaction, rollbackTransaction } from './session-transaction.mjs';
 
 function dbg(category, ...args) {
@@ -401,6 +402,10 @@ export function sessionFormatResult(_session, result, type = 'query') {
 
 export function sessionDescribeResult(session, payload) {
   return session.responseTranslator.translate(payload);
+}
+
+export function sessionDescribeDsl(session, dsl, options = {}) {
+  return dslToNlImpl(session, dsl, options);
 }
 
 export function sessionResolve(session, expr) {

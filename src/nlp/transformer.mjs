@@ -100,6 +100,15 @@ export class NLTransformer {
     normalized = expandContractions(normalized);
     normalized = this.tokenizer.normalize(normalized);
 
+    // Strip redundant outer parentheses to make DSL-like clauses parseable:
+    // "(?x is a bird)" -> "?x is a bird"
+    // "((A))" -> "A"
+    while (normalized.startsWith('(') && normalized.endsWith(')')) {
+      const inner = normalized.slice(1, -1).trim();
+      if (!inner) break;
+      normalized = inner;
+    }
+
     if (!normalized || normalized.length < 3) return null;
 
     const tokens = this.tokenizer.tokenize(normalized);
@@ -141,6 +150,20 @@ export class NLTransformer {
                   ruleType: 'conditional',
                   antecedent: ant,
                   consequent: cons,
+                  source: sentence,
+                  pattern: patternType
+                };
+              }
+            }
+
+            if (extracted.type === 'compound-raw') {
+              const left = this.transformSentence(extracted.leftRaw);
+              const right = this.transformSentence(extracted.rightRaw);
+              if (left && right) {
+                return {
+                  type: 'compound',
+                  operator: extracted.operator,
+                  parts: [left, right],
                   source: sentence,
                   pattern: patternType
                 };
@@ -250,6 +273,15 @@ export class NLTransformer {
       case 'ternary':
         return `${parsed.operator} ${parsed.args.join(' ')}`;
 
+      case 'compound': {
+        const parts = Array.isArray(parsed.parts) ? parsed.parts : [];
+        if (parts.length < 2) return null;
+        const a = this.clauseToDSL(parts[0]);
+        const b = this.clauseToDSL(parts[1]);
+        if (!a || !b) return null;
+        return `${parsed.operator} (${a}) (${b})`;
+      }
+
       case 'unary':
         return `${parsed.operator} ${parsed.subject}`;
 
@@ -262,14 +294,16 @@ export class NLTransformer {
         if (!innerDsl) return null;
         // Remove @inner prefix and wrap in Not
         const innerContent = innerDsl.replace(/^@\w+\s+/, '');
-        return `@${name} Not (${innerContent})`;
+        // Negation is a persistent fact; it does not need a destination binding.
+        return `Not (${innerContent})`;
       }
 
       case 'rule': {
         const ant = this.clauseToDSL(parsed.antecedent);
         const cons = this.clauseToDSL(parsed.consequent);
         if (!ant || !cons) return null;
-        return `@${name} Implies (${ant}) (${cons})`;
+        // Rules are persistent; do not emit non-persistent @dest bindings.
+        return `Implies (${ant}) (${cons})`;
       }
 
       case 'unknown':
@@ -301,6 +335,15 @@ export class NLTransformer {
       case 'property':
         return `hasProperty ${clause.subject} ${clause.property}`;
 
+      case 'compound': {
+        const parts = Array.isArray(clause.parts) ? clause.parts : [];
+        if (parts.length < 2) return null;
+        const a = this.clauseToDSL(parts[0]);
+        const b = this.clauseToDSL(parts[1]);
+        if (!a || !b) return null;
+        return `${clause.operator} (${a}) (${b})`;
+      }
+
       case 'raw':
         return clause.text;
 
@@ -320,7 +363,8 @@ export class NLTransformer {
     if (!text) return [];
 
     return text
-      .split(/[.!?]+/)
+      // Split on sentence-ending punctuation, but do not split on `?x`-style DSL variables.
+      .split(/[.!?]+(?=\s|$)/)
       .map(s => s.trim())
       .filter(s => s.length > 0);
   }
