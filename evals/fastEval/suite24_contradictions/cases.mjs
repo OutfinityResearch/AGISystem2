@@ -14,13 +14,13 @@ export const theories = [];
 export const steps = [
   {
     action: 'learn',
-    input_nl: 'Setup: Door is Open',
+    input_nl: 'Door hasState Open.',
     input_dsl: 'hasState Door Open',
     expected_nl: 'Learned 1 facts'
   },
   {
     action: 'learn',
-    input_nl: 'Contradiction: Door is Closed (should be rejected; atomic rollback keeps Door Open and does not learn Door in Kitchen)',
+    input_nl: 'Door is in Kitchen. Door hasState Closed.',
     input_dsl: `
       locatedIn Door Kitchen
       hasState Door Closed
@@ -36,14 +36,14 @@ export const steps = [
   },
   {
     action: 'prove',
-    input_nl: 'Door is still Open (the rejected learn did not change KB)',
+    input_nl: 'Door hasState Open.',
     input_dsl: '@goal hasState Door Open',
     expected_nl: 'True: Door is Open.',
     proof_nl: 'Door is Open'
   },
   {
     action: 'prove',
-    input_nl: 'Door is not in Kitchen (the rejected learn did not partially apply)',
+    input_nl: 'Door is in Kitchen.',
     input_dsl: '@goal locatedIn Door Kitchen',
     expected_nl: 'Cannot prove: Door is in Kitchen.',
     proof_nl: [
@@ -53,7 +53,7 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Setup: Indirect naming (Portal→Door, Shut→Closed)',
+    input_nl: 'Portal alias Door. Shut alias Closed.',
     input_dsl: `
       alias Portal Door
       alias Shut Closed
@@ -62,7 +62,7 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Indirect contradiction: hasState Portal Shut contradicts hasState Door Open (after canonicalization)',
+    input_nl: 'Portal is in Attic. Portal hasState Shut.',
     input_dsl: `
       locatedIn Portal Attic
       hasState Portal Shut
@@ -78,7 +78,7 @@ export const steps = [
   },
   {
     action: 'prove',
-    input_nl: 'Door is not in Attic (the rejected indirect learn did not partially apply)',
+    input_nl: 'Door is in Attic.',
     input_dsl: '@goal locatedIn Door Attic',
     expected_nl: 'Cannot prove: Door is in Attic.',
     proof_nl: [
@@ -88,13 +88,13 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Setup: Water is Hot',
+    input_nl: 'Water hasProperty Hot.',
     input_dsl: 'hasProperty Water Hot',
     expected_nl: 'Learned 1 facts'
   },
   {
     action: 'learn',
-    input_nl: 'Setup: Indirect value mapping (Icy ↔ Freezing → Cold)',
+    input_nl: 'Freezing alias Cold. Icy synonym Freezing.',
     input_dsl: `
       alias Freezing Cold
       synonym Icy Freezing
@@ -103,7 +103,7 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Indirect contradiction: hasProperty Water Icy contradicts hasProperty Water Hot (via synonym+alias canonicalization)',
+    input_nl: 'Water is in Lake. Water hasProperty Icy.',
     input_dsl: `
       locatedIn Water Lake
       hasProperty Water Icy
@@ -119,13 +119,13 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Setup: A is before B',
+    input_nl: 'A before B.',
     input_dsl: 'before A B',
     expected_nl: 'Learned 1 facts'
   },
   {
     action: 'learn',
-    input_nl: 'Contradiction: after A B (should be rejected by contradictsSameArgs)',
+    input_nl: 'X causes Y. A after B.',
     input_dsl: `
       causes X Y
       after A B
@@ -141,14 +141,14 @@ export const steps = [
   },
   {
     action: 'prove',
-    input_nl: 'A is still before B (the rejected learn did not change KB)',
+    input_nl: 'A before B.',
     input_dsl: '@goal before A B',
     expected_nl: 'True: A is before B.',
     proof_nl: 'A is before B'
   },
   {
     action: 'prove',
-    input_nl: 'X does not cause Y (the rejected learn did not partially apply)',
+    input_nl: 'X causes Y.',
     input_dsl: '@goal causes X Y',
     expected_nl: 'Cannot prove: X causes Y.',
     proof_nl: [
@@ -158,7 +158,7 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Setup: Indirect temporal naming (Alpha→A, Beta→B)',
+    input_nl: 'Alpha alias A. Beta alias B.',
     input_dsl: `
       alias Alpha A
       alias Beta B
@@ -167,7 +167,7 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Indirect temporal contradiction: after Alpha Beta contradicts before A B (after canonicalization)',
+    input_nl: 'Alpha is in Nowhere. Alpha after Beta.',
     input_dsl: `
       locatedIn Alpha Nowhere
       after Alpha Beta
@@ -183,7 +183,7 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Setup: temporal chain Start -> Middle -> End',
+    input_nl: 'Start before Middle. Middle before End.',
     input_dsl: `
       before Start Middle
       before Middle End
@@ -192,7 +192,7 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Indirect contradiction (transitive): after Start End contradicts derived before Start End (rollback keeps Foo causes Bar unlearned)',
+    input_nl: 'Foo causes Bar. Start after End.',
     input_dsl: `
       causes Foo Bar
       after Start End
@@ -211,7 +211,7 @@ export const steps = [
   },
   {
     action: 'prove',
-    input_nl: 'Foo does not cause Bar (the rejected learn did not partially apply)',
+    input_nl: 'Foo causes Bar.',
     input_dsl: '@goal causes Foo Bar',
     expected_nl: 'Cannot prove: Foo causes Bar.',
     proof_nl: [
@@ -221,7 +221,7 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Setup: derived property via inheritance (Tea is a Beverage, Beverage is a Liquid, Liquids are Cold)',
+    input_nl: 'Tea is a Beverage. Beverage is a Liquid. Liquid hasProperty Cold.',
     input_dsl: `
       isA Tea Beverage
       isA Beverage Liquid
@@ -231,7 +231,7 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Indirect contradiction (inherited): hasProperty Tea Hot contradicts derived hasProperty Tea Cold (rollback keeps Tea in Cupboard unlearned)',
+    input_nl: 'Tea is in Cupboard. Tea hasProperty Hot.',
     input_dsl: `
       locatedIn Tea Cupboard
       hasProperty Tea Hot
@@ -251,7 +251,7 @@ export const steps = [
   },
   {
     action: 'prove',
-    input_nl: 'Tea is not in Cupboard (the rejected inherited-contradiction learn did not partially apply)',
+    input_nl: 'Tea is in Cupboard.',
     input_dsl: '@goal locatedIn Tea Cupboard',
     expected_nl: 'Cannot prove: Tea is in Cupboard.',
     proof_nl: [
@@ -261,7 +261,7 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Setup: operator aliasing (earlier→before, later→after)',
+    input_nl: 'earlier alias before. later alias after. Sun earlier Moon.',
     input_dsl: `
       @earlier:earlier __Relation
       @later:later __Relation
@@ -273,7 +273,7 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Indirect contradiction (operator alias): later Sun Moon contradicts earlier Sun Moon (rollback keeps Foo in Bar unlearned)',
+    input_nl: 'Foo is in Bar. Sun later Moon.',
     input_dsl: `
       locatedIn Foo Bar
       later Sun Moon
@@ -289,7 +289,7 @@ export const steps = [
   },
   {
     action: 'prove',
-    input_nl: 'Foo is not in Bar (the rejected operator-alias contradiction learn did not partially apply)',
+    input_nl: 'Foo is in Bar.',
     input_dsl: '@goal locatedIn Foo Bar',
     expected_nl: 'Cannot prove: Foo is in Bar.',
     proof_nl: [
@@ -299,13 +299,13 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Setup: explicit negation exception blocks inherited Cold for Tea',
+    input_nl: 'Tea does not hasProperty Cold.',
     input_dsl: 'Not hasProperty Tea Cold',
     expected_nl: 'Learned 1 facts'
   },
   {
     action: 'learn',
-    input_nl: 'No contradiction: hasProperty Tea Hot succeeds when inherited Cold is blocked by Not (learns location too)',
+    input_nl: 'Tea is in Cupboard2. Tea hasProperty Hot.',
     input_dsl: `
       locatedIn Tea Cupboard2
       hasProperty Tea Hot
@@ -314,14 +314,14 @@ export const steps = [
   },
   {
     action: 'prove',
-    input_nl: 'Tea is now in Cupboard2 (successful learn applied fully)',
+    input_nl: 'Tea is in Cupboard2.',
     input_dsl: '@goal locatedIn Tea Cupboard2',
     expected_nl: 'True: Tea is in Cupboard2.',
     proof_nl: 'Tea is in Cupboard2'
   },
   {
     action: 'prove',
-    input_nl: 'Tea is Hot (successful learn applied fully)',
+    input_nl: 'Tea hasProperty Hot.',
     input_dsl: '@goal hasProperty Tea Hot',
     expected_nl: 'True: Tea has Hot.',
     proof_nl: 'Tea has Hot'

@@ -15,7 +15,7 @@ export const steps = [
   // === SETUP: Complex Economic Theory with Rules ===
   {
     action: 'learn',
-    input_nl: 'Economic theory with causal chains and inference rules',
+    input_nl: 'Inflation causes HigherPrices. HigherPrices causes ReducedSpending. ReducedSpending causes Recession. Recession causes Unemployment. Inflation is an EconomicPhenomenon. Recession is an EconomicPhenomenon. Unemployment is a SocialProblem. implies (?X causes SocialProblem) AND (?X is an EconomicPhenomenon) ?X triggers PolicyResponse.',
     input_dsl: `
       # Causal chain
       causes Inflation HigherPrices
@@ -41,7 +41,7 @@ export const steps = [
   // === DEDUCE: Follow causal chain from Inflation ===
   {
     action: 'query',
-    input_nl: 'What effects follow from Inflation through the causal chain?',
+    input_nl: 'deduce Inflation ?X causes ?Y ?result 4 5.',
     input_dsl: `
       @filter causes ?X ?Y
       @q deduce Inflation $filter ?result 4 5
@@ -57,7 +57,7 @@ export const steps = [
   // === SETUP: Climate Impact Theory ===
   {
     action: 'learn',
-    input_nl: 'Climate theory with cascading effects and location impacts',
+    input_nl: 'CO2Emission causes GlobalWarming. GlobalWarming causes IceMelt. IceMelt causes SeaLevelRise. SeaLevelRise causes CoastalFlooding. CoastalFlooding causes Displacement. Miami locatedAt Coast. Amsterdam locatedAt Coast. Denver locatedAt Inland. implies (?X causes CoastalFlooding) AND (?City locatedAt Coast) ?X threatens ?City.',
     input_dsl: `
       # Emission chain
       causes CO2Emission GlobalWarming
@@ -84,7 +84,7 @@ export const steps = [
   // === DEDUCE: Follow emission impact chain ===
   {
     action: 'query',
-    input_nl: 'What does CO2 emission cause through the climate chain?',
+    input_nl: 'deduce CO2Emission ?X causes ?Y ?result 5 5.',
     input_dsl: `
       @filter causes ?X ?Y
       @q deduce CO2Emission $filter ?result 5 5
@@ -100,7 +100,7 @@ export const steps = [
   // === SETUP: Biological Classification Theory ===
   {
     action: 'learn',
-    input_nl: 'Biology taxonomy with inheritance rules',
+    input_nl: 'Dog is a Mammal. Cat is a Mammal. Whale is a Mammal. Mammal is a Vertebrate. Vertebrate is an Animal. Animal is a LivingThing. Mammal has WarmBlood. Vertebrate has Spine. Animal has Metabolism. implies ?X is a Mammal ?X has Fur.',
     input_dsl: `
       # Taxonomy
       isA Dog Mammal
@@ -126,7 +126,7 @@ export const steps = [
   // === DEDUCE: Follow isA hierarchy from Dog ===
   {
     action: 'query',
-    input_nl: 'What type categories include Dog transitively?',
+    input_nl: 'deduce Dog ?X is a ?Y ?result 4 5.',
     input_dsl: `
       @filter isA ?X ?Y
       @q deduce Dog $filter ?result 4 5
@@ -142,7 +142,7 @@ export const steps = [
   // === SETUP: Disease Transmission Theory ===
   {
     action: 'learn',
-    input_nl: 'Medical theory with disease progression and treatment',
+    input_nl: 'Virus causes Infection. Infection causes Inflammation. Inflammation causes Symptoms. Symptoms causes Diagnosis. Diagnosis causes Treatment. Virus is a Pathogen. Bacteria is a Pathogen. Infection is a MedicalCondition. implies (?X is a Pathogen) AND (?X causes Infection) ?X requires Quarantine.',
     input_dsl: `
       # Disease chain
       causes Virus Infection
@@ -169,7 +169,7 @@ export const steps = [
   // === DEDUCE: Follow disease progression ===
   {
     action: 'query',
-    input_nl: 'What does a Virus cause through the medical chain?',
+    input_nl: 'deduce Virus ?X causes ?Y ?result 5 5.',
     input_dsl: `
       @filter causes ?X ?Y
       @q deduce Virus $filter ?result 5 5
@@ -191,7 +191,7 @@ export const steps = [
   // === SETUP: Supply Chain Theory ===
   {
     action: 'learn',
-    input_nl: 'Supply chain with production and delivery stages',
+    input_nl: 'RawMaterial causes Production. Production causes Assembly. Assembly causes QualityCheck. QualityCheck causes Packaging. Packaging causes Shipping. Shipping causes Delivery. RawMaterial before Production. Production before Assembly. Assembly before QualityCheck.',
     input_dsl: `
       # Production chain
       causes RawMaterial Production
@@ -212,7 +212,7 @@ export const steps = [
   // === DEDUCE: Limited depth test ===
   {
     action: 'query',
-    input_nl: 'What follows from RawMaterial with limited depth?',
+    input_nl: 'deduce RawMaterial ?X causes ?Y ?result 2 3.',
     input_dsl: `
       @filter causes ?X ?Y
       @q deduce RawMaterial $filter ?result 2 3

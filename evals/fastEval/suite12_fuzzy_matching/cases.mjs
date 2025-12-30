@@ -17,7 +17,7 @@ export const steps = [
   // === SETUP: Deep animal hierarchy with synonyms ===
   {
     action: 'learn',
-    input_nl: 'Deep animal taxonomy with synonyms: Rex->GermanShepherd->Shepherd->WorkingDog->Dog->Canine->Carnivore->Mammal->Vertebrate->Animal',
+    input_nl: 'Rex is a GermanShepherd. GermanShepherd is a Shepherd. Shepherd is a WorkingDog. WorkingDog is a Dog. Dog is a Canine. Canine is a Carnivore. Carnivore is a Mammal. Mammal is a Vertebrate. Vertebrate is an Animal. Animal is a LivingThing. Dog synonym Canine. Cat synonym Feline. Mittens is a PersianCat. PersianCat is a LongHair. LongHair is a DomesticCat. DomesticCat is a Cat. Cat is a Feline. Feline is a Mammal.',
     input_dsl: `
       isA Rex GermanShepherd
       isA GermanShepherd Shepherd
@@ -44,7 +44,7 @@ export const steps = [
   // === PROVE: 9-step isA chain (Rex->Animal) ===
   {
     action: 'prove',
-    input_nl: 'Is Rex an Animal? (9-step deep chain)',
+    input_nl: 'Rex is an Animal.',
     input_dsl: '@goal isA Rex Animal',
     expected_nl: 'True: Rex is an animal.',
     proof_nl: 'Rex is a germanshepherd. GermanShepherd is a shepherd. Shepherd is a workingdog. WorkingDog is a dog. Dog is a canine. Canine is a carnivore. Carnivore is a mammal. Mammal is a vertebrate. Vertebrate is an animal. Transitive chain verified (9 hops). Therefore Rex is an animal.'
@@ -53,7 +53,7 @@ export const steps = [
   // === PROVE: 10-step isA chain (Rex->LivingThing) ===
   {
     action: 'prove',
-    input_nl: 'Is Rex a LivingThing? (10-step deep chain)',
+    input_nl: 'Rex is a LivingThing.',
     input_dsl: '@goal isA Rex LivingThing',
     expected_nl: 'True: Rex is a livingthing.',
     proof_nl: 'Rex is a germanshepherd. GermanShepherd is a shepherd. Shepherd is a workingdog. WorkingDog is a dog. Dog is a canine. Canine is a carnivore. Carnivore is a mammal. Mammal is a vertebrate. Vertebrate is an animal. Animal is a livingthing. Transitive chain verified (10 hops). Therefore Rex is a livingthing.'
@@ -62,7 +62,7 @@ export const steps = [
   // === PROVE: Synonym-based query (Rex is Canine via Dog synonym) ===
   {
     action: 'prove',
-    input_nl: 'Is Rex a Canine? (uses Dog=Canine synonym)',
+    input_nl: 'Rex is a Canine.',
     input_dsl: '@goal isA Rex Canine',
     expected_nl: 'True: Rex is a canine.',
     proof_nl: 'Rex is a germanshepherd. GermanShepherd is a shepherd. Shepherd is a workingdog. WorkingDog is a dog. Dog is a canine. Transitive chain verified (5 hops). Therefore Rex is a canine.'
@@ -71,7 +71,7 @@ export const steps = [
   // === PROVE: 7-step isA chain (Mittens->Mammal) ===
   {
     action: 'prove',
-    input_nl: 'Is Mittens a Mammal? (7-step deep chain)',
+    input_nl: 'Mittens is a Mammal.',
     input_dsl: '@goal isA Mittens Mammal',
     expected_nl: 'True: Mittens is a mammal.',
     proof_nl: 'Mittens is a persiancat. PersianCat is a longhair. LongHair is a domesticcat. DomesticCat is a cat. Cat is a mammal. Transitive chain verified (5 hops). Therefore Mittens is a mammal.'
@@ -80,7 +80,7 @@ export const steps = [
   // === SETUP: Deep geographic hierarchy ===
   {
     action: 'learn',
-    input_nl: 'Deep geographic: Paris->IleDeFrance->France->WesternEurope->Europe->Eurasia->Earth->SolarSystem',
+    input_nl: 'Paris is in IleDeFrance. IleDeFrance is in France. France is in WesternEurope. WesternEurope is in Europe. Europe is in Eurasia. Eurasia is in Earth. Earth is in SolarSystem. Berlin is in Brandenburg. Brandenburg is in Germany. Germany is in CentralEurope. CentralEurope is in Europe.',
     input_dsl: `
       locatedIn Paris IleDeFrance
       locatedIn IleDeFrance France
@@ -100,7 +100,7 @@ export const steps = [
   // === PROVE: 7-step locatedIn chain (Paris->SolarSystem) ===
   {
     action: 'prove',
-    input_nl: 'Is Paris in SolarSystem? (7-step geographic chain via HDC)',
+    input_nl: 'Paris is in SolarSystem.',
     input_dsl: '@goal locatedIn Paris SolarSystem',
     expected_nl: 'True: Paris is in SolarSystem.',
     proof_nl: 'Paris is in IleDeFrance. IleDeFrance is in France. France is in WesternEurope. WesternEurope is in Europe. Europe is in Eurasia. Eurasia is in Earth. Earth is in SolarSystem. Transitive chain verified (7 hops). Therefore Paris is in SolarSystem.'
@@ -109,7 +109,7 @@ export const steps = [
   // === PROVE: 5-step locatedIn chain (Paris->Europe) ===
   {
     action: 'prove',
-    input_nl: 'Is Paris in Europe? (5-step geographic chain)',
+    input_nl: 'Paris is in Europe.',
     input_dsl: '@goal locatedIn Paris Europe',
     expected_nl: 'True: Paris is in Europe.',
     proof_nl: 'Paris is in IleDeFrance. IleDeFrance is in France. France is in WesternEurope. WesternEurope is in Europe. Transitive chain verified (4 hops). Therefore Paris is in Europe.'
@@ -118,7 +118,7 @@ export const steps = [
   // === PROVE: 5-step locatedIn chain (Berlin->Europe) ===
   {
     action: 'prove',
-    input_nl: 'Is Berlin in Europe? (5-step geographic chain)',
+    input_nl: 'Berlin is in Europe.',
     input_dsl: '@goal locatedIn Berlin Europe',
     expected_nl: 'True: Berlin is in Europe.',
     proof_nl: 'Berlin is in Brandenburg. Brandenburg is in Germany. Germany is in CentralEurope. CentralEurope is in Europe. Transitive chain verified (4 hops). Therefore Berlin is in Europe.'
@@ -127,7 +127,7 @@ export const steps = [
   // === NEGATIVE: Cross-hierarchy fails with search trace ===
   {
     action: 'prove',
-    input_nl: 'Is Rex in Europe? (cross-hierarchy - should fail)',
+    input_nl: 'Rex is in Europe.',
     input_dsl: '@goal locatedIn Rex Europe',
     expected_nl: 'Cannot prove: Rex is in Europe.',
     proof_nl: [
@@ -139,7 +139,7 @@ export const steps = [
   // === QUERY: What is in Europe ===
   {
     action: 'query',
-    input_nl: 'What is in Europe?',
+    input_nl: '?X is in Europe.',
     input_dsl: '@q locatedIn ?X Europe',
     expected_nl: [
       'WesternEurope is in Europe.',
@@ -166,7 +166,7 @@ export const steps = [
   // === SETUP: Similarity relationships ===
   {
     action: 'learn',
-    input_nl: 'Vehicles with properties for similarity comparison',
+    input_nl: 'Car is a Vehicle. Vehicle is a Transport. Transport is a Mobility. Mobility is a Service. Service is an Utility. Utility is a Concept. Truck is a Vehicle. Bicycle is a Vehicle. Car has Wheels. Car has Engine. Car has Seats. Car has Steering. Truck has Wheels. Truck has Engine. Truck has Cargo. Bicycle has Wheels. Bicycle has Pedals.',
     input_dsl: `
       isA Car Vehicle
       isA Vehicle Transport
@@ -192,7 +192,7 @@ export const steps = [
   // === PROVE: 6-step isA chain (Car->Concept) ===
   {
     action: 'prove',
-    input_nl: 'Is Car a Concept? (6-step hierarchy)',
+    input_nl: 'Car is a Concept.',
     input_dsl: '@goal isA Car Concept',
     expected_nl: 'True: Car is a concept.',
     proof_nl: 'Car isA Vehicle. Vehicle isA Transport. Transport isA Mobility. Mobility isA Service. Service isA Utility. Utility isA Concept.'
@@ -201,7 +201,7 @@ export const steps = [
   // === QUERY: What does Car have ===
   {
     action: 'query',
-    input_nl: 'What does Car have?',
+    input_nl: 'Car has ?property.',
     input_dsl: '@q has Car ?property',
     expected_nl: [
       'Car has a steering.',

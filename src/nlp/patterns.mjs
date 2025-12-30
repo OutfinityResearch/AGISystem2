@@ -352,6 +352,15 @@ export const conditionalPatterns = [
  */
 export const impliesMacroPatterns = [
   {
+    // "implies A1 A2 A3 B1 B2 B3" (two simple 3-token clauses)
+    regex: /^implies\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)$/i,
+    extract: (match) => ({
+      type: 'implies-macro',
+      antecedentRaws: [`${match[1]} ${match[2]} ${match[3]}`],
+      consequentRaw: `${match[4]} ${match[5]} ${match[6]}`
+    })
+  },
+  {
     // "implies (A) AND (B) C"
     regex: /^implies\s+\((.+?)\)\s+(?:and|AND)\s+\((.+?)\)\s+(.+)$/i,
     extract: (match) => ({

@@ -24,7 +24,7 @@ export const steps = [
   // === SETUP: Define macros inline and invoke them ===
   {
     action: 'learn',
-    input_nl: 'Define earthquakeEvent graph that creates hazard facts and causal chains.',
+    input_nl: '$effect is a Hazard. $epicenter is an Epicenter. $effect causes InfrastructureDamage. InfrastructureDamage causes EvacuationNeeded. $effect before EvacuationStart. EvacuationStart before ReliefDeployment.',
     input_dsl: `
       # Macro: earthquakeEvent creates hazard with causal/temporal structure
       @EQ:earthquakeEvent graph epicenter magnitude effect
@@ -48,7 +48,7 @@ export const steps = [
 
   {
     action: 'learn',
-    input_nl: 'Define outbreak graph for virus with infection chains.',
+    input_nl: '$pathogen is a Virus. $pathogen is a Pathogen. $pathogen affects $location. $pathogen causes Infection. Infection causes Symptoms. Symptoms causes Hospitalization.',
     input_dsl: `
       # Macro: outbreak creates virus with infection causation
       @OB:outbreak graph pathogen r0 location
@@ -71,7 +71,7 @@ export const steps = [
 
   {
     action: 'learn',
-    input_nl: 'Define disasterResponse graph with obligations and temporal ordering.',
+    input_nl: '$responderTeam is a Responder. $responderTeam assigned $hazard. $responderTeam must Assist. $responderTeam must Coordinate. $responderTeam can DeploySupplies. Assessment before Response. Response before Recovery.',
     input_dsl: `
       # Macro: disasterResponse with responder obligations
       @DR:disasterResponse graph hazard responderTeam
@@ -94,7 +94,7 @@ export const steps = [
 
   {
     action: 'learn',
-    input_nl: 'Add global causal rules and an implies rule using correct And syntax.',
+    input_nl: 'Hazard causes SupplyChainDisruption. Hazard causes PublicPanic. Hospitalization causes ICUOverload. implies (?X causes Infection) AND (?X is a Virus) ?X causes PublicHealthEmergency. CityPowerDown does not locatedIn SafeZone.',
     input_dsl: `
       # Global causal rules
       causes Hazard SupplyChainDisruption
@@ -119,7 +119,7 @@ export const steps = [
   // === PROVE: Hazard chain from earthquake graph output ===
   {
     action: 'prove',
-    input_nl: 'Does CityPowerDown cause supply chain disruption?',
+    input_nl: 'CityPowerDown causes SupplyChainDisruption.',
     input_dsl: '@goal causes CityPowerDown SupplyChainDisruption',
     expected_nl: 'True: CityPowerDown causes SupplyChainDisruption.',
     proof_nl: [
@@ -132,7 +132,7 @@ export const steps = [
   // === PROVE: Temporal chain from earthquake ===
   {
     action: 'prove',
-    input_nl: 'Is CityPowerDown before ReliefDeployment?',
+    input_nl: 'CityPowerDown before ReliefDeployment.',
     input_dsl: '@goal before CityPowerDown ReliefDeployment',
     expected_nl: 'True: CityPowerDown is before ReliefDeployment.',
     proof_nl: 'CityPowerDown is before EvacuationStart. EvacuationStart is before ReliefDeployment. Transitive chain verified (2 hops). Therefore CityPowerDown is before ReliefDeployment.'
@@ -141,7 +141,7 @@ export const steps = [
   // === PROVE: Responder obligation from graph ===
   {
     action: 'prove',
-    input_nl: 'Must TeamAlpha assist?',
+    input_nl: 'TeamAlpha must Assist.',
     input_dsl: '@goal must TeamAlpha Assist',
     expected_nl: 'True: TeamAlpha must Assist.',
     proof_nl: 'Fact in KB: TeamAlpha must Assist'
@@ -150,7 +150,7 @@ export const steps = [
   // === NEGATIVE: Blocked by explicit negation ===
   {
     action: 'prove',
-    input_nl: 'Is CityPowerDown in SafeZone?',
+    input_nl: 'CityPowerDown is in SafeZone.',
     input_dsl: '@goal locatedIn CityPowerDown SafeZone',
     expected_nl: 'Cannot prove: CityPowerDown is in SafeZone.',
     proof_nl: [
@@ -162,7 +162,7 @@ export const steps = [
   // === QUERY: List all hazards ===
   {
     action: 'query',
-    input_nl: 'What entities are hazards?',
+    input_nl: 'What is a Hazard?',
     input_dsl: '@q isA ?x Hazard',
     expected_nl: [
       'CityPowerDown is a hazard.',
@@ -177,7 +177,7 @@ export const steps = [
   // === PROVE: Virus outbreak leads to hospitalization ===
   {
     action: 'prove',
-    input_nl: 'Does VirusX cause hospitalization?',
+    input_nl: 'VirusX causes Hospitalization.',
     input_dsl: '@goal causes VirusX Hospitalization',
     expected_nl: 'True: VirusX causes Hospitalization.',
     proof_nl: 'VirusX causes Infection. Infection causes Symptoms. Symptoms causes Hospitalization. Causal chain verified (3 hops). Therefore VirusX causes Hospitalization.'
@@ -186,7 +186,7 @@ export const steps = [
   // === PROVE: Public health emergency via implies rule ===
   {
     action: 'prove',
-    input_nl: 'Does VirusX cause a public health emergency?',
+    input_nl: 'VirusX causes PublicHealthEmergency.',
     input_dsl: '@goal causes VirusX PublicHealthEmergency',
     expected_nl: 'True: VirusX causes PublicHealthEmergency.',
     proof_nl: [
@@ -200,7 +200,7 @@ export const steps = [
   // === QUERY: Which hazards cause supply chain disruption? ===
   {
     action: 'query',
-    input_nl: 'What causes supply chain disruption?',
+    input_nl: '?x causes SupplyChainDisruption.',
     input_dsl: '@q causes ?x SupplyChainDisruption',
     expected_nl: [
       'Hazard causes SupplyChainDisruption.',
@@ -217,7 +217,7 @@ export const steps = [
   // === NEGATIVE: VirusY should also trigger (same rule applies) ===
   {
     action: 'prove',
-    input_nl: 'Does VirusY cause a public health emergency?',
+    input_nl: 'VirusY causes PublicHealthEmergency.',
     input_dsl: '@goal causes VirusY PublicHealthEmergency',
     expected_nl: 'True: VirusY causes PublicHealthEmergency.',
     proof_nl: [

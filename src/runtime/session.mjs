@@ -150,6 +150,15 @@ export class Session {
 	    return sessionDescribeDsl(this, dsl, options);
 	  }
 
+  dslToNL(dsl, options = {}) {
+    const res = sessionDescribeDsl(this, dsl, options);
+    if (!res?.success) return res;
+    return {
+      ...res,
+      text: Array.isArray(res.lines) ? res.lines.join(' ') : ''
+    };
+  }
+
   decode(vector) {
     return decodeVectorImpl(this, vector);
   }

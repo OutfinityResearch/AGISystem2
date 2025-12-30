@@ -14,7 +14,7 @@ export const steps = [
   // === SETUP: Entities and conflict rules ===
   {
     action: 'learn',
-    input_nl: 'Define river crossing entities and conflict relationships.',
+    input_nl: 'Farmer is an Agent. Wolf is an Animal. Goat is an Animal. Cabbage is a Plant. Wolf conflicts Goat. Goat conflicts Cabbage. Farmer location Left. Wolf location Left. Goat location Left. Cabbage location Left. Left is a Bank. Right is a Bank.',
     input_dsl: `
       # Entity types
       isA Farmer Agent
@@ -41,7 +41,7 @@ export const steps = [
 
   {
     action: 'learn',
-    input_nl: 'Add safety rules for river crossing.',
+    input_nl: 'IF (((?X conflicts ?Y) AND (?X location ?loc)) AND (?Y location ?loc)) THEN (?loc unsafe). IF (Farmer location ?loc) THEN (?loc safe). Boat boatCapacity Two. Farmer mustBe InBoat.',
     input_dsl: `
       # Rule: if X conflicts with Y and both at same location -> unsafe location
       @safe1 conflicts ?X ?Y
@@ -67,7 +67,7 @@ export const steps = [
   // === PROVE: Wolf conflicts with Goat ===
   {
     action: 'prove',
-    input_nl: 'Does Wolf conflict with Goat?',
+    input_nl: 'Wolf conflicts Goat.',
     input_dsl: '@goal conflicts Wolf Goat',
     expected_nl: 'True: Wolf conflicts Goat.',
     proof_nl: 'Fact in KB: Wolf conflicts Goat'
@@ -76,7 +76,7 @@ export const steps = [
   // === PROVE: Initial unsafe state (all on Left without move) ===
   {
     action: 'prove',
-    input_nl: 'Is Left bank currently safe?',
+    input_nl: 'Left safe.',
     input_dsl: '@goal safe Left',
     expected_nl: 'True: Left is safe.',
     proof_nl: [
@@ -88,7 +88,7 @@ export const steps = [
   // === QUERY: What is on the Left bank? ===
   {
     action: 'query',
-    input_nl: 'What is on the Left bank?',
+    input_nl: '?x location Left.',
     input_dsl: '@q location ?x Left',
     expected_nl: [
       'Farmer is at Left.',
@@ -107,7 +107,7 @@ export const steps = [
   // === QUERY: What conflict pairs exist? ===
   {
     action: 'query',
-    input_nl: 'What conflict pairs exist?',
+    input_nl: '?x conflicts ?y.',
     input_dsl: '@q conflicts ?x ?y',
     expected_nl: [
       'Wolf conflicts Goat.',
@@ -122,7 +122,7 @@ export const steps = [
   // === PROVE: Goat conflicts with Cabbage ===
   {
     action: 'prove',
-    input_nl: 'Does Goat conflict with Cabbage?',
+    input_nl: 'Goat conflicts Cabbage.',
     input_dsl: '@goal conflicts Goat Cabbage',
     expected_nl: 'True: Goat conflicts Cabbage.',
     proof_nl: 'Fact in KB: Goat conflicts Cabbage'
@@ -131,7 +131,7 @@ export const steps = [
   // === PROVE: Boat capacity ===
   {
     action: 'prove',
-    input_nl: 'What is the boat capacity?',
+    input_nl: 'Boat boatCapacity Two.',
     input_dsl: '@goal boatCapacity Boat Two',
     expected_nl: 'True: Boat boatCapacity Two.',
     proof_nl: 'Fact in KB: Boat boatCapacity Two'
@@ -140,7 +140,7 @@ export const steps = [
   // === QUERY: What animals are there? ===
   {
     action: 'query',
-    input_nl: 'What animals are in the puzzle?',
+    input_nl: 'What is a Animal?',
     input_dsl: '@q isA ?x Animal',
     expected_nl: [
       'Wolf is an animal.',
@@ -155,7 +155,7 @@ export const steps = [
   // === PROVE: Farmer must be in boat ===
   {
     action: 'prove',
-    input_nl: 'Must Farmer be in the boat to cross?',
+    input_nl: 'Farmer mustBe InBoat.',
     input_dsl: '@goal mustBe Farmer InBoat',
     expected_nl: 'True: Farmer mustBe InBoat.',
     proof_nl: 'Fact in KB: Farmer mustBe InBoat'
@@ -164,7 +164,7 @@ export const steps = [
   // === DEMONSTRATE: Solve check (like suite 11) ===
   {
     action: 'prove',
-    input_nl: 'Demonstrate the solution logic: Is the initial state safe?',
+    input_nl: 'Left safe.',
     input_dsl: '@goal safe Left',
     expected_nl: 'True: Left is safe.',
     proof_nl: [
@@ -176,7 +176,7 @@ export const steps = [
   // === PLANNING: Solve the puzzle with constraints ===
   {
     action: 'learn',
-    input_nl: 'Define river crossing actions and compute a valid plan (constraint-aware).',
+    input_nl: 'CrossGoatLR requires location Farmer Left. CrossGoatLR requires location Goat Left. CrossGoatLR causes location Farmer Right. CrossGoatLR causes location Goat Right. CrossGoatLR prevents location Farmer Left. CrossGoatLR prevents location Goat Left. CrossGoatRL requires location Farmer Right. CrossGoatRL requires location Goat Right. CrossGoatRL causes location Farmer Left. CrossGoatRL causes location Goat Left. CrossGoatRL prevents location Farmer Right. CrossGoatRL prevents location Goat Right. CrossWolfLR requires location Farmer Left. CrossWolfLR requires location Wolf Left. CrossWolfLR causes location Farmer Right. CrossWolfLR causes location Wolf Right. CrossWolfLR prevents location Farmer Left. CrossWolfLR prevents location Wolf Left. CrossWolfRL requires location Farmer Right. CrossWolfRL requires location Wolf Right. CrossWolfRL causes location Farmer Left. CrossWolfRL causes location Wolf Left. CrossWolfRL prevents location Farmer Right. CrossWolfRL prevents location Wolf Right. CrossCabbageLR requires location Farmer Left. CrossCabbageLR requires location Cabbage Left. CrossCabbageLR causes location Farmer Right. CrossCabbageLR causes location Cabbage Right. CrossCabbageLR prevents location Farmer Left. CrossCabbageLR prevents location Cabbage Left. CrossCabbageRL requires location Farmer Right. CrossCabbageRL requires location Cabbage Right. CrossCabbageRL causes location Farmer Left. CrossCabbageRL causes location Cabbage Left. CrossCabbageRL prevents location Farmer Right. CrossCabbageRL prevents location Cabbage Right. CrossAloneLR requires location Farmer Left. CrossAloneLR causes location Farmer Right. CrossAloneLR prevents location Farmer Left. CrossAloneRL requires location Farmer Right. CrossAloneRL causes location Farmer Left. CrossAloneRL prevents location Farmer Right.',
     input_dsl: `
       # Action model: Farmer crosses alone or with one passenger
       # (Location is the state predicate; Conflicts are state constraints guarded by Farmer)
@@ -263,7 +263,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'How many steps are in the computed plan?',
+    input_nl: 'crossingPlan plan ?len.',
     input_dsl: '@q plan crossingPlan ?len',
     maxResults: 1,
     expected_nl: [
@@ -276,7 +276,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'What is step 1 of the computed plan?',
+    input_nl: 'crossingPlan planStep 1 ?action.',
     input_dsl: '@q planStep crossingPlan 1 ?action',
     maxResults: 1,
     expected_nl: [
@@ -289,7 +289,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'What is step 7 of the computed plan?',
+    input_nl: 'crossingPlan planStep 7 ?action.',
     input_dsl: '@q planStep crossingPlan 7 ?action',
     maxResults: 1,
     expected_nl: [
@@ -302,7 +302,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'Verify the computed plan by simulating it over requires/causes/prevents.',
+    input_nl: 'crossingPlan verifyPlan ?ok.',
     input_dsl: '@q verifyPlan crossingPlan ?ok',
     maxResults: 1,
     expected_nl: [
@@ -343,7 +343,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'How many steps are in the intermediate-state plan?',
+    input_nl: 'nextAfterGoatRight plan ?len.',
     input_dsl: '@q plan nextAfterGoatRight ?len',
     maxResults: 1,
     expected_nl: [
@@ -356,7 +356,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'What is step 1 of the intermediate-state plan?',
+    input_nl: 'nextAfterGoatRight planStep 1 ?action.',
     input_dsl: '@q planStep nextAfterGoatRight 1 ?action',
     maxResults: 1,
     expected_nl: [
@@ -369,7 +369,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'Verify that the intermediate-state plan is valid.',
+    input_nl: 'nextAfterGoatRight verifyPlan ?ok.',
     input_dsl: '@q verifyPlan nextAfterGoatRight ?ok',
     maxResults: 1,
     expected_nl: [
@@ -409,7 +409,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'How many steps are in the later intermediate-state plan?',
+    input_nl: 'nextAfterWolfRight plan ?len.',
     input_dsl: '@q plan nextAfterWolfRight ?len',
     maxResults: 1,
     expected_nl: [
@@ -422,7 +422,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'What is step 1 of the later intermediate-state plan?',
+    input_nl: 'nextAfterWolfRight planStep 1 ?action.',
     input_dsl: '@q planStep nextAfterWolfRight 1 ?action',
     maxResults: 1,
     expected_nl: [
@@ -435,7 +435,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'Verify that the intermediate-state plan is valid.',
+    input_nl: 'nextAfterWolfRight verifyPlan ?ok.',
     input_dsl: '@q verifyPlan nextAfterWolfRight ?ok',
     maxResults: 1,
     expected_nl: [

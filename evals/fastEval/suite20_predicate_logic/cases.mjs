@@ -14,7 +14,7 @@ export const steps = [
   // === SETUP: Logical facts and rules ===
   {
     action: 'learn',
-    input_nl: 'Define propositional implications and conjunction rule.',
+    input_nl: 'P implies Q. Q implies R. R implies S. implies (P holds) AND (S holds) T holds. implies (?X implies ?Y) AND (?Y implies ?Z) ?X implies ?Z. P holds.',
     input_dsl: `
       # Propositional chain: P -> Q -> R -> S
       implies P Q
@@ -44,7 +44,7 @@ export const steps = [
   // === PROVE: Transitive implication P -> S ===
   {
     action: 'prove',
-    input_nl: 'Does P imply S via chain?',
+    input_nl: 'P implies S.',
     input_dsl: '@goal implies P S',
     expected_nl: 'True: P implies S.',
     proof_nl: [
@@ -58,7 +58,7 @@ export const steps = [
   // === PROVE: Modus ponens chain ===
   {
     action: 'prove',
-    input_nl: 'Does R hold given P holds?',
+    input_nl: 'R holds.',
     input_dsl: '@goal holds R',
     expected_nl: 'True: R is holds.',
     proof_nl: 'P holds. P implies Q. Q holds. Q implies R. R holds.'
@@ -67,7 +67,7 @@ export const steps = [
   // === PROVE: S holds via chain ===
   {
     action: 'prove',
-    input_nl: 'Does S hold?',
+    input_nl: 'S holds.',
     input_dsl: '@goal holds S',
     expected_nl: 'True: S is holds.',
     proof_nl: 'P holds. P implies Q. Q holds. Q implies R. R holds. R implies S. S holds.'
@@ -76,7 +76,7 @@ export const steps = [
   // === PROVE: Conjunction rule T ===
   {
     action: 'prove',
-    input_nl: 'Does T hold given P and S both hold?',
+    input_nl: 'T holds.',
     input_dsl: '@goal holds T',
     expected_nl: 'True: T is holds.',
     proof_nl: [
@@ -89,7 +89,7 @@ export const steps = [
   // === QUERY: What does P imply? ===
   {
     action: 'query',
-    input_nl: 'What does P imply?',
+    input_nl: 'P implies ?x.',
     input_dsl: '@q implies P ?x',
     expected_nl: [
       'P implies Q.',
@@ -106,7 +106,7 @@ export const steps = [
   // === NEGATIVE: Unknown proposition ===
   {
     action: 'prove',
-    input_nl: 'Does W hold?',
+    input_nl: 'W holds.',
     input_dsl: '@goal holds W',
     expected_nl: 'Cannot prove: W is holds.',
     proof_nl: 'Searched isA W ?type in KB. Not found. Entity unknown. No applicable inheritance paths.'
@@ -115,7 +115,7 @@ export const steps = [
   // === SETUP 2: Classic syllogism ===
   {
     action: 'learn',
-    input_nl: 'Add Socrates syllogism: Human -> Mortal -> mustDie -> Buried.',
+    input_nl: 'implies ?x is a Human ?x is a Mortal. implies ?x is a Mortal ?x must Die. implies ?x must Die ?x Buried. Socrates is a Human. Plato is a Human. Zeus is not a Mortal. Zeus is a Deity.',
     input_dsl: `
       # Rule: Human implies Mortal
       @h2m1 isA ?x Human
@@ -147,7 +147,7 @@ export const steps = [
   // === PROVE: Socrates is mortal ===
   {
     action: 'prove',
-    input_nl: 'Is Socrates mortal?',
+    input_nl: 'Socrates is a Mortal.',
     input_dsl: '@goal isA Socrates Mortal',
     expected_nl: 'True: Socrates is a mortal.',
     proof_nl: [
@@ -159,7 +159,7 @@ export const steps = [
   // === PROVE: Plato must die ===
   {
     action: 'prove',
-    input_nl: 'Must Plato die?',
+    input_nl: 'Plato must Die.',
     input_dsl: '@goal must Plato Die',
     expected_nl: 'True: Plato must Die.',
     proof_nl: [
@@ -172,7 +172,7 @@ export const steps = [
   // === PROVE: Socrates is buried ===
   {
     action: 'prove',
-    input_nl: 'Is Socrates buried?',
+    input_nl: 'Socrates Buried.',
     input_dsl: '@goal Buried Socrates',
     expected_nl: 'True: Socrates is Buried.',
     proof_nl: [
@@ -186,7 +186,7 @@ export const steps = [
   // === NEGATIVE: Zeus not mortal (blocked by negation) ===
   {
     action: 'prove',
-    input_nl: 'Is Zeus mortal?',
+    input_nl: 'Zeus is a Mortal.',
     input_dsl: '@goal isA Zeus Mortal',
     expected_nl: 'Cannot prove: Zeus is a mortal.',
     proof_nl: [
@@ -198,7 +198,7 @@ export const steps = [
   // === QUANTIFIERS: Not(Exists...) via type disjointness ===
   {
     action: 'learn',
-    input_nl: 'Add type constraints: Plant -> Not(Fungus), Mushroom -> Fungus.',
+    input_nl: 'IF (?x is a Plant) THEN (?x is not a Fungus). IF (?x is a Mushroom) THEN (?x is a Fungus).',
     input_dsl: `
       @p isA ?x Plant
       @f isA ?x Fungus
@@ -213,7 +213,7 @@ export const steps = [
   },
   {
     action: 'prove',
-    input_nl: 'Is it impossible for something to be both a plant and a mushroom?',
+    input_nl: 'NOT ((Exists ?x (And (isA ?x Plant) (isA ?x Mushroom)))).',
     input_dsl: '@goal Not (Exists ?x (And (isA ?x Plant) (isA ?x Mushroom)))',
     expected_nl: 'True:',
     proof_nl: 'No Plant can also be Mushroom'
@@ -222,7 +222,7 @@ export const steps = [
   // === QUANTIFIERS: Exists witness ===
   {
     action: 'learn',
-    input_nl: 'Add a concrete witness for Pet(x) AND Rabbit(x).',
+    input_nl: 'Alice is a Pet. Alice is a Rabbit.',
     input_dsl: `
       isA Alice Pet
       isA Alice Rabbit
@@ -231,7 +231,7 @@ export const steps = [
   },
   {
     action: 'prove',
-    input_nl: 'Does there exist a pet that is also a rabbit?',
+    input_nl: 'Exists ?x (?x is a Pet) AND (?x is a Rabbit).',
     input_dsl: '@goal Exists ?x (And (isA ?x Pet) (isA ?x Rabbit))',
     expected_nl: 'True:',
     proof_nl: 'Witness Alice satisfies the existential'

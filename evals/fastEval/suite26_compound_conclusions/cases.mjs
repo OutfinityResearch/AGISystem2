@@ -13,7 +13,7 @@ export const theories = ['05-logic.sys2'];
 export const steps = [
   {
     action: 'learn',
-    input_nl: 'Setup: Sally is wumpus+sterpus+gorpus. Rule: (w∧s∧g) -> (z∧i).',
+    input_nl: 'Sally is a Wumpus. Sally is a Sterpus. Sally is a Gorpus. IF ((?x is a Wumpus) AND (?x is a Sterpus) AND (?x is a Gorpus)) THEN ((?x is a Zumpus) AND (?x is an Impus)).',
     input_dsl: `
       isA Sally Wumpus
       isA Sally Sterpus
@@ -34,7 +34,7 @@ export const steps = [
 
   {
     action: 'prove',
-    input_nl: 'BUG001 regression: prove leaf (Zumpus) from And consequent.',
+    input_nl: 'Sally is a Zumpus.',
     input_dsl: '@goal isA Sally Zumpus',
     expected_nl: 'True: Sally is a zumpus.',
     proof_nl: [
@@ -49,7 +49,7 @@ export const steps = [
 
   {
     action: 'prove',
-    input_nl: 'Also prove the other leaf (Impus) from the same And consequent.',
+    input_nl: 'Sally is an Impus.',
     input_dsl: '@goal isA Sally Impus',
     expected_nl: 'True: Sally is an impus.',
     proof_nl: [
@@ -64,7 +64,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'Query: who is a zumpus?',
+    input_nl: 'What is a Zumpus?',
     input_dsl: '@q isA ?who Zumpus',
     expected_nl: ['Sally is a zumpus.'],
     proof_nl: [

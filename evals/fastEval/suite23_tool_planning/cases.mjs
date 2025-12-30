@@ -19,7 +19,7 @@ export const theories = [];
 export const steps = [
   {
     action: 'learn',
-    input_nl: 'Define tool-step capabilities via graphs and compute a plan to produce a learning report.',
+    input_nl: '$action actionSig $tool $input $output. $action requires has Workspace $tool. $action requires has Workspace $input. $action causes has Workspace $output. ReadFile is a Tool. Extract is a Tool. WriteFile is a Tool. DS03Spec is a Resource. DS14Spec is a Resource. ReadDS03 toolStep ReadFile DS03Spec DS03Text. ExtractLearnReturn toolStep Extract DS03Text LearnReturnInfo. WriteLearnReport toolStep WriteFile LearnReturnInfo LearnReturnReport. ReadDS14 toolStep ReadFile DS14Spec DS14Text. ExtractProveNoHoles toolStep Extract DS14Text ProveNoHolesInfo. WriteEvalReport toolStep WriteFile ProveNoHolesInfo EvalReport.',
     input_dsl: `
       # Declare action signatures (used to emit planAction facts)
       @actionSig:actionSig __Relation
@@ -77,7 +77,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'Verify the learning-report plan is valid by simulating it.',
+    input_nl: 'planLearn verifyPlan ?ok.',
     input_dsl: '@q verifyPlan planLearn ?ok',
     maxResults: 1,
     expected_nl: [
@@ -90,7 +90,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'How many steps are in the learning-report plan?',
+    input_nl: 'planLearn plan ?len.',
     input_dsl: '@q plan planLearn ?len',
     maxResults: 1,
     expected_nl: [
@@ -103,7 +103,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'What is step 1 of the learning-report plan?',
+    input_nl: 'planLearn planStep 1 ?action.',
     input_dsl: '@q planStep planLearn 1 ?action',
     maxResults: 1,
     expected_nl: [
@@ -115,7 +115,7 @@ export const steps = [
   },
   {
     action: 'query',
-    input_nl: 'What tool is used at step 1 (with parameters)?',
+    input_nl: 'planLearn planAction 1 ?tool ?input ?output.',
     input_dsl: '@q planAction planLearn 1 ?tool ?input ?output',
     maxResults: 1,
     expected_nl: [
@@ -128,7 +128,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'What is step 2 of the learning-report plan?',
+    input_nl: 'planLearn planStep 2 ?action.',
     input_dsl: '@q planStep planLearn 2 ?action',
     maxResults: 1,
     expected_nl: [
@@ -140,7 +140,7 @@ export const steps = [
   },
   {
     action: 'query',
-    input_nl: 'What tool is used at step 2 (with parameters)?',
+    input_nl: 'planLearn planAction 2 ?tool ?input ?output.',
     input_dsl: '@q planAction planLearn 2 ?tool ?input ?output',
     maxResults: 1,
     expected_nl: [
@@ -153,7 +153,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'What is step 3 of the learning-report plan?',
+    input_nl: 'planLearn planStep 3 ?action.',
     input_dsl: '@q planStep planLearn 3 ?action',
     maxResults: 1,
     expected_nl: [
@@ -165,7 +165,7 @@ export const steps = [
   },
   {
     action: 'query',
-    input_nl: 'What tool is used at step 3 (with parameters)?',
+    input_nl: 'planLearn planAction 3 ?tool ?input ?output.',
     input_dsl: '@q planAction planLearn 3 ?tool ?input ?output',
     maxResults: 1,
     expected_nl: [
@@ -197,7 +197,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'Verify the eval-report plan is valid by simulating it.',
+    input_nl: 'planEval verifyPlan ?ok.',
     input_dsl: '@q verifyPlan planEval ?ok',
     maxResults: 1,
     expected_nl: [
@@ -210,7 +210,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'How many steps are in the eval-report plan?',
+    input_nl: 'planEval plan ?len.',
     input_dsl: '@q plan planEval ?len',
     maxResults: 1,
     expected_nl: [
@@ -223,7 +223,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'What is step 1 of the eval-report plan?',
+    input_nl: 'planEval planStep 1 ?action.',
     input_dsl: '@q planStep planEval 1 ?action',
     maxResults: 1,
     expected_nl: [
@@ -235,7 +235,7 @@ export const steps = [
   },
   {
     action: 'query',
-    input_nl: 'What tool is used at step 1 (with parameters)?',
+    input_nl: 'planEval planAction 1 ?tool ?input ?output.',
     input_dsl: '@q planAction planEval 1 ?tool ?input ?output',
     maxResults: 1,
     expected_nl: [
@@ -248,7 +248,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'What is step 2 of the eval-report plan?',
+    input_nl: 'planEval planStep 2 ?action.',
     input_dsl: '@q planStep planEval 2 ?action',
     maxResults: 1,
     expected_nl: [
@@ -260,7 +260,7 @@ export const steps = [
   },
   {
     action: 'query',
-    input_nl: 'What tool is used at step 2 (with parameters)?',
+    input_nl: 'planEval planAction 2 ?tool ?input ?output.',
     input_dsl: '@q planAction planEval 2 ?tool ?input ?output',
     maxResults: 1,
     expected_nl: [
@@ -273,7 +273,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'What is step 3 of the eval-report plan?',
+    input_nl: 'planEval planStep 3 ?action.',
     input_dsl: '@q planStep planEval 3 ?action',
     maxResults: 1,
     expected_nl: [
@@ -285,7 +285,7 @@ export const steps = [
   },
   {
     action: 'query',
-    input_nl: 'What tool is used at step 3 (with parameters)?',
+    input_nl: 'planEval planAction 3 ?tool ?input ?output.',
     input_dsl: '@q planAction planEval 3 ?tool ?input ?output',
     maxResults: 1,
     expected_nl: [

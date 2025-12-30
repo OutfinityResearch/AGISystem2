@@ -13,7 +13,7 @@ export const theories = ['05-logic.sys2'];
 export const steps = [
   {
     action: 'learn',
-    input_nl: 'bAbI16-style colors: two frogs are gray; Greg is a frog',
+    input_nl: 'Lily is a Frog. Lily hasProperty gray. Julius is a Frog. Julius hasProperty gray. Greg is a Frog.',
     input_dsl: `
       isA Lily Frog
       hasProperty Lily gray
@@ -25,6 +25,7 @@ export const steps = [
   },
   {
     action: 'query',
+    input_nl: 'Greg hasProperty ?x.',
     input_dsl: '@q hasProperty Greg ?x',
     expected_nl: [
       'Greg has gray.'
@@ -35,7 +36,7 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Single-peer induction: Bernhard is a yellow swan; Brian is a swan',
+    input_nl: 'Bernhard is a Swan. Brian is a Swan. Bernhard hasProperty yellow.',
     input_dsl: `
       isA Bernhard Swan
       isA Brian Swan
@@ -45,6 +46,7 @@ export const steps = [
   },
   {
     action: 'query',
+    input_nl: 'Brian hasProperty ?x.',
     input_dsl: '@q hasProperty Brian ?x',
     expected_nl: [
       'Brian has yellow.'

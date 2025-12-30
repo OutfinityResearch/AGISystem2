@@ -15,7 +15,7 @@ export const steps = [
   // === SETUP: Multi-domain facts with shared/unique properties ===
   {
     action: 'learn',
-    input_nl: 'Vehicles, animals, tools with overlapping properties for similarity/analogy; capitals for analogies.',
+    input_nl: 'Car is a Vehicle. Car has Wheels. Car has Engine. Car has Seats. Car can Transport. Truck is a Vehicle. Truck has Wheels. Truck has Engine. Truck has Bed. Truck can Transport. Truck can Haul. Bicycle is a Vehicle. Bicycle has Wheels. Bicycle has Pedals. Bicycle can Transport. Truck Difference Car. Car Difference Bicycle. Bird is an Animal. Bird can Fly. Bird has Wings. Sparrow is a Bird. Sparrow has Beak. Sparrow can Chirp. Hawk is a Bird. Hawk can Hunt. Hawk can Fly. Fish is an Animal. Fish can Swim. Fish has Gills. Trout is a Fish. Trout has Spots. Hammer is a Tool. Hammer has Handle. Hammer has Head. Mallet is a Tool. Mallet has Handle. Mallet has Head. Screwdriver is a Tool. Screwdriver has Handle. Screwdriver has Tip. Screwdriver has Shaft. Hammer can Pound. Mallet can Pound. Screwdriver can Turn. Paris is a City. Berlin is a City. France is a Country. Germany is a Country. Paris isCapitalOf France. Berlin isCapitalOf Germany.',
     input_dsl: `
       # Vehicles
       isA Car Vehicle
@@ -81,7 +81,7 @@ export const steps = [
   // === SIMILAR: Hammer with ranked neighbor Mallet (tools) ===
   {
     action: 'query',
-    input_nl: 'What is similar to a Hammer?',
+    input_nl: 'Hammer similar ?entity.',
     input_dsl: '@q similar Hammer ?entity',
     expected_nl: [
       'Mallet is similar to Hammer.',
@@ -96,7 +96,7 @@ export const steps = [
   // === SIMILAR: Car with ranked neighbors ===
   {
     action: 'query',
-    input_nl: 'What is similar to a Car?',
+    input_nl: 'Car similar ?entity.',
     input_dsl: '@q similar Car ?entity',
     expected_nl: [
       'Truck is similar to Car.',
@@ -111,7 +111,7 @@ export const steps = [
   // === SIMILAR: Sparrow vs Hawk (shared bird props) ===
   {
     action: 'query',
-    input_nl: 'What is similar to a Sparrow?',
+    input_nl: 'Sparrow similar ?entity.',
     input_dsl: '@q similar Sparrow ?entity',
     expected_nl: [
       'Hawk is similar to Sparrow.'
@@ -124,7 +124,7 @@ export const steps = [
   // === ANALOGY: Truck:Haul :: Bicycle:? (transport ability) ===
   {
     action: 'query',
-    input_nl: 'Truck is to Haul as Bicycle is to what?',
+    input_nl: 'Truck analogy Haul Bicycle ?ability.',
     input_dsl: '@q analogy Truck Haul Bicycle ?ability',
     expected_nl: [
       'Truck is to Haul as Bicycle is to Transport.'
@@ -137,7 +137,7 @@ export const steps = [
   // === ANALOGY: Capital:Country pattern (Paris isCapitalOf France)
   {
     action: 'query',
-    input_nl: 'Paris is to France as Berlin is to what?',
+    input_nl: 'Paris analogy France Berlin ?answer.',
     input_dsl: '@q analogy Paris France Berlin ?answer',
     expected_nl: [
       'Paris is to France as Berlin is to Germany.'
@@ -150,7 +150,7 @@ export const steps = [
   // === ANALOGY: Bird:Fly :: Fish:? ===
   {
     action: 'query',
-    input_nl: 'Bird is to Fly as Fish is to what?',
+    input_nl: 'Bird analogy Fly Fish ?ability.',
     input_dsl: '@q analogy Bird Fly Fish ?ability',
     expected_nl: [
       'Bird is to Fly as Fish is to Swim.'
@@ -163,7 +163,7 @@ export const steps = [
   // === DIFFERENCE: Car vs Truck (highlight unique props) ===
   {
     action: 'query',
-    input_nl: 'What distinguishes a Car from a Truck?',
+    input_nl: 'Car difference Truck ?feature.',
     input_dsl: '@q difference Car Truck ?feature',
     expected_nl: [
       'Car differs from Truck.'
@@ -176,7 +176,7 @@ export const steps = [
   // === DIFFERENCE: Hammer vs Screwdriver ===
   {
     action: 'query',
-    input_nl: 'What distinguishes a Hammer from a Screwdriver?',
+    input_nl: 'Hammer difference Screwdriver ?feature.',
     input_dsl: '@q difference Hammer Screwdriver ?feature',
     expected_nl: [
       'Hammer differs from Screwdriver.'
@@ -189,7 +189,7 @@ export const steps = [
   // === DIFFERENCE: Car vs Bicycle (engine vs pedals) ===
   {
     action: 'query',
-    input_nl: 'What distinguishes a Car from a Bicycle?',
+    input_nl: 'Car difference Bicycle ?feature.',
     input_dsl: '@q difference Car Bicycle ?feature',
     expected_nl: [
       'Car differs from Bicycle.'
@@ -202,7 +202,7 @@ export const steps = [
   // === BUNDLE: Composite bird pattern should preserve Fly ===
   {
     action: 'query',
-    input_nl: 'Bundle Sparrow and Hawk: what can the bundle do?',
+    input_nl: 'Sparrow bundle Hawk ?ability.',
     input_dsl: '@q bundle Sparrow Hawk ?ability',
     expected_nl: [
       'Sparrow and Hawk combined have Bird, Beak, Chirp, Hunt, and Fly.'
@@ -215,7 +215,7 @@ export const steps = [
   // === INDUCE: Fish vs Trout (no direct common properties, only inheritance) ===
   {
     action: 'query',
-    input_nl: 'Induce common properties of Fish and Trout.',
+    input_nl: 'Fish induce Trout ?property.',
     input_dsl: '@q induce Fish Trout ?property',
     expected_nl: [
       'Fish and Trout have no common properties.'
@@ -228,7 +228,7 @@ export const steps = [
   // === INDUCE: Common bird properties (deeper intersection) ===
   {
     action: 'query',
-    input_nl: 'Induce common properties of Sparrow and Hawk.',
+    input_nl: 'Sparrow induce Hawk ?property.',
     input_dsl: '@q induce Sparrow Hawk ?property',
     expected_nl: [
       'Sparrow and Hawk share Bird.'
@@ -241,7 +241,7 @@ export const steps = [
   // === ANALOGY DEEP: Car:Engine :: Bicycle:? (property-based, multiple answers) ===
   {
     action: 'query',
-    input_nl: 'Car is to Engine as Bicycle is to what?',
+    input_nl: 'Car analogy Engine Bicycle ?part.',
     input_dsl: '@q analogy Car Engine Bicycle ?part',
     expected_nl: [
       'Car is to Engine as Bicycle is to Wheels.',
@@ -256,7 +256,7 @@ export const steps = [
   // === BUNDLE DEEP: Bundle vehicles Car, Truck, Bicycle then look for shared ===
   {
     action: 'query',
-    input_nl: 'Bundle vehicles Car, Truck, Bicycle: what properties remain shared?',
+    input_nl: 'Car bundle Truck Bicycle ?vehicleProp.',
     input_dsl: '@q bundle Car Truck Bicycle ?vehicleProp',
     expected_nl: [
       'Car, Truck, and Bicycle combined have Vehicle, Wheels, Engine, Seats, Transport, Bed, Haul, and Pedals.'
@@ -269,7 +269,7 @@ export const steps = [
   // === NEGATIVE SIMILAR: Unknown entity produces no results but clear trace ===
   {
     action: 'query',
-    input_nl: 'What is similar to QuarkX?',
+    input_nl: 'QuarkX similar ?entity.',
     input_dsl: '@q similar QuarkX ?entity',
     expected_nl: [
       'No results'

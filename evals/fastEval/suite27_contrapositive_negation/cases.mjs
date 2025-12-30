@@ -18,7 +18,7 @@ export const theories = [];
 export const steps = [
   {
     action: 'learn',
-    input_nl: 'Setup: rules/facts that make Not(Tumpus) derivable while (Yumpus ∧ Rompus ∧ Lorpus) → Tumpus.',
+    input_nl: 'IF ((?x is a Yumpus) AND (?x is a Rompus) AND (?x is a Lorpus)) THEN (?x is a Tumpus). IF (?x is a Grimpus) THEN (?x is not a Tumpus). Stella is a Yumpus. Stella is a Rompus. Stella is a Lorpus. Stella is a Grimpus.',
     input_dsl: `
       @cond0 isA ?x Yumpus
       @cond1 isA ?x Rompus
@@ -41,7 +41,7 @@ export const steps = [
   },
   {
     action: 'prove',
-    input_nl: 'Prove: Stella is not a yumpus (via contrapositive from Not(Tumpus)).',
+    input_nl: 'Stella is not a Yumpus.',
     input_dsl: '@goal:goal Not (isA Stella Yumpus)',
     expected_nl: 'True: NOT (Stella is a yumpus).',
     proof_nl: [
@@ -54,7 +54,7 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Setup: contrapositive where the rule conclusion is a conjunction (A → (B ∧ C)).',
+    input_nl: 'IF (?x is a Vumpus) THEN ((?x is a Brimpus) AND (?x is a Zumpus)). Alex is not a Brimpus.',
     input_dsl: `
       @cond8 isA ?x Vumpus
       @cond9 isA ?x Brimpus
@@ -69,7 +69,7 @@ export const steps = [
   },
   {
     action: 'prove',
-    input_nl: 'Prove: Alex is not a vumpus (from Not(Brimpus) and Vumpus→(Brimpus∧Zumpus)).',
+    input_nl: 'Alex is not a Vumpus.',
     input_dsl: '@goal:goal Not (isA Alex Vumpus)',
     expected_nl: 'True: NOT (Alex is a vumpus).',
     proof_nl: [
@@ -80,7 +80,7 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Setup: contrapositive chain (Vumpus→Brimpus→Numpus) with explicit Not(Numpus).',
+    input_nl: 'IF (?x is a Vumpus) THEN (?x is a Brimpus). IF (?x is a Brimpus) THEN (?x is a Numpus). Stella is not a Numpus.',
     input_dsl: `
       @cond13 isA ?x Vumpus
       @cond14 isA ?x Brimpus
@@ -97,7 +97,7 @@ export const steps = [
   },
   {
     action: 'prove',
-    input_nl: 'Prove: Stella is not a vumpus (from Not(Numpus) and the implication chain).',
+    input_nl: 'Stella is not a Vumpus.',
     input_dsl: '@goal:goal Not (isA Stella Vumpus)',
     expected_nl: 'True: NOT (Stella is a vumpus).',
     proof_nl: [
@@ -108,7 +108,7 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Setup: disjunctive antecedent (Lempus OR Shumpus OR Yumpus) → Impus, plus explicit Not(Impus).',
+    input_nl: 'IF ((?x is a Lempus) OR (?x is a Shumpus) OR (?x is a Yumpus)) THEN (?x is an Impus). Max is a Lempus. Max is a Yumpus. Max is not a Impus.',
     input_dsl: `
       @cond18 isA ?x Lempus
       @cond19 isA ?x Shumpus
@@ -125,7 +125,7 @@ export const steps = [
   },
   {
     action: 'prove',
-    input_nl: 'Prove: Max is not a shumpus (from Not(Impus) and (Lempus OR Shumpus OR Yumpus)→Impus).',
+    input_nl: 'Max is not a Shumpus.',
     input_dsl: '@goal:goal Not (isA Max Shumpus)',
     expected_nl: 'True: NOT (Max is a shumpus).',
     proof_nl: [
@@ -136,7 +136,7 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Setup: chain refutation via Or antecedent: Tumpus→Brimpus (as Or branch), and Numpus→(Wumpus∧Tumpus).',
+    input_nl: 'IF ((?x is a Shumpus) OR (?x is a Dumpus) OR (?x is a Tumpus)) THEN (?x is a Brimpus). IF (?x is a Numpus) THEN ((?x is a Tumpus) AND (?x is a Wumpus)). Wren is a Numpus. Wren is not a Brimpus.',
     input_dsl: `
       @s isA ?x Shumpus
       @d isA ?x Dumpus
@@ -157,7 +157,7 @@ export const steps = [
   },
   {
     action: 'prove',
-    input_nl: 'Prove: Wren is not a numpus (from Not(Brimpus) + Or→Brimpus + Numpus→(Wumpus∧Tumpus)).',
+    input_nl: 'Wren is not a Numpus.',
     input_dsl: '@goal:goal Not (isA Wren Numpus)',
     expected_nl: 'True: NOT (Wren is a numpus).',
     proof_nl: [
@@ -168,7 +168,7 @@ export const steps = [
   },
   {
     action: 'learn',
-    input_nl: 'Setup: multiple possible refutations (Shumpus→(Grimpus∧Zumpus∧Rompus), Zumpus→(Sterpus∧...)), with explicit Not(Sterpus).',
+    input_nl: 'IF (?x is a Shumpus) THEN ((?x is a Grimpus) AND (?x is a Zumpus) AND (?x is a Rompus)). IF (?x is a Zumpus) THEN ((?x is a Sterpus) AND (?x is a Lorpus) AND (?x is a Shumpus)). Stella is not a Sterpus.',
     input_dsl: `
       @sh isA ?x Shumpus
       @g isA ?x Grimpus
@@ -190,7 +190,7 @@ export const steps = [
   },
   {
     action: 'prove',
-    input_nl: 'Prove: Stella is not a shumpus (should find the easy refutation path via Not(Sterpus) without exhausting step budget).',
+    input_nl: 'Stella is not a Shumpus.',
     input_dsl: '@goal:goal Not (isA Stella Shumpus)',
     expected_nl: 'True: NOT (Stella is a shumpus).',
     proof_nl: [

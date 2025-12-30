@@ -16,7 +16,7 @@ export const theories = ['05-logic.sys2'];
 export const steps = [
   {
     action: 'learn',
-    input_nl: 'Setup a multi-step causal chain and an alternative independent cause.',
+    input_nl: 'Storm causes Rain. Rain causes WetGrass. WetGrass causes SlipHazard. SlipHazard causes Injury. Accident causes Injury.',
     input_dsl: `
       causes Storm Rain
       causes Rain WetGrass
@@ -31,7 +31,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'Explain why Storm causes Injury (requires multi-step transitive reasoning).',
+    input_nl: 'explain Storm causes Injury ?why.',
     input_dsl: '@q explain (causes Storm Injury) ?why',
     maxResults: 1,
     expected_nl: [
@@ -44,7 +44,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'Counterfactual: if Storm did not occur, would Injury still occur?',
+    input_nl: 'Storm whatif Injury ?outcome.',
     input_dsl: '@q whatif Storm Injury ?outcome',
     maxResults: 1,
     expected_nl: [
@@ -57,7 +57,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'Abduce plausible explanations for Injury (should include direct and upstream causes).',
+    input_nl: 'Injury abduce ?cause.',
     input_dsl: '@q abduce Injury ?cause',
     maxResults: 5,
     expected_nl: [

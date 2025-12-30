@@ -132,13 +132,13 @@ export function capitalizeWord(word) {
   if (/^\$[A-Za-z_][A-Za-z0-9_]*$/.test(s)) return s;
   if (/^__.*__$/.test(s)) return s;
 
-  // Preserve ID-like ALLCAPS tokens (often stable identifiers).
-  if (/[0-9_]/.test(s) && s.toUpperCase() === s) return s;
+  // Preserve ALLCAPS identifier-like tokens (e.g., "ID", "DNA", "USA").
+  // These are often meaningful symbols and should not be downcased to "Id"/"Dna".
+  if (s.length >= 2 && s.toUpperCase() === s && /^[A-Z0-9_]+$/.test(s)) return s;
 
   const first = s.charAt(0);
   const rest = s.slice(1);
 
-  // If the token is a shouty ALLCAPS word ("HELLO"), normalize it to Titlecase ("Hello").
   // If it's mixed/camel case ("LivingThing"), preserve internal caps.
   const hasUpperInRest = /[A-Z]/.test(rest);
   const restIsAllUpper = rest.length > 0 && rest.toUpperCase() === rest;

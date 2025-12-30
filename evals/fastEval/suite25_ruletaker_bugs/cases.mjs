@@ -28,7 +28,7 @@ export const steps = [
 
   {
     action: 'learn',
-    input_nl: 'Setup: Harry is big (single fact)',
+    input_nl: 'Harry hasProperty big.',
     input_dsl: `
       hasProperty Harry big
     `,
@@ -37,7 +37,7 @@ export const steps = [
 
   {
     action: 'prove',
-    input_nl: 'Verify: Harry is big (positive fact exists)',
+    input_nl: 'Harry hasProperty big.',
     input_dsl: '@goal hasProperty Harry big',
     expected_nl: 'True: Harry has big.',
     proof_nl: 'Fact in KB: Harry has big'
@@ -48,7 +48,7 @@ export const steps = [
   // But instead it proves "hasProperty Harry big" ignoring the Not wrapper.
   {
     action: 'prove',
-    input_nl: 'BUG #1: Not(Harry big) should be UNPROVABLE (Harry IS big!)',
+    input_nl: 'Harry does not hasProperty big.',
     // NOTE: prove() uses only the first statement as the goal (see src/runtime/session-prove.mjs),
     // so this must be a single goal statement (no intermediate @neg bindings).
     input_dsl: '@goal Not (hasProperty Harry big)',
@@ -59,7 +59,7 @@ export const steps = [
   // CWA behavior: Not(P) is TRUE when P is absent from KB.
   {
     action: 'prove',
-    input_nl: 'CWA: Not(Zed big) should be PROVABLE (Zed big is absent)',
+    input_nl: 'Zed does not hasProperty big.',
     input_dsl: '@goal Not (hasProperty Zed big)',
     expected_nl: 'True: Not',
     proof_nl: 'Closed world assumption'
@@ -74,7 +74,7 @@ export const steps = [
 
   {
     action: 'learn',
-    input_nl: 'Setup: Charlie is quiet, quiet->round rule',
+    input_nl: 'Charlie hasProperty quiet. IF (Charlie hasProperty quiet) THEN (Charlie hasProperty round).',
     input_dsl: `
       hasProperty Charlie quiet
       @ant hasProperty Charlie quiet
@@ -86,7 +86,7 @@ export const steps = [
 
   {
     action: 'prove',
-    input_nl: 'Verify: Charlie is quiet (antecedent is TRUE)',
+    input_nl: 'Charlie hasProperty quiet.',
     input_dsl: '@goal hasProperty Charlie quiet',
     expected_nl: 'True: Charlie has quiet.',
     proof_nl: 'Fact in KB: Charlie has quiet'
@@ -96,7 +96,7 @@ export const steps = [
   // Classic modus ponens failure.
   {
     action: 'prove',
-    input_nl: 'BUG #2: Charlie round via modus ponens (quiet->round, quiet=TRUE)',
+    input_nl: 'Charlie hasProperty round.',
     input_dsl: '@goal hasProperty Charlie round',
     expected_nl: 'True: Charlie has round.',
     proof_nl: 'Applied rule: IF (Charlie has quiet) THEN (Charlie has round). Therefore Charlie has round.'
@@ -109,7 +109,7 @@ export const steps = [
 
   {
     action: 'learn',
-    input_nl: 'Setup: Bob is big, big->green rule with variable',
+    input_nl: 'Bob hasProperty big. IF (?x hasProperty big) THEN (?x hasProperty green).',
     input_dsl: `
       hasProperty Bob big
       @cond hasProperty ?x big
@@ -121,7 +121,7 @@ export const steps = [
 
   {
     action: 'prove',
-    input_nl: 'Sanity: Bob green via variable rule (THIS WORKS)',
+    input_nl: 'Bob hasProperty green.',
     input_dsl: '@goal hasProperty Bob green',
     expected_nl: 'True: Bob has green.',
     proof_nl: 'Applied rule: IF (Bob has big) THEN (Bob has green). Therefore Bob has green.'
@@ -134,7 +134,7 @@ export const steps = [
 
   {
     action: 'learn',
-    input_nl: 'Setup: Dave is cold, cold->frozen (GROUND TERMS)',
+    input_nl: 'Dave hasProperty cold. IF (Dave hasProperty cold) THEN (Dave hasProperty frozen).',
     input_dsl: `
       hasProperty Dave cold
       @a hasProperty Dave cold
@@ -146,7 +146,7 @@ export const steps = [
 
   {
     action: 'prove',
-    input_nl: 'BUG #3: Dave frozen via ground modus ponens (should work but fails)',
+    input_nl: 'Dave hasProperty frozen.',
     input_dsl: '@goal hasProperty Dave frozen',
     expected_nl: 'True: Dave has frozen.',
     proof_nl: 'Applied rule: IF (Dave has cold) THEN (Dave has frozen). Therefore Dave has frozen.'
@@ -159,7 +159,7 @@ export const steps = [
 
   {
     action: 'learn',
-    input_nl: 'Setup: Tom is smart (positive fact)',
+    input_nl: 'Tom hasProperty smart.',
     input_dsl: `
       hasProperty Tom smart
       @p hasProperty Tom smart
@@ -171,7 +171,7 @@ export const steps = [
   // Tom IS smart (hasProperty Tom smart is in KB)
   {
     action: 'prove',
-    input_nl: 'Verify: Tom is smart (positive)',
+    input_nl: 'Tom hasProperty smart.',
     input_dsl: '@goal hasProperty Tom smart',
     expected_nl: 'True: Tom has smart.',
     proof_nl: 'Fact in KB: Tom has smart'
@@ -181,7 +181,7 @@ export const steps = [
   // This one WORKS correctly - engine returns "Cannot prove" which is expected
   {
     action: 'prove',
-    input_nl: 'Sanity: Not(Tom smart) correctly unprovable (Tom IS smart)',
+    input_nl: 'Tom does not hasProperty smart.',
     input_dsl: '@goal Not (hasProperty Tom smart)',
     expected_nl: 'Cannot prove: Not',
     proof_nl: 'Not'
@@ -194,7 +194,7 @@ export const steps = [
 
   {
     action: 'learn',
-    input_nl: 'Setup: Ice cold->frozen, Water cold->frozen (but Water is NOT cold)',
+    input_nl: 'Ice hasProperty cold. IF (Ice hasProperty cold) THEN (Ice hasProperty frozen). Water hasProperty liquid. IF (Water hasProperty cold) THEN (Water hasProperty frozen).',
     input_dsl: `
       hasProperty Ice cold
       @anti hasProperty Ice cold
@@ -211,7 +211,7 @@ export const steps = [
 
   {
     action: 'prove',
-    input_nl: 'BUG #4: Water frozen should be UNPROVABLE (Water is not cold)',
+    input_nl: 'Water hasProperty frozen.',
     input_dsl: '@goal hasProperty Water frozen',
     expected_nl: 'Cannot prove',
     proof_nl: [

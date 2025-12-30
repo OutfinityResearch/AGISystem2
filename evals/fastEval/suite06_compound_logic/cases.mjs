@@ -14,7 +14,7 @@ export const steps = [
   // === SETUP: Deep hierarchy + 3-way And rule ===
   {
     action: 'learn',
-    input_nl: 'Guilt requires motive AND opportunity AND means. Deep suspect hierarchy.',
+    input_nl: 'John is a Detective. Detective is an Investigator. Investigator is a Professional. Professional is a Person. Person is a Human. Human is an Entity. John has Motive. John has Opportunity. John has Means. Mary is a Civilian. Civilian is a Citizen. Citizen is a Person. Mary has Motive. Mary has Opportunity. Charlie is an Outsider. Outsider is an Unknown. Unknown is an Entity. Charlie has Motive. IF (((?x has Motive) AND (?x has Opportunity)) AND (?x has Means)) THEN (?x isGuilty).',
     input_dsl: `
       isA John Detective
       isA Detective Investigator
@@ -49,7 +49,7 @@ export const steps = [
   // === PROVE: 5-step John is guilty (3-way And satisfied) ===
   {
     action: 'prove',
-    input_nl: 'Is John guilty? (has Motive AND Opportunity AND Means)',
+    input_nl: 'John isGuilty.',
     input_dsl: '@goal isGuilty John',
     expected_nl: 'True: John is guilty.',
     proof_nl: [
@@ -64,7 +64,7 @@ export const steps = [
   // === NEGATIVE: Mary missing Means ===
   {
     action: 'prove',
-    input_nl: 'Is Mary guilty? (missing Means)',
+    input_nl: 'Mary isGuilty.',
     input_dsl: '@goal isGuilty Mary',
     expected_nl: 'Cannot prove: Mary is guilty.',
     proof_nl: [
@@ -79,7 +79,7 @@ export const steps = [
   // === NEGATIVE: Charlie missing two conditions ===
   {
     action: 'prove',
-    input_nl: 'Is Charlie guilty? (only has Motive)',
+    input_nl: 'Charlie isGuilty.',
     input_dsl: '@goal isGuilty Charlie',
     expected_nl: 'Cannot prove: Charlie is guilty.',
     proof_nl: [
@@ -94,7 +94,7 @@ export const steps = [
   // === SETUP: Deep payment hierarchy + 3-way Or rule ===
   {
     action: 'learn',
-    input_nl: 'Payment: deep hierarchy + Cash OR Card OR Crypto.',
+    input_nl: 'Alice is a Customer. Customer is a Buyer. Buyer is a Participant. Participant is an Actor. Actor is an Entity. Alice has Cash. Bob is a Member. Member is a Subscriber. Subscriber is an User. User is a Participant. Bob has Card. Eve is a Trader. Trader is an Investor. Investor is a Participant. Eve has Crypto. Dan is a Guest. Guest is a Visitor. Visitor is a Participant. Dan has Nothing. IF (((?x has Cash) OR (?x has Card)) OR (?x has Crypto)) THEN (?x can Pay).',
     input_dsl: `
       isA Alice Customer
       isA Customer Buyer
@@ -129,7 +129,7 @@ export const steps = [
   // === PROVE: Alice can pay via Cash (Or branch 1) ===
   {
     action: 'prove',
-    input_nl: 'Can Alice pay? (has Cash)',
+    input_nl: 'Alice can Pay.',
     input_dsl: '@goal can Alice Pay',
     expected_nl: 'True: Alice can Pay.',
     proof_nl: [
@@ -143,7 +143,7 @@ export const steps = [
   // === PROVE: Bob can pay via Card (Or branch 2) ===
   {
     action: 'prove',
-    input_nl: 'Can Bob pay? (has Card)',
+    input_nl: 'Bob can Pay.',
     input_dsl: '@goal can Bob Pay',
     expected_nl: 'True: Bob can Pay.',
     proof_nl: [
@@ -157,7 +157,7 @@ export const steps = [
   // === PROVE: Eve can pay via Crypto (Or branch 3) ===
   {
     action: 'prove',
-    input_nl: 'Can Eve pay? (has Crypto)',
+    input_nl: 'Eve can Pay.',
     input_dsl: '@goal can Eve Pay',
     expected_nl: 'True: Eve can Pay.',
     proof_nl: [
@@ -171,7 +171,7 @@ export const steps = [
   // === NEGATIVE: Dan has Nothing (Or not satisfied) ===
   {
     action: 'prove',
-    input_nl: 'Can Dan pay? (has Nothing)',
+    input_nl: 'Dan can Pay.',
     input_dsl: '@goal can Dan Pay',
     expected_nl: 'Cannot prove: Dan can Pay.',
     proof_nl: [
@@ -186,7 +186,7 @@ export const steps = [
   // === SETUP: Deep voting hierarchy + mixed And+Or ===
   {
     action: 'learn',
-    input_nl: 'Voting: (Citizen AND Adult) AND (ID OR Passport). Deep hierarchy.',
+    input_nl: 'Voter is a Resident. Resident is an Inhabitant. Inhabitant is an Occupant. Occupant is a Person. Person is a Human. Human is an Entity. Voter hasProperty Citizen. Voter hasProperty Adult. Voter has ID. Minor is a Child. Child is a Dependent. Dependent is a Person. Minor hasProperty Citizen. Minor has ID. IF (((?x hasProperty Citizen) AND (?x hasProperty Adult)) AND ((?x has ID) OR (?x has Passport))) THEN (?x can Vote).',
     input_dsl: `
       isA Voter Resident
       isA Resident Inhabitant
@@ -218,7 +218,7 @@ export const steps = [
   // === PROVE: Voter can vote (mixed And+Or satisfied) ===
   {
     action: 'prove',
-    input_nl: 'Can Voter vote? (Citizen AND Adult AND (ID OR Passport))',
+    input_nl: 'Voter can Vote.',
     input_dsl: '@goal can Voter Vote',
     expected_nl: 'True: Voter can Vote.',
     proof_nl: [
@@ -233,7 +233,7 @@ export const steps = [
   // === NEGATIVE: Minor cannot vote (not Adult) ===
   {
     action: 'prove',
-    input_nl: 'Can Minor vote? (Citizen but not Adult)',
+    input_nl: 'Minor can Vote.',
     input_dsl: '@goal can Minor Vote',
     expected_nl: 'Cannot prove: Minor can Vote.',
     proof_nl: [
@@ -248,7 +248,7 @@ export const steps = [
   // === QUERY: Who can pay ===
   {
     action: 'query',
-    input_nl: 'Who can pay?',
+    input_nl: '?who can Pay.',
     input_dsl: '@q can ?who Pay',
     expected_nl: [
       'Alice can Pay.',
@@ -265,7 +265,7 @@ export const steps = [
   // === SETUP: Deep corporate hierarchy + promotion rule ===
   {
     action: 'learn',
-    input_nl: 'Corporate: Junior→Associate→Senior→Lead→Manager→Director→VP→CTO→Executive→Leadership.',
+    input_nl: 'Junior is an AssociateLvl. AssociateLvl is a SeniorLvl. SeniorLvl is a LeadLvl. LeadLvl is a ManagerLvl. ManagerLvl is a DirectorLvl. DirectorLvl is a VPLvl. VPLvl is a CTOLvl. CTOLvl is an ExecutiveLvl. ExecutiveLvl is a LeadershipLvl. Dave is a Junior. Sally is a LeadLvl. Dave has Performance. Dave has Tenure. Sally has Performance. IF ((?x has Performance) AND (?x has Tenure)) THEN (?x can GetPromoted).',
     input_dsl: `
       isA Junior AssociateLvl
       isA AssociateLvl SeniorLvl
@@ -293,7 +293,7 @@ export const steps = [
   // === PROVE: 9-step Dave→LeadershipLvl ===
   {
     action: 'prove',
-    input_nl: 'Is Dave at LeadershipLvl? (9-step chain)',
+    input_nl: 'Dave is a LeadershipLvl.',
     input_dsl: '@goal isA Dave LeadershipLvl',
     expected_nl: 'True: Dave is a leadershiplvl.',
     proof_nl: 'Dave isA Junior. Junior isA AssociateLvl. AssociateLvl isA SeniorLvl. SeniorLvl isA LeadLvl. LeadLvl isA ManagerLvl. ManagerLvl isA DirectorLvl. DirectorLvl isA VPLvl. VPLvl isA CTOLvl. CTOLvl isA ExecutiveLvl. ExecutiveLvl isA LeadershipLvl.'
@@ -302,7 +302,7 @@ export const steps = [
   // === PROVE: 5-step Sally→LeadershipLvl ===
   {
     action: 'prove',
-    input_nl: 'Is Sally at LeadershipLvl? (5-step chain)',
+    input_nl: 'Sally is a LeadershipLvl.',
     input_dsl: '@goal isA Sally LeadershipLvl',
     expected_nl: 'True: Sally is a leadershiplvl.',
     proof_nl: 'Sally isA LeadLvl. LeadLvl isA ManagerLvl. ManagerLvl isA DirectorLvl. DirectorLvl isA VPLvl. VPLvl isA CTOLvl. CTOLvl isA ExecutiveLvl. ExecutiveLvl isA LeadershipLvl.'
@@ -311,7 +311,7 @@ export const steps = [
   // === PROVE: Dave can get promoted (And rule satisfied) ===
   {
     action: 'prove',
-    input_nl: 'Can Dave get promoted? (Performance AND Tenure)',
+    input_nl: 'Dave can GetPromoted.',
     input_dsl: '@goal can Dave GetPromoted',
     expected_nl: 'True: Dave can GetPromoted.',
     proof_nl: [
@@ -326,7 +326,7 @@ export const steps = [
   // === NEGATIVE: Sally cannot get promoted (missing Tenure) ===
   {
     action: 'prove',
-    input_nl: 'Can Sally get promoted? (missing Tenure)',
+    input_nl: 'Sally can GetPromoted.',
     input_dsl: '@goal can Sally GetPromoted',
     expected_nl: 'Cannot prove: Sally can GetPromoted.',
     proof_nl: [

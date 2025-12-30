@@ -14,7 +14,7 @@ export const steps = [
   // === SETUP: Define missionPlan graph and invoke ===
   {
     action: 'learn',
-    input_nl: 'Define missionPlan graph with team obligations and temporal structure.',
+    input_nl: '$team is a ResponseTeam. $team is in HQ. $team can Mobilize. $team must Protect. $team assigned $objective. $objective is in $location. Deployment before Completion. Planning before Deployment. $objective causes Safety. implies ?T can Mobilize ?T must Train. implies ?T must Protect ?T must Coordinate.',
     input_dsl: `
       # Macro: missionPlan sets up team with obligations and timeline
       @MP:missionPlan graph team objective location
@@ -49,7 +49,7 @@ export const steps = [
   // === SETUP: Define manufacturingBatch graph ===
   {
     action: 'learn',
-    input_nl: 'Define manufacturingBatch graph with supply chain causation.',
+    input_nl: '$supplier is a Supplier. $plant is a Factory. $supplier has $material. $supplier is in $plant. $supplier causes Supplies. Supplies causes Production. Production causes QA. QA causes ProductReady. $product partOf SupplyChain. ProductReady causes Exportable.',
     input_dsl: `
       # Macro: manufacturingBatch creates supply chain facts
       @MFG:manufacturingBatch graph supplier material product plant
@@ -78,7 +78,7 @@ export const steps = [
   // === NEGATION: Block location ===
   {
     action: 'learn',
-    input_nl: 'Add explicit negation: TeamAlpha not located in ReactorSite.',
+    input_nl: 'TeamAlpha does not locatedIn ReactorSite.',
     input_dsl: `
       @neg_loc locatedIn TeamAlpha ReactorSite
       Not $neg_loc
@@ -89,7 +89,7 @@ export const steps = [
   // === PROVE: Team obligation from implies rule ===
   {
     action: 'prove',
-    input_nl: 'Must TeamAlpha coordinate?',
+    input_nl: 'TeamAlpha must Coordinate.',
     input_dsl: '@goal must TeamAlpha Coordinate',
     expected_nl: 'True: TeamAlpha must Coordinate.',
     proof_nl: [
@@ -101,7 +101,7 @@ export const steps = [
   // === PROVE: Team must train via can Mobilize rule ===
   {
     action: 'prove',
-    input_nl: 'Must TeamAlpha train?',
+    input_nl: 'TeamAlpha must Train.',
     input_dsl: '@goal must TeamAlpha Train',
     expected_nl: 'True: TeamAlpha must Train.',
     proof_nl: [
@@ -113,7 +113,7 @@ export const steps = [
   // === PROVE: Temporal chain ===
   {
     action: 'prove',
-    input_nl: 'Is Planning before Completion?',
+    input_nl: 'Planning before Completion.',
     input_dsl: '@goal before Planning Completion',
     expected_nl: 'True: Planning is before Completion.',
     proof_nl: 'Planning is before Deployment. Deployment is before Completion. Transitive chain verified (2 hops). Therefore Planning is before Completion.'
@@ -122,7 +122,7 @@ export const steps = [
   // === NEGATIVE: Location blocked by negation ===
   {
     action: 'prove',
-    input_nl: 'Is TeamAlpha located in ReactorSite?',
+    input_nl: 'TeamAlpha is in ReactorSite.',
     input_dsl: '@goal locatedIn TeamAlpha ReactorSite',
     expected_nl: 'Cannot prove: TeamAlpha is in ReactorSite.',
     proof_nl: [
@@ -134,7 +134,7 @@ export const steps = [
   // === QUERY: What must TeamAlpha do? ===
   {
     action: 'query',
-    input_nl: 'What must TeamAlpha do?',
+    input_nl: 'TeamAlpha must ?duty.',
     input_dsl: '@q must TeamAlpha ?duty',
     expected_nl: [
       'TeamAlpha must Protect.',
@@ -151,7 +151,7 @@ export const steps = [
   // === PROVE: Manufacturing causal chain ===
   {
     action: 'prove',
-    input_nl: 'Does SupplierA cause ProductReady?',
+    input_nl: 'SupplierA causes ProductReady.',
     input_dsl: '@goal causes SupplierA ProductReady',
     expected_nl: 'True: SupplierA causes ProductReady.',
     proof_nl: 'SupplierA causes Supplies. Supplies causes Production. Production causes QA. QA causes ProductReady. Causal chain verified (4 hops). Therefore SupplierA causes ProductReady.'
@@ -160,7 +160,7 @@ export const steps = [
   // === PROVE: QA to Exportable ===
   {
     action: 'prove',
-    input_nl: 'Does QA cause Exportable?',
+    input_nl: 'QA causes Exportable.',
     input_dsl: '@goal causes QA Exportable',
     expected_nl: 'True: QA causes Exportable.',
     proof_nl: 'QA causes ProductReady. ProductReady causes Exportable. Causal chain verified (2 hops). Therefore QA causes Exportable.'
@@ -169,7 +169,7 @@ export const steps = [
   // === QUERY: What is part of SupplyChain? ===
   {
     action: 'query',
-    input_nl: 'What products are in the supply chain?',
+    input_nl: '?x partOf SupplyChain.',
     input_dsl: '@q partOf ?x SupplyChain',
     expected_nl: [
       'Beam partOf SupplyChain.',
@@ -184,7 +184,7 @@ export const steps = [
   // === PROVE: SupplierB also causes ProductReady (same chain) ===
   {
     action: 'prove',
-    input_nl: 'Does SupplierB cause ProductReady?',
+    input_nl: 'SupplierB causes ProductReady.',
     input_dsl: '@goal causes SupplierB ProductReady',
     expected_nl: 'True: SupplierB causes ProductReady.',
     proof_nl: 'SupplierB causes Supplies. Supplies causes Production. Production causes QA. QA causes ProductReady. Causal chain verified (4 hops). Therefore SupplierB causes ProductReady.'

@@ -14,7 +14,7 @@ export const steps = [
   // === SETUP: Axioms as rules + concrete sets ===
   {
     action: 'learn',
-    input_nl: 'Define subset transitivity and element propagation axioms with concrete sets.',
+    input_nl: 'implies (?A subsetOf ?B) AND (?B subsetOf ?C) ?A subsetOf ?C. implies (?x elementOf ?A) AND (?A subsetOf ?B) ?x elementOf ?B. SetA subsetOf SetB. SetB subsetOf SetC. SetC subsetOf SetD. SetD subsetOf Universe. x elementOf SetA. y elementOf SetB.',
     input_dsl: `
       # Axiom: subset transitivity (A ⊆ B ∧ B ⊆ C → A ⊆ C)
       @ax_sub1 subsetOf ?A ?B
@@ -46,7 +46,7 @@ export const steps = [
   // === PROVE: Deep subset transitivity (SetA -> SetD) ===
   {
     action: 'prove',
-    input_nl: 'Is SetA a subset of SetD?',
+    input_nl: 'SetA subsetOf SetD.',
     input_dsl: '@goal subsetOf SetA SetD',
     expected_nl: 'True: SetA subsetOf SetD.',
     proof_nl: [
@@ -60,7 +60,7 @@ export const steps = [
   // === PROVE: Element propagation (x ∈ SetA -> x ∈ SetC) ===
   {
     action: 'prove',
-    input_nl: 'Does x belong to SetC?',
+    input_nl: 'x elementOf SetC.',
     input_dsl: '@goal elementOf x SetC',
     expected_nl: 'True: x elementOf SetC.',
     proof_nl: [
@@ -75,7 +75,7 @@ export const steps = [
   // === PROVE: Element propagation to Universe ===
   {
     action: 'prove',
-    input_nl: 'Is y in Universe via subset chain?',
+    input_nl: 'y elementOf Universe.',
     input_dsl: '@goal elementOf y Universe',
     expected_nl: 'True: y elementOf Universe.',
     proof_nl: [
@@ -90,7 +90,7 @@ export const steps = [
   // === QUERY: What sets contain x? ===
   {
     action: 'query',
-    input_nl: 'List all sets that contain x.',
+    input_nl: 'x elementOf ?set.',
     input_dsl: '@q elementOf x ?set',
     expected_nl: [
       'x elementOf SetA.',
@@ -111,7 +111,7 @@ export const steps = [
   // === NEGATIVE: Element not in unrelated set ===
   {
     action: 'prove',
-    input_nl: 'Is x in SetZ (unrelated)?',
+    input_nl: 'x elementOf SetZ.',
     input_dsl: '@goal elementOf x SetZ',
     expected_nl: 'Cannot prove: x elementOf SetZ.',
     proof_nl: [
@@ -123,7 +123,7 @@ export const steps = [
   // === SETUP 2: Equality axiom and intersection ===
   {
     action: 'learn',
-    input_nl: 'Add equality axiom (mutual subset implies equal) and intersection rule.',
+    input_nl: 'implies (?X subsetOf ?Y) AND (?Y subsetOf ?X) ?X equal ?Y. implies (?x elementOf SetA) AND (?x elementOf SetB) ?x elementOf IntersectAB. IntersectAB subsetOf SetA. IntersectAB subsetOf SetB. Alpha subsetOf Beta. Beta subsetOf Alpha. z elementOf Alpha.',
     input_dsl: `
       # Equality axiom: A ⊆ B ∧ B ⊆ A → A = B
       @eq1 subsetOf ?X ?Y
@@ -156,7 +156,7 @@ export const steps = [
   // === PROVE: Equality from mutual subset ===
   {
     action: 'prove',
-    input_nl: 'Are Alpha and Beta equal sets?',
+    input_nl: 'Alpha equal Beta.',
     input_dsl: '@goal equal Alpha Beta',
     expected_nl: 'True: Alpha equals Beta.',
     proof_nl: [
@@ -170,7 +170,7 @@ export const steps = [
   // === PROVE: x is in intersection (x already in SetA and SetB via propagation) ===
   {
     action: 'prove',
-    input_nl: 'Is x in the intersection of SetA and SetB?',
+    input_nl: 'x elementOf IntersectAB.',
     input_dsl: '@goal elementOf x IntersectAB',
     expected_nl: 'True: x elementOf IntersectAB.',
     proof_nl: [

@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /**
- * Generate `evals/fastEval/supported-nl.generated.mjs` from canonical DSL.
+ * Apply DSL-derived `input_nl` into all suite case files.
  *
  * Goal:
- * - Provide a deterministic, NLTransformer-targeted English form ("supported NL")
- * - Keep suite case files stable (avoid huge diffs)
+ * - Ensure `input_nl` is strictly a translation of `input_dsl` / `query_dsl`
+ * - Remove any hand-written hinty NL (proof chains, etc.) by overwriting it
+ * - Avoid storing generated lookup tables in the repo
  */
 
 import fs from 'node:fs';
@@ -17,7 +18,6 @@ import { discoverSuites, loadSuite } from '../lib/loader.mjs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PROJECT_ROOT = path.resolve(__dirname, '../../..');
-const OUT_PATH = path.join(PROJECT_ROOT, 'evals', 'fastEval', 'supported-nl.generated.mjs');
 
 function parseArgs(argv) {
   const args = argv.slice(2);
@@ -32,37 +32,27 @@ function parseArgs(argv) {
   return { suites };
 }
 
-function jsString(s) {
-  return JSON.stringify(String(s ?? ''));
-}
-
-function printHeader() {
-  const now = new Date().toISOString();
-  return [
-    '// GENERATED FILE - DO NOT EDIT BY HAND',
-    `// Generated at: ${now}`,
-    '// Generator: node evals/fastEval/tools/gen-supported-nl.mjs',
-    '',
-    'export const supportedNL = {'
-  ].join('\n');
-}
-
-function printFooter() {
-  return [
-    '};',
-    '',
-    'export default { supportedNL };',
-    ''
-  ].join('\n');
-}
-
 function shouldGenerateForCase(c) {
   if (!c || typeof c !== 'object') return false;
   if (!c.input_dsl && !c.query_dsl) return false;
   return ['learn', 'prove', 'query', 'listSolutions'].includes(c.action);
 }
 
-function supportedNlForCase(session, c) {
+function escapeSingleQuotedJsString(s) {
+  return String(s ?? '')
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/\r?\n/g, ' ');
+}
+
+function ensureFinalPunctuation(s) {
+  const t = String(s ?? '').trim();
+  if (!t) return '';
+  if (/[.!?]$/.test(t)) return t;
+  return `${t}.`;
+}
+
+function generatedInputNlForCase(session, c) {
   if (!c || typeof c !== 'object') return null;
 
   if (c.action === 'listSolutions') {
@@ -82,12 +72,235 @@ function supportedNlForCase(session, c) {
   if (!res?.success || !Array.isArray(res.lines) || res.lines.length === 0) return null;
 
   if (c.action === 'learn') {
-    // Keep per-statement lines to avoid gigantic strings in this generated file.
-    return res.lines;
+    return res.lines
+      .map(l => String(l ?? '').trim().replace(/[.!?]+$/g, ''))
+      .filter(Boolean)
+      .map(l => `${l}.`)
+      .join(' ');
   }
 
   // query/prove: use first line (one sentence)
-  return res.lines[0] || null;
+  return ensureFinalPunctuation(res.lines[0] || '');
+}
+
+function findExportedArray(source) {
+  const candidates = ['steps', 'cases'];
+  for (const name of candidates) {
+    const idx = source.indexOf(`export const ${name} = [`);
+    if (idx !== -1) return { name, idx };
+  }
+  return null;
+}
+
+function scanToMatchingBracket(source, openIndex, openChar, closeChar) {
+  let i = openIndex;
+  let depth = 0;
+  let inS = false;
+  let inD = false;
+  let inT = false;
+  let inLineComment = false;
+  let inBlockComment = false;
+
+  const n = source.length;
+  for (; i < n; i++) {
+    const c = source[i];
+    const next = i + 1 < n ? source[i + 1] : '';
+
+    if (inLineComment) {
+      if (c === '\n') inLineComment = false;
+      continue;
+    }
+    if (inBlockComment) {
+      if (c === '*' && next === '/') {
+        inBlockComment = false;
+        i++;
+      }
+      continue;
+    }
+
+    if (inS) {
+      if (c === '\\') {
+        i++;
+        continue;
+      }
+      if (c === "'") inS = false;
+      continue;
+    }
+    if (inD) {
+      if (c === '\\') {
+        i++;
+        continue;
+      }
+      if (c === '"') inD = false;
+      continue;
+    }
+    if (inT) {
+      if (c === '\\') {
+        i++;
+        continue;
+      }
+      if (c === '`') inT = false;
+      continue;
+    }
+
+    if (c === '/' && next === '/') {
+      inLineComment = true;
+      i++;
+      continue;
+    }
+    if (c === '/' && next === '*') {
+      inBlockComment = true;
+      i++;
+      continue;
+    }
+
+    if (c === "'") {
+      inS = true;
+      continue;
+    }
+    if (c === '"') {
+      inD = true;
+      continue;
+    }
+    if (c === '`') {
+      inT = true;
+      continue;
+    }
+
+    if (c === openChar) depth++;
+    if (c === closeChar) {
+      depth--;
+      if (depth === 0) return i;
+    }
+  }
+  return -1;
+}
+
+function findTopLevelObjectRanges(arraySource) {
+  const ranges = [];
+  let i = 0;
+  let braceDepth = 0;
+  let objStart = -1;
+  let inS = false;
+  let inD = false;
+  let inT = false;
+  let inLineComment = false;
+  let inBlockComment = false;
+
+  const n = arraySource.length;
+  for (; i < n; i++) {
+    const c = arraySource[i];
+    const next = i + 1 < n ? arraySource[i + 1] : '';
+
+    if (inLineComment) {
+      if (c === '\n') inLineComment = false;
+      continue;
+    }
+    if (inBlockComment) {
+      if (c === '*' && next === '/') {
+        inBlockComment = false;
+        i++;
+      }
+      continue;
+    }
+
+    if (inS) {
+      if (c === '\\') {
+        i++;
+        continue;
+      }
+      if (c === "'") inS = false;
+      continue;
+    }
+    if (inD) {
+      if (c === '\\') {
+        i++;
+        continue;
+      }
+      if (c === '"') inD = false;
+      continue;
+    }
+    if (inT) {
+      if (c === '\\') {
+        i++;
+        continue;
+      }
+      if (c === '`') inT = false;
+      continue;
+    }
+
+    if (c === '/' && next === '/') {
+      inLineComment = true;
+      i++;
+      continue;
+    }
+    if (c === '/' && next === '*') {
+      inBlockComment = true;
+      i++;
+      continue;
+    }
+
+    if (c === "'") {
+      inS = true;
+      continue;
+    }
+    if (c === '"') {
+      inD = true;
+      continue;
+    }
+    if (c === '`') {
+      inT = true;
+      continue;
+    }
+
+    if (c === '{') {
+      if (braceDepth === 0) objStart = i;
+      braceDepth++;
+      continue;
+    }
+    if (c === '}') {
+      braceDepth--;
+      if (braceDepth === 0 && objStart !== -1) {
+        ranges.push({ start: objStart, end: i + 1 });
+        objStart = -1;
+      }
+    }
+  }
+  return ranges;
+}
+
+function replaceOrInsertInputNl(objectSource, generatedNl) {
+  const nl = escapeSingleQuotedJsString(generatedNl);
+
+  const keyIdx = objectSource.indexOf('input_nl');
+  if (keyIdx !== -1) {
+    // Replace the existing single-quoted literal after `input_nl:`
+    const colon = objectSource.indexOf(':', keyIdx);
+    if (colon === -1) return objectSource;
+    const quote = objectSource.indexOf("'", colon);
+    if (quote === -1) return objectSource;
+
+    let i = quote + 1;
+    for (; i < objectSource.length; i++) {
+      const c = objectSource[i];
+      if (c === '\\') {
+        i++;
+        continue;
+      }
+      if (c === "'") break;
+    }
+    if (i >= objectSource.length) return objectSource;
+
+    return objectSource.slice(0, quote + 1) + nl + objectSource.slice(i);
+  }
+
+  // Insert after `action: ...`
+  const actionMatch = objectSource.match(/\n(\s*)action\s*:\s*'[^']*'\s*,?\s*\n/);
+  if (!actionMatch) return objectSource;
+  const indent = actionMatch[1] || '';
+  const insertAt = actionMatch.index + actionMatch[0].length;
+  const insertLine = `${indent}input_nl: '${nl}',\n`;
+  return objectSource.slice(0, insertAt) + insertLine + objectSource.slice(insertAt);
 }
 
 async function main() {
@@ -111,48 +324,73 @@ async function main() {
     throwOnValidationError: false
   });
 
-  const chunks = [];
-  chunks.push(printHeader());
-
+  let touched = 0;
   for (const suiteName of selected) {
     const suite = await loadSuite(suiteName);
-    const steps = suite.cases || [];
+    const cases = suite.cases || [];
+    if (cases.length === 0) continue;
 
-    const perCase = new Array(steps.length).fill(null);
-
-    for (let i = 0; i < steps.length; i++) {
-      const c = steps[i];
-      if (!shouldGenerateForCase(c)) continue;
-      const value = supportedNlForCase(session, c);
-      if (!value) continue;
-      perCase[i] = value;
+    const casesPath = path.join(PROJECT_ROOT, 'evals', 'fastEval', suiteName, 'cases.mjs');
+    const src = fs.readFileSync(casesPath, 'utf8');
+    const exported = findExportedArray(src);
+    if (!exported) {
+      console.error(`[${suiteName}] Could not find exported steps/cases array in ${casesPath}`);
+      process.exitCode = 1;
+      continue;
     }
 
-    // Only output suites that have at least one generated entry.
-    if (!perCase.some(v => v !== null)) continue;
-
-    chunks.push(`  ${jsString(suiteName)}: [`);
-    for (let i = 0; i < perCase.length; i++) {
-      const v = perCase[i];
-      if (v === null) {
-        chunks.push('    null,');
-        continue;
-      }
-      if (Array.isArray(v)) {
-        const arr = v.map(jsString).join(', ');
-        chunks.push(`    [${arr}],`);
-        continue;
-      }
-      chunks.push(`    ${jsString(v)},`);
+    const openBracket = src.indexOf('[', exported.idx);
+    if (openBracket === -1) {
+      console.error(`[${suiteName}] Malformed exported array (missing '[') in ${casesPath}`);
+      process.exitCode = 1;
+      continue;
     }
-    chunks.push('  ],');
+    const closeBracket = scanToMatchingBracket(src, openBracket, '[', ']');
+    if (closeBracket === -1) {
+      console.error(`[${suiteName}] Malformed exported array (no matching ']') in ${casesPath}`);
+      process.exitCode = 1;
+      continue;
+    }
+
+    const before = src.slice(0, openBracket + 1);
+    const arrayBody = src.slice(openBracket + 1, closeBracket);
+    const after = src.slice(closeBracket);
+
+    const objectRanges = findTopLevelObjectRanges(arrayBody);
+    if (objectRanges.length !== cases.length) {
+      console.error(`[${suiteName}] Object count mismatch: parsed=${objectRanges.length}, exported=${cases.length} in ${casesPath}`);
+      process.exitCode = 1;
+      continue;
+    }
+
+    let outBody = '';
+    let cursor = 0;
+    for (let i = 0; i < objectRanges.length; i++) {
+      const r = objectRanges[i];
+      outBody += arrayBody.slice(cursor, r.start);
+
+      const objSrc = arrayBody.slice(r.start, r.end);
+      const c = cases[i];
+      const should = shouldGenerateForCase(c);
+      const generated = should ? generatedInputNlForCase(session, c) : null;
+      outBody += generated ? replaceOrInsertInputNl(objSrc, generated) : objSrc;
+
+      cursor = r.end;
+    }
+    outBody += arrayBody.slice(cursor);
+
+    const nextSrc = before + outBody + after;
+    if (nextSrc !== src) {
+      fs.writeFileSync(casesPath, nextSrc, 'utf8');
+      touched++;
+      console.log(`[${suiteName}] updated input_nl for ${cases.length} case(s)`);
+    } else {
+      console.log(`[${suiteName}] no changes`);
+    }
   }
 
-  chunks.push(printFooter());
-  fs.writeFileSync(OUT_PATH, chunks.join('\n') + '\n', 'utf8');
-
   session.close();
-  console.log(`Wrote ${OUT_PATH}`);
+  console.log(`Done. Updated suite files: ${touched}`);
 }
 
 main().catch(err => {

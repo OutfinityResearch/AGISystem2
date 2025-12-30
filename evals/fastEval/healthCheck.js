@@ -743,21 +743,21 @@ async function analyzeSuite(suite) {
       analysis.formatErrors.push({ case: caseNum, caseInfo, ...issue });
     }
 
-    // Validate supported NL roundtrip (NLTransformer ↔ canonical DSL)
+    // Validate generated NL roundtrip (NLTransformer ↔ canonical DSL)
     if (['learn', 'query', 'prove'].includes(testCase.action) && (testCase.input_dsl || testCase.query_dsl)) {
-      const supportedNl = testCase.input_nl_supported;
-      if (!supportedNl || typeof supportedNl !== 'string' || supportedNl.trim().length === 0) {
+      const generatedNl = testCase.input_nl;
+      if (!generatedNl || typeof generatedNl !== 'string' || generatedNl.trim().length === 0) {
         analysis.nlRoundtripErrors.push({
           case: caseNum,
           caseInfo,
           type: 'error',
-          msg: 'Missing input_nl_supported (generated supported NL)'
+          msg: 'Missing input_nl (generated from DSL)'
         });
       } else {
-        const tr = transformer.transform(supportedNl);
+        const tr = transformer.transform(generatedNl);
         if (!tr.success) {
           const msg = (tr.errors || []).map(e => `${e.sentence}: ${e.error}`).slice(0, 2).join(' | ') || 'NL→DSL parse failed';
-          analysis.nlRoundtripErrors.push({ case: caseNum, caseInfo, type: 'error', msg: `Supported NL does not parse: ${msg}` });
+          analysis.nlRoundtripErrors.push({ case: caseNum, caseInfo, type: 'error', msg: `Generated NL does not parse: ${msg}` });
         } else {
           const generated = normalizeDslToStatements(tr.dsl, { onlyPersistent: testCase.action === 'learn' });
           const canonicalDsl = String(testCase.query_dsl || testCase.input_dsl || '').trim();
@@ -773,7 +773,7 @@ async function analyzeSuite(suite) {
                 case: caseNum,
                 caseInfo,
                 type: 'error',
-                msg: `Supported NL roundtrip mismatch (learn): missing=${missing.length}, extra=${extra.length}`
+                msg: `Generated NL roundtrip mismatch (learn): missing=${missing.length}, extra=${extra.length}`
               });
             }
           } else {
@@ -784,7 +784,7 @@ async function analyzeSuite(suite) {
                 case: caseNum,
                 caseInfo,
                 type: 'error',
-                msg: `Supported NL roundtrip mismatch: expected "${exp}", got "${got}"`
+                msg: `Generated NL roundtrip mismatch: expected "${exp}", got "${got}"`
               });
             }
           }

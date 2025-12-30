@@ -14,7 +14,7 @@ export const steps = [
   // === SETUP: Taxonomy and respiration pathway ===
   {
     action: 'learn',
-    input_nl: 'Define animal taxonomy, cellular structures, and respiration pathway.',
+    input_nl: 'Mammal is an Animal. Human is a Mammal. Cell is an Eukaryote. Eukaryote is an Organism. Human has Cell. Cell has Mitochondria. Mitochondria can Respire. Glucose causes Glycolysis. Glycolysis causes Pyruvate. Pyruvate causes KrebsCycle. KrebsCycle causes NADH. NADH causes ElectronTransport. ElectronTransport causes ATP.',
     input_dsl: `
       # Taxonomy
       isA Mammal Animal
@@ -40,7 +40,7 @@ export const steps = [
 
   {
     action: 'learn',
-    input_nl: 'Add respiration rules with And conditions.',
+    input_nl: 'implies (?c has Mitochondria) AND (?c is an Eukaryote) ?c can Respire. implies (?org has ?cell) AND (?cell can Respire) ?org can Respire.',
     input_dsl: `
       # Rule: cell with mitochondria AND eukaryote can respire
       @r1c1 has ?c Mitochondria
@@ -62,7 +62,7 @@ export const steps = [
   // === PROVE: Cell can respire via rule ===
   {
     action: 'prove',
-    input_nl: 'Can Cell respire?',
+    input_nl: 'Cell can Respire.',
     input_dsl: '@goal can Cell Respire',
     expected_nl: 'True: Cell can Respire.',
     proof_nl: [
@@ -76,7 +76,7 @@ export const steps = [
   // === PROVE: Human can respire via chain ===
   {
     action: 'prove',
-    input_nl: 'Can Human respire?',
+    input_nl: 'Human can Respire.',
     input_dsl: '@goal can Human Respire',
     expected_nl: 'True: Human can Respire.',
     proof_nl: [
@@ -89,7 +89,7 @@ export const steps = [
   // === PROVE: ATP production via causal chain ===
   {
     action: 'prove',
-    input_nl: 'Does glucose cause ATP production?',
+    input_nl: 'Glucose causes ATP.',
     input_dsl: '@goal causes Glucose ATP',
     expected_nl: 'True: Glucose causes ATP.',
     proof_nl: 'Glucose causes Glycolysis. Glycolysis causes Pyruvate. Pyruvate causes KrebsCycle. KrebsCycle causes NADH. NADH causes ElectronTransport. ElectronTransport causes ATP. Causal chain verified (6 hops). Therefore Glucose causes ATP.'
@@ -98,7 +98,7 @@ export const steps = [
   // === QUERY: What does glucose cause? ===
   {
     action: 'query',
-    input_nl: 'What does glucose cause in the pathway?',
+    input_nl: 'Glucose causes ?stage.',
     input_dsl: '@q causes Glucose ?stage',
     expected_nl: [
       'Glucose causes Glycolysis.',
@@ -121,7 +121,7 @@ export const steps = [
   // === NEGATIVE: Prokaryote cannot respire (missing conditions) ===
   {
     action: 'prove',
-    input_nl: 'Can Prokaryote respire?',
+    input_nl: 'Prokaryote can Respire.',
     input_dsl: '@goal can Prokaryote Respire',
     expected_nl: 'Cannot prove: Prokaryote can Respire.',
     proof_nl: [
@@ -135,7 +135,7 @@ export const steps = [
   // === SETUP 2: Virus severity rule ===
   {
     action: 'learn',
-    input_nl: 'Add virus severity rule with risk factors.',
+    input_nl: 'VirusX causes CytokineStorm. CytokineStorm causes OrganFailure. Human has RiskFactor. VirusX causes Infection. implies (?host has RiskFactor) AND (VirusX causes Infection) VirusX causes SevereOutcome. SevereOutcome causes OrganFailure. DrugD does not causes ElectronTransport.',
     input_dsl: `
       causes VirusX CytokineStorm
       causes CytokineStorm OrganFailure
@@ -161,7 +161,7 @@ export const steps = [
   // === PROVE: VirusX causes organ failure via severity ===
   {
     action: 'prove',
-    input_nl: 'Does VirusX cause organ failure?',
+    input_nl: 'VirusX causes OrganFailure.',
     input_dsl: '@goal causes VirusX OrganFailure',
     expected_nl: 'True: VirusX causes OrganFailure.',
     proof_nl: 'VirusX causes CytokineStorm. CytokineStorm causes OrganFailure. Causal chain verified (2 hops). Therefore VirusX causes OrganFailure.'
@@ -170,7 +170,7 @@ export const steps = [
   // === NEGATIVE: DrugD blocked by negation ===
   {
     action: 'prove',
-    input_nl: 'Does DrugD cause ElectronTransport?',
+    input_nl: 'DrugD causes ElectronTransport.',
     input_dsl: '@goal causes DrugD ElectronTransport',
     expected_nl: 'Cannot prove: DrugD causes ElectronTransport.',
     proof_nl: [

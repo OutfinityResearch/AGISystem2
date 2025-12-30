@@ -14,7 +14,7 @@ export const steps = [
   // === SETUP: Causal KB with conflicting explanations ===
   {
     action: 'learn',
-    input_nl: 'Causal world: Rain vs Sprinkler, plus side-effects to disambiguate.',
+    input_nl: 'Rain causes WetGrass. Rain causes WetSidewalk. Sprinkler causes WetGrass. Sprinkler causes DryPath. PowerOutage causes SprinklerOff. Storm causes Rain. WetGrass observed. WetSidewalk observed. DryPath observed. Storm observed.',
     input_dsl: `
       causes Rain WetGrass
       causes Rain WetSidewalk
@@ -33,7 +33,7 @@ export const steps = [
   // === ABDUCE: Both Rain and Sprinkler can explain WetGrass ===
   {
     action: 'query',
-    input_nl: 'Why is the grass wet and the sidewalk wet?',
+    input_nl: 'WetGrass abduce ?cause.',
     input_dsl: '@q abduce WetGrass ?cause',
     expected_nl: [
       'WetGrass is explained by Rain.',
@@ -48,7 +48,7 @@ export const steps = [
   // === COUNTERFACTUAL: remove Rain, keep Sprinkler evidence ===
   {
     action: 'query',
-    input_nl: 'What if Rain did not occur?',
+    input_nl: 'Rain whatif WetGrass ?outcome.',
     input_dsl: '@q whatif Rain WetGrass ?outcome',
     expected_nl: [
       'If Rain did not occur, WetGrass would be uncertain.'
@@ -61,7 +61,7 @@ export const steps = [
   // === COUNTERFACTUAL DEEP: remove PowerOutage to activate Sprinkler ===
   {
     action: 'query',
-    input_nl: 'What if the power outage did not happen?',
+    input_nl: 'PowerOutage whatif SprinklerOff ?outcome.',
     input_dsl: '@q whatif PowerOutage SprinklerOff ?outcome',
     expected_nl: [
       'If PowerOutage did not occur, SprinklerOff would not occur.'
@@ -74,7 +74,7 @@ export const steps = [
   // === DEFAULT / EXCEPTION: Birds fly unless exceptions ===
   {
     action: 'learn',
-    input_nl: 'Default flight rule with exceptions and And condition.',
+    input_nl: 'can Default Bird Fly. can Exception Penguin Fly. can Exception FlightlessBird Fly. Opus is a Penguin. Penguin is a Bird. Hawk is a Bird. FlightlessBird is a Bird. Penguin is a FlightlessBird.',
     input_dsl: `
       Default can Bird Fly
       Exception can Penguin Fly
@@ -90,7 +90,7 @@ export const steps = [
 
   {
     action: 'prove',
-    input_nl: 'Can Hawk fly under default rule?',
+    input_nl: 'Hawk can Fly.',
     input_dsl: '@goal can Hawk Fly',
     expected_nl: 'True: Hawk can Fly.',
     proof_nl: 'Default can Bird Fly applies. Hawk inherits via default. Therefore Hawk can Fly.'
@@ -98,7 +98,7 @@ export const steps = [
 
   {
     action: 'prove',
-    input_nl: 'Can Opus fly (exception should block)?',
+    input_nl: 'Opus can Fly.',
     input_dsl: '@goal can Opus Fly',
     expected_nl: 'Cannot prove: Opus can Fly.',
     proof_nl: [
@@ -110,7 +110,7 @@ export const steps = [
   // === ANALOGY: Orbital system proportional reasoning ===
   {
     action: 'learn',
-    input_nl: 'Orbital systems: Planet-Sun and Electron-Nucleus.',
+    input_nl: 'Planet orbits Sun. Electron orbits Nucleus.',
     input_dsl: `
       @Orbits:orbits __Relation
       orbits Planet Sun
@@ -121,7 +121,7 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'Planet:Sun :: Electron: ?',
+    input_nl: 'Planet analogy Sun Electron ?center.',
     input_dsl: '@q analogy Planet Sun Electron ?center',
     expected_nl: [
       'Planet is to Sun as Electron is to Nucleus.'
@@ -134,7 +134,7 @@ export const steps = [
   // === NEGATION + AND: Abduce with missing evidence should fail softly ===
   {
     action: 'query',
-    input_nl: 'Why is the path dry (should reject Rain)?',
+    input_nl: 'DryPath abduce ?cause.',
     input_dsl: '@q abduce DryPath ?cause',
     expected_nl: [
       'DryPath is explained by Sprinkler.'

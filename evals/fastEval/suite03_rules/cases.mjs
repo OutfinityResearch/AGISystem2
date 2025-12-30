@@ -14,7 +14,7 @@ export const steps = [
   // === SETUP: Deep hierarchy for flying (6 levels) ===
   {
     action: 'learn',
-    input_nl: 'Deep hierarchy: Opus→Penguin→AntarcticBird→Seabird→Bird→FlyingAnimal→Vertebrate→Animal',
+    input_nl: 'Opus is a Penguin. Penguin is an AntarcticBird. AntarcticBird is a Seabird. Seabird is a Bird. Bird is a FlyingAnimal. FlyingAnimal is a Vertebrate. Vertebrate is an Animal. Tweety is a Sparrow. Sparrow is a Songbird. Songbird is a Passerine. Passerine is a Bird. IF (?x is a Bird) THEN (?x can Fly).',
     input_dsl: `
       isA Opus Penguin
       isA Penguin AntarcticBird
@@ -37,7 +37,7 @@ export const steps = [
   // === PROVE: 6-step (Opus→Bird via 4 intermediates + rule) ===
   {
     action: 'prove',
-    input_nl: 'Can Opus fly? (Opus→Penguin→AntarcticBird→Seabird→Bird + rule→canFly)',
+    input_nl: 'Opus can Fly.',
     input_dsl: '@goal can Opus Fly',
     expected_nl: 'True: Opus can Fly.',
     proof_nl: [
@@ -51,7 +51,7 @@ export const steps = [
   // === PROVE: 5-step (Tweety→Bird via 3 intermediates + rule) ===
   {
     action: 'prove',
-    input_nl: 'Can Tweety fly? (Tweety→Sparrow→Songbird→Passerine→Bird + rule)',
+    input_nl: 'Tweety can Fly.',
     input_dsl: '@goal can Tweety Fly',
     expected_nl: 'True: Tweety can Fly.',
     proof_nl: [
@@ -65,7 +65,7 @@ export const steps = [
   // === SETUP: Deep suspect chain (7 levels for roles + And rule) ===
   {
     action: 'learn',
-    input_nl: 'Deep role hierarchy: Detective→Investigator→LawEnforcer→PublicServant→Professional→Person→Entity',
+    input_nl: 'John is a Detective. Detective is an Investigator. Investigator is a LawEnforcer. LawEnforcer is a PublicServant. PublicServant is a Professional. Professional is a Person. Person is an Entity. John has Motive. John has Opportunity. John has Alibi. Mary has Motive. Mary is a Civilian. Civilian is a Person. IF ((?x has Motive) AND (?x has Opportunity)) THEN (?x isSuspect).',
     input_dsl: `
       isA John Detective
       isA Detective Investigator
@@ -93,7 +93,7 @@ export const steps = [
   // === PROVE: 5-step And rule (has Motive + has Opportunity + rule application) ===
   {
     action: 'prove',
-    input_nl: 'Is John a suspect? (has Motive AND has Opportunity, both verified)',
+    input_nl: 'John isSuspect.',
     input_dsl: '@goal isSuspect John',
     expected_nl: 'True: John is suspect.',
     proof_nl: [
@@ -108,7 +108,7 @@ export const steps = [
   // === NEGATIVE: 6-step search showing what failed ===
   {
     action: 'prove',
-    input_nl: 'Is Mary a suspect? (has Motive but NOT Opportunity)',
+    input_nl: 'Mary isSuspect.',
     input_dsl: '@goal isSuspect Mary',
     expected_nl: 'Cannot prove: Mary is suspect.',
     proof_nl: [
@@ -122,7 +122,7 @@ export const steps = [
   // === SETUP: Deep payment chain (6 levels Or rule + chained rules) ===
   {
     action: 'learn',
-    input_nl: 'Payment hierarchy: CreditCard→Card→PaymentMethod. Chain: canPay→canPurchase→canOwn→canUse→isCapable',
+    input_nl: 'Alice is a Customer. Customer is a Buyer. Buyer is a Participant. Participant is an Actor. Actor is an Entity. Alice has CreditCard. CreditCard is a Card. Card is a PaymentMethod. Bob has DebitCard. DebitCard is a Card. Eve has Cash. Cash is a PaymentMethod. IF (?x has PaymentMethod) THEN (?x can Pay). IF (?x can Pay) THEN (?x can Purchase). IF (?x can Purchase) THEN (?x can Own). IF (?x can Own) THEN (?x can Use). IF (?x can Use) THEN (?x isCapable).',
     input_dsl: `
       isA Alice Customer
       isA Customer Buyer
@@ -158,7 +158,7 @@ export const steps = [
   // === PROVE: 6-step (Alice has CreditCard→Card→PaymentMethod + rule) ===
   {
     action: 'prove',
-    input_nl: 'Can Alice pay? (CreditCard→Card→PaymentMethod + rule)',
+    input_nl: 'Alice can Pay.',
     input_dsl: '@goal can Alice Pay',
     expected_nl: 'True: Alice can Pay.',
     proof_nl: [
@@ -173,7 +173,7 @@ export const steps = [
   // === PROVE: 5-step chained rules (Pay→Purchase→Own→Use→Capable) ===
   {
     action: 'prove',
-    input_nl: 'Is Alice capable? (canPay→canPurchase→canOwn→canUse→isCapable)',
+    input_nl: 'Alice isCapable.',
     input_dsl: '@goal isCapable Alice',
     expected_nl: 'True: Alice is isCapable.',
     proof_nl: [
@@ -187,7 +187,7 @@ export const steps = [
   // === QUERY: Who can pay ===
   {
     action: 'query',
-    input_nl: 'Who can pay?',
+    input_nl: '?who can Pay.',
     input_dsl: '@q can ?who Pay',
     expected_nl: [
       'Alice can Pay.',
@@ -204,7 +204,7 @@ export const steps = [
   // === NEGATIVE: Deep search failure (5+ steps) ===
   {
     action: 'prove',
-    input_nl: 'Can Charlie pay? (has no payment method)',
+    input_nl: 'Charlie can Pay.',
     input_dsl: '@goal can Charlie Pay',
     expected_nl: 'Cannot prove: Charlie can Pay.',
     proof_nl: [
@@ -217,7 +217,7 @@ export const steps = [
   // === SETUP: Negation with deep hierarchy ===
   {
     action: 'learn',
-    input_nl: 'Dan had his account frozen (negated payment capability)',
+    input_nl: 'Dan is a Customer. Dan is a Buyer. Dan is a Participant. Dan has ExpiredCard. ExpiredCard is a Card. Dan cannot Pay.',
     input_dsl: `
       isA Dan Customer
       isA Dan Buyer
@@ -233,7 +233,7 @@ export const steps = [
   // === NEGATIVE: Negation blocks inference despite having card ===
   {
     action: 'prove',
-    input_nl: 'Can Dan pay? (has ExpiredCard but payment is negated)',
+    input_nl: 'Dan can Pay.',
     input_dsl: '@goal can Dan Pay',
     expected_nl: 'Cannot prove: Dan can Pay.',
     proof_nl: 'Found explicit negation: NOT (Dan can Pay)'
@@ -242,7 +242,7 @@ export const steps = [
   // === PROVE: 5-step Bob payment (different path) ===
   {
     action: 'prove',
-    input_nl: 'Can Bob pay? (DebitCard→Card→PaymentMethod + rule)',
+    input_nl: 'Bob can Pay.',
     input_dsl: '@goal can Bob Pay',
     expected_nl: 'True: Bob can Pay.',
     proof_nl: [
@@ -255,7 +255,7 @@ export const steps = [
   // === PROVE: 5-step Eve payment (Cash path) ===
   {
     action: 'prove',
-    input_nl: 'Can Eve pay? (Cash→PaymentMethod + rule)',
+    input_nl: 'Eve can Pay.',
     input_dsl: '@goal can Eve Pay',
     expected_nl: 'True: Eve can Pay.',
     proof_nl: [

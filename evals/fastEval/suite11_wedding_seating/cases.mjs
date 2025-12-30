@@ -42,6 +42,7 @@ export const cases = [
 
   {
     action: 'learn',
+    input_nl: 'Alice is a GuestA. Bob is a GuestA. T1 is a TableA. T2 is a TableA. Alice conflictsWith Bob. Bob conflictsWith Alice.',
     input_dsl: `
       isA Alice GuestA
       isA Bob GuestA
@@ -61,12 +62,14 @@ export const cases = [
   // List all solutions - Alice and Bob are always seated at different tables
   {
     action: 'listSolutions',
+    input_nl: 'List solutions for seating.',
     input_dsl: 'seating',
     expected_nl: 'Found 2 solutions. Solution 1: Alice is at T1, Bob is at T2. Solution 2: Alice is at T2, Bob is at T1.'
   },
   // Single query - Alice can be at either table
   {
     action: 'query',
+    input_nl: 'Alice seating ?table.',
     input_dsl: `seating Alice ?table`,
     expected_nl: [
       'Alice is at T1.',
@@ -87,6 +90,7 @@ export const cases = [
 
   {
     action: 'learn',
+    input_nl: 'Carol is a GuestB. Dave is a GuestB. Eve is a GuestB. RoomX is a TableB. RoomY is a TableB. RoomZ is a TableB. Carol conflictsWith Dave. Dave conflictsWith Carol.',
     input_dsl: `
       isA Carol GuestB
       isA Dave GuestB
@@ -108,6 +112,7 @@ export const cases = [
   // List all 18 solutions - Carol and Dave are ALWAYS in different rooms
   {
     action: 'listSolutions',
+    input_nl: 'List solutions for arrangement.',
     input_dsl: 'arrangement',
     expected_nl: 'Found 18 solutions. Solution 1: Carol is at RoomX, Dave is at RoomY, Eve is at RoomX. Solution 2: Carol is at RoomX, Dave is at RoomY, Eve is at RoomY. Solution 3: Carol is at RoomX, Dave is at RoomY, Eve is at RoomZ. Solution 4: Carol is at RoomX, Dave is at RoomZ, Eve is at RoomX. Solution 5: Carol is at RoomX, Dave is at RoomZ, Eve is at RoomY. Solution 6: Carol is at RoomX, Dave is at RoomZ, Eve is at RoomZ. Solution 7: Carol is at RoomY, Dave is at RoomX, Eve is at RoomX. Solution 8: Carol is at RoomY, Dave is at RoomX, Eve is at RoomY. Solution 9: Carol is at RoomY, Dave is at RoomX, Eve is at RoomZ. Solution 10: Carol is at RoomY, Dave is at RoomZ, Eve is at RoomX. Solution 11: Carol is at RoomY, Dave is at RoomZ, Eve is at RoomY. Solution 12: Carol is at RoomY, Dave is at RoomZ, Eve is at RoomZ. Solution 13: Carol is at RoomZ, Dave is at RoomX, Eve is at RoomX. Solution 14: Carol is at RoomZ, Dave is at RoomX, Eve is at RoomY. Solution 15: Carol is at RoomZ, Dave is at RoomX, Eve is at RoomZ. Solution 16: Carol is at RoomZ, Dave is at RoomY, Eve is at RoomX. Solution 17: Carol is at RoomZ, Dave is at RoomY, Eve is at RoomY. Solution 18: Carol is at RoomZ, Dave is at RoomY, Eve is at RoomZ.'
   },
@@ -120,6 +125,7 @@ export const cases = [
 
   {
     action: 'learn',
+    input_nl: 'Mary is a GuestC. John is a GuestC. Ann is a GuestC. BigTable is a TableC. SmallTable is a TableC. Mary conflictsWith John. John conflictsWith Mary. John conflictsWith Ann. Ann conflictsWith John. Mary conflictsWith Ann. Ann conflictsWith Mary.',
     input_dsl: `
       isA Mary GuestC
       isA John GuestC
@@ -144,6 +150,7 @@ export const cases = [
   // Query the seating - should return no results because problem has no solution
   {
     action: 'listSolutions',
+    input_nl: 'List solutions for seatingImpossible.',
     input_dsl: 'seatingImpossible',
     expected_nl: 'No valid solutions found.'
   },
@@ -158,6 +165,7 @@ export const cases = [
 
   {
     action: 'learn',
+    input_nl: 'Guest1 is a GuestD. Guest2 is a GuestD. Guest3 is a GuestD. Guest4 is a GuestD. Room1 is a RoomD. Room2 is a RoomD. Room3 is a RoomD. Room4 is a RoomD.',
     input_dsl: `
       isA Guest1 GuestD
       isA Guest2 GuestD
@@ -178,12 +186,14 @@ export const cases = [
   },
   {
     action: 'listSolutions',
+    input_nl: 'List solutions for rooms.',
     input_dsl: 'rooms',
     maxSolutions: 2,
     expected_nl: 'Found 24 solutions (showing 2). Solution 1: Guest1 is at Room1, Guest2 is at Room2, Guest3 is at Room3, Guest4 is at Room4. Solution 2: Guest1 is at Room1, Guest2 is at Room2, Guest3 is at Room4, Guest4 is at Room3.'
   },
   {
     action: 'query',
+    input_nl: 'rooms cspTuple Guest1 ?r1 Guest2 ?r2 Guest3 ?r3 Guest4 Room4.',
     input_dsl: 'cspTuple rooms Guest1 ?r1 Guest2 ?r2 Guest3 ?r3 Guest4 Room4',
     maxResults: 1,
     expected_nl: [
@@ -203,6 +213,7 @@ export const cases = [
 
   {
     action: 'learn',
+    input_nl: 'Guest1 is a GuestE. Guest2 is a GuestE. Guest3 is a GuestE. Guest4 is a GuestE. Room1 is a RoomE. Room2 is a RoomE. Room3 is a RoomE. Room4 is a RoomE. Room5 is a RoomE.',
     input_dsl: `
       isA Guest1 GuestE
       isA Guest2 GuestE
@@ -225,6 +236,7 @@ export const cases = [
 
   {
     action: 'query',
+    input_nl: 'Guest4 rooms5 ?room.',
     input_dsl: '@q rooms5 Guest4 ?room',
     maxResults: 5,
     expected_nl: [
@@ -245,6 +257,7 @@ export const cases = [
 
   {
     action: 'query',
+    input_nl: 'rooms5 cspTuple Guest1 ?r1 Guest2 ?r2 Guest3 ?r3 Guest4 Room4.',
     input_dsl: 'cspTuple rooms5 Guest1 ?r1 Guest2 ?r2 Guest3 ?r3 Guest4 Room4',
     maxResults: 1,
     expected_nl: [

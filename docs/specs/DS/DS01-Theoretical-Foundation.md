@@ -22,11 +22,16 @@ Hyperdimensional Computing (HDC) bridges symbolic AI and neural networks:
 
 ---
 
-## 1.2 The Two Fundamental Operations
+## 1.2 Core Operations (Strategy-defined)
 
-AGISystem2 uses only **TWO** vector operations:
+AGISystem2 is built around a very small **strategy interface**: `BIND`, `UNBIND`, `BUNDLE`, `SIMILARITY` (plus deterministic atom creation).  
+This chapter introduces the **baseline intuition** using the classic dense-binary (XOR) instantiation, but **the exact algebra is strategy-dependent** (see DS07a + strategy DS-es).
 
-### 1.2.1 Bind (XOR)
+In particular:
+- for XOR-based strategies, `UNBIND` is the same operation as `BIND` (self-inverse cancellation);
+- for non-XOR strategies, `UNBIND` is **not** necessarily the same as `BIND` (and may be a quotient/residual-style operator).
+
+### 1.2.1 Bind (Dense-Binary XOR)
 
 ```
 C = A ⊕ B    (bitwise XOR)
@@ -41,7 +46,7 @@ C = A ⊕ B    (bitwise XOR)
 
 **Use:** Associate concepts, create relationships
 
-> ### ⚠️ THE FOUNDATIONAL LIMITATION: XOR Commutativity and Argument Order
+> ### ⚠️ XOR Commutativity and Argument Order (Dense-Binary)
 >
 > **Critical Understanding:** Because XOR is both commutative AND associative, the algebraic result is invariant to the order in which pairs are XORed together:
 >
@@ -66,7 +71,7 @@ C = A ⊕ B    (bitwise XOR)
 > - Decoding relies on semantic context and similarity matching
 > - The Phrasing Engine is the authoritative component for enforcing output order
 
-### 1.2.2 Bundle (Majority Vote)
+### 1.2.2 Bundle (Dense-Binary Majority Vote)
 
 ```
 C = Bundle(A, B, D, ...)
@@ -79,9 +84,24 @@ C[i] = 1 if majority of inputs have 1 at position i
 - **Non-reversible**: Cannot extract individual items
 - **Preserves extension**: Works with cloned vectors ✓
 
-*\*In Symbolic-Priority mode, facts are stored with metadata rather than bundled, removing this capacity limit. See Section 1.10.*
+*\*Some runtime modes avoid global BUNDLE superposition by keeping facts as separate items (and using HDC only for candidate generation/cleanup). See DS05 and DS17.*
 
 **Use:** Superposition, memory, sets
+
+### 1.2.3 UNBIND is Strategy-Dependent (Not Always Self-Inverse)
+
+For XOR strategies, unbinding is “free cancellation”:
+
+```
+UNBIND(XOR):  UNBIND(C, B) = C ⊕ B
+```
+
+But in AGISystem2 we also support strategies where:
+- `BIND` is not XOR (e.g., polynomial/field-like binding, metric hybrids),
+- the representation is not a fixed-length dense bitvector,
+- `UNBIND` may be an **approximate inverse**, a **residual extraction**, or an operator family.
+
+Example: the `exact` strategy (DS25) treats facts as sets (bitsets) and uses a quotient-like `UNBIND` that extracts residues via subset tests (not self-inverse XOR).
 
 ### 1.2.3 Why NOT Permutation?
 
@@ -197,14 +217,15 @@ similarity(f1, f2) ≈ 0.5  # Different facts (as expected)
 
 ### 1.4.3 Recovery (Unbinding)
 
-To extract Arg1 from a fact where we know Verb and Arg2:
+To extract `Arg1` from a fact where we know `Verb` and `Arg2` (XOR strategies):
 ```
 temp = fact ⊕ Verb ⊕ (Pos2 ⊕ Arg2)
 # temp ≈ Pos1 ⊕ Arg1
 Arg1 = temp ⊕ Pos1
 ```
 
-Known parts cancel out via XOR self-inverse property.
+Known parts cancel out via XOR’s self-inverse property.  
+Other strategies follow the same **structured-record idea** (role/position markers), but use their own `UNBIND` + decoding/cleanup pipeline (DS07a, DS15, DS18, DS23, DS25).
 
 ### 1.4.4 Why Position Vectors Work with Extension
 
@@ -439,6 +460,8 @@ The graph internally uses position vectors for its own structure.
 
 Query: `@q Op ?who Arg2` (hole at position 1)
 
+This example uses XOR-style unbinding. The same query surface exists across strategies, but the backend uses strategy-specific `UNBIND` + decoding.
+
 ```
 # Build partial (without the hole)
 partial = Op ⊕ (Pos2 ⊕ Arg2)
@@ -451,6 +474,11 @@ result = KB ⊕ partial
 candidate = result ⊕ Pos1
 answer = findMostSimilar(candidate, vocabulary)
 ```
+
+For non-XOR strategies, the equivalent flow is:
+- construct the query key / partial structure,
+- apply strategy-defined `UNBIND` against the KB representation,
+- decode/cleanup candidates using strategy-defined similarity or exact witnesses.
 
 ---
 
@@ -477,80 +505,63 @@ final_vector = Bundle(ascii_vector, llm_vector)
 
 ## 1.10 Hybrid Reasoning Architecture
 
-AGISystem2 implements a **hybrid architecture** with two distinct reasoning modes, selected based on the HDC strategy in use.
+AGISystem2 implements a **hybrid reasoning architecture**. In practice there are multiple “engines” that can cooperate:
+- a symbolic matcher / backtracker for exact validation and proofs,
+- a holographic (HDC/VSA) candidate generator and scorer,
+- strategy-specific decoding/cleanup for turning an unbound residue into named symbols.
 
-### 1.10.1 The Two Motors
+The runtime can choose different tactics depending on strategy capabilities and query type (DS05, DS06, DS17, DS25).
 
-| Aspect | Motor 1: HDC-Priority | Motor 2: Symbolic-Priority |
-|--------|----------------------|---------------------------|
-| **Strategies** | `dense-binary` | `sparse-polynomial`, `metric-affine` |
-| **HDC Role** | Primary reasoning engine | Candidate filter only |
-| **Validation** | Similarity-based matching | Pure symbolic (CSP, backtracking) |
-| **Master Equation** | Full unbinding: `Answer = KB ⊕ Query⁻¹` | Not used (0% success rate) |
-| **Best For** | Analogical reasoning, fuzzy matching | Logical inference, transitive chains |
+### 1.10.1 Symbolic-first vs Holographic-first (High Level)
 
-### 1.10.2 Motor 1: HDC-Priority (Dense-Binary)
+| Mode | HDC role | Symbolic role | Typical use |
+|------|----------|---------------|-------------|
+| **Holographic-first** | Generate candidates via `UNBIND` + similarity/witnesses | Optional validation / proof | Fast retrieval, approximate reasoning, cleanup |
+| **Symbolic-first** | Optional prefilter / scoring | Primary solver (match, chain, CSP) | Proofs, constraints, long chains, exactness |
 
-In HDC-Priority mode, the system uses hyperdimensional vectors as the **primary reasoning mechanism**:
+### 1.10.2 The “Reasoning Equation” (General Form)
 
-```
-Query Processing:
-1. Build partial vector (exclude holes)
-2. Unbind from KB: candidate = KB ⊕ partial
-3. Similarity search in vocabulary
-4. Return best match with confidence
-```
-
-**Characteristics:**
-- Bundle capacity: ~100-200 facts at 32K geometry
-- Supports the Master Equation for retrieval
-- Graceful degradation under noise
-- Analogical reasoning (A:B :: C:?)
-
-### 1.10.3 Motor 2: Symbolic-Priority (Sparse/Metric-Affine)
-
-In Symbolic-Priority mode, HDC provides **structural representation only**. Actual reasoning is purely symbolic:
+Across strategies, the canonical pattern is:
 
 ```
-Query Processing:
-1. Build query structure (HDC vectors)
-2. HDC similarity filters candidates (fast pre-filter)
-3. Symbolic KB matching (exact operator + argument lookup)
-4. Transitive chain reasoning (graph traversal)
-5. Rule derivation (pattern matching with unification)
-6. CSP solver for constraint satisfaction (if needed)
+AnswerCandidates = UNBIND(KB, QueryKey)
 ```
 
-**Why HDC is just a filter:**
-- Sparse-polynomial Jaccard similarity doesn't support unbinding
-- Metric-affine L₁ distance has different baseline (0.67 vs 0.5)
-- Neither strategy implements the Master Equation effectively
-- 100% accuracy achieved via symbolic reasoning alone
+Where:
+- `UNBIND` is strategy-defined (XOR cancellation, quotient-like extraction, approximate inverse, etc.),
+- `AnswerCandidates` typically require decoding/cleanup (similarity search, witness ranking, structural projection),
+- symbolic validation may be applied depending on query type and engine policy.
 
-**Characteristics:**
-- Memory efficient (32 bytes vs 4KB per vector)
-- Faster for pure logical queries
-- Unlimited effective KB capacity (no bundle saturation)
-- Perfect for symbolic AI workloads
+See DS07a (primitives), DS05/DS06/DS17 (reasoning engines), DS25 (EXACT UNBIND), DS15/DS18/DS23 (strategy families).
 
-### 1.10.4 Strategy Selection Guide
+### 1.10.3 Closure Operators (STAR / UNSTAR) — Research Direction
 
-| Use Case | Recommended Strategy | Motor |
-|----------|---------------------|-------|
-| General purpose, balanced | `dense-binary` | HDC-Priority |
-| Analogical reasoning | `dense-binary` | HDC-Priority |
-| Large knowledge bases | `sparse-polynomial` | Symbolic-Priority |
-| Embedded/memory-constrained | `metric-affine` | Symbolic-Priority |
-| Pure logical inference | `sparse-polynomial` | Symbolic-Priority |
-| Fuzzy/graded similarity | `metric-affine` | Symbolic-Priority |
+Some reasoning tasks are naturally multi-step (chains, closure, exploration). For these, a single `UNBIND(KB, QueryKey)` pass is not enough; we can iterate a *step operator* to a fixpoint (with budgets).
+
+URK/closure introduces two operators:
+- `STAR(seed)` (least-fixpoint closure / “all reachable derivations”),
+- `UNSTAR(goal)` (reverse-closure / abduction-style preimage exploration).
+
+These are strategy-agnostic at the engine level and can be **exact** for strategies like `exact`, or **beam/approx** for dense/metric strategies.
+
+See DS39–DS45 (STAR/UNSTAR, URK programs, fixpoint engine, backends, probabilistic + mathematical extensions) and the overview DS06.
+
+### 1.10.4 Practical Strategy Guidance (Conservative)
+
+Different strategies trade off capacity, speed, and how “literal” unbinding is:
+- XOR-style dense strategies are strong at cleanup and graded similarity, but can saturate under large superpositions.
+- sparse/metric strategies support scalable storage and structured matching, but rely more on decoding/validation logic.
+- `exact` is lossless at the representation level (session-local atom IDs) and supports quotient-like unbinding, but requires careful projection/cleanup for human-readable decoding.
+
+For implementation details and current runtime behavior, prefer DS05/DS06/DS17 and per-strategy DS-es over this chapter.
 
 ### 1.10.5 Architecture Implications
 
 The hybrid design means:
-1. **Same DSL, different engines:** User code works identically regardless of strategy
-2. **Strategy-specific optimizations:** Each motor optimizes for its strengths
-3. **Fallback behavior:** Symbolic-Priority can use CSP backtracking when HDC fails
-4. **Transparent switching:** `SYS2_HDC_STRATEGY` environment variable selects mode
+1. **Same DSL, multiple backends:** user-level DSL stays stable while engines/strategies evolve.
+2. **Engine policy is explicit:** holographic-first may validate symbolically; symbolic-first may use HDC prefilters.
+3. **UNBIND is not a single law:** the reasoning pipeline must be designed per strategy family (XOR vs non-XOR).
+4. **Advanced reasoning is layered:** STAR/UNSTAR and URK-style programs extend the core without breaking it.
 
 ---
 
@@ -558,22 +569,41 @@ The hybrid design means:
 
 | Concept | Description |
 |---------|-------------|
-| **Two operations only** | XOR (bind) and Bundle (superposition) |
+| **Core interface** | Strategy-defined `bind / unbind / bundle / similarity` |
+| **Dense-binary baseline** | XOR bind/unbind + majority bundle |
 | **No permutation** | Breaks vector extension |
 | **Position vectors** | Pos1, Pos2, ... encode argument order |
 | **Extension** | Clone: [v] → [v\|v] → [v\|v\|v\|v] |
-| **ASCII stamping** | Name → ASCII bits → repeated stamp + PRNG variation |
+| **Deterministic init (example)** | ASCII stamping for PRNG-based strategies (others may differ) |
 | **Binding formula** | result = Op ⊕ (Pos1⊕A1) ⊕ (Pos2⊕A2) ⊕ ... |
-| **Query** | Unbind known parts, search vocabulary |
-| **Hybrid architecture** | HDC-Priority vs Symbolic-Priority based on strategy |
+| **Query** | `UNBIND(KB, QueryKey)` + decode/cleanup (+ optional proof/validation) |
+| **Closure (research)** | STAR/UNSTAR fixpoint reasoning over a step operator |
 
 **Key design decisions:**
-1. XOR + Bundle only → extension works
-2. Position via role vectors → no permutation needed
-3. ASCII stamping → deterministic, recognizable, extensible
-4. Theory-scoped names → same name can exist in multiple theories
-5. Dual motors → optimal reasoning for each HDC strategy
+1. Keep a small strategy interface, allow multiple algebras.
+2. Use explicit role/position markers (no permutation) for structured records.
+3. Prefer deterministic atom creation per strategy (debuggable and reproducible).
+4. Separate “candidate generation” (HDC) from “validation/proof” (symbolic) when needed.
+5. Extend core reasoning via closure/program semantics (STAR/UNSTAR, URK) without rewriting the DSL.
 
 ---
+
+## 1.12 Related Specifications
+
+This chapter is intentionally conceptual. For concrete implementation details and current runtime behavior:
+
+- `docs/specs/DS/DS02-DSL-Syntax.md` — DSL surface used by theories and eval books.
+- `docs/specs/DS/DS03-Architecture.md` — layering, Session, strategy pluggability.
+- `docs/specs/DS/DS05-Basic-Reasoning-Engine.md` — baseline query processing + proof/validation flow.
+- `docs/specs/DS/DS06-Advanced-Reasoning.md` — advanced operators and engine extensions.
+- `docs/specs/DS/DS07a-HDC-Primitives.md` — abstract primitives + structured-record encoding.
+- `docs/specs/DS/DS11-Decoding-Phrasing-Engine.md` — turning internal results into human-readable form.
+- `docs/specs/DS/DS15-Sparse-Polynomial-HDC.md` — sparse polynomial strategy family.
+- `docs/specs/DS/DS18-Metric-Affine-HDC.md` and `docs/specs/DS/DS23-Elastic-Metric-Affine-HDC.md` — metric-affine strategy family.
+- `docs/specs/DS/DS25-Exact-Sparse-Bitset-Polynomial-HDC.md` — EXACT strategy (quotient-like unbinding).
+- `docs/specs/DS/DS17-Holographic-Priority-Mode.md` and `docs/specs/DS/DS17-Meta-Query-Operators.md` — engine policies and meta-operators.
+- `docs/specs/DS/DS39-Reasoning-Closure-STAR-UNSTAR-RESEARCH.md` — STAR/UNSTAR closure (research).
+- `docs/specs/DS/DS41-URK-Reasoning-Programs-IR-RESEARCH.md` to `docs/specs/DS/DS45-URK-Probabilistic-and-Mathematical-Reasoning-RESEARCH.md` — URK kernel (research).
+- `docs/specs/DS/DS46-Discrete-Phase-Lattice-Hologram-HDC-RESEARCH.md` and `docs/specs/DS/DS47-Optical-Field-HDC-Strategy-OFHDC-RESEARCH.md` — additional strategy proposals (research).
 
 *End of Chapter 1*

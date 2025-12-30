@@ -6,73 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="better documentation, new research directions documented">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS00-Vision.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS00-Vision.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS01-Theoretical-Foundation.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS01-Theoretical-Foundation.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS02-DSL-Syntax.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS02-DSL-Syntax.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS03-Architecture.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS03-Architecture.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS03-Memory-Model-OBSOLETE.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS03-Memory-Model-OBSOLETE.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS05-Basic-Reasoning-Engine.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS05-Basic-Reasoning-Engine.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS06-Advanced-Reasoning.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS06-Advanced-Reasoning.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07-Core-Theory-Index.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07-Core-Theory-Index.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07-Core-Theory.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07-Core-Theory.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07a-HDC-Primitives.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07a-HDC-Primitives.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07b-Type-System.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07b-Type-System.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07c-Semantic-Primitives.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07c-Semantic-Primitives.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07d-Logic.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07d-Logic.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07e-Temporal-Modal.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07e-Temporal-Modal.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07f-Roles-Properties.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07f-Roles-Properties.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07g-Bootstrap-Verbs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07g-Bootstrap-Verbs.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07h-Reasoning.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07h-Reasoning.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS08-TrustworthyAI-Overview-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS08-TrustworthyAI-Overview-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS09-Core-HDC-Implementation.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS09-Core-HDC-Implementation.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS10-Codebase-Map.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS10-Codebase-Map.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS11-Decoding-Phrasing-Engine.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS11-Decoding-Phrasing-Engine.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS12-Test-Library.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS12-Test-Library.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS13-BasicNLP.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS13-BasicNLP.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS14-EvalSuite.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS14-EvalSuite.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS15-Sparse-Polynomial-HDC.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS15-Sparse-Polynomial-HDC.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS16-CSP-Solver.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS16-CSP-Solver.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS17-Holographic-Priority-Mode.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS17-Holographic-Priority-Mode.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS17-Meta-Query-Operators.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS17-Meta-Query-Operators.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS18-Metric-Affine-HDC.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS18-Metric-Affine-HDC.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS19-Semantic-Unification.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS19-Semantic-Unification.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS20-AutoDiscovery.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS20-AutoDiscovery.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS21-NL2DSL.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS21-NL2DSL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS22-Constructivist-Level-Optimization.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS22-Constructivist-Level-Optimization.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS23-Elastic-Metric-Affine-HDC.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS23-Elastic-Metric-Affine-HDC.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS24-Pure-Symbolic-Term-Engine-EXPLORATORY.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS24-Pure-Symbolic-Term-Engine-EXPLORATORY.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS25-Exact-Sparse-Bitset-Polynomial-HDC.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS25-Exact-Sparse-Bitset-Polynomial-HDC.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS26-Session-Universe.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS26-Session-Universe.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS27-Session-High-Level-Holographic-API-PROPOSED.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS27-Session-High-Level-Holographic-API-PROPOSED.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS28-Agent-Planning-and-Tool-Orchestration-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS28-Agent-Planning-and-Tool-Orchestration-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS29-Creative-Writing-Consistency-and-Bias-Detection-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS29-Creative-Writing-Consistency-and-Bias-Detection-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS30-Compliance-and-Regulatory-Verification-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS30-Compliance-and-Regulatory-Verification-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS31-Scientific-Theory-Encoding-and-Validation-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS31-Scientific-Theory-Encoding-and-Validation-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS32-Universal-Theory-Engine-UTE-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS32-Universal-Theory-Engine-UTE-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS33-UTE-Representation-and-Query-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS33-UTE-Representation-and-Query-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS34-UTE-Provenance-Contradictions-and-Revision-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS34-UTE-Provenance-Contradictions-and-Revision-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS35-UTE-Causal-Mechanistic-Reasoning-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS35-UTE-Causal-Mechanistic-Reasoning-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS36-UTE-Uncertainty-and-Probabilistic-Semantics-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS36-UTE-Uncertainty-and-Probabilistic-Semantics-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS37-UTE-Numeric-Modeling-and-Units-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS37-UTE-Numeric-Modeling-and-Units-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS38-UTE-Experiment-Planning-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS38-UTE-Experiment-Planning-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS39-Reasoning-Closure-STAR-UNSTAR-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS39-Reasoning-Closure-STAR-UNSTAR-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS40-Holographic-Priority-Closure-Tactics-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS40-Holographic-Priority-Closure-Tactics-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS41-URK-Reasoning-Programs-IR-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS41-URK-Reasoning-Programs-IR-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS42-URK-Fixpoint-Engine-MU-NU-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS42-URK-Fixpoint-Engine-MU-NU-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS43-URK-Backends-EXACT-EMA-Dense-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS43-URK-Backends-EXACT-EMA-Dense-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS44-URK-Extensions-Semiring-Constraints-Symbolic-Execution-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS44-URK-Extensions-Semiring-Constraints-Symbolic-Execution-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS45-URK-Probabilistic-and-Mathematical-Reasoning-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS45-URK-Probabilistic-and-Mathematical-Reasoning-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS46-Discrete-Phase-Lattice-Hologram-HDC-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS46-Discrete-Phase-Lattice-Hologram-HDC-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS47-Optical-Field-HDC-Strategy-OFHDC-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS47-Optical-Field-HDC-Strategy-OFHDC-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/healthCheck.js" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/healthCheck.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/supported-nl.generated.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/supported-nl.generated.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/tools/gen-supported-nl.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/tools/gen-supported-nl.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/runFastEvalNLTranslate.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/runFastEvalNLTranslate.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/runFastEvalReview.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/runFastEvalReview.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/nlp/normalizer.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/normalizer.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/nlp/patterns.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/patterns.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/nlp/transformer.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/transformer.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/dsl-to-nl.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/dsl-to-nl.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -191,15 +126,7 @@
       <workItem from="1766562947099" duration="21851000" />
       <workItem from="1766650266623" duration="6940000" />
       <workItem from="1767005469743" duration="10476000" />
-      <workItem from="1767083849618" duration="18468000" />
-    </task>
-    <task id="LOCAL-00051" summary="new approach for val suite, wip">
-      <option name="closed" value="true" />
-      <created>1766397524341</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1766397524341</updated>
+      <workItem from="1767083849618" duration="19256000" />
     </task>
     <task id="LOCAL-00052" summary="new approach for val suite, trying to improve teh deft theories, doing various experiemnts to improve and generalise the reasoning engines">
       <option name="closed" value="true" />
@@ -585,7 +512,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767133103051</updated>
     </task>
-    <option name="localTasksCounter" value="100" />
+    <task id="LOCAL-00100" summary="better documentation, new research directions documented">
+      <option name="closed" value="true" />
+      <created>1767134675154</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1767134675154</updated>
+    </task>
+    <option name="localTasksCounter" value="101" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

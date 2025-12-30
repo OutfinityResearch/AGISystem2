@@ -14,7 +14,7 @@ export const steps = [
   // === SETUP: Deep historical timeline (8 steps) ===
   {
     action: 'learn',
-    input_nl: 'Deep historical: AncientRome->Byzantine->Medieval->Renaissance->Enlightenment->Industrial->ModernAge->InfoAge->AIAge',
+    input_nl: 'AncientRome before Byzantine. Byzantine before Medieval. Medieval before Renaissance. Renaissance before Enlightenment. Enlightenment before Industrial. Industrial before ModernAge. ModernAge before InfoAge. InfoAge before AIAge.',
     input_dsl: `
       before AncientRome Byzantine
       before Byzantine Medieval
@@ -31,7 +31,7 @@ export const steps = [
   // === PROVE: 8-step temporal (AncientRome->AIAge) ===
   {
     action: 'prove',
-    input_nl: 'Was AncientRome before AIAge? (8-step chain)',
+    input_nl: 'AncientRome before AIAge.',
     input_dsl: '@goal before AncientRome AIAge',
     expected_nl: 'True: AncientRome is before AIAge.',
     proof_nl: 'AncientRome is before Byzantine. Byzantine is before Medieval. Medieval is before Renaissance. Renaissance is before Enlightenment. Enlightenment is before Industrial. Industrial is before ModernAge. ModernAge is before InfoAge. InfoAge is before AIAge.'
@@ -40,7 +40,7 @@ export const steps = [
   // === PROVE: 6-step temporal (Medieval->InfoAge) ===
   {
     action: 'prove',
-    input_nl: 'Was Medieval before InfoAge? (6-step chain)',
+    input_nl: 'Medieval before InfoAge.',
     input_dsl: '@goal before Medieval InfoAge',
     expected_nl: 'True: Medieval is before InfoAge.',
     proof_nl: 'Medieval is before Renaissance. Renaissance is before Enlightenment. Enlightenment is before Industrial. Industrial is before ModernAge. ModernAge is before InfoAge.'
@@ -49,7 +49,7 @@ export const steps = [
   // === PROVE: 5-step temporal (Byzantine->Industrial) ===
   {
     action: 'prove',
-    input_nl: 'Was Byzantine before Industrial? (5-step chain)',
+    input_nl: 'Byzantine before Industrial.',
     input_dsl: '@goal before Byzantine Industrial',
     expected_nl: 'True: Byzantine is before Industrial.',
     proof_nl: 'Byzantine is before Medieval. Medieval is before Renaissance. Renaissance is before Enlightenment. Enlightenment is before Industrial. Transitive chain verified (4 hops). Therefore Byzantine is before Industrial.'
@@ -58,7 +58,7 @@ export const steps = [
   // === SETUP: Deep causal chain (7 steps) + entity hierarchy ===
   {
     action: 'learn',
-    input_nl: 'Deep causal: Deforestation->Erosion->Flooding->CropLoss->FoodShortage->Malnutrition->HealthCrisis->SocialUnrest',
+    input_nl: 'Deforestation causes Erosion. Erosion causes Flooding. Flooding causes CropLoss. CropLoss causes FoodShortage. FoodShortage causes Malnutrition. Malnutrition causes HealthCrisis. HealthCrisis causes SocialUnrest. Deforestation is an EnvironmentalDamage. EnvironmentalDamage is a HumanImpact. HumanImpact is a GlobalIssue. GlobalIssue is a Problem. Problem is a Concern. Concern is an AbstractConcept.',
     input_dsl: `
       causes Deforestation Erosion
       causes Erosion Flooding
@@ -80,7 +80,7 @@ export const steps = [
   // === PROVE: 7-step causal (Deforestation->SocialUnrest) ===
   {
     action: 'prove',
-    input_nl: 'Does Deforestation cause SocialUnrest? (7-step causal chain)',
+    input_nl: 'Deforestation causes SocialUnrest.',
     input_dsl: '@goal causes Deforestation SocialUnrest',
     expected_nl: 'True: Deforestation causes SocialUnrest.',
     proof_nl: 'Deforestation causes Erosion. Erosion causes Flooding. Flooding causes CropLoss. CropLoss causes FoodShortage. FoodShortage causes Malnutrition. Malnutrition causes HealthCrisis. HealthCrisis causes SocialUnrest.'
@@ -89,7 +89,7 @@ export const steps = [
   // === PROVE: 5-step causal (Flooding->HealthCrisis) ===
   {
     action: 'prove',
-    input_nl: 'Does Flooding cause HealthCrisis? (5-step causal chain)',
+    input_nl: 'Flooding causes HealthCrisis.',
     input_dsl: '@goal causes Flooding HealthCrisis',
     expected_nl: 'True: Flooding causes HealthCrisis.',
     proof_nl: 'Flooding causes CropLoss. CropLoss causes FoodShortage. FoodShortage causes Malnutrition. Malnutrition causes HealthCrisis. Causal chain verified (4 hops). Therefore Flooding causes HealthCrisis.'
@@ -98,7 +98,7 @@ export const steps = [
   // === PROVE: 6-step isA (Deforestation->AbstractConcept) ===
   {
     action: 'prove',
-    input_nl: 'Is Deforestation an AbstractConcept? (6-step isA chain)',
+    input_nl: 'Deforestation is an AbstractConcept.',
     input_dsl: '@goal isA Deforestation AbstractConcept',
     expected_nl: 'True: Deforestation is an abstractconcept.',
     proof_nl: 'Deforestation isA EnvironmentalDamage. EnvironmentalDamage isA HumanImpact. HumanImpact isA GlobalIssue. GlobalIssue isA Problem. Problem isA Concern. Concern isA AbstractConcept.'
@@ -107,7 +107,7 @@ export const steps = [
   // === SETUP: Deep prevention reasoning ===
   {
     action: 'learn',
-    input_nl: 'Prevention rule: stopping X prevents downstream Y through causal chain.',
+    input_nl: 'IF ((?a causes ?b) AND (?b causes ?c)) THEN (?a wouldPrevent ?c).',
     input_dsl: `
       @causeAB causes ?a ?b
       @causeBC causes ?b ?c
@@ -121,7 +121,7 @@ export const steps = [
   // === PROVE: Prevention via rule (5+ step reasoning) ===
   {
     action: 'prove',
-    input_nl: 'Would preventing Deforestation prevent Flooding? (rule application)',
+    input_nl: 'Deforestation wouldPrevent Flooding.',
     input_dsl: '@goal wouldPrevent Deforestation Flooding',
     expected_nl: 'True: Preventing Deforestation would prevent Flooding.',
     proof_nl: [
@@ -136,7 +136,7 @@ export const steps = [
   // === PROVE: Deeper prevention (5+ step reasoning) ===
   {
     action: 'prove',
-    input_nl: 'Would preventing Erosion prevent FoodShortage? (rule application)',
+    input_nl: 'Erosion wouldPrevent FoodShortage.',
     input_dsl: '@goal wouldPrevent Erosion FoodShortage',
     expected_nl: 'True: Preventing Erosion would prevent FoodShortage.',
     proof_nl: [
@@ -151,7 +151,7 @@ export const steps = [
   // === NEGATIVE: Reverse temporal fails with search trace ===
   {
     action: 'prove',
-    input_nl: 'Is AIAge before AncientRome? (reverse temporal - should fail)',
+    input_nl: 'AIAge before AncientRome.',
     input_dsl: '@goal before AIAge AncientRome',
     expected_nl: 'Cannot prove: AIAge is before AncientRome.',
     proof_nl: [
@@ -163,7 +163,7 @@ export const steps = [
   // === NEGATIVE: Reverse causal fails with search trace ===
   {
     action: 'prove',
-    input_nl: 'Does SocialUnrest cause Deforestation? (reverse causal - should fail)',
+    input_nl: 'SocialUnrest causes Deforestation.',
     input_dsl: '@goal causes SocialUnrest Deforestation',
     expected_nl: 'Cannot prove: SocialUnrest causes Deforestation.',
     proof_nl: [
@@ -175,7 +175,7 @@ export const steps = [
   // === QUERY: What does Deforestation cause ===
   {
     action: 'query',
-    input_nl: 'What does Deforestation cause?',
+    input_nl: 'Deforestation causes ?effect.',
     input_dsl: '@q causes Deforestation ?effect',
     expected_nl: [
       'Deforestation causes Erosion.'
