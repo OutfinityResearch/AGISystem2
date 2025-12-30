@@ -296,7 +296,7 @@ fact = Loves ⊗ (P₁ ⊗ John) ⊗ (P₂ ⊗ Mary)
 
   <h3>Deterministic Initialization and Privacy</h3>
 
-  <p>AGISystem2 generates concept vectors deterministically from names using cryptographic hashing:</p>
+  <p>Most AGISystem2 strategies generate concept vectors deterministically from names using hashing/PRNG (strategy-specific). The lossless <strong>EXACT</strong> strategy is different: it uses a session-local appearance-index dictionary instead of hashing-based IDs.</p>
 
   <pre><code>// Concept vector from name
 John_vector = createFromName("John", geometry)

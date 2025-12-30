@@ -90,17 +90,22 @@
       <a href="strategies/dense-binary.html">Dense-Binary</a> &middot;
       <a href="strategies/sparse-polynomial.html">SPHDC</a> &middot;
       <a href="strategies/metric-affine.html">Metric-Affine</a> &middot;
-      <a href="strategies/metric-affine-elastic.html">Metric-Affine Elastic</a>
+      <a href="strategies/metric-affine-elastic.html">Metric-Affine Elastic</a> &middot;
+      <a href="strategies/exact.html">EXACT</a>
     </small>
     <small>Assessment: Are our strategies Holographic Reduced Representations?</small>
   </div>
 
   <div class="section-intro">
-    <p>This document analyzes the relationship between AGISystem2's HDC strategies and <strong>Holographic Reduced Representations (HRR)</strong> as defined by Tony Plate (1995). Two of our strategies&mdash;<strong>Sparse Polynomial</strong> and <strong>Metric-Affine</strong>&mdash;are original contributions developed for this system. <strong>Metric-Affine Elastic (EMA)</strong> is an extension of Metric-Affine focused on large superpositions.</p>
+    <p>This document analyzes the relationship between AGISystem2's HDC strategies and <strong>Holographic Reduced Representations (HRR)</strong> as defined by Tony Plate (1995). Two of our strategies&mdash;<strong>Sparse Polynomial</strong> and <strong>Metric-Affine</strong>&mdash;are original contributions developed for this system. <strong>Metric-Affine Elastic (EMA)</strong> is an extension of Metric-Affine focused on large superpositions. <strong>EXACT</strong> is a lossless “bitset polynomial” exploration used as an upper bound for retrievability and decoding behavior.</p>
   </div>
 
+	  <div class="alert alert-info" style="margin: 20px 0;">
+	    <strong>Note on EMA:</strong> Metric-Affine Elastic keeps the same XOR bind and L1 similarity as Metric-Affine, but changes bundling (chunked bundles; bounded depth). Geometry (D bytes) is configurable in both strategies; EMA does not auto-grow D during a session in the current runtime. See <a href="strategies/metric-affine-elastic.html">the EMA theory page</a> for details.
+	  </div>
+
   <div class="alert alert-info" style="margin: 20px 0;">
-    <strong>Note on EMA:</strong> Metric-Affine Elastic keeps the same XOR bind and L1 similarity as Metric-Affine, but changes bundling and allows elastic geometry. See <a href="strategies/metric-affine-elastic.html">the EMA theory page</a> for details.
+    <strong>Note on EXACT:</strong> EXACT is intentionally not “HRR-like”. It is a lossless, session-local representation with a quotient-like UNBIND (UNBIND is not required to equal BIND). See <a href="strategies/exact.html">the EXACT theory page</a> and <a href="../specsLoader.html?spec=DS/DS25-Exact-Sparse-Bitset-Polynomial-HDC.md">DS25</a>.
   </div>
 
   <h2>What is HRR?</h2>

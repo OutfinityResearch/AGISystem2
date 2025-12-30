@@ -99,17 +99,24 @@
     </tr>
     <tr>
       <td><strong>Metric-Affine</strong></td>
-      <td>32 byte channels</td>
-      <td>Affine transformation</td>
-      <td>Channel overlap</td>
+      <td>Byte channels (16–32B typical)</td>
+      <td>XOR on bytes (self-inverse) + mean bundling</td>
+      <td>L1 / baseline-aware similarity</td>
       <td><a href="../theory/strategies/metric-affine.html">Full docs</a>, <a href="../theory/hrr-comparison.html">HRR Comparison</a></td>
     </tr>
     <tr>
       <td><strong>Metric-Affine Elastic (EMA)</strong></td>
       <td>Elastic byte channels (32B+)</td>
-      <td>Affine transformation</td>
+      <td>XOR on bytes (self-inverse) + chunked bundling</td>
       <td>Channel overlap (max over chunks)</td>
       <td><a href="../theory/strategies/metric-affine-elastic.html">Full docs</a>, <a href="../specsLoader.html?spec=DS/DS23-Elastic-Metric-Affine-HDC.md">EMA Spec</a></td>
+    </tr>
+    <tr>
+      <td><strong>EXACT</strong></td>
+      <td>Lossless bitset-polynomial (BigInt monomials)</td>
+      <td>Polynomial bind (not self-inverse); quotient-like UNBIND</td>
+      <td>Witness/overlap scoring (strategy-aware)</td>
+      <td><a href="../theory/strategies/exact.html">Full docs</a>, <a href="../specsLoader.html?spec=DS/DS25-Exact-Sparse-Bitset-Polynomial-HDC.md">EXACT Spec</a></td>
     </tr>
   </table>
 

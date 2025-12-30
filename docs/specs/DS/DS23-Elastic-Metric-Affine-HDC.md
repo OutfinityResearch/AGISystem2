@@ -20,10 +20,12 @@ This document specifies **Elastic Metric-Affine (EMA)** — an extension of AGIS
 1. **Gray convergence under large superpositions:** arithmetic-mean bundling drifts toward ~128 as the number of bundled items grows (signal collapses toward the random baseline ≈ 0.665).
 2. **Deep nested bundling:** repeated incremental updates `KB := bundle([KB, v])` compounds gray drift and reduces distinctiveness faster than one-shot bundling.
 
-EMA introduces two engineering mechanisms compatible with AGISystem2’s existing reasoning pipelines:
+EMA introduces one core engineering mechanism (implemented) plus one optional tuning knob:
 
-- **Chunked bundling (bounded depth):** represent a bundle as a set of per-chunk means (no “bundle-of-bundles”).
-- **Elastic geometry (optional, controlled):** allow increasing the number of byte channels `D ∈ {32, 64, 96, ...}` between “epochs” to improve discrimination as the KB grows, with prefix-stable deterministic generation.
+- **Chunked bundling (bounded depth, implemented):** represent a bundle as a set of per-chunk means (no “bundle-of-bundles”). The bundle can grow by accumulating chunks as you add facts.
+- **Geometry `D` (tuning knob, manual):** `D` is the number of byte channels per vector (`Uint8Array(D)`). Larger `D` increases time/memory linearly and typically improves discrimination, but does not remove gray convergence by itself.
+
+Terminology note: earlier drafts called the second bullet “elastic geometry”. In the current runtime, **EMA does not auto-grow `D`** during a session; you choose `D` when building a session/run (same knob also exists in DS18).
 
 The implementation is intended as a new strategy ID: `metric-affine-elastic`, without modifying other strategies.
 
@@ -36,7 +38,7 @@ The implementation is intended as a new strategy ID: `metric-affine-elastic`, wi
 - **G1 — Preserve Metric-Affine semantics:** keep `createFromName`, `bind`, `bundle`, `similarity` contracts and “feel” consistent with DS18.
 - **G2 — Reduce gray convergence impact:** ensure bundling quality degrades slowly and predictably as KB grows.
 - **G3 — Avoid deep nested bundling:** incremental KB maintenance must not repeatedly “average an average”.
-- **G4 — Elastic discrimination valve:** allow controlled growth of `D` when retrieval margins degrade.
+- **G4 — Geometry as a tuning knob:** support configurable `D` (bytes per vector) without changing the algebra or breaking determinism.
 - **G5 — Candidate-set friendly decoding:** designed for pipelines where cleanup is performed over restricted candidate sets (vocabulary subsets / reverse indices / ComponentKB).
 
 ### 2.2 Non-goals
@@ -54,7 +56,7 @@ The implementation is intended as a new strategy ID: `metric-affine-elastic`, wi
 EMA operates on a family of spaces:
 
 ```
-Z256^D   where D is variable (bytes)
+Z256^D   where D is the geometry (bytes per vector / number of byte channels)
 ```
 
 Vector element:
@@ -63,11 +65,11 @@ Vector element:
 V = [b0, b1, ..., b(D-1)] with bi ∈ {0..255}
 ```
 
-EMA generalizes DS18’s fixed `D=32` to a variable `D`.
+EMA uses the same geometry parameter as DS18. Default `D=32`, but `D` is configurable.
 
 ---
 
-## 4. Deterministic Vector Generation (Elastic + Prefix-Stable)
+## 4. Deterministic Vector Generation (Prefix-Stable across D)
 
 ### 4.1 Prefix stability requirement
 
@@ -75,7 +77,7 @@ For any atom name `N` and any `D1 < D2`:
 
 `V(N, D1)` must equal the first `D1` bytes of `V(N, D2)`.
 
-This allows geometry to grow without changing existing dimensions.
+This allows you to choose different `D` values across runs (or “epochs”) without changing the meaning of the first `D1` channels. This is useful if you experiment with `D=32` vs `D=64/128`, even if you never auto-grow inside a session.
 
 ### 4.2 Generation pipeline
 
@@ -188,13 +190,15 @@ This allows current reasoning engines to keep calling `bind`, `bundle`, `unbind`
 
 ---
 
-## 8. Elastic Geometry Growth Protocol (system-level)
+## 8. Optional (Not Implemented): Geometry growth protocol (system-level)
 
 ### 8.1 Why this cannot be “just inside the strategy”
 
 EMA growth requires **session-wide consistency**: when `D` changes, all atom vectors and all stored fact vectors must be re-encoded to the new geometry. The strategy alone cannot reconstruct larger-geometry facts unless the system preserves enough provenance (operator/args or a regenerable RecordSpec).
 
 Therefore, **automatic growth is a runtime concern**, not a pure `bundle()` concern.
+
+**Current runtime note:** the shipped EMA strategy supports variable `D`, but **does not implement any automatic growth**. For most experiments, it is sufficient (and simpler) to select `D` up-front.
 
 ### 8.2 Recommended integration point
 
@@ -244,12 +248,12 @@ EMA preserves the Metric-Affine contract properties:
 and introduces:
 
 ```
-GEOMETRY_ELASTIC: true
+GEOMETRY_CONFIGURABLE: true
 BUNDLE_CHUNKED: true
 BUNDLE_BOUNDED_DEPTH: true
 ```
 
-The contract should be implemented in `src/hdc/ema-contract.mjs` and validated similarly to `src/hdc/metric-affine-contract.mjs`.
+In the current runtime, EMA reuses the Metric-Affine contract/validation approach; a dedicated `ema-contract.mjs` is optional future work.
 
 ---
 

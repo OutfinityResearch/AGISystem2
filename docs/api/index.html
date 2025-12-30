@@ -326,9 +326,12 @@ const extracted = removePosition(1, positionedVector);</code></pre>
 // Initialize specific strategy
 initHDC('dense-binary');     // Classic: 2048-bit binary vectors
 initHDC('sparse-polynomial'); // SPHDC: k=4 exponent sets
+initHDC('metric-affine');     // Byte-channel vectors (fast baseline)
+initHDC('metric-affine-elastic'); // EMA: elastic geometry + chunked bundling
+initHDC('exact');             // EXACT: lossless session-local bitset-polynomials (UNBIND not self-inverse)
 
 // Check current strategy
-console.log(getStrategyId()); // "dense-binary" or "sparse-polynomial"</code></pre>
+console.log(getStrategyId()); // e.g. "dense-binary", "metric-affine", "exact", ...</code></pre>
 
   <h2>Parser API</h2>
 

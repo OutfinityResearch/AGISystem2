@@ -127,17 +127,7 @@ export function capitalize(word) {
  */
 export function capitalizeWord(word) {
   if (!word) return '';
-  const head = word.charAt(0).toUpperCase();
-  const tail = word.slice(1);
-
-  // Preserve existing internal capitalization (e.g. LivingThing, DNA, iPhone).
-  // Lowercasing these breaks DSL identifiers that are case-sensitive.
-  if (/[A-Z]/.test(tail)) return head + tail;
-
-  // Preserve non-letter tokens (underscores/digits) as-is (except first char capitalization).
-  if (/[^a-z]/i.test(tail)) return head + tail;
-
-  return head + tail.toLowerCase();
+  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
 
 /**

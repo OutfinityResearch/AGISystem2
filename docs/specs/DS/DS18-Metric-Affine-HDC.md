@@ -10,12 +10,18 @@
 
 ## 1. Executive Summary
 
-This document specifies the **Metric-Affine HDC Strategy** - a compact hyperdimensional computing approach that represents concepts as 32-byte vectors over Z₂₅₆ (integers 0-255), using XOR for binding and L₁ (Manhattan) distance for similarity.
+This document specifies the **Metric-Affine HDC Strategy** — a compact hyperdimensional computing approach that represents concepts as **byte vectors** over Z₂₅₆ (integers 0-255), using XOR for binding and L₁ (Manhattan) distance for similarity.
+
+In AGISystem2 terms, the strategy’s **geometry** is:
+
+- `D` = the number of byte channels per vector (`Uint8Array(D)`)
+- **memory per atomic vector = `D` bytes**
+- default `D = 32` (so “32 bytes” is the default configuration, not a hard limit)
 
 **Key Innovation:** Metric-Affine provides a middle ground between dense-binary (4KB vectors) and sparse-polynomial (32 bytes) with continuous fuzzy values instead of binary.
 
 **Design Characteristics:**
-- **Memory:** 32 bytes per vector (8x smaller than dense-binary)
+- **Memory:** `D` bytes per vector (default 32; typically 8/16/32/64/128)
 - **Baseline Similarity:** ~0.67 (different from standard 0.5)
 - **Bundle Behavior:** Arithmetic mean (fuzzy superposition)
 - **Metric:** Manhattan L₁ distance
@@ -26,25 +32,25 @@ This document specifies the **Metric-Affine HDC Strategy** - a compact hyperdime
 
 ### 2.1 Core Structure
 
-The Metric-Affine algebra operates on Z₂₅₆³² (Fuzzy-Boolean Hyper-Lattice):
+The Metric-Affine algebra operates on Z₂₅₆ᴰ (Fuzzy-Boolean Hyper-Lattice), where `D` is the geometry:
 
 | Component | Definition |
 |-----------|------------|
-| **Space** | Z₂₅₆³² (32 dimensions × 8 bits) |
+| **Space** | Z₂₅₆ᴰ (`D` dimensions × 8 bits) |
 | **Bind** | XOR component-wise (abelian group) |
 | **Bundle** | Arithmetic mean with clamp to [0,255] |
 | **Metric** | Manhattan L₁ distance |
-| **Cardinality** | 256³² ≈ 10⁷⁷ possible states |
+| **Cardinality** | 256ᴰ possible states |
 
 ### 2.2 Vector Representation
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  Metric-Affine Vector: 32 bytes                             │
+│  Metric-Affine Vector: D bytes (example shown at D = 32)     │
 ├─────────────────────────────────────────────────────────────┤
 │  [b₀][b₁][b₂][b₃]...[b₃₀][b₃₁]  where bᵢ ∈ {0..255}        │
 ├─────────────────────────────────────────────────────────────┤
-│  Storage: Uint8Array(32) = 256 bits = 32 bytes             │
+│  Storage: Uint8Array(D) = D bytes                           │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -75,8 +81,9 @@ The Metric-Affine algebra operates on Z₂₅₆³² (Fuzzy-Boolean Hyper-Lattic
 
 ```javascript
 function bind(a, b) {
-  const result = new Uint8Array(32);
-  for (let i = 0; i < 32; i++) {
+  const D = a.geometry;
+  const result = new Uint8Array(D);
+  for (let i = 0; i < D; i++) {
     result[i] = a.data[i] ^ b.data[i];
   }
   return result;
@@ -91,8 +98,9 @@ function bind(a, b) {
 
 ```javascript
 function bundle(vectors) {
-  const result = new Uint8Array(32);
-  for (let i = 0; i < 32; i++) {
+  const D = vectors[0].geometry;
+  const result = new Uint8Array(D);
+  for (let i = 0; i < D; i++) {
     let sum = 0;
     for (const v of vectors) {
       sum += v.data[i];
@@ -119,11 +127,12 @@ function bundle(vectors) {
 
 ```javascript
 function similarity(a, b) {
+  const D = a.geometry;
   let l1 = 0;
-  for (let i = 0; i < 32; i++) {
+  for (let i = 0; i < D; i++) {
     l1 += Math.abs(a.data[i] - b.data[i]);
   }
-  const maxL1 = 32 * 255;  // = 8160
+  const maxL1 = D * 255;
   return 1 - (l1 / maxL1);
 }
 ```
@@ -138,9 +147,13 @@ function similarity(a, b) {
 For X, Y ~ Uniform(0, 255):
   E[|X - Y|] = (256² - 1) / (3 × 256) ≈ 85.33
 
-Expected L₁ = 32 × 85.33 = 2730.56
-Similarity = 1 - (2730.56 / 8160) ≈ 0.665
+Expected L₁ = D × 85.33
+max L₁ = D × 255
+
+Similarity = 1 - (D × 85.33) / (D × 255) ≈ 0.665
 ```
+
+**Important note:** the expected *baseline* similarity is approximately constant in `D`, but increasing `D` typically tightens the distribution (lower variance), which can change practical margins and threshold tuning.
 
 ---
 
@@ -157,7 +170,7 @@ Similarity = 1 - (2730.56 / 8160) ≈ 0.665
 
 ### 4.2 Limitations
 
-- Resolution "lower" than classic HRR (32 channels vs. 10,000 typical)
+- Resolution "lower" than classic HRR at default `D=32` (classic HRR often uses 10,000+ dimensions)
 - Capacity: ~30-50 superposed concepts before significant interference
 - Baseline similarity ~0.67 requires adjusted thresholds
 
@@ -309,7 +322,7 @@ The name "Fuzzy-Boolean Hyper-Lattice" reflects:
 ## 11. Future Directions
 
 1. **Adaptive Thresholds** - Learn optimal thresholds from evaluation data
-2. **Variable Geometry** - Support 64/128 byte vectors for more capacity
+2. **Geometry-Aware Calibration** - Tune thresholds and heuristics as a function of `D`
 3. **Weighted Bundle** - Non-uniform weighting for concept importance
 4. **Median Bundle** - Alternative to mean for outlier resistance
 

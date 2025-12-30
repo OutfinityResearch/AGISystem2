@@ -89,8 +89,8 @@
 </head>
 <body>
   <div class="page">
-  <div class="nav-header">
-    <h1>Metric-Affine HDC</h1>
+	  <div class="nav-header">
+	    <h1>Metric-Affine HDC</h1>
     <small>
       <a href="../../index.html">Home</a> &middot;
       <a href="../index.html">Theory</a> &middot;
@@ -99,34 +99,34 @@
       <a href="metric-affine.html"><strong>Metric-Affine</strong></a> &middot;
       <a href="metric-affine-elastic.html">Metric-Affine Elastic</a> &middot;
       <a href="exact.html">EXACT</a>
-    </small>
-    <small>Fuzzy-Boolean Hyper-Lattice: Continuous HDC in 32 Bytes</small>
-  </div>
+	    </small>
+	    <small>Fuzzy-Boolean Hyper-Lattice: Continuous HDC in D Bytes (default D=32)</small>
+	  </div>
 
-  <div class="section-intro">
-    <p>Metric-Affine HDC represents concepts as <strong>32-byte vectors over Z₂₅₆</strong> (integers 0-255). Unlike binary HDC with discrete 0/1 values, Metric-Affine uses continuous fuzzy values, enabling graded similarity and smooth interpolation between concepts.</p>
-  </div>
+	  <div class="section-intro">
+	    <p>Metric-Affine HDC represents concepts as <strong>D-byte vectors over Z₂₅₆</strong> (integers 0-255). In AGISystem2, <strong>geometry = D</strong> (the number of byte channels per vector). The default is <strong>D=32</strong>, and this page illustrates that default configuration.</p>
+	  </div>
 
   <h2>1. The Core Idea: Continuous Values in Compact Space</h2>
 
-  <div class="concept-box">
-    <h4>Fundamental Insight</h4>
-    <p>Instead of thousands of binary bits, Metric-Affine uses just <strong>32 byte channels</strong>. Each byte (0-255) carries 8 bits of information, giving 256 bits total in only 32 bytes. The continuous values enable <em>fuzzy superposition</em> where bundled concepts smoothly blend rather than voting discretely.</p>
-  </div>
+	  <div class="concept-box">
+	    <h4>Fundamental Insight</h4>
+	    <p>Instead of thousands of binary bits, Metric-Affine uses just <strong>D byte channels</strong> (default D=32). Each channel is a byte (0-255), so the storage is <strong>D bytes = 8D bits</strong>. The continuous values enable <em>fuzzy superposition</em> where bundled concepts smoothly blend rather than voting discretely.</p>
+	  </div>
 
-  <div class="definition">
-    <strong>Definition: Metric-Affine Vector</strong>
-    <p>A metric-affine vector V is a fixed-length sequence of bytes:</p>
-    <p style="text-align: center; font-family: monospace; font-size: 14px;">
-      V = [b<sub>0</sub>, b<sub>1</sub>, ..., b<sub>31</sub>] where b<sub>i</sub> &isin; {0, 1, ..., 255}
-    </p>
-    <p>Storage: 32 bytes (256 bits of information).</p>
-  </div>
+	  <div class="definition">
+	    <strong>Definition: Metric-Affine Vector</strong>
+	    <p>A metric-affine vector V is a fixed-length sequence of bytes:</p>
+	    <p style="text-align: center; font-family: monospace; font-size: 14px;">
+	      V = [b<sub>0</sub>, b<sub>1</sub>, ..., b<sub>D-1</sub>] where b<sub>i</sub> &isin; {0, 1, ..., 255}
+	    </p>
+	    <p>Storage: D bytes (default 32 bytes = 256 bits).</p>
+	  </div>
 
   <div class="diagram-container">
-    <svg viewBox="0 0 800 160" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 800px;">
-      <!-- Title -->
-      <text x="400" y="25" text-anchor="middle" font-weight="bold" font-size="14" fill="#ff9800">Metric-Affine Vector Structure (32 bytes)</text>
+	    <svg viewBox="0 0 800 160" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 800px;">
+	      <!-- Title -->
+	      <text x="400" y="25" text-anchor="middle" font-weight="bold" font-size="14" fill="#ff9800">Metric-Affine Vector Structure (example at D=32 bytes)</text>
 
       <!-- Main vector bar -->
       <rect x="50" y="40" width="700" height="50" rx="5" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
@@ -164,27 +164,27 @@
       <text x="77" y="100" text-anchor="middle" font-size="9" fill="#666">byte 0</text>
       <text x="710" y="100" text-anchor="middle" font-size="9" fill="#666">byte 31</text>
 
-      <!-- Memory layout -->
-      <rect x="50" y="115" width="700" height="35" rx="5" fill="#f5f5f5" stroke="#ddd"/>
-      <text x="400" y="135" text-anchor="middle" font-weight="bold" font-size="11">Storage: Uint8Array(32) = 32 bytes = 256 bits</text>
-      <text x="400" y="147" text-anchor="middle" font-size="10" fill="#666">8x smaller than Dense-Binary (4KB) with continuous values</text>
-    </svg>
-  </div>
+	      <!-- Memory layout -->
+	      <rect x="50" y="115" width="700" height="35" rx="5" fill="#f5f5f5" stroke="#ddd"/>
+	      <text x="400" y="135" text-anchor="middle" font-weight="bold" font-size="11">Storage: Uint8Array(D) (example shown at D=32 → 32 bytes)</text>
+	      <text x="400" y="147" text-anchor="middle" font-size="10" fill="#666">8x smaller than Dense-Binary (4KB) with continuous values</text>
+	    </svg>
+	  </div>
 
   <h2>2. The Shifted Baseline: Why 0.67, Not 0.5</h2>
 
   <p>Unlike binary HDC where random vectors share ~50% of bits, metric-affine vectors have a different baseline.</p>
 
-  <div class="definition">
-    <strong>Theorem: Metric-Affine Baseline Similarity</strong>
-    <p>For random vectors X, Y with each byte uniformly distributed over [0, 255]:</p>
-    <ul>
-      <li>Expected absolute difference per byte: E[|X<sub>i</sub> - Y<sub>i</sub>|] &asymp; 85.33</li>
-      <li>Expected L<sub>1</sub> distance: 32 &times; 85.33 = 2730</li>
-      <li>Maximum L<sub>1</sub> distance: 32 &times; 255 = 8160</li>
-      <li><strong>Expected similarity: 1 - (2730/8160) &asymp; 0.665</strong></li>
-    </ul>
-  </div>
+	  <div class="definition">
+	    <strong>Theorem: Metric-Affine Baseline Similarity</strong>
+	    <p>For random vectors X, Y with each byte uniformly distributed over [0, 255]:</p>
+	    <ul>
+	      <li>Expected absolute difference per byte: E[|X<sub>i</sub> - Y<sub>i</sub>|] &asymp; 85.33</li>
+	      <li>Expected L<sub>1</sub> distance: D &times; 85.33</li>
+	      <li>Maximum L<sub>1</sub> distance: D &times; 255</li>
+	      <li><strong>Expected similarity: 1 - (D &times; 85.33)/(D &times; 255) &asymp; 0.665</strong></li>
+	    </ul>
+	  </div>
 
   <div class="warning-box">
     <strong>Important:</strong> Because the baseline is ~0.67 instead of 0.5, all similarity thresholds must be adjusted. A "good match" in metric-affine is ~0.75+, whereas in dense-binary it would be ~0.55+.
@@ -416,19 +416,19 @@
 
   <h2>6. Strategy Comparison</h2>
 
-  <table class="comparison-table">
+	  <table class="comparison-table">
     <tr>
       <th>Property</th>
       <th>Dense-Binary</th>
       <th>SPHDC</th>
       <th>Metric-Affine</th>
     </tr>
-    <tr>
-      <td><strong>Memory</strong></td>
-      <td>4 KB</td>
-      <td>32 bytes</td>
-      <td>32 bytes</td>
-    </tr>
+	    <tr>
+	      <td><strong>Memory</strong></td>
+	      <td>4 KB</td>
+	      <td>k-sparse (varies)</td>
+	      <td>D bytes (default 32)</td>
+	    </tr>
     <tr>
       <td><strong>Values</strong></td>
       <td>Binary {0, 1}</td>
@@ -475,15 +475,15 @@
 
   <h2>7. Use Cases</h2>
 
-  <div class="concept-box">
-    <h4>Ideal Applications</h4>
-    <ul>
-      <li><strong>Embedded Systems:</strong> 32 bytes per vector is highly efficient</li>
-      <li><strong>Fuzzy Reasoning:</strong> Continuous values enable graded similarity</li>
-      <li><strong>Compact Holography:</strong> When full HRR resolution is overkill</li>
-      <li><strong>Privacy-Sensitive:</strong> Smaller vectors expose less information</li>
-    </ul>
-  </div>
+	  <div class="concept-box">
+	    <h4>Ideal Applications</h4>
+	    <ul>
+	      <li><strong>Embedded Systems:</strong> D bytes per vector (default 32) is highly efficient</li>
+	      <li><strong>Fuzzy Reasoning:</strong> Continuous values enable graded similarity</li>
+	      <li><strong>Compact Holography:</strong> When full HRR resolution is overkill</li>
+	      <li><strong>Privacy-Sensitive:</strong> Smaller vectors expose less information</li>
+	    </ul>
+	  </div>
 
   <div class="warning-box">
     <strong>Limitations:</strong>
@@ -496,18 +496,18 @@
 
   <h2>8. Usage</h2>
 
-  <div class="example-box">
-    <strong>Programmatic Usage</strong>
-    <pre style="margin: 10px 0;">
-import { initHDC, setDefaultGeometry } from './src/hdc/facade.mjs';
-import { Session } from './src/runtime/session.mjs';
+	  <div class="example-box">
+	    <strong>Programmatic Usage</strong>
+	    <pre style="margin: 10px 0;">
+	import { initHDC, setDefaultGeometry } from './src/hdc/facade.mjs';
+	import { Session } from './src/runtime/session.mjs';
 
-// Initialize metric-affine strategy
-initHDC('metric-affine');
-setDefaultGeometry(32);
+	// Initialize metric-affine strategy
+	initHDC('metric-affine');
+	setDefaultGeometry(32); // D in bytes (try 8/16/32/64/128)
 
-// Create session
-const session = new Session({ geometry: 32 });
+	// Create session
+	const session = new Session({ geometry: 32 }); // D in bytes
 
 // Learn facts
 session.learn('isA Dog Animal');
@@ -525,24 +525,24 @@ export SYS2_HDC_STRATEGY=metric-affine
 node your-script.js</pre>
   </div>
 
-  <div class="warning-box">
-    <strong>Need better scaling for large KBs?</strong>
-    <p>Metric-Affine Elastic (EMA) extends this strategy with chunked bundling and optional elastic geometry to reduce gray drift. <a href="metric-affine-elastic.html">Read the EMA theory page &rarr;</a></p>
-  </div>
+	  <div class="warning-box">
+	    <strong>Need better scaling for large KBs?</strong>
+	    <p>Metric-Affine Elastic (EMA) extends this strategy with <strong>chunked bundling</strong> (bounded depth) to reduce gray drift under large superpositions. Geometry (D bytes) remains a manual tuning knob in both strategies. <a href="metric-affine-elastic.html">Read the EMA theory page &rarr;</a></p>
+	  </div>
 
   <h2>9. Mathematical Properties</h2>
 
-  <div class="concept-box">
-    <h4>Key Properties of Metric-Affine HDC</h4>
-    <ul>
+	  <div class="concept-box">
+	    <h4>Key Properties of Metric-Affine HDC</h4>
+	    <ul>
       <li><strong>Perfect Self-Inverse:</strong> (A &oplus; B) &oplus; B = A exactly</li>
       <li><strong>Commutativity:</strong> A &oplus; B = B &oplus; A</li>
       <li><strong>Associativity:</strong> (A &oplus; B) &oplus; C = A &oplus; (B &oplus; C)</li>
       <li><strong>Continuous Bundling:</strong> Smooth interpolation between concepts</li>
-      <li><strong>Compact Storage:</strong> 32 bytes regardless of complexity</li>
-      <li><strong>Shifted Baseline:</strong> ~0.67 for random (requires threshold adjustment)</li>
-    </ul>
-  </div>
+	      <li><strong>Compact Storage:</strong> D bytes regardless of complexity (default 32)</li>
+	      <li><strong>Shifted Baseline:</strong> ~0.67 for random (requires threshold adjustment)</li>
+	    </ul>
+	  </div>
 
   <div class="footer-nav">
     <p>

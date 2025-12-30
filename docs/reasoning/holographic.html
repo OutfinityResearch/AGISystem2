@@ -401,7 +401,7 @@ const result = engine.prove(parseGoal("isA Rex Canine"));
 
   <h2>Configuration Thresholds</h2>
 
-  <p>HDC thresholds are strategy-dependent (dense-binary vs sparse-polynomial):</p>
+  <p>HDC thresholds are strategy-dependent (dense-binary vs sparse-polynomial vs metric-affine/EMA vs EXACT):</p>
 
   <pre><code>// From constants.mjs - holographic-specific thresholds
 const holographicThresholds = {
@@ -418,6 +418,14 @@ const holographicThresholds = {
   FALLBACK_TO_SYMBOLIC: true,    // Allow symbolic fallback
   VALIDATION_REQUIRED: true      // Require symbolic validation
 };</code></pre>
+
+  <p>
+    Some concrete implications:
+  </p>
+  <ul>
+    <li><strong>Metric-Affine / EMA:</strong> similarity baselines are different from dense-binary, so thresholds must be tuned to that geometry (<a href="../theory/strategies/metric-affine.html">Metric-Affine</a>).</li>
+    <li><strong>EXACT:</strong> lossless vectors make “similarity thresholds” less central; decoding is witness/residual-driven and UNBIND is not self-inverse (<a href="../theory/strategies/exact.html">EXACT</a>).</li>
+  </ul>
 
   <h2>Statistics Tracking</h2>
 

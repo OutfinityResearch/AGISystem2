@@ -87,13 +87,14 @@
       <a href="metric-affine.html">Metric-Affine</a> &middot;
       <a href="metric-affine-elastic.html"><strong>Metric-Affine Elastic</strong></a> &middot;
       <a href="exact.html">EXACT</a>
-    </small>
-    <small>Chunked bundling + optional elastic geometry for stable KB superposition</small>
-  </div>
-
-  <div class="section-intro">
-    <p>Metric-Affine Elastic (EMA) extends Metric-Affine with two engineering upgrades: <strong>chunked bundling</strong> (bounded depth) and <strong>elastic geometry</strong> (optional growth of byte channels). The algebra stays the same: XOR bind and normalized L1 similarity, but capacity degrades more slowly under large superpositions.</p>
-  </div>
+	    </small>
+	    <small>Chunked bundling (bounded depth) + configurable geometry (D bytes)</small>
+	  </div>
+	
+	  <div class="section-intro">
+	    <p>Metric-Affine Elastic (EMA) extends Metric-Affine primarily with <strong>chunked bundling</strong> (bounded depth). The algebra stays the same (XOR bind and normalized L1 similarity), but capacity degrades more slowly under large superpositions because EMA avoids “bundle-of-bundles” gray drift.</p>
+	    <p>In AGISystem2 terms, <strong>geometry = D</strong> (the number of byte channels per vector, i.e. `Uint8Array(D)`). EMA supports configurable `D` just like Metric-Affine; it does <strong>not</strong> auto-grow `D` during a session.</p>
+	  </div>
 
   <h2>1. Why Elastic? The Gray-Convergence Problem</h2>
 
@@ -131,37 +132,37 @@
     </svg>
   </div>
 
-  <h2>2. Representation: Variable Byte Channels</h2>
+	  <h2>2. Geometry: Byte Channels (D)</h2>
 
-  <div class="definition">
-    <strong>Definition: EMA Vector</strong>
-    <p>EMA uses a variable number of byte channels D:</p>
-    <p style="text-align: center; font-family: monospace; font-size: 14px;">
-      V = [b0, b1, ..., b(D-1)] where bi in {0..255}
-    </p>
-    <p>Default D matches Metric-Affine (32 bytes). It can grow to 64, 96, 128+ bytes if needed.</p>
-  </div>
+	  <div class="definition">
+	    <strong>Definition: EMA Vector</strong>
+	    <p>EMA uses a configurable number of byte channels D:</p>
+	    <p style="text-align: center; font-family: monospace; font-size: 14px;">
+	      V = [b0, b1, ..., b(D-1)] where bi in {0..255}
+	    </p>
+	    <p>Default D matches Metric-Affine (32 bytes). You can run with 8/16/32/64/128+ bytes depending on the speed/capacity trade-off you want.</p>
+	  </div>
 
   <div class="diagram-container">
-    <svg viewBox="0 0 820 170" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 820px;">
-      <text x="410" y="20" text-anchor="middle" font-weight="bold" font-size="13" fill="#00897b">Elastic Geometry (Prefix-Stable)</text>
+	    <svg viewBox="0 0 820 170" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 820px;">
+	      <text x="410" y="20" text-anchor="middle" font-weight="bold" font-size="13" fill="#00897b">Prefix Stability Across D (manual configuration)</text>
 
       <rect x="70" y="40" width="240" height="24" rx="4" fill="#26a69a"/>
-      <text x="190" y="56" text-anchor="middle" font-size="10" fill="white">32B base</text>
+	      <text x="190" y="56" text-anchor="middle" font-size="10" fill="white">D=32B example</text>
 
       <rect x="70" y="75" width="320" height="24" rx="4" fill="#4db6ac"/>
       <rect x="310" y="75" width="80" height="24" rx="4" fill="#b2dfdb"/>
-      <text x="230" y="91" text-anchor="middle" font-size="10" fill="white">64B (prefix kept)</text>
+	      <text x="230" y="91" text-anchor="middle" font-size="10" fill="white">D=64B example (prefix kept)</text>
       <text x="350" y="91" text-anchor="middle" font-size="9" fill="#00695c">new</text>
 
       <rect x="70" y="110" width="480" height="24" rx="4" fill="#80cbc4"/>
       <rect x="390" y="110" width="160" height="24" rx="4" fill="#c8e6c9"/>
-      <text x="310" y="126" text-anchor="middle" font-size="10" fill="#004d40">128B (prefix stable)</text>
+	      <text x="310" y="126" text-anchor="middle" font-size="10" fill="#004d40">D=128B example (prefix stable)</text>
       <text x="470" y="126" text-anchor="middle" font-size="9" fill="#2e7d32">new</text>
 
-      <text x="410" y="150" text-anchor="middle" font-size="10" fill="#455a64">V(name, 32B) == first 32 bytes of V(name, 64B/128B)</text>
-    </svg>
-  </div>
+	      <text x="410" y="150" text-anchor="middle" font-size="10" fill="#455a64">V(name, 32B) == first 32 bytes of V(name, 64B/128B)</text>
+	    </svg>
+	  </div>
 
   <h2>3. Operations (Same Algebra, Different Bundle)</h2>
 
@@ -226,11 +227,11 @@ sim(Bundle, X) = max_j sim(mean_j, X)
       <td>Single mean</td>
       <td>Chunked mean (no bundle-of-bundles)</td>
     </tr>
-    <tr>
-      <td>Geometry</td>
-      <td>Fixed D (32B default)</td>
-      <td>Elastic D (prefix-stable growth)</td>
-    </tr>
+	    <tr>
+	      <td>Geometry (D bytes)</td>
+	      <td>Configurable (default 32B)</td>
+	      <td>Configurable (default 32B; no auto-growth)</td>
+	    </tr>
     <tr>
       <td>Best Use</td>
       <td>Small to mid KBs</td>
@@ -252,16 +253,16 @@ export SYS2_HDC_STRATEGY=metric-affine-elastic
 node your-script.js</pre>
   </div>
 
-  <div class="concept-box">
-    <h4>Key Properties of EMA</h4>
-    <ul>
-      <li><strong>Perfect Self-Inverse:</strong> (A XOR B) XOR B = A exactly</li>
-      <li><strong>Chunked Bundling:</strong> Reduced gray drift under superposition</li>
-      <li><strong>Elastic Geometry:</strong> Optional growth of byte channels</li>
-      <li><strong>Prefix Stability:</strong> D grows without rewriting existing bytes</li>
-      <li><strong>Similarity Baseline:</strong> Same shifted baseline as Metric-Affine</li>
-    </ul>
-  </div>
+	  <div class="concept-box">
+	    <h4>Key Properties of EMA</h4>
+	    <ul>
+	      <li><strong>Perfect Self-Inverse:</strong> (A XOR B) XOR B = A exactly</li>
+	      <li><strong>Chunked Bundling:</strong> Reduced gray drift under superposition</li>
+	      <li><strong>Geometry (D bytes):</strong> Configurable vector length (manual)</li>
+	      <li><strong>Prefix Stability:</strong> V(name, 32B) is a prefix of V(name, 64B/128B)</li>
+	      <li><strong>Similarity Baseline:</strong> Same shifted baseline as Metric-Affine</li>
+	    </ul>
+	  </div>
 
   <div class="footer-nav">
     <p>
