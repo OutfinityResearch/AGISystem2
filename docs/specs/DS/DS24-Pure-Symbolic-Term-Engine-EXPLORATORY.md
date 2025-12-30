@@ -1,6 +1,6 @@
 # AGISystem2 - System Specifications
 #
-# DS24: Pure Symbolic Term Engine (Baseline Backend)
+# DS24: Pure Symbolic Term Engine (Baseline Backend) — Exploratory
 #
 # **Document Version:** 1.0
 # **Status:** Exploratory (not planned for implementation)

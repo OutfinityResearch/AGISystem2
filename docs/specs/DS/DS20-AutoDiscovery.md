@@ -1,5 +1,8 @@
 # DS20 - AutoDiscovery: Automated Bug Discovery System
 
+**Document Version:** 1.0  
+**Status:** Implemented (tooling; not part of runtime Core)
+
 ## 1. Overview
 
 The AutoDiscovery system is an automated bug-discovery environment that iteratively identifies and categorizes translation heuristics bugs and reasoning engine failures in AGISystem2.

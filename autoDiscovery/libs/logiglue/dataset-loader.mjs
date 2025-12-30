@@ -13,9 +13,16 @@
  */
 
 import fs from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const CACHE_DIR = '/tmp/logiglue';
+const THIS_DIR = dirname(fileURLToPath(import.meta.url));
+const AUTO_DISCOVERY_DIR = join(THIS_DIR, '..', '..');
+
+const DEFAULT_CACHE_DIR = join(AUTO_DISCOVERY_DIR, 'cache', 'logiglue');
+const LEGACY_CACHE_DIR = '/tmp/logiglue';
+
+export const CACHE_DIR = process.env.LOGIGLUE_CACHE_DIR || DEFAULT_CACHE_DIR;
 const HF_API_URL = 'https://datasets-server.huggingface.co/rows';
 
 // Dataset sources with their HuggingFace paths and configurations
@@ -269,13 +276,24 @@ function sleep(ms) {
 }
 
 function ensureCacheDir() {
-  if (!fs.existsSync(CACHE_DIR)) {
-    fs.mkdirSync(CACHE_DIR, { recursive: true });
-  }
+  if (fs.existsSync(CACHE_DIR)) return;
+  fs.mkdirSync(CACHE_DIR, { recursive: true });
 }
 
-function getCachePath(sourceKey, subsetKey) {
+function getCachePathPrimary(sourceKey, subsetKey) {
   return join(CACHE_DIR, `${sourceKey}_${subsetKey}.jsonl`);
+}
+
+function getCachePathLegacy(sourceKey, subsetKey) {
+  return join(LEGACY_CACHE_DIR, `${sourceKey}_${subsetKey}.jsonl`);
+}
+
+function getCachePathForRead(sourceKey, subsetKey) {
+  const primary = getCachePathPrimary(sourceKey, subsetKey);
+  if (fs.existsSync(primary)) return primary;
+  const legacy = getCachePathLegacy(sourceKey, subsetKey);
+  if (fs.existsSync(legacy)) return legacy;
+  return primary;
 }
 
 function isCacheFresh(cachePath, maxAgeHours = 24 * 7) {
@@ -362,7 +380,7 @@ async function downloadSubset(sourceKey, subsetKey, progressCallback) {
 
   const sourceInfo = DATASET_SOURCES[sourceKey];
   const subsetInfo = sourceInfo.subsets[subsetKey];
-  const cachePath = getCachePath(sourceKey, subsetKey);
+  const cachePath = getCachePathPrimary(sourceKey, subsetKey);
 
   // Try to get actual size, fall back to approx
   let totalRows;
@@ -439,7 +457,7 @@ async function loadSubset(sourceKey, subsetKey, options = {}) {
   const { forceDownload = false, progressCallback, offline = false } = options;
 
   ensureCacheDir();
-  const cachePath = getCachePath(sourceKey, subsetKey);
+  const cachePath = getCachePathForRead(sourceKey, subsetKey);
 
   // Offline mode: never attempt network; use cache if present (even if stale).
   if (offline === true) {

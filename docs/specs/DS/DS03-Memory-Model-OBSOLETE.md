@@ -1,9 +1,11 @@
 # AGISystem2 - System Specifications
 
-# Chapter 3: Theories and Memory Model
+# Chapter 3: Theories and Memory Model (Obsolete)
 
 **Document Version:** 3.0  
-**Status:** Draft Specification
+**Status:** Exploratory (historical; not implemented as written)
+
+> **Note (runtime reality):** The current runtime supports session-local KB storage and reloading theories from text, but does not implement the disk “cold storage” format described later in this document. Several details here (e.g., fixed `uint64[]` geometry assumptions, and the “Core not auto-loaded” session lifecycle) are also outdated relative to the current multi-strategy HDC runtime. Keep this DS as a research/historical reference until a dedicated persistence milestone is prioritized.
 
 ---
 

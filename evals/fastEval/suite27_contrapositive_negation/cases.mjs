@@ -70,7 +70,37 @@ export const steps = [
     action: 'prove',
     input_nl: 'Prove: Alex is not a vumpus (from Not(Brimpus) and Vumpus→(Brimpus∧Zumpus)).',
     input_dsl: '@goal:goal Not (isA Alex Vumpus)',
-    expected_nl: 'Cannot prove: NOT (Alex is a vumpus).',
-    proof_nl: 'Open-world negation: no explicit negation fact for (Alex is a vumpus)'
+    expected_nl: 'True: Not((isA, Alex, Vumpus)).',
+    proof_nl: [
+      'Proved: Not(isA, Alex, Brimpus)',
+      'Therefore Not((isA, Alex, Vumpus))'
+    ]
+  },
+  {
+    action: 'learn',
+    input_nl: 'Setup: contrapositive chain (Vumpus→Brimpus→Numpus) with explicit Not(Numpus).',
+    input_dsl: `
+      @cond13 isA ?x Vumpus
+      @cond14 isA ?x Brimpus
+      Implies $cond13 $cond14
+
+      @cond15 isA ?x Brimpus
+      @cond16 isA ?x Numpus
+      Implies $cond15 $cond16
+
+      @base17 isA Stella Numpus
+      Not $base17
+    `,
+    expected_nl: 'Learned 1 facts'
+  },
+  {
+    action: 'prove',
+    input_nl: 'Prove: Stella is not a vumpus (from Not(Numpus) and the implication chain).',
+    input_dsl: '@goal:goal Not (isA Stella Vumpus)',
+    expected_nl: 'True: Not((isA, Stella, Vumpus)).',
+    proof_nl: [
+      'Proved: Not(isA, Stella, Numpus)',
+      'Therefore Not((isA, Stella, Vumpus))'
+    ]
   }
 ];

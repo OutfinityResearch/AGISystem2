@@ -137,14 +137,35 @@ export function tryRuleDerivedNotFromCompoundConclusion(self, innerOp, innerArgs
 
 export function tryContrapositiveNot(self, innerOp, innerArgs, depth, proveGoalFn) {
   for (const rule of self.session.rules || []) {
-    if (!rule.conditionParts || rule.conditionParts.type !== 'And') continue;
+    const condLeaves = (() => {
+      if (rule.conditionParts) {
+        if (rule.conditionParts.type === 'Or') return null;
+        if (rule.conditionParts.type === 'leaf' && rule.conditionParts.ast) return [rule.conditionParts.ast];
+        return extractLeafAsts(rule.conditionParts, []);
+      }
+      if (rule.conditionAST) return [rule.conditionAST];
+      return null;
+    })();
+    if (!condLeaves) continue;
+    if (condLeaves.length < 1) continue;
 
-    const condLeaves = extractLeafAsts(rule.conditionParts, []);
-    if (condLeaves.length < 2) continue;
-
+    // Contrapositive is applied conservatively:
+    // - allow a single leaf conclusion: (A ∧ B ∧ ...) → C
+    // - allow a conjunction conclusion: (A ∧ B ∧ ...) → (C ∧ D ∧ ...)
+    //   In classical logic, Not(C) implies Not(C ∧ D ∧ ...), which is sufficient for modus tollens.
+    // - do NOT apply this to disjunction conclusions: (A → (C ∨ D)) is NOT refutable by Not(C) alone.
     const concLeaves = [];
-    if (rule.conclusionParts) extractLeafAsts(rule.conclusionParts, concLeaves);
-    else if (rule.conclusionAST) concLeaves.push(rule.conclusionAST);
+    if (rule.conclusionParts) {
+      if (rule.conclusionParts.type === 'leaf') {
+        if (rule.conclusionParts.ast) concLeaves.push(rule.conclusionParts.ast);
+      } else if (rule.conclusionParts.type === 'And') {
+        extractLeafAsts(rule.conclusionParts, concLeaves);
+      } else {
+        continue;
+      }
+    } else if (rule.conclusionAST) {
+      concLeaves.push(rule.conclusionAST);
+    }
     if (concLeaves.length === 0) continue;
 
     for (let targetIdx = 0; targetIdx < condLeaves.length; targetIdx++) {

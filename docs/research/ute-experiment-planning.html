@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UTE – Experiment Planning</title>
+  <link rel="stylesheet" href="../reference/style.css">
+  <style>
+    .callout { background: #e3f2fd; border-left: 4px solid #1976d2; padding: 14px 18px; border-radius: 0 10px 10px 0; margin: 18px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin: 18px 0; }
+    .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+    .card h3 { margin: 0 0 8px 0; color: #1976d2; font-size: 15px; }
+    .card p { margin: 0; color: #555; font-size: 13px; line-height: 1.45; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="nav-header">
+      <h1>UTE: Experiment Planning (Research)</h1>
+      <small>
+        <a href="../index.html">Home</a> ·
+        <a href="index.html">Research</a> ·
+        <a href="universal-theory-engine.html">UTE</a> ·
+        <a href="ute-experiment-planning.html"><strong>Experiment Planning</strong></a>
+      </small>
+      <small>Plan experiments to reduce uncertainty under constraints</small>
+    </div>
+
+    <div class="callout">
+      UTE is meant to be an engine for “theories that get better”. Experiment planning turns uncertainty into action: choose measurements
+      or interventions that reduce uncertainty (or disambiguate mechanisms) while respecting constraints.
+    </div>
+
+    <h2 style="margin-top: 0;">What exists today</h2>
+    <ul>
+      <li>Planning and CSP solving: <a href="../specsLoader.html?spec=DS/DS16-CSP-Solver.md">DS16</a></li>
+      <li>Core verb/operator patterns for actions: <a href="../specsLoader.html?spec=DS/DS07g-Bootstrap-Verbs.md">DS07g</a></li>
+    </ul>
+
+    <h2>UTE requirement: experiments are information actions</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Objective</h3>
+        <p>Define information objectives (reduce entropy, distinguish hypotheses) as first-class planning goals.</p>
+      </div>
+      <div class="card">
+        <h3>Constraints</h3>
+        <p>Plan under real constraints: cost, time, feasibility, ethics, safety.</p>
+      </div>
+      <div class="card">
+        <h3>Closed loop</h3>
+        <p>Execute the experiment, ingest results as evidence, revise the model, and re-plan.</p>
+      </div>
+    </div>
+
+    <h2>Proposed extensions (research direction)</h2>
+    <ul>
+      <li><strong>Experiment operators</strong> with explicit preconditions, effects, and evidence output schemas.</li>
+      <li><strong>Information gain estimation</strong> integrated with uncertainty semantics.</li>
+      <li><strong>Batch planning</strong> for multi-step experimental protocols.</li>
+    </ul>
+
+    <h2>Spec</h2>
+    <p>
+      This page is summarized and formalized in <a href="../specsLoader.html?spec=DS/DS38-UTE-Experiment-Planning-RESEARCH.md">DS38</a>.
+    </p>
+  </div>
+</body>
+</html>
+

@@ -14,7 +14,7 @@
 import fs from 'node:fs';
 import { join } from 'node:path';
 
-import { loadExamples } from './libs/logiglue/dataset-loader.mjs';
+import { CACHE_DIR, loadExamples } from './libs/logiglue/dataset-loader.mjs';
 import { ensureDir } from './discovery/fs-utils.mjs';
 import { loadAnalysedCases } from './discovery/analysed.mjs';
 import { runBatch } from './discovery/run-batch.mjs';
@@ -186,6 +186,16 @@ async function runDiscoverOnce(args, { quarantineOnly = true } = {}) {
   });
   examples = data.examples;
   console.log(`\n  Loaded ${examples.length} examples from ${data.subsetsLoaded?.length || 0} sources`);
+  if (examples.length === 0) {
+    if (args.offline === true) {
+      console.log(`\n${C.yellow}No examples loaded in offline mode.${C.reset}`);
+      console.log(`${C.dim}Dataset cache appears empty. Cache dir: ${CACHE_DIR}${C.reset}`);
+      console.log(`${C.dim}Tip: run once with --online to download datasets (or set LOGIGLUE_CACHE_DIR to a prefilled cache).${C.reset}`);
+    } else if (args.source) {
+      console.log(`\n${C.yellow}No examples loaded for source=${args.source}.${C.reset}`);
+      console.log(`${C.dim}Check the source name (e.g. prontoqa, folio, logiqa, logicnli, reclor, clutrr, ruletaker).${C.reset}`);
+    }
+  }
 
   const results = await runBatch(examples, analysedCases, {
     ...args,

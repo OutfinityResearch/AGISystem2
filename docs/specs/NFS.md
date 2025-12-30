@@ -371,13 +371,13 @@ src/
 | **DS01-Theoretical-Foundation.md** | HDC theory basics | Implementing core vector operations |
 | **DS02-DSL-Syntax.md** | **CRITICAL:** Complete DSL grammar | Writing/parsing ANY DSL code |
 | **DS03-Architecture.md** | System architecture overview | Understanding module relationships |
-| **DS03-Memory-Model.md** | Memory and KB model | Implementing session/KB operations |
+| **DS03-Memory-Model-OBSOLETE.md** | Memory and KB model | Implementing session/KB operations |
 | **DS05-Basic-Reasoning-Engine.md** | Query and prove algorithms | Implementing reasoning |
 | **DS06-Advanced-Reasoning.md** | Advanced inference patterns | Implementing rule chains, defaults |
 | **DS07-Core-Theory.md** | Core theory content and types | Understanding L0-L3 layers |
-| **DS08-ThurstworthyAI-Patterns.md** | AI safety patterns | Implementing constraints |
+| **DS08-TrustworthyAI-Overview-RESEARCH.md** | AI safety patterns | Implementing constraints |
 | **DS09-Core-HDC-Implementation.md** | Vector operation details | Implementing bind/bundle/similarity |
-| **DS10-Code-Plan.md** | Implementation roadmap | Planning work |
+| **DS10-Codebase-Map.md** | Current codebase map | Navigating the implementation |
 | **DS11-Decoding-Phrasing-Engine.md** | Vector decoding, NL generation | Implementing decode/summarize |
 | **DS12-Test-Library.md** | Testing requirements | Writing tests |
 | **DS13-BasicNLP.md** | NL→DSL transformation | Implementing NL parser |

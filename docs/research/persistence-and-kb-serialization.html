@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research – Persistence & KB Serialization</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+    <div class="nav-header">
+      <h1>Persistence & KB Serialization</h1>
+      <small>
+        <a href="../index.html">Home</a> ·
+        <a href="../architecture/index.html">Architecture</a> ·
+        <a href="../theory/index.html">Theory</a> ·
+        <a href="../specs/matrix.html">Specs</a> ·
+        <a href="index.html">Research</a> ·
+        <a href="persistence-and-kb-serialization.html"><strong>Persistence</strong></a>
+      </small>
+      <small>Research topic: stable storage for KB + dictionaries without breaking determinism</small>
+    </div>
+
+    <p>
+      The current AGISystem2 workflow reloads theories from text (`.sys2`) and re-vectorizes on each run. This keeps runs deterministic and avoids
+      forcing a cross-strategy persistence format too early. However, several research directions (RAG-like usage, long-running services,
+      multi-session caching, large KB experiments) eventually require a stable persistence story.
+    </p>
+
+    <h2>What makes persistence tricky</h2>
+    <p>
+      Different HDC strategies have different notions of “identity”. For example, EXACT uses a session-local appearance-index dictionary; persisting
+      the KB requires persisting the dictionary alongside the stored vectors. This must not leak state across sessions in the same process.
+    </p>
+
+    <h2>Specs and current reality</h2>
+    <ul>
+      <li>
+        <a href="../specsLoader.html?spec=DS/DS03-Memory-Model-OBSOLETE.md">DS03b – Memory Model (Obsolete)</a>
+        describes historical ideas for “cold storage”; it is not implemented as written.
+      </li>
+      <li>
+        <a href="../specsLoader.html?spec=DS/DS25-Exact-Sparse-Bitset-Polynomial-HDC.md">DS25 – EXACT</a>
+        explicitly defers dictionary persistence until a dedicated KB serialization milestone.
+      </li>
+      <li>
+        <a href="../specsLoader.html?spec=DS/DS26-Session-Universe.md">DS26 – Session Universe</a>
+        defines the requirement that sessions must remain isolated (no allocator leakage).
+      </li>
+    </ul>
+
+    <h2>Practical short-term stance</h2>
+    <p>
+      For now, the system should treat “theories as source-of-truth” and keep sessions lightweight and reproducible. Persistence work should be
+      introduced as a deliberate milestone with explicit format/versioning decisions and tests for cross-session determinism.
+    </p>
+  </div>
+</body>
+</html>
+

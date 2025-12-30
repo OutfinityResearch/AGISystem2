@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research – Pure Symbolic Baseline (Exploratory)</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+    <div class="nav-header">
+      <h1>Pure Symbolic Baseline (Exploratory)</h1>
+      <small>
+        <a href="../index.html">Home</a> ·
+        <a href="../architecture/index.html">Architecture</a> ·
+        <a href="../theory/index.html">Theory</a> ·
+        <a href="../specs/matrix.html">Specs</a> ·
+        <a href="index.html">Research</a> ·
+        <a href="pure-symbolic-baseline.html"><strong>Symbolic Baseline</strong></a>
+      </small>
+      <small>Design idea: a separate term engine (kept exploratory)</small>
+    </div>
+
+    <p>
+      A recurring research question is: what does HDC add beyond a strong symbolic baseline? One possible answer is to build a separate “pure term
+      engine” backend (unification + backtracking) that runs Sys2DSL without vectors.
+    </p>
+
+    <p>
+      In practice, AGISystem2 already contains substantial symbolic machinery (direct matches, rules, transitive reasoning, CSP, proof validation),
+      and a fully separate backend would create a large maintenance burden (semantic drift, proof formatting parity, graph/macro parity).
+      Because of this, the “pure term engine backend” remains a research reference, not an implementation plan.
+    </p>
+
+    <h2>Spec</h2>
+    <p>
+      <a href="../specsLoader.html?spec=DS/DS24-Pure-Symbolic-Term-Engine-EXPLORATORY.md">DS24 – Pure Symbolic Term Engine (Exploratory)</a>
+      captures the design motivation and what a full backend would look like.
+    </p>
+
+    <h2>Preferred baseline approach</h2>
+    <p>
+      When we need a “pure symbolic” comparison for performance, the preferred approach is to add a symbolic-only profile to the existing engine
+      (disable holographic candidate generation) rather than introducing a new backend.
+    </p>
+  </div>
+</body>
+</html>
+
