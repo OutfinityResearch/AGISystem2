@@ -120,6 +120,17 @@ export class ProveTranslator extends BaseTranslator {
 
   goalToHuman(goalString) {
     const parts = splitGoalParts(goalString);
+    if (parts.length >= 2 && parts[0] === 'Not') {
+      const innerParts = parts.slice(1);
+      innerParts[0] = innerParts[0].replace(/^\(/, '');
+      innerParts[innerParts.length - 1] = innerParts[innerParts.length - 1].replace(/\)$/, '');
+      const innerOp = innerParts[0];
+      const innerArgs = innerParts.slice(1);
+      if (innerOp) {
+        const inner = this.session.generateText(innerOp, innerArgs).replace(/[.!?]+$/, '');
+        return `NOT (${inner})`;
+      }
+    }
     if (parts.length < 2) return parts.join(' ') || 'statement';
     const op = parts[0];
     const args = parts.slice(1);

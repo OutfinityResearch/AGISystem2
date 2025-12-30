@@ -116,6 +116,13 @@ class PositiveProveRenderer {
 
   goalToHuman(goalString) {
     const parts = splitGoalParts(goalString);
+    if (parts.length >= 2 && parts[0] === 'Not') {
+      const parsed = this.parseNotGoal(goalString);
+      if (parsed) {
+        const inner = this.session.generateText(parsed.innerOp, parsed.innerArgs).replace(/[.!?]+$/, '');
+        return `NOT (${inner})`;
+      }
+    }
     if (parts.length < 2) return parts.join(' ') || 'statement';
     const op = parts[0];
     const args = parts.slice(1);

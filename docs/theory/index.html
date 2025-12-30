@@ -226,29 +226,43 @@ fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) -
 
   <p>AGISystem2 implements five HDC strategies. Two are <strong>original contributions</strong> not found in existing literature, one is an elastic extension of Metric-Affine, and one (EXACT) is a lossless, session-local “bitset polynomial” exploration. How do they relate to Tony Plate's Holographic Reduced Representations (HRR)?</p>
 
+  <p style="margin-top: 10px;">
+    Strategy pages:
+    <a href="strategies/dense-binary.html">Dense-Binary</a>,
+    <a href="strategies/sparse-polynomial.html">SPHDC</a>,
+    <a href="strategies/metric-affine.html">Metric-Affine</a>,
+    <a href="strategies/metric-affine-elastic.html">EMA</a>,
+    <a href="strategies/exact.html">EXACT</a>.
+  </p>
+
   <div class="section-grid">
     <div class="section-card">
       <h3><a href="hrr-comparison.html">HRR vs. Our Strategies</a></h3>
       <p>Detailed analysis of Dense-Binary (standard), Sparse Polynomial (novel), and Metric-Affine (novel) against classic HRR, with notes on the EMA extension.</p>
     </div>
 
+    <div class="section-card">
+      <h3><a href="strategies/dense-binary.html">Dense-Binary</a></h3>
+      <p><strong>STANDARD:</strong> A classic VSA/HDC baseline: fixed-length binary vectors, XOR binding, majority-vote bundling. Useful as a reference point when comparing to HRR-style binding and to our novel strategies.</p>
+    </div>
+
     <div class="section-card" style="background: linear-gradient(135deg, #f3e5f522 0%, #ce93d822 100%);">
-      <h3>Sparse Polynomial (SPHDC)</h3>
+      <h3><a href="strategies/sparse-polynomial.html">Sparse Polynomial (SPHDC)</a></h3>
       <p><strong>ORIGINAL:</strong> Set-based HDC with Cartesian XOR binding and Min-Hash sparsification. NOT HRR - a novel paradigm.</p>
     </div>
 
     <div class="section-card" style="background: linear-gradient(135deg, #fff3e022 0%, #ffe0b222 100%);">
-      <h3>Metric-Affine</h3>
+      <h3><a href="strategies/metric-affine.html">Metric-Affine</a></h3>
       <p><strong>ORIGINAL:</strong> Fuzzy-Boolean hybrid combining XOR binding with continuous bundling. HRR-inspired but novel.</p>
     </div>
 
     <div class="section-card" style="background: linear-gradient(135deg, #e0f2f122 0%, #b2dfdb22 100%);">
-      <h3>Metric-Affine Elastic (EMA)</h3>
+      <h3><a href="strategies/metric-affine-elastic.html">Metric-Affine Elastic (EMA)</a></h3>
       <p><strong>EXTENSION:</strong> Chunked bundling + elastic geometry for stable superposition at scale.</p>
     </div>
 
     <div class="section-card" style="background: linear-gradient(135deg, #e8eaf622 0%, #c5cae922 100%);">
-      <h3>EXACT (Exact-Sparse)</h3>
+      <h3><a href="strategies/exact.html">EXACT (Exact-Sparse)</a></h3>
       <p><strong>EXPLORATION:</strong> Lossless bitset-polynomial strategy (no PRNG/hashing for atom IDs inside a session). Uses a quotient-like UNBIND instead of self-inverse XOR.</p>
     </div>
   </div>

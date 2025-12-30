@@ -43,12 +43,13 @@ export const steps = [
     action: 'prove',
     input_nl: 'Prove: Stella is not a yumpus (via contrapositive from Not(Tumpus)).',
     input_dsl: '@goal:goal Not (isA Stella Yumpus)',
-    expected_nl: 'True: Not((isA, Stella, Yumpus)).',
+    expected_nl: 'True: NOT (Stella is a yumpus).',
     proof_nl: [
       'Stella is a rompus',
       'Stella is a lorpus',
-      'Applied contrapositive on rule: IF ((Stella is a yumpus) AND (Stella is a rompus) AND (Stella is a lorpus)) THEN (Stella is a tumpus)',
-      'Therefore Not((isA, Stella, Yumpus))'
+      'Derived: NOT (Stella is a tumpus)',
+      'Using contrapositive on rule: IF ((Stella is a yumpus) AND (Stella is a rompus) AND (Stella is a lorpus)) THEN',
+      'Therefore NOT (Stella is a yumpus)'
     ]
   },
   {
@@ -70,10 +71,11 @@ export const steps = [
     action: 'prove',
     input_nl: 'Prove: Alex is not a vumpus (from Not(Brimpus) and Vumpus→(Brimpus∧Zumpus)).',
     input_dsl: '@goal:goal Not (isA Alex Vumpus)',
-    expected_nl: 'True: Not((isA, Alex, Vumpus)).',
+    expected_nl: 'True: NOT (Alex is a vumpus).',
     proof_nl: [
-      'Proved: Not(isA, Alex, Brimpus)',
-      'Therefore Not((isA, Alex, Vumpus))'
+      'Found in KB: NOT (Alex is a brimpus)',
+      'Using contrapositive on rule: IF (Alex is a vumpus) THEN',
+      'Therefore NOT (Alex is a vumpus)'
     ]
   },
   {
@@ -97,10 +99,11 @@ export const steps = [
     action: 'prove',
     input_nl: 'Prove: Stella is not a vumpus (from Not(Numpus) and the implication chain).',
     input_dsl: '@goal:goal Not (isA Stella Vumpus)',
-    expected_nl: 'True: Not((isA, Stella, Vumpus)).',
+    expected_nl: 'True: NOT (Stella is a vumpus).',
     proof_nl: [
-      'Proved: Not(isA, Stella, Numpus)',
-      'Therefore Not((isA, Stella, Vumpus))'
+      'Found in KB: NOT (Stella is a numpus)',
+      'infer NOT (Stella is a brimpus)',
+      'Therefore NOT (Stella is a vumpus)'
     ]
   },
   {
@@ -124,10 +127,11 @@ export const steps = [
     action: 'prove',
     input_nl: 'Prove: Max is not a shumpus (from Not(Impus) and (Lempus OR Shumpus OR Yumpus)→Impus).',
     input_dsl: '@goal:goal Not (isA Max Shumpus)',
-    expected_nl: 'True: Not((isA, Max, Shumpus)).',
+    expected_nl: 'True: NOT (Max is a shumpus).',
     proof_nl: [
-      'Proved: Not(isA, Max, Impus)',
-      'Therefore Not((isA, Max, Shumpus))'
+      'Found in KB: NOT (Max is an impus)',
+      'Using contrapositive on rule: IF ((',
+      'Therefore NOT (Max is a shumpus)'
     ]
   },
   {
@@ -155,10 +159,11 @@ export const steps = [
     action: 'prove',
     input_nl: 'Prove: Wren is not a numpus (from Not(Brimpus) + Or→Brimpus + Numpus→(Wumpus∧Tumpus)).',
     input_dsl: '@goal:goal Not (isA Wren Numpus)',
-    expected_nl: 'True: Not((isA, Wren, Numpus)).',
+    expected_nl: 'True: NOT (Wren is a numpus).',
     proof_nl: [
-      'Proved: Not(isA, Wren, Brimpus)',
-      'Therefore Not((isA, Wren, Numpus))'
+      'Found in KB: NOT (Wren is a brimpus)',
+      'infer NOT (Wren is a tumpus)',
+      'Therefore NOT (Wren is a numpus)'
     ]
   },
   {
@@ -187,9 +192,9 @@ export const steps = [
     action: 'prove',
     input_nl: 'Prove: Stella is not a shumpus (should find the easy refutation path via Not(Sterpus) without exhausting step budget).',
     input_dsl: '@goal:goal Not (isA Stella Shumpus)',
-    expected_nl: 'True: Not((isA, Stella, Shumpus)).',
+    expected_nl: 'True: NOT (Stella is a shumpus).',
     proof_nl: [
-      'Therefore Not((isA, Stella, Shumpus))'
+      'Therefore NOT (Stella is a shumpus)'
     ]
   }
 ];

@@ -24,8 +24,17 @@ function parseNotGoal(goalString) {
   return { innerOp, innerArgs };
 }
 
+function renderNotHuman(session, innerOp, innerArgs) {
+  const inner = session.generateText(innerOp, innerArgs).replace(/[.!?]+$/, '');
+  return `NOT (${inner})`;
+}
+
 function goalToHuman(session, goalString) {
   const parts = splitGoalParts(goalString);
+  if (parts.length >= 2 && parts[0] === 'Not') {
+    const parsed = parseNotGoal(goalString);
+    if (parsed) return renderNotHuman(session, parsed.innerOp, parsed.innerArgs);
+  }
   if (parts.length < 2) return parts.join(' ') || 'statement';
   const op = parts[0];
   const args = parts.slice(1);
@@ -80,14 +89,13 @@ function compoundToHuman(session, part, bindings) {
 }
 
 function inferBindingsFromNotGoal(ruleObj, parsedNot, session) {
-  if (!ruleObj?.conditionParts || !parsedNot) return null;
-  const leaves = collectLeafAsts(ruleObj.conditionParts, []);
-  for (const leaf of leaves) {
-    const extracted = extractOpArgsFromStatementAst(leaf);
-    if (!extracted || extracted.op !== parsedNot.innerOp) continue;
-    if (extracted.args.length !== parsedNot.innerArgs.length) continue;
+  if (!ruleObj || !parsedNot) return null;
+
+  const tryMatchStatement = (leafAst) => {
+    const extracted = extractOpArgsFromStatementAst(leafAst);
+    if (!extracted || extracted.op !== parsedNot.innerOp) return null;
+    if (extracted.args.length !== parsedNot.innerArgs.length) return null;
     const bindings = {};
-    let ok = true;
     for (let i = 0; i < extracted.args.length; i++) {
       const argNode = extracted.args[i];
       const wanted = parsedNot.innerArgs[i];
@@ -95,10 +103,21 @@ function inferBindingsFromNotGoal(ruleObj, parsedNot, session) {
         bindings[argNode.name] = wanted;
       } else {
         const token = termToToken(argNode, null);
-        if (token !== wanted) { ok = false; break; }
+        if (token !== wanted) return null;
       }
     }
-    if (ok) return bindings;
+    return bindings;
+  };
+
+  if (!ruleObj.conditionParts && ruleObj.conditionAST) {
+    return tryMatchStatement(ruleObj.conditionAST);
+  }
+
+  if (!ruleObj.conditionParts) return null;
+  const leaves = collectLeafAsts(ruleObj.conditionParts, []);
+  for (const leaf of leaves) {
+    const bindings = tryMatchStatement(leaf);
+    if (bindings) return bindings;
   }
   return null;
 }
@@ -106,9 +125,33 @@ function inferBindingsFromNotGoal(ruleObj, parsedNot, session) {
 function renderNotFact(session, fact) {
   const parts = String(fact || '').trim().split(/\s+/).filter(Boolean);
   if (parts.length < 3 || parts[0] !== 'Not') return null;
-  const op = parts[0];
-  const args = parts.slice(1);
+  const innerOp = String(parts[1] || '').replace(/^\(/, '');
+  const innerArgs = parts.slice(2).map((p, idx, arr) => {
+    if (idx === arr.length - 1) return String(p).replace(/\)$/, '');
+    return p;
+  });
+  if (!innerOp) return null;
+  return renderNotHuman(session, innerOp, innerArgs);
+}
+
+function renderPositiveFact(session, fact) {
+  const parts = String(fact || '').trim().split(/\s+/).filter(Boolean);
+  if (parts.length < 2) return null;
+  const op = String(parts[0] || '').replace(/^\(/, '');
+  const args = parts.slice(1).map((p, idx, arr) => {
+    if (idx === arr.length - 1) return String(p).replace(/\)$/, '');
+    return p;
+  });
+  if (!op) return null;
   return session.generateText(op, args).replace(/[.!?]+$/, '');
+}
+
+function renderFact(session, fact) {
+  if (!fact) return null;
+  const text = String(fact).trim();
+  if (text.startsWith('Not ')) return renderNotFact(session, text);
+  if (text.startsWith('Not(')) return renderNotFact(session, text.replace('Not(', 'Not ').replace(',', ' ').replace(')', ''));
+  return renderPositiveFact(session, text);
 }
 
 export function describeContrapositiveProof(session, reasoningResult) {
@@ -120,45 +163,55 @@ export function describeContrapositiveProof(session, reasoningResult) {
   const hasContrapositive = steps.some(s => s?.inference === 'contrapositive');
   if (!hasContrapositive) return null;
   const goalText = goalToHuman(session, reasoningResult.goal);
-  const targetHuman = session.generateText(parsedNot.innerOp, parsedNot.innerArgs).replace(/[.!?]+$/, '');
 
-  const ruleStep = steps.find(s => s?.operation === 'rule_application' && s?.inference === 'contrapositive') || null;
-  const ruleObj = ruleStep?.ruleId ? (session.rules || []).find(r => r.id === ruleStep.ruleId) : null;
-  const bindings = inferBindingsFromNotGoal(ruleObj, parsedNot, session) || null;
+  const lines = [];
+  let previousNegated = null;
 
-  const condText = ruleObj?.conditionParts ? compoundToHuman(session, ruleObj.conditionParts, bindings) : null;
-  const concText = ruleObj?.conclusionParts
-    ? compoundToHuman(session, ruleObj.conclusionParts, bindings)
-    : (ruleObj?.conclusionAST ? (statementToHuman(session, ruleObj.conclusionAST, bindings) || null) : null);
+  for (const step of steps) {
+    if (!step || typeof step !== 'object') continue;
 
-  const otherAntecedents = [];
-  if (ruleObj?.conditionParts) {
-    for (const leafAst of collectLeafAsts(ruleObj.conditionParts, [])) {
-      const human = statementToHuman(session, leafAst, bindings);
-      if (!human) continue;
-      if (normalizeSentence(human) === normalizeSentence(targetHuman)) continue;
-      otherAntecedents.push(human);
+    if (step.operation === 'rule_application' && step.inference === 'contrapositive') {
+      const produced = typeof step.fact === 'string' ? renderNotFact(session, step.fact) : null;
+      const ruleObj = step.ruleId ? (session.rules || []).find(r => r.id === step.ruleId) : null;
+      const parsedProduced = typeof step.fact === 'string' ? parseNotGoal(step.fact) : null;
+      const bindings = inferBindingsFromNotGoal(ruleObj, parsedProduced, session) || null;
+
+      const condText = ruleObj?.conditionParts ? compoundToHuman(session, ruleObj.conditionParts, bindings) : null;
+      const condTextFallback = (!condText && ruleObj?.conditionAST) ? (statementToHuman(session, ruleObj.conditionAST, bindings) || null) : null;
+      const concText = ruleObj?.conclusionParts
+        ? compoundToHuman(session, ruleObj.conclusionParts, bindings)
+        : (ruleObj?.conclusionAST ? (statementToHuman(session, ruleObj.conclusionAST, bindings) || null) : null);
+
+      const finalCondText = condText || condTextFallback;
+      const ruleText = (finalCondText && concText) ? `IF (${finalCondText}) THEN (${concText})` : null;
+      if (ruleText && previousNegated && produced) {
+        lines.push(`Using contrapositive on rule: ${ruleText}. Since ${previousNegated}, infer ${produced}`);
+      } else if (ruleText && produced) {
+        lines.push(`Using contrapositive on rule: ${ruleText}. Infer ${produced}`);
+      } else if (produced) {
+        lines.push(`Using contrapositive. Infer ${produced}`);
+      }
+      if (produced) previousNegated = produced;
+      continue;
+    }
+
+    if (typeof step.fact === 'string' && step.fact.trim().startsWith('Not ')) {
+      const rendered = renderNotFact(session, step.fact);
+      if (rendered) {
+        const label = step.operation === 'not_fact' ? 'Found in KB' : 'Derived';
+        lines.push(`${label}: ${rendered}`);
+        previousNegated = rendered;
+      }
+      continue;
+    }
+
+    if ((step.operation === 'direct_fact' || step.operation === 'fact_matched') && typeof step.fact === 'string') {
+      const rendered = renderFact(session, step.fact);
+      if (rendered) lines.push(`Found in KB: ${rendered}`);
+      continue;
     }
   }
 
-  const negatedConclusion = (() => {
-    const goalNotDsl = `Not ${parsedNot.innerOp} ${parsedNot.innerArgs.join(' ')}`.trim();
-    const goalNotNorm = normalizeSentence(goalNotDsl);
-    const candidate = steps.find(s =>
-      typeof s?.fact === 'string' &&
-      s.fact.trim().startsWith('Not ') &&
-      normalizeSentence(s.fact) !== goalNotNorm
-    );
-    const rendered = candidate ? renderNotFact(session, candidate.fact) : null;
-    if (rendered) return rendered;
-    if (concText) return `NOT (${concText})`;
-    return null;
-  })();
-
-  const lines = [];
-  if (negatedConclusion) lines.push(`Proved: ${negatedConclusion}`);
-  for (const a of otherAntecedents) lines.push(a);
-  if (condText && concText) lines.push(`Applied contrapositive on rule: IF (${condText}) THEN (${concText})`);
   lines.push(`Therefore ${goalText}`);
 
   return `True: ${goalText}. Proof: ${lines.join('. ')}.`;

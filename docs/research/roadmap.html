@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AGISystem2 – Research Roadmap 2025</title>
+  <title>AGISystem2 – Research Roadmap</title>
   <link rel="stylesheet" href="../reference/style.css">
   <style>
     .direction-card {
@@ -33,28 +33,6 @@
     .status-active { background: #e8f5e9; color: #2e7d32; }
     .status-planned { background: #fff3e0; color: #e65100; }
     .status-research { background: #f3e5f5; color: #7b1fa2; }
-    .timeline-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin: 20px 0;
-    }
-    .quarter-box {
-      background: #f5f5f5;
-      padding: 15px;
-      border-radius: 8px;
-      text-align: center;
-    }
-    .quarter-box h4 {
-      margin: 0 0 10px 0;
-      color: #1976d2;
-    }
-    .quarter-box ul {
-      margin: 0;
-      padding-left: 15px;
-      text-align: left;
-      font-size: 12px;
-    }
     .vision-box {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
@@ -72,63 +50,141 @@
       padding-bottom: 10px;
       margin-top: 40px;
     }
-    .metric-row {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin: 20px 0;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      margin: 18px 0;
     }
-    .metric-item {
-      background: #e3f2fd;
-      padding: 15px 25px;
-      border-radius: 8px;
-      text-align: center;
+    .card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 16px 18px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
     }
-    .metric-item strong {
-      display: block;
-      font-size: 24px;
+    .card h3 {
+      margin: 0 0 8px 0;
       color: #1976d2;
+      font-size: 15px;
+    }
+    .card p {
+      margin: 0;
+      color: #555;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .note {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      margin: 18px 0;
     }
   </style>
 </head>
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>Research Roadmap 2025</h1>
+    <h1>Research Roadmap</h1>
     <small>
       <a href="../index.html">Home</a> ·
       <a href="index.html">Research</a> ·
       <a href="benchmarks.html">Benchmarks</a> ·
-      <a href="hdc-evaluation.html">HDC Evaluation</a> ·
+      <a href="saturationEvaluation.html">Saturation</a> ·
       <a href="roadmap.html"><strong>Roadmap</strong></a>
     </small>
-    <small>Strategic research directions for the next 12 months</small>
+    <small>Qualitative roadmap: what is implemented, what is research, and where we are going</small>
   </div>
 
   <div class="vision-box">
-    <h2>The Vision</h2>
-    <p>AGISystem2 aims to become the definitive platform for <strong>semantic programming</strong> — enabling domain experts to define formal knowledge in near-natural language, with automatic reasoning, verification, and explanation capabilities.</p>
-    <p style="margin-bottom: 0;"><strong>Key goal for 2025:</strong> Complete coverage of natural language patterns, seamless LLM integration, and domain-specific semantic libraries for medicine, law, and science.</p>
+    <h2>UTE Roadmap: Toward “Scientific-Theory AGI”</h2>
+    <p>
+      This roadmap is about building a <strong>Universal Theory Engine (UTE)</strong>: a platform where theories are executable, checkable,
+      revisable, and comparable. The goal is not “general AGI” in the nebulous sense; it is a pragmatic kind of AGI for science and engineering:
+      agents that can represent, review, argue, prove, and revise scientific theories with evidence and auditability.
+    </p>
+    <p style="margin-bottom: 18px; opacity: 0.95;">
+      Our core bet is that UTE requires a hybrid stack: symbolic semantics for correctness and explicit traces, plus HDC/VSA strategies for fast retrieval
+      and capacity experiments under growth (elastic/dynamic size representations).
+    </p>
+
+    <svg viewBox="0 0 980 220" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px;">
+      <defs>
+        <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="rgba(255,255,255,0.7)"/>
+        </marker>
+        <linearGradient id="fog" x1="0" x2="1">
+          <stop offset="0" stop-color="rgba(255,255,255,0.2)"/>
+          <stop offset="1" stop-color="rgba(255,255,255,0.05)"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Nodes -->
+      <rect x="20" y="40" width="170" height="120" rx="12" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.25)"/>
+      <text x="105" y="70" text-anchor="middle" font-weight="bold" font-size="13" fill="white">Today</text>
+      <text x="105" y="92" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.9)">Executable DSL</text>
+      <text x="105" y="110" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.9)">Query/Prove + traces</text>
+      <text x="105" y="128" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.9)">Multi-strategy HDC</text>
+      <text x="105" y="146" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.9)">Evals + AutoDiscovery</text>
+
+      <rect x="220" y="40" width="180" height="120" rx="12" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.25)"/>
+      <text x="310" y="70" text-anchor="middle" font-weight="bold" font-size="13" fill="white">Micro-Theories</text>
+      <text x="310" y="92" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.9)">Reusable theory fragments</text>
+      <text x="310" y="110" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.9)">Evidence conventions</text>
+      <text x="310" y="128" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.9)">Community eval suites</text>
+
+      <rect x="430" y="40" width="210" height="120" rx="12" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.25)"/>
+      <text x="535" y="70" text-anchor="middle" font-weight="bold" font-size="13" fill="white">UTE Layers</text>
+      <text x="535" y="92" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.9)">Provenance + revision</text>
+      <text x="535" y="110" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.9)">Causal/mechanistic models</text>
+      <text x="535" y="128" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.9)">Uncertainty + numeric</text>
+      <text x="535" y="146" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.9)">Experiment planning</text>
+
+      <rect x="670" y="40" width="200" height="120" rx="12" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.25)"/>
+      <text x="770" y="70" text-anchor="middle" font-weight="bold" font-size="13" fill="white">Scientific-Theory AGI</text>
+      <text x="770" y="92" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.9)">Domain scientist agents</text>
+      <text x="770" y="110" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.9)">Review / argue / prove</text>
+      <text x="770" y="128" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.9)">Evidence-aware workflows</text>
+
+      <rect x="890" y="40" width="70" height="120" rx="12" fill="url(#fog)" stroke="rgba(255,255,255,0.20)" stroke-dasharray="6,6"/>
+      <text x="925" y="78" text-anchor="middle" font-weight="bold" font-size="11" fill="rgba(255,255,255,0.85)">General</text>
+      <text x="925" y="96" text-anchor="middle" font-weight="bold" font-size="11" fill="rgba(255,255,255,0.85)">AGI</text>
+      <text x="925" y="120" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.75)">nebulous</text>
+      <text x="925" y="136" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.75)">future</text>
+
+      <!-- Arrows -->
+      <line x1="190" y1="100" x2="220" y2="100" stroke="rgba(255,255,255,0.65)" stroke-width="2" marker-end="url(#arrow)"/>
+      <line x1="400" y1="100" x2="430" y2="100" stroke="rgba(255,255,255,0.65)" stroke-width="2" marker-end="url(#arrow)"/>
+      <line x1="640" y1="100" x2="670" y2="100" stroke="rgba(255,255,255,0.65)" stroke-width="2" marker-end="url(#arrow)"/>
+      <line x1="870" y1="100" x2="890" y2="100" stroke="rgba(255,255,255,0.45)" stroke-width="2" marker-end="url(#arrow)"/>
+    </svg>
+
+    <p style="margin: 14px 0 0 0; opacity: 0.95;">
+      See <a href="universal-theory-engine.html" style="color: white; text-decoration: underline;">Universal Theory Engine (UTE)</a> and the research specs DS32–DS38 in the <a href="../specs/matrix.html" style="color: white; text-decoration: underline;">Specs matrix</a>.
+    </p>
   </div>
 
-  <h2>Current Status</h2>
-
-  <div class="metric-row">
-    <div class="metric-item">
-      <strong>99.5%</strong>
-      ProntoQA accuracy
+  <h2>Where we are now</h2>
+  <p>
+    AGISystem2 is already a coherent research platform: you can express micro-theories in DSL, run symbolic reasoning with proofs/traces,
+    and run capacity and retrieval experiments via multiple HDC strategies (including elastic and lossless variants).
+  </p>
+  <div class="grid">
+    <div class="card">
+      <h3>Implemented foundation</h3>
+      <p>DSL parsing and execution, Session runtime, query/prove, traces/proofs, eval harness.</p>
+      <p style="margin-top: 10px; font-size: 12px; color: #666;">See <a href="../specs/matrix.html">Specs matrix</a> for implemented vs research items.</p>
     </div>
-    <div class="metric-item">
-      <strong>100%</strong>
-      Translation success
+    <div class="card">
+      <h3>HDC strategy substrate</h3>
+      <p>Dense / Sparse / Metric / EMA (elastic) / EXACT (lossless) as swappable strategy contract for controlled experiments.</p>
+      <p style="margin-top: 10px; font-size: 12px; color: #666;">See <a href="directions/hdc-strategies.html">HDC strategy directions</a> and <a href="dynamic-size-representations.html">dynamic size representations</a>.</p>
     </div>
-    <div class="metric-item">
-      <strong>364/364</strong>
-      Core tests passing
-    </div>
-    <div class="metric-item">
-      <strong>3</strong>
-      HDC strategies
+    <div class="card">
+      <h3>Agentic hardening loop</h3>
+      <p>AutoDiscovery-style workflows treat eval data as a judge: regressions become artifacts (tests, minimal repros, documented fixes).</p>
+      <p style="margin-top: 10px; font-size: 12px; color: #666;">See <a href="agentic-code-generation.html">agentic code generation</a> and <a href="../specsLoader.html?spec=DS/DS20-AutoDiscovery.md">DS20</a>.</p>
     </div>
   </div>
 
@@ -136,7 +192,7 @@
 
   <div class="direction-card priority-high">
     <h3><a href="directions/nl2dsl-grammar.html">NL→DSL Translation (Grammar-Based)</a> <span class="status-badge status-active">Active</span></h3>
-    <p><strong>Goal:</strong> Extend grammar coverage to handle 95%+ of natural language patterns without requiring LLM assistance.</p>
+    <p><strong>Goal:</strong> Expand deterministic coverage of “structured reasoning language” patterns (high precision, reproducible behavior).</p>
     <ul>
       <li>Complex quantifiers (all, some, most, few)</li>
       <li>Nested conditionals and exceptions</li>
@@ -148,7 +204,7 @@
 
   <div class="direction-card priority-high">
     <h3><a href="directions/nl2dsl-llm.html">NL→DSL Translation (LLM-Assisted)</a> <span class="status-badge status-active">Active</span></h3>
-    <p><strong>Goal:</strong> Use LLMs as intelligent preprocessors for complex/ambiguous natural language before formal parsing.</p>
+    <p><strong>Goal:</strong> Use LLMs as proposers and disambiguators while keeping the system’s semantics checkable by DSL + evaluation.</p>
     <ul>
       <li>Disambiguation of pronouns and references</li>
       <li>Domain-specific terminology expansion</li>
@@ -158,9 +214,9 @@
     <p><strong>Impact:</strong> Handles edge cases that grammar alone cannot, enables natural user interaction.</p>
   </div>
 
-  <div class="direction-card priority-high">
-    <h3><a href="directions/proof-to-nl.html">Proof→NL Generation</a> <span class="status-badge status-planned">Planned</span></h3>
-    <p><strong>Goal:</strong> Generate fluent, human-readable explanations from formal proof traces.</p>
+  <div class="direction-card priority-research">
+    <h3><a href="directions/proof-to-nl.html">Proof→NL Generation</a> <span class="status-badge status-research">Prototype</span></h3>
+    <p><strong>Goal:</strong> Make formal reasoning legible to humans: fluent explanations derived from proofs/traces (not post-hoc narratives).</p>
     <ul>
       <li>Template-based generation for common patterns</li>
       <li>LLM-enhanced fluency post-processing</li>
@@ -172,7 +228,7 @@
 
   <div class="direction-card priority-medium">
     <h3><a href="directions/text-generation.html">Essay & Document Generation</a> <span class="status-badge status-planned">Planned</span></h3>
-    <p><strong>Goal:</strong> Generate structured documents (essays, reports, summaries) from knowledge base queries.</p>
+    <p><strong>Goal:</strong> Generate structured, evidence-linked reports from query/proof results (research notes, audits, review memos).</p>
     <ul>
       <li>Outline generation from concept hierarchies</li>
       <li>Paragraph synthesis from related facts</li>
@@ -184,7 +240,7 @@
 
   <div class="direction-card priority-medium">
     <h3><a href="directions/learning-from-text.html">Learning from Textbook-Style Content</a> <span class="status-badge status-planned">Planned</span></h3>
-    <p><strong>Goal:</strong> Automatically extract formal concepts and relationships from structured educational texts.</p>
+    <p><strong>Goal:</strong> Assist theory authoring: propose candidate theory fragments from structured text, validate via eval suites and proofs.</p>
     <ul>
       <li>Definition extraction ("X is defined as...")</li>
       <li>Relationship mining (taxonomies, properties, rules)</li>
@@ -199,157 +255,60 @@
     <p><strong>Goal:</strong> Advance the theoretical and practical foundations of hyperdimensional computing for reasoning.</p>
     <ul>
       <li>Hybrid strategies combining Dense + Sparse + Metric approaches</li>
-      <li>Adaptive geometry based on domain complexity</li>
+      <li>Dynamic/elastic size representations under KB growth</li>
       <li>Novel similarity measures for semantic matching</li>
       <li>Scalability to million-fact knowledge bases</li>
     </ul>
-    <p><strong>Impact:</strong> Fundamental advances in neuro-symbolic computing, novel research contributions.</p>
+    <p><strong>Impact:</strong> A controlled substrate for retrieval and capacity research; informs UTE-scale theory manipulation.</p>
   </div>
 
   <div class="direction-card priority-research">
     <h3><a href="directions/holographic-reasoning.html">Deep Holographic Reasoning</a> <span class="status-badge status-research">Research</span></h3>
-    <p><strong>Goal:</strong> Move beyond symbolic-first reasoning to HDC-native inference algorithms.</p>
+    <p><strong>Goal:</strong> Understand when holographic steps help and when symbolic validation is required; build safe hybrid workflows.</p>
     <ul>
       <li>HDC Master Equation for direct query answering</li>
       <li>Analogical reasoning via bind/unbind algebra</li>
       <li>Similarity-based rule application</li>
       <li>Probabilistic confidence from vector distances</li>
     </ul>
-    <p><strong>Impact:</strong> Enables fuzzy reasoning, graceful degradation, novel inference patterns.</p>
+    <p><strong>Impact:</strong> Fast retrieval and candidate generation for large theory sets, with auditable fallbacks.</p>
   </div>
 
   <div class="direction-card priority-research">
     <h3><a href="directions/semantic-libraries.html">Domain Semantic Libraries</a> <span class="status-badge status-research">Research</span></h3>
-    <p><strong>Goal:</strong> Create reusable semantic libraries for major scientific and professional domains.</p>
+    <p><strong>Goal:</strong> Build an ecosystem of domain libraries (theory fragments + eval suites) that make UTE progress cumulative.</p>
     <ul>
       <li><strong>Medicine:</strong> Symptoms, diagnoses, treatments, drug interactions</li>
       <li><strong>Law:</strong> Legal concepts, rights, obligations, precedents</li>
       <li><strong>Physics:</strong> Physical quantities, laws, relationships</li>
       <li><strong>Biology:</strong> Organisms, pathways, genetics, ecology</li>
     </ul>
-    <p><strong>Impact:</strong> Ready-to-use reasoning for specific domains, community collaboration model.</p>
+    <p><strong>Impact:</strong> Domain specialization is the path to scientific-theory assistants; community contribution model.</p>
   </div>
 
-  <h2>2025 Timeline Overview</h2>
-
-  <div class="timeline-grid">
-    <div class="quarter-box">
-      <h4>Q1 2025</h4>
-      <ul>
-        <li>Grammar quantifiers</li>
-        <li>LLM disambiguation</li>
-        <li>Proof templates</li>
-      </ul>
+  <h2>UTE milestones (qualitative)</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Near-term</h3>
+      <p>Improve the “Linux layer”: stable semantics, clearer docs/spec statuses, richer eval coverage, and better developer ergonomics.</p>
+      <p style="margin-top: 10px; font-size: 12px; color: #666;">Anchor: implemented DS + evaluation-driven development.</p>
     </div>
-    <div class="quarter-box">
-      <h4>Q2 2025</h4>
-      <ul>
-        <li>Temporal expressions</li>
-        <li>Essay generation MVP</li>
-        <li>HDC hybrid strategies</li>
-      </ul>
+    <div class="card">
+      <h3>Mid-term</h3>
+      <p>Prototype UTE-layer primitives where they can be validated: evidence/provenance objects, contradiction reports, and revision workflows.</p>
+      <p style="margin-top: 10px; font-size: 12px; color: #666;">Anchor: DS34 (provenance/revision) + DS19 direction.</p>
     </div>
-    <div class="quarter-box">
-      <h4>Q3 2025</h4>
-      <ul>
-        <li>Textbook learning</li>
-        <li>Medicine library alpha</li>
-        <li>Deep holographic v1</li>
-      </ul>
-    </div>
-    <div class="quarter-box">
-      <h4>Q4 2025</h4>
-      <ul>
-        <li>Multi-language NL</li>
-        <li>Law library alpha</li>
-        <li>Production readiness</li>
-      </ul>
+    <div class="card">
+      <h3>Long-horizon</h3>
+      <p>Integrate causal/mechanistic, uncertainty, numeric modeling, and experiment planning into closed-loop “theory improvement” workflows.</p>
+      <p style="margin-top: 10px; font-size: 12px; color: #666;">Anchor: DS35–DS38 (research) as the roadmap.</p>
     </div>
   </div>
 
-  <h2>Operator Enhancement Priorities</h2>
-
-  <p>Based on the operator backlog in <a href="../../future-improvements.md"><code>future-improvements.md</code></a>:</p>
-
-  <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-    <tr style="background: #1976d2; color: white;">
-      <th style="padding: 12px; text-align: left;">Operator</th>
-      <th style="padding: 12px; text-align: left;">Current State</th>
-      <th style="padding: 12px; text-align: left;">Enhancement</th>
-      <th style="padding: 12px; text-align: left;">Priority</th>
-    </tr>
-    <tr style="background: #e8f5e9;">
-      <td style="padding: 12px;"><strong>analogy</strong></td>
-      <td style="padding: 12px;">Symbolic lookup only</td>
-      <td style="padding: 12px;">HDC bind/unbind algebra</td>
-      <td style="padding: 12px; color: #2e7d32; font-weight: bold;">P1</td>
-    </tr>
-    <tr>
-      <td style="padding: 12px;"><strong>abduce</strong></td>
-      <td style="padding: 12px;">Rule backward chaining</td>
-      <td style="padding: 12px;">Bayesian probability scoring</td>
-      <td style="padding: 12px; color: #2e7d32; font-weight: bold;">P1</td>
-    </tr>
-    <tr style="background: #fff3e0;">
-      <td style="padding: 12px;"><strong>induce</strong></td>
-      <td style="padding: 12px;">Pattern frequency</td>
-      <td style="padding: 12px;">Statistical significance testing</td>
-      <td style="padding: 12px; color: #e65100; font-weight: bold;">P2</td>
-    </tr>
-    <tr>
-      <td style="padding: 12px;"><strong>whatif</strong></td>
-      <td style="padding: 12px;">Causal chains</td>
-      <td style="padding: 12px;">do-calculus intervention</td>
-      <td style="padding: 12px; color: #e65100; font-weight: bold;">P2</td>
-    </tr>
-    <tr style="background: #f3e5f5;">
-      <td style="padding: 12px;"><strong>explain</strong></td>
-      <td style="padding: 12px;">Thin wrapper</td>
-      <td style="padding: 12px;">Full NL generation pipeline</td>
-      <td style="padding: 12px; color: #7b1fa2; font-weight: bold;">P3</td>
-    </tr>
-  </table>
-
-  <h2>Success Metrics</h2>
-
-  <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-    <tr style="background: #1976d2; color: white;">
-      <th style="padding: 12px; text-align: left;">Metric</th>
-      <th style="padding: 12px; text-align: center;">Current</th>
-      <th style="padding: 12px; text-align: center;">Q2 2025</th>
-      <th style="padding: 12px; text-align: center;">Q4 2025</th>
-    </tr>
-    <tr>
-      <td style="padding: 12px;">Grammar coverage (NL patterns)</td>
-      <td style="padding: 12px; text-align: center;">70%</td>
-      <td style="padding: 12px; text-align: center;">85%</td>
-      <td style="padding: 12px; text-align: center;">95%</td>
-    </tr>
-    <tr style="background: #f9f9f9;">
-      <td style="padding: 12px;">External benchmark average</td>
-      <td style="padding: 12px; text-align: center;">72%</td>
-      <td style="padding: 12px; text-align: center;">80%</td>
-      <td style="padding: 12px; text-align: center;">85%</td>
-    </tr>
-    <tr>
-      <td style="padding: 12px;">HDC Master Equation success</td>
-      <td style="padding: 12px; text-align: center;">5%</td>
-      <td style="padding: 12px; text-align: center;">30%</td>
-      <td style="padding: 12px; text-align: center;">50%</td>
-    </tr>
-    <tr style="background: #f9f9f9;">
-      <td style="padding: 12px;">Domain libraries available</td>
-      <td style="padding: 12px; text-align: center;">0</td>
-      <td style="padding: 12px; text-align: center;">1</td>
-      <td style="padding: 12px; text-align: center;">3</td>
-    </tr>
-    <tr>
-      <td style="padding: 12px;">Proof-to-NL quality score</td>
-      <td style="padding: 12px; text-align: center;">N/A</td>
-      <td style="padding: 12px; text-align: center;">3.5/5</td>
-      <td style="padding: 12px; text-align: center;">4.2/5</td>
-    </tr>
-  </table>
+  <div class="note">
+    <strong>Honesty note:</strong> Roadmaps are hypotheses. In this project we keep the boundary explicit:
+    what is implemented is tracked in the <a href="../specs/matrix.html">Specs matrix</a>, and research specs are marked clearly (Research/Exploratory/Proposed).
+  </div>
 
   <div class="footer-nav">
     <p><strong>Research Directions:</strong></p>
@@ -362,6 +321,9 @@
       <li><a href="directions/hdc-strategies.html">HDC Strategy Development</a></li>
       <li><a href="directions/holographic-reasoning.html">Deep Holographic Reasoning</a></li>
       <li><a href="directions/semantic-libraries.html">Domain Semantic Libraries</a></li>
+      <li><a href="universal-theory-engine.html">Universal Theory Engine (UTE)</a></li>
+      <li><a href="dynamic-size-representations.html">Dynamic Size Representations</a></li>
+      <li><a href="agentic-code-generation.html">Agentic Code Generation</a></li>
     </ul>
     <p><a href="../index.html">&larr; Back to Documentation Home</a></p>
   </div>

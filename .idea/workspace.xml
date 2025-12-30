@@ -5,9 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="better docuemntation, overview of the planned research, wip. started to run the autidiscovery agent  stuff from the external benchmark suites">
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/analised.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/fastEvalReview.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/runFastEvalNLTranslate.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/runFastEvalReview.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/analised.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/roadmap.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/roadmap.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite27_contrapositive_negation/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite27_contrapositive_negation/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nlp/normalizer.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/normalizer.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/output/response-translator/prove-contrapositive.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator/prove-contrapositive.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/output/response-translator/prove-positive.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator/prove-positive.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/output/response-translator/prove-translator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator/prove-translator.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,15 +136,7 @@
       <workItem from="1766562947099" duration="21851000" />
       <workItem from="1766650266623" duration="6940000" />
       <workItem from="1767005469743" duration="10476000" />
-      <workItem from="1767083849618" duration="13109000" />
-    </task>
-    <task id="LOCAL-00047" summary="working to refactor the resonign engine for deeper semantic unification to make use of HDC properties better. wip">
-      <option name="closed" value="true" />
-      <created>1766151588074</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1766151588074</updated>
+      <workItem from="1767083849618" duration="14184000" />
     </task>
     <task id="LOCAL-00048" summary="working to refactor the reasoning engine for deeper semantic unification to make use of HDC properties better. wip">
       <option name="closed" value="true" />
@@ -520,7 +522,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767105060037</updated>
     </task>
-    <option name="localTasksCounter" value="96" />
+    <task id="LOCAL-00096" summary="better docuemntation, overview of the planned research, wip. started to run the autidiscovery agent  stuff from the external benchmark suites">
+      <option name="closed" value="true" />
+      <created>1767106029149</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1767106029149</updated>
+    </task>
+    <option name="localTasksCounter" value="97" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
