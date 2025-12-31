@@ -195,6 +195,19 @@ export class NLTransformer {
               }
             }
 
+            if (extracted.type === 'exists-raw') {
+              const body = this.transformSentence(extracted.bodyRaw);
+              if (body) {
+                return {
+                  type: 'exists',
+                  variable: extracted.variable,
+                  body,
+                  source: sentence,
+                  pattern: patternType
+                };
+              }
+            }
+
             if (extracted.type === 'compound-raw') {
               const left = this.transformSentence(extracted.leftRaw);
               const right = this.transformSentence(extracted.rightRaw);
@@ -310,6 +323,44 @@ export class NLTransformer {
         return `${parsed.operator} ${parsed.subject} ${parsed.object}`;
 
       case 'ternary':
+        // DSL-preserving macros: some meta-operators take a relation as a single compound argument.
+        // When NL is rendered as a flat token stream (e.g. "deduce X ?a causes ?b ..."),
+        // rebuild the compound form to match canonical DSL.
+        if (Array.isArray(parsed.args)) {
+          const args = parsed.args.map(String);
+          const op = String(parsed.operator || '');
+
+          const looksLikeAtom = (s) => /^[$@?]?\w+$/.test(s) || /^[0-9]+$/.test(s);
+          const looksLikeRelOp = (s) => /^[A-Za-z][A-Za-z0-9_]*$/.test(s) && !/^(?:is|are|was|were|a|an|the)$/i.test(s);
+
+          // explain (Relation S O) ?why
+          // from tokens: explain S relOp O ?why
+          if (op.toLowerCase() === 'explain' && args.length >= 4) {
+            const [s, rel, o, ...rest] = args;
+            if (looksLikeAtom(s) && looksLikeRelOp(rel) && looksLikeAtom(o)) {
+              return `${op} (${rel} ${s} ${o}) ${rest.join(' ')}`.trim();
+            }
+          }
+
+          // deduce Topic (relOp ?X ?Y) ?result depth breadth
+          // from tokens: deduce Topic ?X relOp ?Y ?result depth breadth
+          if (op.toLowerCase() === 'deduce' && args.length >= 6) {
+            // Shape A: deduce Topic A relOp B ...
+            const [topic, a, rel, b, ...rest] = args;
+            if (looksLikeAtom(topic) && looksLikeAtom(a) && looksLikeRelOp(rel) && looksLikeAtom(b)) {
+              return `${op} ${topic} (${rel} ${a} ${b}) ${rest.join(' ')}`.trim();
+            }
+
+            // Shape B: deduce Topic A is a B ...  -> treat as isA(A,B)
+            if (args.length >= 7) {
+              const [t2, a2, isTok, art, b2, ...rest2] = args;
+              if (looksLikeAtom(t2) && looksLikeAtom(a2) && /^is$/i.test(isTok) && /^(?:a|an)$/i.test(art) && looksLikeAtom(b2)) {
+                return `${op} ${t2} (isA ${a2} ${b2}) ${rest2.join(' ')}`.trim();
+              }
+            }
+          }
+        }
+
         return `${parsed.operator} ${parsed.args.join(' ')}`;
 
       case 'compound': {
@@ -350,6 +401,12 @@ export class NLTransformer {
         const cons = this.clauseToDSL(parsed.consequent);
         if (!ant || !cons) return null;
         return `implies (${ant}) (${cons})`;
+      }
+
+      case 'exists': {
+        const body = this.clauseToDSL(parsed.body);
+        if (!body) return null;
+        return `Exists ${parsed.variable} (${body})`;
       }
 
       case 'unknown':

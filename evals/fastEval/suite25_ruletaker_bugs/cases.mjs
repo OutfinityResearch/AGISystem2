@@ -184,7 +184,11 @@ export const steps = [
     input_nl: 'Tom does not hasProperty smart.',
     input_dsl: '@goal Not (hasProperty Tom smart)',
     expected_nl: 'Cannot prove: Not',
-    proof_nl: 'Not'
+    proof_nl: [
+      'Found in KB: Tom has smart',
+      'Therefore NOT (Tom has smart) cannot be proved'
+    ],
+    alternative_proof_nl: 'Not'
   },
 
   // ============================================================

@@ -87,7 +87,7 @@ export const steps = [
       @susConc isSuspect ?x
       Implies $susAnd $susConc
     `,
-    expected_nl: 'Learned 18 facts'
+    expected_nl: 'Learned 19 facts'
   },
 
   // === PROVE: 5-step And rule (has Motive + has Opportunity + rule application) ===

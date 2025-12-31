@@ -5,9 +5,37 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="better documentation, new research directions documented">
+      <change afterPath="$PROJECT_DIR$/KBExplorer/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/client/app.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/client/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/client/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/index.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/server.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS48-KBExplorer.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/tools/dsl-to-nl.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/index-exports.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/kbexplorer/server-smoke.test.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS01-Theoretical-Foundation.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS01-Theoretical-Foundation.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/healthCheck.js" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/healthCheck.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite03_rules/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite03_rules/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite06_compound_logic/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite06_compound_logic/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite15_reasoning_macros/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite15_reasoning_macros/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite20_predicate_logic/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite20_predicate_logic/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite22_deduction/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite22_deduction/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite25_ruletaker_bugs/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite25_ruletaker_bugs/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite27_contrapositive_negation/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite27_contrapositive_negation/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEvalReview.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEvalSupportedNL_suite27.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/runDslToNl.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/runFastEvalNLTranslate.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/runFastEvalReview.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/runFastEvalSupportedNL.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nlp/index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/index.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/nlp/patterns.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/patterns.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nlp/transformer.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/transformer.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/dsl-to-nl.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/dsl-to-nl.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,27 +76,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "master",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/home/salboaie/work/ploinky",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/salboaie/work/ploinky&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -126,15 +154,8 @@
       <workItem from="1766562947099" duration="21851000" />
       <workItem from="1766650266623" duration="6940000" />
       <workItem from="1767005469743" duration="10476000" />
-      <workItem from="1767083849618" duration="19256000" />
-    </task>
-    <task id="LOCAL-00052" summary="new approach for val suite, trying to improve teh deft theories, doing various experiemnts to improve and generalise the reasoning engines">
-      <option name="closed" value="true" />
-      <created>1766407883874</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1766407883874</updated>
+      <workItem from="1767083849618" duration="20002000" />
+      <workItem from="1767176590511" duration="1314000" />
     </task>
     <task id="LOCAL-00053" summary="new approach for val suite, trying to improve teh deft theories, doing various experiemnts to improve and generalise the reasoning engines">
       <option name="closed" value="true" />
@@ -520,7 +541,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767134675154</updated>
     </task>
-    <option name="localTasksCounter" value="101" />
+    <task id="LOCAL-00101" summary="better documentation, new research directions documented">
+      <option name="closed" value="true" />
+      <created>1767136523436</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1767136523436</updated>
+    </task>
+    <option name="localTasksCounter" value="102" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

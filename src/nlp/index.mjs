@@ -20,5 +20,8 @@ export {
   toSentenceCase
 } from './normalizer.mjs';
 
+// Grammar-based NL → DSL translator (DS21).
+export { translateNL2DSL, translateExample, resetRefCounter } from './nl2dsl.mjs';
+
 // Default export
 export { NLTransformer as default } from './transformer.mjs';

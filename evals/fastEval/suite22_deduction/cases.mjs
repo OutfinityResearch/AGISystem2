@@ -100,7 +100,7 @@ export const steps = [
   // === SETUP: Biological Classification Theory ===
   {
     action: 'learn',
-    input_nl: 'Dog is a Mammal. Cat is a Mammal. Whale is a Mammal. Mammal is a Vertebrate. Vertebrate is an Animal. Animal is a LivingThing. Mammal has WarmBlood. Vertebrate has Spine. Animal has Metabolism. implies ?X is a Mammal ?X has Fur.',
+    input_nl: 'Dog is a Mammal. Cat is a Mammal. Whale is a Mammal. Mammal is a Vertebrate. Vertebrate is an Animal. Animal is a LivingThing. Mammal has WarmBlood. Vertebrate has Spine. Animal has Metabolism. implies (?X is a Mammal) ?X has Fur.',
     input_dsl: `
       # Taxonomy
       isA Dog Mammal

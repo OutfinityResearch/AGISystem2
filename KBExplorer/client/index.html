@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KBExplorer (AGISystem2)</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar__title">KBExplorer</div>
+      <div class="topbar__meta">
+        <span id="sessionLabel" class="mono">session: (initializing)</span>
+        <span id="kbFactsStat" class="mono muted">KB facts: 0</span>
+        <label class="label label--topbar">HDC
+          <select id="strategySelect" class="mono">
+            <option value="dense-binary">dense-binary</option>
+            <option value="exact">exact</option>
+            <option value="sparse-polynomial">sparse-polynomial</option>
+            <option value="metric-affine">metric-affine</option>
+            <option value="metric-affine-elastic">metric-affine-elastic</option>
+          </select>
+        </label>
+        <label class="label label--topbar">Reasoning
+          <select id="reasoningSelect" class="mono">
+            <option value="symbolicPriority">symbolicPriority</option>
+            <option value="holographicPriority">holographicPriority</option>
+          </select>
+        </label>
+        <button id="newSessionBtn" class="btn btn--ghost" title="Create a new isolated Session universe">New session</button>
+        <button id="resetSessionBtn" class="btn btn--ghost" title="Reset current Session universe">Reset</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="tabs">
+        <div class="tabs__bar" role="tablist" aria-label="KBExplorer tabs">
+          <button id="tabChat" type="button" class="tab tab--active" role="tab" aria-selected="true">Chat</button>
+          <button id="tabKB" type="button" class="tab" role="tab" aria-selected="false">KB Explorer</button>
+          <button id="tabDocs" type="button" class="tab" role="tab" aria-selected="false">Examples</button>
+        </div>
+
+        <div id="panelChat" class="tabs__panel tabs__panel--active" role="tabpanel">
+          <div id="chat" class="chat" aria-label="Conversation history"></div>
+
+          <div class="composer">
+            <div class="composer__row">
+              <label class="label">Mode
+                <select id="modeSelect">
+                  <option value="query">query</option>
+                  <option value="prove">prove</option>
+                  <option value="learn">learn</option>
+                  <option value="abduce">abduce</option>
+                  <option value="findAll">findAll</option>
+                </select>
+              </label>
+              <label class="label">Input
+                <select id="inputModeSelect">
+                  <option value="nl">NL</option>
+                  <option value="dsl">DSL</option>
+                </select>
+              </label>
+
+              <input id="theoryFile" type="file" accept=".sys2,.txt" multiple hidden />
+              <button id="loadBtn" type="button" class="btn">Load...</button>
+              <button id="cancelLoadBtn" type="button" class="btn btn--ghost" disabled>Cancel</button>
+            </div>
+
+            <textarea id="textInput" class="composer__input" rows="3" placeholder="Type Natural Language (NL) or Sys2DSL..."></textarea>
+            <div class="composer__row composer__row--end">
+              <button id="sendBtn" class="btn btn--primary">Send</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="panelKB" class="tabs__panel" role="tabpanel">
+          <div class="kb">
+            <div class="kb__toolbar">
+              <input id="factFilter" class="kb__search" type="search" placeholder="Search facts..." />
+              <div class="kb__meta">
+                <label class="label">
+                  <input id="namedOnlyToggle" type="checkbox" />
+                  Named only
+                </label>
+                <span id="factCount" class="muted"></span>
+                <button id="refreshFactsBtn" type="button" class="btn btn--ghost">Refresh</button>
+              </div>
+            </div>
+
+            <div class="explorer" aria-label="KB filesystem explorer">
+              <div class="explorer__tree">
+                <div id="kbTree" class="tree" aria-label="KB tree"></div>
+              </div>
+              <div class="explorer__details">
+                <div class="details__header">
+                  <div class="details__title">Details</div>
+                  <button id="openDefinitionBtn" type="button" class="btn btn--ghost" disabled>Open definition</button>
+                </div>
+                <div id="kbDetails" class="details" aria-label="Selected node details"></div>
+              </div>
+            </div>
+
+            <div class="kb__paging">
+              <button id="factsPrevBtn" type="button" class="btn btn--ghost">Prev</button>
+              <span id="factsPageLabel" class="muted"></span>
+              <button id="factsNextBtn" type="button" class="btn btn--ghost">Next</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="panelDocs" class="tabs__panel" role="tabpanel">
+          <div class="docs">
+            <div class="docsTabs" role="tablist" aria-label="Examples tabs">
+              <button id="docsTabDsl" type="button" class="docsTab docsTab--active" role="tab" aria-selected="true">DSL Examples</button>
+              <button id="docsTabNl" type="button" class="docsTab" role="tab" aria-selected="false">NL Examples</button>
+            </div>
+
+            <div id="docsPanelDsl" class="docsPanel docsPanel--active" role="tabpanel">
+              <h2>DSL Examples</h2>
+              <p class="muted">Use these with Input = <span class="mono">DSL</span>.</p>
+
+              <h3>learn (adds facts to KB)</h3>
+              <pre class="code">isA Anne Dog
+isA Dog Animal
+hasProperty Anne Friendly
+locatedIn Anne Paris</pre>
+
+              <h3>query (use ?holes)</h3>
+              <pre class="code">isA Anne ?x
+isA ?x Animal
+locatedIn ?who Paris</pre>
+
+              <h3>prove (true/false + proof)</h3>
+              <pre class="code">isA Anne Dog
+Not (isA Anne Cat)</pre>
+
+              <h3>findAll (pattern scan)</h3>
+              <pre class="code">isA ?x Dog</pre>
+            </div>
+
+            <div id="docsPanelNl" class="docsPanel" role="tabpanel">
+              <h2>NL Examples</h2>
+              <p class="muted">Use these with Input = <span class="mono">NL</span>. NL is heuristic/grammar-based and can be ambiguous.</p>
+
+              <h3>learn</h3>
+              <pre class="code">Anne is a dog.
+All dogs are animals.
+Anne is friendly.</pre>
+
+              <h3>query / prove</h3>
+              <pre class="code">Is Anne an animal?
+Is Anne a cat?</pre>
+
+              <h3>Why “A is B” becomes a rule</h3>
+              <p>
+                In NL, <span class="mono">A</span> is usually an English article (“a”), not an entity name.
+                So the translator may interpret <span class="mono">"A is B"</span> as a generalized pattern and produce rule-shaped DSL:
+              </p>
+              <pre class="code">@cond0 isA ?x I
+@cond1 hasProperty ?x b
+Implies $cond0 $cond1</pre>
+              <p>If you meant literal symbols <span class="mono">A</span> and <span class="mono">B</span>, switch to DSL: <span class="mono">isA A B</span>.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

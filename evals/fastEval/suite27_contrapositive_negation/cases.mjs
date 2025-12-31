@@ -37,7 +37,7 @@ export const steps = [
       isA Stella Lorpus
       isA Stella Grimpus
     `,
-    expected_nl: 'Learned 1 facts'
+    expected_nl: 'Learned 14 facts'
   },
   {
     action: 'prove',
@@ -65,7 +65,7 @@ export const steps = [
       @base12 isA Alex Brimpus
       Not $base12
     `,
-    expected_nl: 'Learned 1 facts'
+    expected_nl: 'Learned 7 facts'
   },
   {
     action: 'prove',
@@ -93,7 +93,7 @@ export const steps = [
       @base17 isA Stella Numpus
       Not $base17
     `,
-    expected_nl: 'Learned 1 facts'
+    expected_nl: 'Learned 8 facts'
   },
   {
     action: 'prove',
@@ -121,7 +121,7 @@ export const steps = [
       isA Max Yumpus
       Not isA Max Impus
     `,
-    expected_nl: 'Learned 1 facts'
+    expected_nl: 'Learned 9 facts'
   },
   {
     action: 'prove',
@@ -153,7 +153,7 @@ export const steps = [
       isA Wren Numpus
       Not isA Wren Brimpus
     `,
-    expected_nl: 'Learned 1 facts'
+    expected_nl: 'Learned 12 facts'
   },
   {
     action: 'prove',
@@ -186,7 +186,7 @@ export const steps = [
 
       Not isA Stella Sterpus
     `,
-    expected_nl: 'Learned 1 facts'
+    expected_nl: 'Learned 13 facts'
   },
   {
     action: 'prove',

@@ -134,6 +134,11 @@ function renderNegationParseable(session, innerExpr, env) {
 }
 
 function exprToHuman(session, expr, env, { style = 'pretty' } = {}) {
+  // `env` stores full Statement nodes; handle them explicitly to avoid leaking `.toString()`.
+  if (expr && typeof expr === 'object' && expr.type === 'Statement') {
+    return statementToHuman(session, expr, env, { style });
+  }
+
   const e = termToToken(expr, env);
 
   if (e && typeof e === 'object' && e.type === 'Statement') {
@@ -149,6 +154,8 @@ function exprToHuman(session, expr, env, { style = 'pretty' } = {}) {
       if (style === 'parseable') {
         const rendered = renderNegationParseable(session, args[0], env);
         if (rendered) return rendered;
+        // Fallback for complex negations: prefer an NL form that NLTransformer already supports.
+        return `It is not true that ${exprToHuman(session, args[0], env, { style })}`;
       }
       return `NOT (${exprToHuman(session, args[0], env, { style })})`;
     }
@@ -157,11 +164,19 @@ function exprToHuman(session, expr, env, { style = 'pretty' } = {}) {
       return args.map(a => `(${exprToHuman(session, a, env, { style })})`).join(joiner);
     }
 
+    if (style === 'parseable' && (op === 'Exists' || op === 'ForAll') && args.length === 2) {
+      const v = exprToHuman(session, args[0], env, { style });
+      const body = exprToHuman(session, args[1], env, { style });
+      return `${op} ${v} ${body}`.trim();
+    }
+
     const tokenArgs = args.map(a => termToToken(a, env));
     if (tokenArgs.every(a => typeof a === 'string')) {
       return renderSentence(session, op, tokenArgs, { stripPunctuation: true, style });
     }
-    return typeof e.toString === 'function' ? e.toString() : String(e);
+    // Recursive fallback for compound arguments (keep it parseable instead of leaking `.toString()`).
+    const renderedArgs = args.map(a => exprToHuman(session, a, env, { style })).join(' ');
+    return `${op} ${renderedArgs}`.trim();
   }
 
   if (e.type === 'List') {
@@ -193,6 +208,7 @@ function statementToHuman(session, stmt, env, { style = 'pretty' } = {}) {
     if (style === 'parseable') {
       const rendered = renderNegationParseable(session, args[0], env);
       if (rendered) return rendered;
+      return `It is not true that ${exprToHuman(session, args[0], env, { style })}`;
     }
     const inner = exprToHuman(session, args[0], env, { style });
     return `NOT (${inner})`;
@@ -204,9 +220,45 @@ function statementToHuman(session, stmt, env, { style = 'pretty' } = {}) {
       const innerExpr = { type: 'Compound', operator: args[0], args: args.slice(1) };
       const rendered = renderNegationParseable(session, innerExpr, env);
       if (rendered) return rendered;
+      return `It is not true that ${exprToHuman(session, innerExpr, env, { style })}`;
     }
     const inner = args.map(a => exprToHuman(session, a, env, { style })).join(' ');
     return `NOT (${inner})`;
+  }
+
+  // Parseable implies statement: `implies <antecedent> <consequent>`
+  if (style === 'parseable' && op === 'implies' && args.length === 2) {
+    // If it's a simple propositional edge `implies P Q`, treat as a normal binary relation.
+    const isAtomic = (x) => x && typeof x === 'object' && (x.type === 'Identifier' || x.type === 'Hole' || x.type === 'Literal');
+    if (isAtomic(args[0]) && isAtomic(args[1])) {
+      // Fall through to the generic relation renderer.
+    } else {
+    const resolve = (expr) => {
+      if (expr?.type === 'Reference') return env?.get?.(expr.name) || expr;
+      return expr;
+    };
+    const antExpr = resolve(args[0]);
+    const consExpr = resolve(args[1]);
+
+    const isAndOr = (x) => {
+      const node = x && typeof x === 'object' ? x : null;
+      const o = node?.type === 'Statement' ? operatorName(node.operator) : operatorName(node?.operator);
+      return o === 'And' || o === 'Or';
+    };
+
+    // If antecedent is an And/Or, prefer `implies (A) AND (B) C` form (supported by NL patterns).
+    if (isAndOr(antExpr) && Array.isArray(antExpr.args) && antExpr.args.length === 2) {
+      const left = exprToHuman(session, antExpr.args[0], env, { style });
+      const right = exprToHuman(session, antExpr.args[1], env, { style });
+      const cons = exprToHuman(session, consExpr, env, { style });
+      const join = operatorName(antExpr.operator) === 'Or' ? ' OR ' : ' AND ';
+      return `implies (${left})${join}(${right}) ${cons}`.trim();
+    }
+
+    const ant = exprToHuman(session, antExpr, env, { style });
+    const cons = exprToHuman(session, consExpr, env, { style });
+    return `implies (${ant}) ${cons}`.trim();
+    }
   }
 
   if ((op === 'And' || op === 'Or') && args.length > 0) {

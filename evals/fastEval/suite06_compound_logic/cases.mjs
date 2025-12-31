@@ -43,7 +43,7 @@ export const steps = [
       @guiltConc isGuilty ?x
       Implies $guiltAnd2 $guiltConc
     `,
-    expected_nl: 'Learned 25 facts'
+    expected_nl: 'Learned 26 facts'
   },
 
   // === PROVE: 5-step John is guilty (3-way And satisfied) ===

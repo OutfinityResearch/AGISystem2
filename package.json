@@ -8,6 +8,8 @@
     ".": "./src/index.mjs",
     "./core": "./src/core/index.mjs",
     "./util": "./src/util/index.mjs",
+    "./nlp": "./src/nlp/index.mjs",
+    "./nl2dsl": "./src/nlp/nl2dsl.mjs",
     "./parser": "./src/parser/index.mjs",
     "./runtime": "./src/runtime/index.mjs",
     "./reasoning": "./src/reasoning/index.mjs",
@@ -15,6 +17,9 @@
     "./test-lib": "./src/test-lib/index.mjs"
   },
   "scripts": {
+    "kbexplorer": "node KBExplorer/server/index.mjs",
+    "runserver": "node KBExplorer/server/index.mjs",
+    "server": "node KBExplorer/server/index.mjs",
     "tests": "node --test 'tests/**/*.mjs'",
     "unit": "node --test 'tests/unit/**/*.mjs'",
     "deep": "node --test 'tests/integration/**/*.mjs'",

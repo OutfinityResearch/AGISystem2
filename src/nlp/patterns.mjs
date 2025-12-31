@@ -7,6 +7,18 @@
 
 import { capitalizeWord, singularize, normalizeVerb } from './normalizer.mjs';
 
+function normAtom(token, transformer, { singular = false } = {}) {
+  const raw = String(token ?? '');
+  if (transformer?.dslPreserveOperators) return raw;
+  return capitalizeWord(singular ? singularize(raw) : raw);
+}
+
+function normOp(token, transformer) {
+  const raw = String(token ?? '');
+  if (transformer?.dslPreserveOperators) return raw;
+  return normalizeVerb(raw);
+}
+
 /**
  * IS-A patterns: "X is a Y", "Xs are Ys"
  */
@@ -14,19 +26,19 @@ export const isAPatterns = [
   {
     // "A dog is an animal", "The dog is an animal"
     regex: /^(?:(?:a|an|the)\s+)?([$@?]?\w+)\s+(?:is|are)\s+(?:a|an)\s+([$@?]?\w+)$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'isA',
-      subject: capitalizeWord(singularize(match[1])),
-      object: capitalizeWord(singularize(match[2]))
+      subject: normAtom(match[1], t, { singular: true }),
+      object: normAtom(match[2], t, { singular: true })
     })
   },
   {
     // "Dogs are animals"
     regex: /^([$@?]?\w+)s\s+are\s+([$@?]?\w+)s$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'isA',
-      subject: capitalizeWord(singularize(match[1])),
-      object: capitalizeWord(singularize(match[2]))
+      subject: normAtom(match[1], t, { singular: true }),
+      object: normAtom(match[2], t, { singular: true })
     })
   },
   {
@@ -37,10 +49,10 @@ export const isAPatterns = [
       const obj = match[2];
       return /^[a-z]/.test(obj) || /^[A-Z][a-z]+$/.test(obj);
     },
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'isA',
-      subject: capitalizeWord(match[1]),
-      object: capitalizeWord(match[2])
+      subject: normAtom(match[1], t),
+      object: normAtom(match[2], t)
     })
   }
 ];
@@ -57,6 +69,9 @@ const EXACT_SVO_OPERATOR_ALLOWLIST = new Set([
   'knows',
   'seating',
   'orbits',
+  'plan',
+  'alias',
+  'synonym',
   'analogy',
   'difference',
   'bundle',
@@ -83,11 +98,11 @@ export const exactSvoPatterns = [
       if (['is', 'are', 'was', 'were', 'a', 'an', 'the'].includes(lower)) return false;
       return /[A-Z]/.test(verb) || EXACT_SVO_OPERATOR_ALLOWLIST.has(lower);
     },
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'binary',
       operator: match[2],
-      subject: capitalizeWord(match[1]),
-      object: capitalizeWord(match[3])
+      subject: normAtom(match[1], t),
+      object: normAtom(match[3], t)
     })
   }
 ];
@@ -147,7 +162,10 @@ export const exactPrefixNaryPatterns = [
 ];
 
 const EXACT_UNARY_OPERATOR_ALLOWLIST = new Set([
-  'observed'
+  'observed',
+  'holds',
+  'safe',
+  'unsafe'
 ]);
 
 export const exactUnaryPatterns = [
@@ -160,10 +178,10 @@ export const exactUnaryPatterns = [
       if (['is', 'are', 'was', 'were'].includes(lower)) return false;
       return /[A-Z]/.test(op) || EXACT_UNARY_OPERATOR_ALLOWLIST.has(lower);
     },
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'unary',
       operator: match[2],
-      subject: capitalizeWord(match[1])
+      subject: normAtom(match[1], t)
     })
   }
 ];
@@ -177,11 +195,11 @@ export const svoPatterns = [
       const verb = match[2].toLowerCase();
       return !['is', 'are', 'was', 'were', 'a', 'an', 'the'].includes(verb);
     },
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'binary',
-      operator: normalizeVerb(match[2]),
-      subject: capitalizeWord(match[1]),
-      object: capitalizeWord(match[3])
+      operator: normOp(match[2], t),
+      subject: normAtom(match[1], t),
+      object: normAtom(match[3], t)
     })
   }
 ];
@@ -193,39 +211,39 @@ export const svioPatterns = [
   {
     // "Alice gave Bob a book", "John told Mary a story"
     regex: /^(?:the\s+)?([$@?]?\w+)\s+(gave|sent|told|showed|taught|offered|brought|handed|passed|threw)\s+([$@?]?\w+)\s+(?:a\s+)?(?:the\s+)?([$@?]?\w+)$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'ternary',
-      operator: normalizeVerb(match[2]),
+      operator: normOp(match[2], t),
       args: [
-        capitalizeWord(match[1]),
-        capitalizeWord(match[3]),
-        capitalizeWord(match[4])
+        normAtom(match[1], t),
+        normAtom(match[3], t),
+        normAtom(match[4], t)
       ]
     })
   },
   {
     // "John sells cars to Mary", "Alice gave a book to Bob"
     regex: /^(?:the\s+)?([$@?]?\w+)\s+(\w+(?:s|ed)?)\s+(?:a\s+)?(?:the\s+)?([$@?]?\w+)\s+to\s+([$@?]?\w+)$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'ternary',
-      operator: normalizeVerb(match[2]),
+      operator: normOp(match[2], t),
       args: [
-        capitalizeWord(match[1]),
-        capitalizeWord(match[3]),
-        capitalizeWord(match[4])
+        normAtom(match[1], t),
+        normAtom(match[3], t),
+        normAtom(match[4], t)
       ]
     })
   },
   {
     // "Alice bought a book from Bob"
     regex: /^(?:the\s+)?([$@?]?\w+)\s+(bought|received|got|obtained)\s+(?:a\s+)?(?:the\s+)?([$@?]?\w+)\s+from\s+([$@?]?\w+)$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'ternary',
-      operator: normalizeVerb(match[2]),
+      operator: normOp(match[2], t),
       args: [
-        capitalizeWord(match[1]),
-        capitalizeWord(match[3]),
-        capitalizeWord(match[4])
+        normAtom(match[1], t),
+        normAtom(match[3], t),
+        normAtom(match[4], t)
       ]
     })
   }
@@ -238,9 +256,9 @@ export const propertyPatterns = [
   {
     // "The sky is blue", "Roses are red"
     regex: /^(?:the\s+)?([$@?]?\w+)s?\s+(?:is|are)\s+(red|blue|green|yellow|black|white|big|small|tall|short|fast|slow|hot|cold|old|new|good|bad|happy|sad|young|beautiful|ugly|rich|poor|smart|stupid|strong|weak)$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'property',
-      subject: capitalizeWord(singularize(match[1])),
+      subject: normAtom(match[1], t, { singular: true }),
       property: match[2].toLowerCase()
     })
   }
@@ -253,58 +271,58 @@ export const universalPatterns = [
   {
     // "All humans are mortal"
     regex: /^all\s+(\w+)s?\s+are\s+(\w+)s?$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'rule',
       ruleType: 'universal',
       variable: '?x',
       antecedent: {
         type: 'isA',
         subject: '?x',
-        object: capitalizeWord(singularize(match[1]))
+        object: normAtom(match[1], t, { singular: true })
       },
       consequent: {
         type: 'isA',
         subject: '?x',
-        object: capitalizeWord(singularize(match[2]))
+        object: normAtom(match[2], t, { singular: true })
       }
     })
   },
   {
     // "Every dog is an animal"
     regex: /^every\s+(\w+)\s+is\s+(?:a|an)\s+(\w+)$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'rule',
       ruleType: 'universal',
       variable: '?x',
       antecedent: {
         type: 'isA',
         subject: '?x',
-        object: capitalizeWord(match[1])
+        object: normAtom(match[1], t)
       },
       consequent: {
         type: 'isA',
         subject: '?x',
-        object: capitalizeWord(match[2])
+        object: normAtom(match[2], t)
       }
     })
   },
   {
     // "Each student has a teacher"
     regex: /^each\s+(\w+)\s+(\w+)s?\s+(?:a\s+)?(\w+)$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'rule',
       ruleType: 'universal',
       variable: '?x',
       antecedent: {
         type: 'isA',
         subject: '?x',
-        object: capitalizeWord(match[1])
+        object: normAtom(match[1], t)
       },
       consequent: {
         type: 'binary',
-        operator: normalizeVerb(match[2]),
+        operator: normOp(match[2], t),
         subject: '?x',
-        object: capitalizeWord(match[3])
+        object: normAtom(match[3], t)
       }
     })
   }
@@ -317,19 +335,19 @@ export const conditionalPatterns = [
   {
     // "If X is Y then X is Z"
     regex: /^if\s+([$@?]?\w+)\s+is\s+(?:a\s+)?([$@?]?\w+)\s+then\s+\1\s+is\s+(?:a\s+)?([$@?]?\w+)$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'rule',
       ruleType: 'conditional',
       variable: '?x',
       antecedent: {
         type: 'isA',
         subject: '?x',
-        object: capitalizeWord(match[2])
+        object: normAtom(match[2], t)
       },
       consequent: {
         type: 'isA',
         subject: '?x',
-        object: capitalizeWord(match[3])
+        object: normAtom(match[3], t)
       }
     })
   },
@@ -381,6 +399,22 @@ export const impliesMacroPatterns = [
 ];
 
 /**
+ * Quantifiers (DSL-ish)
+ * These exist primarily to support suite-generated NL roundtrips.
+ */
+export const existsPatterns = [
+  {
+    // "Exists ?x (A) AND (B)" / "Exists ?x A"
+    regex: /^exists\s+(\?[A-Za-z_][A-Za-z0-9_]*)\s+(.+)$/i,
+    extract: (match) => ({
+      type: 'exists-raw',
+      variable: match[1],
+      bodyRaw: String(match[2] || '').trim()
+    })
+  }
+];
+
+/**
  * Compound clause patterns: "A and B", "A or B"
  * Used mainly inside conditional antecedents/consequents.
  */
@@ -404,38 +438,38 @@ export const negationPatterns = [
   {
     // "Opus cannot fly"
     regex: /^([$@?]?\w+)\s+cannot\s+(\w+)$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'negation',
       negated: {
         type: 'binary',
         operator: 'can',
-        subject: capitalizeWord(match[1]),
-        object: capitalizeWord(match[2])
+        subject: normAtom(match[1], t),
+        object: normAtom(match[2], t)
       }
     })
   },
   {
     // "John does not love Mary"
     regex: /^([$@?]?\w+)\s+(?:does\s+not|doesn't)\s+(\w+)\s+([$@?]?\w+)$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'negation',
       negated: {
         type: 'binary',
-        operator: /[A-Z]/.test(match[2]) ? match[2] : normalizeVerb(match[2]),
-        subject: capitalizeWord(match[1]),
-        object: capitalizeWord(match[3])
+        operator: t?.dslPreserveOperators ? String(match[2]) : (/[A-Z]/.test(match[2]) ? match[2] : normalizeVerb(match[2])),
+        subject: normAtom(match[1], t),
+        object: normAtom(match[3], t)
       }
     })
   },
   {
     // "Dogs do not fly", "Cats don't bark"
     regex: /^([$@?]?\w+)s?\s+(?:do\s+not|don't)\s+(\w+)$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'negation',
       negated: {
         type: 'unary',
-        operator: normalizeVerb(match[2]),
-        subject: capitalizeWord(singularize(match[1]))
+        operator: normOp(match[2], t),
+        subject: normAtom(match[1], t, { singular: true })
       }
     })
   },
@@ -450,12 +484,12 @@ export const negationPatterns = [
   {
     // "X is not Y"
     regex: /^([$@?]?\w+)\s+is\s+not\s+(?:a\s+)?([$@?]?\w+)$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'negation',
       negated: {
         type: 'isA',
-        subject: capitalizeWord(match[1]),
-        object: capitalizeWord(match[2])
+        subject: normAtom(match[1], t),
+        object: normAtom(match[2], t)
       }
     })
   }
@@ -468,11 +502,11 @@ export const abilityPatterns = [
   {
     // "Tweety can fly"
     regex: /^([$@?]?\w+)\s+can\s+(\w+)$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'binary',
       operator: 'can',
-      subject: capitalizeWord(match[1]),
-      object: capitalizeWord(match[2])
+      subject: normAtom(match[1], t),
+      object: normAtom(match[2], t)
     })
   }
 ];
@@ -484,21 +518,21 @@ export const locationPatterns = [
   {
     // "Paris is in France"
     regex: /^([$@?]?\w+)\s+is\s+in\s+([$@?]?\w+)$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'binary',
       operator: 'locatedIn',
-      subject: capitalizeWord(match[1]),
-      object: capitalizeWord(match[2])
+      subject: normAtom(match[1], t),
+      object: normAtom(match[2], t)
     })
   },
   {
     // "The store is located in Paris"
     regex: /^(?:the\s+)?([$@?]?\w+)\s+is\s+located\s+in\s+([$@?]?\w+)$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'binary',
       operator: 'locatedIn',
-      subject: capitalizeWord(match[1]),
-      object: capitalizeWord(match[2])
+      subject: normAtom(match[1], t),
+      object: normAtom(match[2], t)
     })
   }
 ];
@@ -510,21 +544,21 @@ export const ownershipPatterns = [
   {
     // "John has a car", "Alice has money"
     regex: /^([$@?]?\w+)\s+has\s+(?:a\s+)?(?:an\s+)?([$@?]?\w+)$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'binary',
       operator: 'has',
-      subject: capitalizeWord(match[1]),
-      object: capitalizeWord(match[2])
+      subject: normAtom(match[1], t),
+      object: normAtom(match[2], t)
     })
   },
   {
     // "John owns a car"
     regex: /^([$@?]?\w+)\s+owns\s+(?:a\s+)?(?:an\s+)?([$@?]?\w+)$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'binary',
       operator: 'owns',
-      subject: capitalizeWord(match[1]),
-      object: capitalizeWord(match[2])
+      subject: normAtom(match[1], t),
+      object: normAtom(match[2], t)
     })
   }
 ];
@@ -537,19 +571,19 @@ export const queryPatterns = [
   {
     // "What is a bird?"
     regex: /^what\s+(?:is|are)\s+(?:a|an)\s+(\w+)$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'isA',
       subject: '?x',
-      object: capitalizeWord(singularize(match[1]))
+      object: normAtom(match[1], t, { singular: true })
     })
   },
   {
     // "What are birds?"
     regex: /^what\s+are\s+(\w+)s?$/i,
-    extract: (match) => ({
+    extract: (match, t) => ({
       type: 'isA',
       subject: '?x',
-      object: capitalizeWord(singularize(match[1]))
+      object: normAtom(match[1], t, { singular: true })
     })
   }
 ];
@@ -559,6 +593,7 @@ export const queryPatterns = [
  */
 export const patterns = {
   impliesMacro: impliesMacroPatterns,
+  exists: existsPatterns,
   negation: negationPatterns,
   conditional: conditionalPatterns,
   universal: universalPatterns,
@@ -582,6 +617,7 @@ export const patterns = {
  */
 export const patternPriority = [
   'impliesMacro',
+  'exists',
   'exactPrefixNary',
   'negation',
   'conditional',

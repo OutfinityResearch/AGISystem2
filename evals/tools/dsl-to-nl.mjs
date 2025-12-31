@@ -2,15 +2,15 @@
  * DSL → English renderer (script-level)
  *
  * Examples:
- *   node evals/runDslToNl.mjs --file=evals/fastEval/suite01_foundations/cases.mjs
- *   node evals/runDslToNl.mjs --file=config/Core/00-relations.sys2
- *   cat some.sys2 | node evals/runDslToNl.mjs
+ *   node evals/tools/dsl-to-nl.mjs --file=evals/fastEval/suite01_foundations/cases.mjs
+ *   node evals/tools/dsl-to-nl.mjs --file=config/Core/00-relations.sys2
+ *   cat some.sys2 | node evals/tools/dsl-to-nl.mjs
  */
 
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { Session } from '../src/runtime/session.mjs';
+import { Session } from '../../src/runtime/session.mjs';
 
 function parseArgs(argv) {
   const args = argv.slice(2);
@@ -44,7 +44,7 @@ async function main() {
   } else if (!process.stdin.isTTY) {
     dsl = await readStdin();
   } else {
-    console.log('Usage: node evals/runDslToNl.mjs --file=PATH [--include-decls] [--include-meta] [--no-core]');
+    console.log('Usage: node evals/tools/dsl-to-nl.mjs --file=PATH [--include-decls] [--include-meta] [--no-core]');
     process.exit(0);
   }
 
@@ -79,4 +79,3 @@ main().catch(err => {
   console.error(err?.stack || err?.message || String(err));
   process.exit(1);
 });
-

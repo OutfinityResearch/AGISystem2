@@ -116,7 +116,7 @@ export const steps = [
       orbits Planet Sun
       orbits Electron Nucleus
     `,
-    expected_nl: 'Learned 2 facts'
+    expected_nl: 'Learned 3 facts'
   },
 
   {

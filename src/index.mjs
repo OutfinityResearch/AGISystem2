@@ -46,6 +46,9 @@ export { Executor, ExecutionError } from './runtime/executor.mjs';
 export { QueryEngine } from './reasoning/query.mjs';
 export { ProofEngine } from './reasoning/prove.mjs';
 
+// NLP exports
+export { translateNL2DSL, translateExample, resetRefCounter } from './nlp/nl2dsl.mjs';
+
 // Decoding exports
 export { StructuralDecoder } from './decoding/structural-decoder.mjs';
 export { PhrasingEngine } from './decoding/phrasing.mjs';
@@ -56,4 +59,4 @@ export { TestSession, TestError } from './test-lib/test-session.mjs';
 export { Assertions, AssertionError } from './test-lib/assertions.mjs';
 
 // Default export is Session for convenience
-export default Session;
+export { Session as default } from './runtime/session.mjs';

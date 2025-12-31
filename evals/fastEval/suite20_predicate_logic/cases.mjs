@@ -115,7 +115,7 @@ export const steps = [
   // === SETUP 2: Classic syllogism ===
   {
     action: 'learn',
-    input_nl: 'implies ?x is a Human ?x is a Mortal. implies ?x is a Mortal ?x must Die. implies ?x must Die ?x Buried. Socrates is a Human. Plato is a Human. Zeus is not a Mortal. Zeus is a Deity.',
+    input_nl: 'implies (?x is a Human) ?x is a Mortal. implies (?x is a Mortal) ?x must Die. implies (?x must Die) ?x Buried. Socrates is a Human. Plato is a Human. Zeus is not a Mortal. Zeus is a Deity.',
     input_dsl: `
       # Rule: Human implies Mortal
       @h2m1 isA ?x Human
@@ -213,7 +213,7 @@ export const steps = [
   },
   {
     action: 'prove',
-    input_nl: 'NOT ((Exists ?x (And (isA ?x Plant) (isA ?x Mushroom)))).',
+    input_nl: 'It is not true that Exists ?x (?x is a Plant) AND (?x is a Mushroom).',
     input_dsl: '@goal Not (Exists ?x (And (isA ?x Plant) (isA ?x Mushroom)))',
     expected_nl: 'True:',
     proof_nl: 'No Plant can also be Mushroom'
