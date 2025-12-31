@@ -10,6 +10,12 @@ From the repo root:
 node KBExplorer/server/index.mjs
 ```
 
+Or:
+
+```bash
+npm run runserver
+```
+
 Then open:
 
 - `http://127.0.0.1:3311/`

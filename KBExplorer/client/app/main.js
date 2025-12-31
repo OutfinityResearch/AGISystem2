@@ -2,14 +2,13 @@ import { $, must } from './dom.js';
 import { createState } from './state.js';
 import { createApi } from './api.js';
 
-import { wireTabs, setMainTab, setDocsTab } from './ui/tabs.js';
+import { wireTabs, setMainTab } from './ui/tabs.js';
 import { loadConfig, currentSessionOptions, wireConfig } from './ui/config.js';
 import { wireChat, addChatItem } from './ui/chat.js';
 import { wireLoad, setLoadUi } from './ui/load.js';
 import { setKbFactsStat } from './ui/stats.js';
 
 import { buildTree, renderDetails, renderTree, selectedNode } from './kb/tree.js';
-import { openSelectedDefinition } from './kb/actions.js';
 
 function debounce(fn, ms) {
   let t = null;
@@ -25,10 +24,12 @@ export async function bootstrap() {
   must('kbFactsStat');
   must('tabChat');
   must('tabKB');
-  must('tabDocs');
+  must('tabDsl');
+  must('tabNl');
   must('panelChat');
   must('panelKB');
-  must('panelDocs');
+  must('panelDsl');
+  must('panelNl');
   must('sendBtn');
   must('textInput');
   must('loadBtn');
@@ -54,33 +55,19 @@ export async function bootstrap() {
     updateSessionLabel();
   }
 
-  async function refreshFacts() {
-    const params = new URLSearchParams();
-    const q = String(state.kb.q || '').trim();
-    if (q) params.set('q', q);
-    params.set('offset', String(state.kb.offset));
-    params.set('limit', String(state.kb.limit));
-    params.set('namedOnly', state.kb.namedOnly ? '1' : '0');
-    params.set('namedFirst', '1');
+  async function refreshSessionStats() {
+    const res = await api('/api/session/stats');
+    state.kb.kbFactCount = res.kbFactCount ?? state.kb.kbFactCount;
+    state.kb.graphCount = res.graphCount ?? state.kb.graphCount;
+    state.kb.vocabCount = res.vocabCount ?? state.kb.vocabCount;
+    state.kb.scopeCount = res.scopeCount ?? state.kb.scopeCount;
+    setKbFactsStat(ctx, state.kb.kbFactCount);
+    $('factCount').textContent =
+      `KB=${state.kb.kbFactCount} • graphs=${state.kb.graphCount} • vocab=${state.kb.vocabCount} • scope=${state.kb.scopeCount}`;
+  }
 
-    const res = await api(`/api/kb/facts?${params.toString()}`);
-    state.kb.total = res.total ?? 0;
-    state.kb.offset = res.offset ?? 0;
-    state.kb.limit = res.limit ?? state.kb.limit;
-    state.kb.facts = res.facts || [];
-    setKbFactsStat(ctx, res.kbFactCount);
-
-    const kbCount = typeof res.kbFactCount === 'number' ? res.kbFactCount : null;
-    $('factCount').textContent = kbCount === null
-      ? `${state.kb.total} total`
-      : `${state.kb.total} total (KB=${kbCount})`;
-
-    const start = state.kb.total ? (state.kb.offset + 1) : 0;
-    const end = state.kb.offset + state.kb.facts.length;
-    $('factsPageLabel').textContent = state.kb.total ? `${start}-${end} of ${state.kb.total}` : '0';
-    $('factsPrevBtn').disabled = state.kb.offset <= 0;
-    $('factsNextBtn').disabled = (state.kb.offset + state.kb.limit) >= state.kb.total;
-
+  async function refreshExplorer() {
+    await refreshSessionStats();
     buildTree({ state });
     renderTree(ctx);
     renderDetails(ctx, selectedNode({ state }));
@@ -90,26 +77,25 @@ export async function bootstrap() {
   wireTabs(ctx);
   loadConfig(ctx);
   setMainTab(ctx, 'chat');
-  setDocsTab(ctx, 'dsl');
   setLoadUi({ $, state }, { loading: false });
 
   // Header controls
   $('newSessionBtn').addEventListener('click', async () => {
     await ensureSession();
     $('chat').innerHTML = '';
-    state.kb.offset = 0;
+    state.kb.kbOffset = 0;
     state.kb.pinnedFactIds = [];
     state.kb.selectedNodeId = null;
-    await refreshFacts();
+    await refreshExplorer();
     addChatItem({ $, who: 'system', text: 'New session created.' });
   });
   $('resetSessionBtn').addEventListener('click', async () => {
     await resetSession();
     $('chat').innerHTML = '';
-    state.kb.offset = 0;
+    state.kb.kbOffset = 0;
     state.kb.pinnedFactIds = [];
     state.kb.selectedNodeId = null;
-    await refreshFacts();
+    await refreshExplorer();
     addChatItem({ $, who: 'system', text: 'Session reset.' });
   });
 
@@ -117,10 +103,10 @@ export async function bootstrap() {
     onRestartSession: async () => {
       await ensureSession();
       $('chat').innerHTML = '';
-      state.kb.offset = 0;
+      state.kb.kbOffset = 0;
       state.kb.pinnedFactIds = [];
       state.kb.selectedNodeId = null;
-      await refreshFacts();
+      await refreshExplorer();
     }
   });
 
@@ -128,41 +114,35 @@ export async function bootstrap() {
   $('namedOnlyToggle').checked = !!state.kb.namedOnly;
   $('namedOnlyToggle').addEventListener('change', async () => {
     state.kb.namedOnly = !!$('namedOnlyToggle').checked;
-    state.kb.offset = 0;
+    state.kb.kbOffset = 0;
     state.kb.pinnedFactIds = [];
     state.kb.selectedNodeId = null;
-    await refreshFacts();
+    await refreshExplorer();
   });
 
   $('factFilter').addEventListener('input', debounce(async () => {
     state.kb.q = $('factFilter').value || '';
-    state.kb.offset = 0;
-    await refreshFacts();
+    state.kb.kbOffset = 0;
+    state.kb.graphOffset = 0;
+    state.kb.scopeOffset = 0;
+    for (const k of Object.keys(state.kb.vocab || {})) {
+      state.kb.vocab[k].offset = 0;
+    }
+    await refreshExplorer();
   }, 250));
 
-  $('refreshFactsBtn').addEventListener('click', refreshFacts);
-  $('factsPrevBtn').addEventListener('click', async () => {
-    state.kb.offset = Math.max(0, state.kb.offset - state.kb.limit);
-    await refreshFacts();
-  });
-  $('factsNextBtn').addEventListener('click', async () => {
-    state.kb.offset = state.kb.offset + state.kb.limit;
-    await refreshFacts();
-  });
-
-  $('openDefinitionBtn').addEventListener('click', () => openSelectedDefinition(ctx));
+  $('refreshFactsBtn').addEventListener('click', refreshExplorer);
 
   // Chat + Load
-  wireChat(ctx, { refreshFacts });
-  wireLoad(ctx, { refreshFacts });
+  wireChat(ctx, { refreshExplorer });
+  wireLoad(ctx, { refreshExplorer });
 
   // Initial session
   await ensureSession();
-  await refreshFacts();
+  await refreshExplorer();
   addChatItem({
     $,
     who: 'system',
-    text: 'Ready. Tip: Enter sends; Ctrl+Enter inserts a newline. Use “learn” to add facts, then “query” or “prove”.'
+    text: 'Ready. Tip: Enter sends; Ctrl+Enter inserts a newline. NL parsing is English-oriented; use DSL for non-English input.'
   });
 }
-

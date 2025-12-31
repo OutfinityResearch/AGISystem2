@@ -84,6 +84,34 @@ describe('KBExplorer server (smoke)', () => {
     assert.ok(Array.isArray(bundleRes.json.bundle.items));
   });
 
+  test('lists graphs and fetches graph details', async (t) => {
+    if (listenError) {
+      t.skip(`Socket listen is not permitted in this environment (${listenError.code || 'ERR'}).`);
+      return;
+    }
+    const c = makeClient(baseUrl);
+
+    const newRes = await c.json('/api/session/new', {
+      method: 'POST',
+      body: { sessionOptions: { hdcStrategy: 'dense-binary', reasoningPriority: 'symbolicPriority' } }
+    });
+    const sessionId = newRes.json.sessionId;
+
+    const listRes = await c.json('/api/graphs?limit=50', { sessionId });
+    assert.equal(listRes.status, 200);
+    assert.equal(listRes.json.ok, true);
+    assert.ok(Array.isArray(listRes.json.graphs));
+    assert.ok(listRes.json.graphs.length > 0);
+
+    // Core always defines at least some graphs (e.g., __Role).
+    const name = listRes.json.graphs.find(g => g.name === '__Role')?.name || listRes.json.graphs[0].name;
+    const detailRes = await c.json(`/api/graphs/${encodeURIComponent(name)}`, { sessionId });
+    assert.equal(detailRes.status, 200);
+    assert.equal(detailRes.json.ok, true);
+    assert.equal(detailRes.json.name, name);
+    assert.ok(String(detailRes.json.graphDsl || '').includes('graph'));
+  });
+
   test('blocks Load/Unload by default', async (t) => {
     if (listenError) {
       t.skip(`Socket listen is not permitted in this environment (${listenError.code || 'ERR'}).`);

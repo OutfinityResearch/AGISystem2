@@ -1,10 +1,25 @@
 import { addChatItem } from './chat.js';
 
+function safeSelectValue(selectEl, preferredValue, fallbackValue) {
+  const v = String(preferredValue || '');
+  if (v && Array.from(selectEl.options || []).some(o => o.value === v)) return v;
+  return fallbackValue;
+}
+
 export function loadConfig({ $, state }) {
-  state.config.hdcStrategy = localStorage.getItem('kbexplorer.hdcStrategy') || 'dense-binary';
-  state.config.reasoningPriority = localStorage.getItem('kbexplorer.reasoningPriority') || 'symbolicPriority';
-  $('strategySelect').value = state.config.hdcStrategy;
-  $('reasoningSelect').value = state.config.reasoningPriority;
+  const defaultStrategy = 'dense-binary';
+  const defaultReasoning = 'symbolicPriority';
+  const storedStrategy = localStorage.getItem('kbexplorer.hdcStrategy');
+  const storedReasoning = localStorage.getItem('kbexplorer.reasoningPriority');
+
+  const strategyEl = $('strategySelect');
+  const reasoningEl = $('reasoningSelect');
+
+  state.config.hdcStrategy = safeSelectValue(strategyEl, storedStrategy, defaultStrategy);
+  state.config.reasoningPriority = safeSelectValue(reasoningEl, storedReasoning, defaultReasoning);
+
+  strategyEl.value = state.config.hdcStrategy;
+  reasoningEl.value = state.config.reasoningPriority;
 }
 
 export function saveConfig({ state }) {
@@ -49,4 +64,3 @@ export function wireConfig(ctx, { onRestartSession }) {
   $('strategySelect').addEventListener('change', async () => applyChange(currentSessionOptions({ $ })));
   $('reasoningSelect').addEventListener('change', async () => applyChange(currentSessionOptions({ $ })));
 }
-

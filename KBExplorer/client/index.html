@@ -37,7 +37,8 @@
         <div class="tabs__bar" role="tablist" aria-label="KBExplorer tabs">
           <button id="tabChat" type="button" class="tab tab--active" role="tab" aria-selected="true">Chat</button>
           <button id="tabKB" type="button" class="tab" role="tab" aria-selected="false">KB Explorer</button>
-          <button id="tabDocs" type="button" class="tab" role="tab" aria-selected="false">Examples</button>
+          <button id="tabDsl" type="button" class="tab" role="tab" aria-selected="false">DSL Examples</button>
+          <button id="tabNl" type="button" class="tab" role="tab" aria-selected="false">NL Examples</button>
         </div>
 
         <div id="panelChat" class="tabs__panel tabs__panel--active" role="tabpanel">
@@ -76,15 +77,23 @@
         <div id="panelKB" class="tabs__panel" role="tabpanel">
           <div class="kb">
             <div class="kb__toolbar">
-              <input id="factFilter" class="kb__search" type="search" placeholder="Search facts..." />
+              <input id="factFilter" class="kb__search" type="search" placeholder="Search session..." />
               <div class="kb__meta">
                 <label class="label">
                   <input id="namedOnlyToggle" type="checkbox" />
-                  Named only
+                  <span title="When enabled, shows only KB facts that were explicitly named (e.g. @:name ...). Anonymous facts are hidden.">Named only</span>
                 </label>
                 <span id="factCount" class="muted"></span>
                 <button id="refreshFactsBtn" type="button" class="btn btn--ghost">Refresh</button>
               </div>
+            </div>
+
+            <div class="kb__legend" aria-label="KB explorer legend">
+              <span class="legend__item"><span class="ico ico--fact">⊕</span>Fact (bundle)</span>
+              <span class="legend__item"><span class="ico ico--bind">⊗</span>Bind (position-tag)</span>
+              <span class="legend__item"><span class="ico ico--verb">V</span>Verb / operator</span>
+              <span class="legend__item"><span class="ico ico--atom">•</span>Atom</span>
+              <span class="legend__item muted">Tip: click any node to see details; expand nodes to browse definitions.</span>
             </div>
 
             <div class="explorer" aria-label="KB filesystem explorer">
@@ -94,73 +103,119 @@
               <div class="explorer__details">
                 <div class="details__header">
                   <div class="details__title">Details</div>
-                  <button id="openDefinitionBtn" type="button" class="btn btn--ghost" disabled>Open definition</button>
                 </div>
                 <div id="kbDetails" class="details" aria-label="Selected node details"></div>
               </div>
             </div>
-
-            <div class="kb__paging">
-              <button id="factsPrevBtn" type="button" class="btn btn--ghost">Prev</button>
-              <span id="factsPageLabel" class="muted"></span>
-              <button id="factsNextBtn" type="button" class="btn btn--ghost">Next</button>
-            </div>
           </div>
         </div>
 
-        <div id="panelDocs" class="tabs__panel" role="tabpanel">
+        <div id="panelDsl" class="tabs__panel" role="tabpanel">
           <div class="docs">
-            <div class="docsTabs" role="tablist" aria-label="Examples tabs">
-              <button id="docsTabDsl" type="button" class="docsTab docsTab--active" role="tab" aria-selected="true">DSL Examples</button>
-              <button id="docsTabNl" type="button" class="docsTab" role="tab" aria-selected="false">NL Examples</button>
-            </div>
+            <h2>DSL Examples</h2>
+            <p class="muted">Use these with Input = <span class="mono">DSL</span>.</p>
 
-            <div id="docsPanelDsl" class="docsPanel docsPanel--active" role="tabpanel">
-              <h2>DSL Examples</h2>
-              <p class="muted">Use these with Input = <span class="mono">DSL</span>.</p>
-
-              <h3>learn (adds facts to KB)</h3>
-              <pre class="code">isA Anne Dog
+            <h3>learn (facts + naming)</h3>
+            <pre class="code"># Anonymous facts (persist to KB)
+isA Anne Dog
 isA Dog Animal
 hasProperty Anne Friendly
-locatedIn Anne Paris</pre>
+in Anne Kitchen
 
-              <h3>query (use ?holes)</h3>
-              <pre class="code">isA Anne ?x
-isA ?x Animal
-locatedIn ?who Paris</pre>
+# Named KB facts (persist under a name)
+@:anneIsDog isA Anne Dog
+@cond isA ?x Dog
+@cons isA ?x Animal
+@:allDogsAreAnimals Implies $cond $cons</pre>
 
-              <h3>prove (true/false + proof)</h3>
-              <pre class="code">isA Anne Dog
+            <h3>query (holes)</h3>
+            <pre class="code">@q1 isA Anne ?x
+@q2 hasProperty ?who Friendly
+@q3 parent Harry ?child</pre>
+
+            <h3>prove (true/false + proof)</h3>
+            <pre class="code">isA Anne Dog
+isA Dog Animal
+@goal isA Anne Animal
 Not (isA Anne Cat)</pre>
 
-              <h3>findAll (pattern scan)</h3>
-              <pre class="code">isA ?x Dog</pre>
-            </div>
+            <h3>solve (planning) inside learn</h3>
+            <pre class="code"># Action model
+at Alice Home
+requires MoveToPark at Alice Home
+causes MoveToPark at Alice Park
+prevents MoveToPark at Alice Home
 
-            <div id="docsPanelNl" class="docsPanel" role="tabpanel">
-              <h2>NL Examples</h2>
-              <p class="muted">Use these with Input = <span class="mono">NL</span>. NL is heuristic/grammar-based and can be ambiguous.</p>
+@goal at Alice Park
+@plan solve planning [
+  (goal goal),
+  (maxDepth 3)
+]</pre>
 
-              <h3>learn</h3>
-              <pre class="code">Anne is a dog.
+            <h3>solve (WeddingSeating) inside learn</h3>
+            <pre class="code">isA Alice Guest
+isA Bob Guest
+isA T1 Table
+isA T2 Table
+conflictsWith Alice Bob
+conflictsWith Bob Alice
+
+@seating solve WeddingSeating [
+  (variablesFrom Guest),
+  (domainFrom Table),
+  (noConflict conflictsWith)
+]</pre>
+
+            <h3>meta-queries (DS17)</h3>
+            <pre class="code"># Setup
+isA Hammer Tool
+has Hammer Handle
+has Hammer Head
+isA Mallet Tool
+has Mallet Handle
+has Mallet Head
+
+# Query similar entities
+@q similar Hammer ?entity</pre>
+          </div>
+        </div>
+
+        <div id="panelNl" class="tabs__panel" role="tabpanel">
+          <div class="docs">
+            <h2>NL Examples</h2>
+            <p class="muted">Use these with Input = <span class="mono">NL</span>. NL is grammar-based and can be ambiguous.</p>
+
+            <h3>learn</h3>
+            <pre class="code">Anne is a dog.
 All dogs are animals.
-Anne is friendly.</pre>
+Mary is in the kitchen.
+Harry is the parent of Jack.
+Anne does not like Bob.</pre>
 
-              <h3>query / prove</h3>
-              <pre class="code">Is Anne an animal?
-Is Anne a cat?</pre>
+            <h3>query / prove</h3>
+            <pre class="code">Is Anne an animal?
+Does Anne not like Bob?
+What is Anne?
+What color is the cat?
+Is there an animal?
+No cats are dogs.</pre>
 
-              <h3>Why “A is B” becomes a rule</h3>
-              <p>
-                In NL, <span class="mono">A</span> is usually an English article (“a”), not an entity name.
-                So the translator may interpret <span class="mono">"A is B"</span> as a generalized pattern and produce rule-shaped DSL:
-              </p>
-              <pre class="code">@cond0 isA ?x I
-@cond1 hasProperty ?x b
-Implies $cond0 $cond1</pre>
-              <p>If you meant literal symbols <span class="mono">A</span> and <span class="mono">B</span>, switch to DSL: <span class="mono">isA A B</span>.</p>
-            </div>
+            <h3>rules</h3>
+            <pre class="code">If someone is a dog, then they are an animal.
+If Harry is the parent of Jack, then Jack is a child.</pre>
+
+            <h3>solve (KBExplorer directives in NL mode)</h3>
+            <p class="muted">These are KBExplorer shortcuts (not generic NL→DSL grammar).</p>
+            <pre class="code">Solve planning: goal: at Alice Park. maxDepth: 3. as: plan
+Solve wedding seating: variables from Guest, domain from Table, noConflict conflictsWith, as seating</pre>
+
+            <h3>Why “A is B” can look strange</h3>
+            <p>
+              In English, <span class="mono">a</span> is usually an article, not an entity name.
+              Prefer proper names (e.g. <span class="mono">Alice is a doctor</span>) or use DSL when you mean literal symbols.
+            </p>
+            <pre class="code"># If you mean literal symbols:
+isA A B</pre>
           </div>
         </div>
       </section>

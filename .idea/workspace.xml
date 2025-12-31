@@ -4,38 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="better documentation, new research directions documented">
-      <change afterPath="$PROJECT_DIR$/KBExplorer/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/KBExplorer/client/app.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/KBExplorer/client/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/KBExplorer/client/styles.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/KBExplorer/server/index.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/KBExplorer/server/server.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS48-KBExplorer.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/tools/dsl-to-nl.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/index-exports.test.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/kbexplorer/server-smoke.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/healthCheck.js" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/healthCheck.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite03_rules/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite03_rules/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite06_compound_logic/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite06_compound_logic/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite15_reasoning_macros/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite15_reasoning_macros/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite20_predicate_logic/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite20_predicate_logic/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite22_deduction/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite22_deduction/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite25_ruletaker_bugs/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite25_ruletaker_bugs/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite27_contrapositive_negation/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite27_contrapositive_negation/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEvalReview.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEvalSupportedNL_suite27.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/runDslToNl.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/runFastEvalNLTranslate.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/runFastEvalReview.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/runFastEvalSupportedNL.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/nlp/index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/index.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/nlp/patterns.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/patterns.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/nlp/transformer.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/transformer.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/dsl-to-nl.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/dsl-to-nl.mjs" afterDir="false" />
+    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="wip  KB explorer tool for demos and visual inspection of the system during research">
+      <change beforePath="$PROJECT_DIR$/KBExplorer/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/kb/actions.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/kb/tree.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/kb/tree.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/state.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/state.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/ui/chat.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/ui/chat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/ui/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/ui/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/ui/load.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/ui/load.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/ui/tabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/ui/tabs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KBExplorer/client/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KBExplorer/client/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KBExplorer/server/server.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/server/server.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Core/04a-numeric.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/04a-numeric.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Core/15-stress-compat.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/15-stress-compat.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS48-KBExplorer.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS48-KBExplorer.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/domains/Math/01-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/domains/Math/01-relations.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nlp/normalizer.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/normalizer.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/kbexplorer/server-smoke.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/kbexplorer/server-smoke.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -155,23 +142,7 @@
       <workItem from="1766650266623" duration="6940000" />
       <workItem from="1767005469743" duration="10476000" />
       <workItem from="1767083849618" duration="20002000" />
-      <workItem from="1767176590511" duration="1314000" />
-    </task>
-    <task id="LOCAL-00053" summary="new approach for val suite, trying to improve teh deft theories, doing various experiemnts to improve and generalise the reasoning engines">
-      <option name="closed" value="true" />
-      <created>1766411694087</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1766411694087</updated>
-    </task>
-    <task id="LOCAL-00054" summary="new approach for val suite, trying to improve the default theories, doing various experiemnts to improve and generalise the reasoning engines.fixed an issue in teh evals loding for the alternative HDC strategies">
-      <option name="closed" value="true" />
-      <created>1766415079772</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1766415079772</updated>
+      <workItem from="1767176590511" duration="2118000" />
     </task>
     <task id="LOCAL-00055" summary="wip to create better semantic unification of theories and concepts even when defined with different defeinitions">
       <option name="closed" value="true" />
@@ -549,7 +520,23 @@
       <option name="project" value="LOCAL" />
       <updated>1767136523436</updated>
     </task>
-    <option name="localTasksCounter" value="102" />
+    <task id="LOCAL-00102" summary="cleanimng in teh fast eval suites, healt check, started a KB explorer toolfor demos and visual inspection of the system during research">
+      <option name="closed" value="true" />
+      <created>1767185384499</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1767185384499</updated>
+    </task>
+    <task id="LOCAL-00103" summary="wip  KB explorer tool for demos and visual inspection of the system during research">
+      <option name="closed" value="true" />
+      <created>1767185539082</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1767185539082</updated>
+    </task>
+    <option name="localTasksCounter" value="104" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -568,8 +555,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="prearing to add new reasoning methods" />
-    <MESSAGE value="slowly trying to get back the evaluation suite do pass after introducing new reasonign capabilities" />
     <MESSAGE value="working to refactor the resonign engine for deeper semantic unification to make use of HDC properties better. wip" />
     <MESSAGE value="working to refactor the reasoning engine for deeper semantic unification to make use of HDC properties better. wip" />
     <MESSAGE value="added git ignore" />
@@ -593,6 +578,8 @@
     <MESSAGE value="better docuementation, overview of the planned research, wip. started to run the autidiscovery agent  stuff from the external benchmark suites" />
     <MESSAGE value="better documentation, new research directions" />
     <MESSAGE value="better documentation, new research directions documented" />
-    <option name="LAST_COMMIT_MESSAGE" value="better documentation, new research directions documented" />
+    <MESSAGE value="cleanimng in teh fast eval suites, healt check, started a KB explorer toolfor demos and visual inspection of the system during research" />
+    <MESSAGE value="wip  KB explorer tool for demos and visual inspection of the system during research" />
+    <option name="LAST_COMMIT_MESSAGE" value="wip  KB explorer tool for demos and visual inspection of the system during research" />
   </component>
 </project>

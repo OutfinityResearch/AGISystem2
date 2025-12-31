@@ -14,7 +14,7 @@ export function cancelLoad({ $, state }) {
   $('theoryFile').value = '';
 }
 
-export async function loadFiles(ctx, files, { refreshFacts }) {
+export async function loadFiles(ctx, files, { refreshExplorer }) {
   const { $, state } = ctx;
   const list = Array.from(files || []);
   if (list.length === 0) return;
@@ -50,7 +50,7 @@ export async function loadFiles(ctx, files, { refreshFacts }) {
     }
 
     addChatItem({ $, who: 'system', text: 'Load complete.', meta: 'learn' });
-    await refreshFacts();
+    if (refreshExplorer) await refreshExplorer();
   } catch (e) {
     addChatItem({ $, who: 'system', text: e?.message || String(e), isError: true });
   } finally {
@@ -60,10 +60,9 @@ export async function loadFiles(ctx, files, { refreshFacts }) {
   }
 }
 
-export function wireLoad(ctx, { refreshFacts }) {
+export function wireLoad(ctx, { refreshExplorer }) {
   const { $ } = ctx;
   $('loadBtn').addEventListener('click', () => $('theoryFile').click());
   $('cancelLoadBtn').addEventListener('click', () => cancelLoad(ctx));
-  $('theoryFile').addEventListener('change', async () => loadFiles(ctx, $('theoryFile').files, { refreshFacts }));
+  $('theoryFile').addEventListener('change', async () => loadFiles(ctx, $('theoryFile').files, { refreshExplorer }));
 }
-

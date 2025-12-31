@@ -20,7 +20,7 @@ export function addChatItem({ $, who, text, dsl = null, meta = null, isError = f
   $('chat').scrollTop = $('chat').scrollHeight;
 }
 
-export function wireChat(ctx, { refreshFacts }) {
+export function wireChat(ctx, { refreshExplorer }) {
   const { $, api, state } = ctx;
 
   async function sendCommand() {
@@ -42,15 +42,20 @@ export function wireChat(ctx, { refreshFacts }) {
       }
 
       const dsl = res.dsl && inputMode === 'nl' ? res.dsl : null;
+      const rendered = (() => {
+        const t = String(res.rendered || '').trim();
+        if (t === 'No results' && dsl) return 'No results (translated DSL shown below).';
+        return t || '(no rendered output)';
+      })();
       addChatItem({
         $,
         who: 'system',
-        text: res.rendered || '(no rendered output)',
+        text: rendered,
         dsl,
         meta: `facts=${res.dump?.factCount ?? '?'}`
       });
       setKbFactsStat({ $, state }, res.dump?.factCount);
-      await refreshFacts();
+      if (refreshExplorer) await refreshExplorer();
     } catch (e) {
       addChatItem({ $, who: 'system', text: e?.message || String(e), isError: true });
     }
@@ -80,4 +85,3 @@ export function wireChat(ctx, { refreshFacts }) {
     sendCommand();
   });
 }
-

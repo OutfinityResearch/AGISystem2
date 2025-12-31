@@ -132,9 +132,10 @@ export function capitalizeWord(word) {
   if (/^\$[A-Za-z_][A-Za-z0-9_]*$/.test(s)) return s;
   if (/^__.*__$/.test(s)) return s;
 
-  // Preserve ALLCAPS identifier-like tokens (e.g., "ID", "DNA", "USA").
-  // These are often meaningful symbols and should not be downcased to "Id"/"Dna".
-  if (s.length >= 2 && s.toUpperCase() === s && /^[A-Z0-9_]+$/.test(s)) return s;
+  // Preserve short ALLCAPS acronyms (e.g., "ID", "DNA", "HTTP", "UUID") and
+  // identifier-like ALLCAPS tokens that contain digits/underscores.
+  const isAllCaps = s.length >= 2 && s.toUpperCase() === s && /^[A-Z0-9_]+$/.test(s);
+  if (isAllCaps && (s.length <= 4 || s.includes('_') || /\d/.test(s))) return s;
 
   const first = s.charAt(0);
   const rest = s.slice(1);
@@ -272,8 +273,7 @@ export function normalizeVerb(verb) {
   // Irregular verbs (common ones)
   const irregulars = {
     'is': 'be', 'are': 'be', 'was': 'be', 'were': 'be', 'been': 'be', 'am': 'be',
-    // In AGISystem2 DSL, `has` is a first-class relation name (we keep it as-is).
-    'has': 'has', 'had': 'has',
+    'has': 'have', 'had': 'have',
     'does': 'do', 'did': 'do',
     'goes': 'go', 'went': 'go', 'gone': 'go',
     'says': 'say', 'said': 'say',

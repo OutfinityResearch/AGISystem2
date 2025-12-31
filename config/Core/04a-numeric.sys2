@@ -15,8 +15,6 @@
 
 @Addition:Addition ___NewVector "Addition" "Core"
 @Subtraction:Subtraction ___NewVector "Subtraction" "Core"
-@Multiplication:Multiplication ___NewVector "Multiplication" "Core"
-@Division:Division ___NewVector "Division" "Core"
 
 # ===== Comparison Operators =====
 
@@ -82,24 +80,6 @@ end
     @operandA __Role Operand $a
     @operandB __Role Operand $b
     @operationType __Role Operation Subtraction
-    @result __Bundle $operandA $operandB $operationType
-    return $result
-end
-
-@Multiply:Multiply graph a b
-    # Multiplication: a * b
-    @operandA __Role Operand $a
-    @operandB __Role Operand $b
-    @operationType __Role Operation Multiplication
-    @result __Bundle $operandA $operandB $operationType
-    return $result
-end
-
-@Divide:Divide graph a b
-    # Division: a / b
-    @operandA __Role Operand $a
-    @operandB __Role Operand $b
-    @operationType __Role Operation Division
     @result __Bundle $operandA $operandB $operationType
     return $result
 end

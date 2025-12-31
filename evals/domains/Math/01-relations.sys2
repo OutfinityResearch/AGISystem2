@@ -89,7 +89,28 @@ end
 end
 
 # ===== Ordering / Arithmetic =====
-# Delegate numeric reasoning to Core numeric operators.
+# Provide minimal arithmetic graphs for this domain.
+
+@Multiplication:Multiplication ___NewVector "Multiplication" "Math"
+@Division:Division ___NewVector "Division" "Math"
+
+@Multiply:Multiply graph a b
+    # Multiplication: a * b (symbolic placeholder for Math domain)
+    @operandA __Role Operand $a
+    @operandB __Role Operand $b
+    @operationType __Role Operation Multiplication
+    @result __Bundle $operandA $operandB $operationType
+    return $result
+end
+
+@Divide:Divide graph a b
+    # Division: a / b (symbolic placeholder for Math domain)
+    @operandA __Role Operand $a
+    @operandB __Role Operand $b
+    @operationType __Role Operation Division
+    @result __Bundle $operandA $operandB $operationType
+    return $result
+end
 
 @lessThan:lessThan graph a b
     @result LessThan $a $b

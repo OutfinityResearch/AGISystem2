@@ -260,13 +260,6 @@ end
     return $result
 end
 
-# ===== Numeric alias =====
-
-@mult:mult graph a b
-    @result Multiply $a $b
-    return $result
-end
-
 @equal:equal graph a b
     @result equals $a $b
     return $result
