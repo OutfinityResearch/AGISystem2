@@ -1,4 +1,4 @@
-# Spec: config/Core/09-roles.sys2
+# Spec: `config/Packs/Bootstrap/09-roles.sys2`
 
 ## Purpose
 Defines the semantic role relations that annotate events (Agent, Theme, Source, Goal, etc.), linking DS07f (Roles & Properties) with structural macros.  By declaring these roles, macros like `_ptrans` can reference them without recreating vectors.

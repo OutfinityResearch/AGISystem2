@@ -9,7 +9,7 @@
 export const name = 'Deduction';
 export const description = 'Forward-chaining deduction through complex theories and rule chains';
 
-export const theories = ['05-logic.sys2', 'Biology/01-relations.sys2'];
+export const theories = ['Biology/01-relations.sys2'];
 
 export const steps = [
   // === SETUP: Complex Economic Theory with Rules ===

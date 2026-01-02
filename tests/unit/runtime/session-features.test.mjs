@@ -16,7 +16,8 @@ describe('Session Features', () => {
 
       const result = session.prove('@goal isA Socrates Philosopher');
       assert.equal(result.valid, true);
-      assert.equal(result.method, 'direct');
+      // Direct matches may be proven via raw fact string or structured metadata fastpath.
+      assert.ok(['direct', 'direct_metadata'].includes(result.method));
     });
 
     test('should prove 2-step transitive chain', () => {
@@ -84,20 +85,20 @@ describe('Session Features', () => {
       const initialFacts = session.kbFacts.length;
 
       // Use an existing core theory file
-      session.learn('@_ Load "./config/Core/00-types.sys2"');
+      session.learn('@_ Load "./config/Packs/Bootstrap/00-types.sys2"');
 
       // Core types may not add KB facts (they define types), so check scope or no error
       // This test verifies Load command works without throwing
-      assert.ok(session.loadedFiles && session.loadedFiles.has('./config/Core/00-types.sys2') || true, 'should load without error');
+      assert.ok(session.loadedFiles && session.loadedFiles.has('./config/Packs/Bootstrap/00-types.sys2') || true, 'should load without error');
     });
 
     test('should not double-load same file', () => {
       const session = new Session({ geometry: 2048 });
 
-      session.learn('@_ Load "./config/Core/00-types.sys2"');
+      session.learn('@_ Load "./config/Packs/Bootstrap/00-types.sys2"');
       const loadedAfterFirst = session.loadedFiles?.size || 0;
 
-      session.learn('@_ Load "./config/Core/00-types.sys2"');
+      session.learn('@_ Load "./config/Packs/Bootstrap/00-types.sys2"');
       const loadedAfterSecond = session.loadedFiles?.size || 0;
 
       // If loadedFiles tracking exists, size shouldn't change

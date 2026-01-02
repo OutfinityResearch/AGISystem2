@@ -14,6 +14,12 @@ describe('TextGenerator', () => {
   function setup() {
     session = new Session({ geometry: 2048 });
     generator = new TextGenerator(session);
+    // Keep tests hermetic: declare operators used in facts under strict declaration rules.
+    learn(`
+      @loves:loves __Relation
+      @likes:likes __Relation
+      @parent:parent __Relation
+    `);
   }
 
   function learn(dsl) {

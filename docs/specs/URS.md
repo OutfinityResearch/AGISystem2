@@ -67,7 +67,7 @@ AGISystem2 is a neuro-symbolic reasoning system that provides deterministic, exp
 
 | ID | Requirement | Priority | Rationale |
 |----|-------------|----------|-----------|
-| **URS-16** | The system SHALL generate replayable DSL traces for every operation | MUST | Full audit trail |
+| **URS-16** | The system SHALL generate replayable DSL traces for every operation | SHOULD | Future milestone: support full audit/replay without relying on debug logs |
 | **URS-17** | The system SHALL support "summarize" output mode for concise explanations | MUST | Different verbosity levels needed |
 | **URS-18** | The system SHALL support "elaborate" output mode for detailed narratives | SHOULD | Some contexts need full explanations |
 | **URS-19** | The system SHALL indicate uncertainty and alternatives in results | MUST | Transparency about limitations |
@@ -96,7 +96,7 @@ AGISystem2 is a neuro-symbolic reasoning system that provides deterministic, exp
 
 | ID | Requirement | Priority | Rationale |
 |----|-------------|----------|-----------|
-| **URS-30** | The system SHALL maintain complete audit logs of all reasoning operations | MUST | Regulatory compliance |
+| **URS-30** | The system SHALL maintain complete audit logs of all reasoning operations | SHOULD | Future milestone: production-grade audit logging and trace export |
 | **URS-31** | The system SHALL support encoding of regulatory rules (e.g., GDPR, HIPAA) | SHOULD | Enterprise compliance use cases |
 | **URS-32** | The system SHALL allow real-time compliance checking against encoded rules | SHOULD | Proactive violation prevention |
 | **URS-33** | The system SHALL generate compliance reports on demand | SHOULD | Audit support |
@@ -124,7 +124,7 @@ AGISystem2 is a neuro-symbolic reasoning system that provides deterministic, exp
 | ID | Requirement | Priority | Rationale |
 |----|-------------|----------|-----------|
 | **URS-42** | The system SHALL support pluggable HDC implementations via a strategy pattern | SHOULD | Allows experimentation with alternative vector representations |
-| **URS-43** | The system SHALL provide a default HDC strategy (dense-binary) that works out of the box | MUST | Users should not need to configure HDC to get started |
+| **URS-43** | The system SHALL provide a default HDC strategy (exact) that works out of the box | MUST | Users should not need to configure HDC to get started |
 | **URS-44** | The system SHALL allow HDC strategy selection via environment variable (`SYS2_HDC_STRATEGY`) | SHOULD | Runtime configuration without code changes |
 | **URS-45** | The system SHALL provide benchmarking tools to compare HDC strategy performance | SHOULD | Support for performance optimization |
 | **URS-46** | The system SHALL validate custom HDC strategies against a defined contract | SHOULD | Ensure correctness of new implementations |
@@ -138,8 +138,8 @@ AGISystem2 is a neuro-symbolic reasoning system that provides deterministic, exp
 | **CON-01** | Technology | Implementation in JavaScript/TypeScript |
 | **CON-02** | License | GNU AGPL v3 |
 | **CON-03** | Mathematical Foundation | Hyperdimensional Computing (HDC) |
-| **CON-04** | Operations | Limited to Bind (XOR) and Bundle (Majority) |
-| **CON-05** | Geometry | Default 32,768 bits, extensible |
+| **CON-04** | HDC primitives | Must provide bind/bundle semantics via a strategy-defined contract (not limited to XOR/Majority) |
+| **CON-05** | Geometry | Strategy-defined (dense-binary default: 32,768 bits; exact default: 256), extensible |
 
 ---
 

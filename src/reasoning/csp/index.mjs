@@ -18,4 +18,4 @@ export {
   CapacityConstraint
 } from './constraint.mjs';
 export { BacktrackSearch } from './backtrack.mjs';
-export { CSPSolver, solveWeddingSeating } from './solver.mjs';
+export { CSPSolver } from './solver.mjs';

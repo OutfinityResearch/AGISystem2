@@ -15,6 +15,8 @@ describe('QueryEngine', () => {
   function setup() {
     session = new Session({ geometry: 2048 });
     queryEngine = new QueryEngine(session);
+    // Keep tests hermetic under strict declaration rules.
+    learn('@owns:owns __Relation');
   }
 
   function learn(dsl) {

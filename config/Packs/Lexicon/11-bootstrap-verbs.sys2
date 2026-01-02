@@ -1,0 +1,165 @@
+# Lexicon Pack - L3 Bootstrap Verbs
+# Common verbs built from L2 primitives.
+
+# ===== Communication Verbs =====
+
+# tell: speaker tells info to listener
+# Types: speaker:Person, info:Abstract, listener:Person
+@TellMacro:tell graph speaker info listener
+    @result _mtrans $speaker $info $speaker $listener
+    return $result
+end
+
+# ask: asker asks question to askee
+# Types: asker:Person, question:Abstract, askee:Person
+@AskMacro:ask graph asker question askee
+    @req __Role Request $question
+    @result _mtrans $asker $req $asker $askee
+    return $result
+end
+
+# say: speaker says utterance
+# Types: speaker:Person, utterance:Abstract
+@SayMacro:say graph speaker utterance
+    @result _speak $speaker $utterance
+    return $result
+end
+
+# ===== Transfer Verbs =====
+
+# give: giver gives object to receiver
+# Types: giver:Person, object:Entity, receiver:Person
+@GiveMacro:give graph giver object receiver
+    @result _atrans $giver $object $giver $receiver
+    return $result
+end
+
+# take: taker takes object from source
+# Types: taker:Person, object:Entity, source:Person|Place
+@TakeMacro:take graph taker object source
+    @result _atrans $taker $object $source $taker
+    return $result
+end
+
+# ===== Transaction Verbs =====
+
+# buy: buyer buys item from seller for price
+# Types: buyer:Person, item:Entity, seller:Person, price:Quantity
+@BuyMacro:buy graph buyer item seller price
+    @t1 _atrans $buyer $item $seller $buyer
+    @t2 _atrans $buyer $price $buyer $seller
+    @result __Bundle $t1 $t2
+    return $result
+end
+
+# sell: seller sells item to buyer for price
+# Types: seller:Person, item:Entity, buyer:Person, price:Quantity
+@SellMacro:sell graph seller item buyer price
+    @result buy $buyer $item $seller $price
+    return $result
+end
+
+# sells: seller sells item to buyer (no price)
+# Types: seller:Person, item:Entity, buyer:Person
+@SellsMacro:sells graph seller item buyer
+    @result _atrans $seller $item $seller $buyer
+    return $result
+end
+
+# ===== Motion Verbs =====
+
+# go: agent goes from source to destination
+# Types: agent:Person, from:Place, to:Place
+@GoMacro:go graph agent from to
+    @result _ptrans $agent $agent $from $to
+    return $result
+end
+
+# move: agent moves object from source to destination
+# Types: agent:Person, object:Entity, from:Place, to:Place
+@MoveMacro:move graph agent object from to
+    @result _ptrans $agent $object $from $to
+    return $result
+end
+
+# ===== Perception Verbs =====
+
+# see: experiencer sees object
+# Types: experiencer:Person, object:Entity
+@SeeMacro:see graph experiencer object
+    @eyes __Object
+    @result _attend $experiencer $eyes $object
+    return $result
+end
+
+# hear: experiencer hears sound
+# Types: experiencer:Person, sound:Entity|Abstract
+@HearMacro:hear graph experiencer sound
+    @ears __Object
+    @result _attend $experiencer $ears $sound
+    return $result
+end
+
+# ===== Mental State Verbs =====
+
+# want: experiencer wants something
+# Types: experiencer:Person, desired:Entity|Abstract|Event
+@Wanting:Wanting __State
+
+@WantMacro:want graph experiencer desired
+    @eid __Event
+    @r1 __Role Experiencer $experiencer
+    @r2 __Role Theme $desired
+    @r3 __Role State Wanting
+    @result __Bundle $eid $r1 $r2 $r3
+    return $result
+end
+
+# like: experiencer likes something
+# Types: experiencer:Person, liked:Entity|Abstract
+@Liking:Liking __State
+
+@LikeMacro:like graph experiencer liked
+    @eid __Event
+    @r1 __Role Experiencer $experiencer
+    @r2 __Role Theme $liked
+    @r3 __Role State Liking
+    @result __Bundle $eid $r1 $r2 $r3
+    return $result
+end
+
+# fear: experiencer fears something
+# Types: experiencer:Person, feared:Entity|Abstract
+@Fearing:Fearing __State
+
+@FearMacro:fear graph experiencer feared
+    @eid __Event
+    @r1 __Role Experiencer $experiencer
+    @r2 __Role Theme $feared
+    @r3 __Role State Fearing
+    @result __Bundle $eid $r1 $r2 $r3
+    return $result
+end
+
+# think: thinker thinks about concept
+# Types: thinker:Person, concept:Abstract
+@ThinkMacro:think graph thinker concept
+    @result _conc $thinker $concept
+    return $result
+end
+
+# ===== Consumption Verbs =====
+
+# eat: eater eats food
+# Types: eater:Person, food:Substance|Object
+@EatMacro:eat graph eater food
+    @result _ingest $eater $food
+    return $result
+end
+
+# drink: drinker drinks liquid
+# Types: drinker:Person, liquid:Substance
+@DrinkMacro:drink graph drinker liquid
+    @result _ingest $drinker $liquid
+    return $result
+end

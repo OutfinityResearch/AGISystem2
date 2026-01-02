@@ -22,8 +22,12 @@ AGISystem2 uses a **strategy pattern** for HDC operations. This allows swapping 
 │  Layer 2: HDC Operations Interface (bind, bundle, sim)      │  ← CONTRACT
 │  ═══════════════════════════════════════════════════════════│
 │  Layer 1: HDC Implementation Strategy                       │  ← SWAPPABLE
-│           ├── dense-binary (Uint32Array, XOR, majority)     │  ← DEFAULT
-│           └── [future: sparse-polynomial, bigint, etc.]     │
+│           ├── exact (EXACT-sparse; structural unbind)        │  ← DEFAULT
+│           ├── dense-binary (Uint32Array, XOR, majority)     │
+│           ├── sparse-polynomial (SPHDC, Set<bigint>)        │
+│           ├── metric-affine (Uint8Array, L1 similarity)     │
+│           ├── metric-affine-elastic (chunked/elastic)       │
+│           └── [other strategies]                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -33,9 +37,9 @@ The HDC strategy is selected via environment variable:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `SYS2_HDC_STRATEGY` | `dense-binary` | Active HDC implementation |
+| `SYS2_HDC_STRATEGY` | `exact` | Active HDC implementation |
 
-**Note:** This chapter describes the `dense-binary` strategy (the default and currently only implementation). Future strategies must satisfy the same HDC contract.
+**Note:** EXACT is the default strategy. The current runtime also includes dense-binary, SPHDC (`sparse-polynomial`), and metric-affine (`metric-affine` and `metric-affine-elastic`). All strategies must satisfy the HDC contract.
 
 ---
 
@@ -61,8 +65,8 @@ The HDC strategy is selected via environment variable:
 │  └──────────────────────────┬─────────────────────────────────┘ │
 │                             │                                   │
 │  ┌──────────────────────────┴─────────────────────────────────┐ │
-│  │              HDC Strategy: dense-binary (DEFAULT)           │ │
-│  │  DenseBinaryVector │ XOR binding │ Majority bundle          │ │
+│  │              HDC Strategy: exact (DEFAULT)                  │ │
+│  │  ExactVector │ structural bind/unbind │ union bundle         │ │
 │  └─────────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -76,7 +80,11 @@ src/
 │   ├── contract.mjs         # Interface definitions (JSDoc)
 │   └── strategies/
 │       ├── index.mjs        # Strategy registry
-│       └── dense-binary.mjs # Default: Uint32Array + XOR
+│       ├── exact.mjs             # Default: session-local EXACT
+│       ├── dense-binary.mjs      # Uint32Array + XOR
+│       ├── sparse-polynomial.mjs # SPHDC
+│       ├── metric-affine.mjs     # Metric-affine
+│       └── metric-affine-elastic.mjs # EMA
 │
 ├── core/                    # ← BACKWARD COMPATIBILITY (re-exports)
 │   ├── vector.mjs           # Re-exports Vector from hdc/facade
@@ -553,7 +561,7 @@ console.log(result.valid ? 'OK' : result.errors);
 | `facade.mjs` | Single entry point | bind, bundle, similarity, createFromName, initHDC |
 | `contract.mjs` | Interface definitions | HDC_CONTRACT, validateStrategy |
 | `strategies/index.mjs` | Strategy registry | getStrategy, registerStrategy, listStrategies |
-| `strategies/dense-binary.mjs` | Default strategy | DenseBinaryVector, bind, bundle, similarity |
+| `strategies/exact.mjs` | Default `Session` strategy | ExactVector, bind, bundle, unbind, decodeUnboundCandidates |
 
 ### Core Layer (src/core/) - Backward Compatibility
 
@@ -579,12 +587,12 @@ console.log(result.valid ? 'OK' : result.errors);
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
 | Architecture | Strategy pattern | Allows future HDC implementations |
-| Default strategy | dense-binary | Proven, fast, SIMD-friendly |
-| Bit storage (dense-binary) | Uint32Array | Native 32-bit ops in JS |
+| Default strategy | exact | Session-local, structural unbind, deterministic semantics |
+| Dense-binary storage | Uint32Array | Native 32-bit ops in JS |
 | Argument order | Position vectors | Permutation breaks extension |
 | Initialization | ASCII stamp + hash | Deterministic + debuggable |
 | Bundle limit | ~200 facts | Similarity degrades beyond |
-| Default geometry | 32,768 | Good capacity/memory tradeoff |
+| Default geometry | Strategy-defined (exact: 256; dense-binary: 32,768) | Good capacity/memory tradeoff |
 | Position count | 20 | Sufficient for most relations |
 | Strategy selection | Env var | Simple, runtime-configurable |
 

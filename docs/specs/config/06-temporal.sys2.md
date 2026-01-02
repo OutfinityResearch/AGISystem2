@@ -1,4 +1,4 @@
-# Spec: config/Core/06-temporal.sys2
+# Spec: `config/Packs/Temporal/06-temporal.sys2`
 
 ## Purpose
 Adds temporal and causal relations (`Before`, `During`, `Causes`, etc.) with macros capturing common reasoning patterns, per DS07e-Temporal-Modal.  Provides canonical bundling so proofs can align events chronologically.

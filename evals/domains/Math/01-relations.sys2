@@ -3,6 +3,12 @@
 
 @_:MathRelations isA MathRelations AbstractType
 
+# equal: alias of equals (kept for readability in eval suites).
+@EqualMacro:equal graph A B
+    @r equals $A $B
+    return $r
+end
+
 # ===== Set / Collection =====
 
 @ElementOfMacro:elementOf graph x S

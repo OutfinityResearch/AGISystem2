@@ -1,0 +1,28 @@
+# URC - MetricCore v1
+# Minimal metric objects for evidence (bounds, residuals, scores).
+
+# ===== Category =====
+@Metric:Metric __Category
+
+# ===== Metric slots =====
+@mKind:mKind __Relation
+@mValue:mValue __Relation
+@mUnit:mUnit __Relation
+
+# ===== Metric kind atoms (extensible) =====
+@LowerBound:LowerBound __Atom
+@UpperBound:UpperBound __Atom
+@Gap:Gap __Atom
+@ResidualNorm:ResidualNorm __Atom
+@ErrorBar:ErrorBar __Atom
+@PValue:PValue __Atom
+@LogLik:LogLik __Atom
+@CountEstimate:CountEstimate __Atom
+
+@MkMetric:MkMetric graph m kind value unit
+    @a mKind $m $kind
+    @b mValue $m $value
+    @c mUnit $m $unit
+    @res __Bundle $a $b $c
+    return $res
+end

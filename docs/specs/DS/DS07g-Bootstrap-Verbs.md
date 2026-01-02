@@ -5,8 +5,8 @@
 **Document Version:** 1.0
 **Author:** Sînică Alboaie
 **Status:** Draft Specification
-**Part Of:** DS07 Core Theory (refactored)
-**Config File:** `config/Core/11-bootstrap-verbs.sys2`
+**Part Of:** DS07 CommonLexicon Pack (refactored; formerly Core)
+**Pack File (canonical):** `config/Packs/Lexicon/11-bootstrap-verbs.sys2`
 
 ---
 

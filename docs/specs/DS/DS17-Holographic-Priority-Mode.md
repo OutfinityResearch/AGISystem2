@@ -6,7 +6,7 @@
 **Author:** Sînică Alboaie
 **Status:** Experimental
 
-> **Note:** Holographic Priority Mode is an experimental feature for research and large-scale optimization scenarios. The default `symbolicPriority` mode provides 100% accuracy and is recommended for production use. See DS01 Section 1.10 for the dual reasoning architecture.
+> **Note:** Holographic Priority Mode is an experimental feature for research and large-scale optimization scenarios. The default `symbolicPriority` mode prioritizes exact symbolic reasoning and is recommended for production use. See DS01 Section 1.10 for the dual reasoning architecture.
 
 ---
 
@@ -16,8 +16,8 @@ AGISystem2 supports two reasoning modes that determine how HDC and symbolic reas
 
 | Mode | Description | Use Case |
 |------|-------------|----------|
-| `symbolicPriority` | Symbolic reasoning first, HDC for storage/indexing | Default, 100% accuracy |
-| `holographicPriority` | HDC operations first, symbolic validation | Research, large-scale problems |
+| `symbolicPriority` | Symbolic reasoning first, HDC for storage/indexing | Default, exact-first reasoning |
+| `holographicPriority` | HDC operations first, symbolic validation | Research, heuristic-first with validation |
 
 **Key insight:** In `holographicPriority`, the HDC substrate becomes the primary reasoning mechanism, with symbolic logic serving as validation. This inverts the traditional hierarchy.
 
@@ -43,14 +43,11 @@ REASONING_PRIORITY=holographicPriority # HDC-first mode
 
 ### 17.2.2 Combined Configurations
 
-With existing `SYS2_HDC_STRATEGY`, we get **4 configurations**:
+`REASONING_PRIORITY` controls the **engine policy** (symbolic-first vs HDC-first), while `SYS2_HDC_STRATEGY` controls the **vector substrate** (exact vs approximate, geometry semantics, similarity metric, and performance profile).
 
-| # | HDC Strategy | Reasoning Priority | Expected Profile |
-|---|--------------|-------------------|------------------|
-| 1 | `dense-binary` | `symbolicPriority` | 100% accurate, baseline |
-| 2 | `dense-binary` | `holographicPriority` | ~95% accurate, faster for large |
-| 3 | `sparse-polynomial` | `symbolicPriority` | 100% accurate, faster |
-| 4 | `sparse-polynomial` | `holographicPriority` | ~97% accurate, fastest |
+In practice:
+- `symbolicPriority` treats symbolic results as authoritative, using HDC primarily for storage/indexing/candidate generation.
+- `holographicPriority` uses HDC to propose candidates and always validates results symbolically (with configurable fallback).
 
 ### 17.2.3 Constants Definition
 
@@ -66,22 +63,8 @@ export function getReasoningPriority() {
   return process.env.REASONING_PRIORITY || REASONING_PRIORITY.SYMBOLIC;
 }
 
-export const HOLOGRAPHIC_THRESHOLDS = {
-  'dense-binary': {
-    UNBIND_MIN_SIMILARITY: 0.4,      // Minimum for HDC candidates
-    UNBIND_MAX_CANDIDATES: 10,       // Top-K to validate
-    CSP_HEURISTIC_WEIGHT: 0.7,       // HDC weight in domain ordering
-    VALIDATION_REQUIRED: true,        // Always validate with symbolic
-    FALLBACK_TO_SYMBOLIC: true        // Fallback on HDC failure
-  },
-  'sparse-polynomial': {
-    UNBIND_MIN_SIMILARITY: 0.02,
-    UNBIND_MAX_CANDIDATES: 10,
-    CSP_HEURISTIC_WEIGHT: 0.7,
-    VALIDATION_REQUIRED: true,
-    FALLBACK_TO_SYMBOLIC: true
-  }
-};
+// Holographic mode thresholds are strategy-defined and loaded from per-strategy modules.
+// See getHolographicThresholds(strategy) in src/core/constants.mjs.
 ```
 
 ---
@@ -508,16 +491,16 @@ const cspHeuristicUsage = stats.cspHeuristicOrderings;
 
 ## 17.8 EvalSuite Integration
 
-### 17.8.1 Four-Configuration Runner
+### 17.8.1 Multi-Configuration Runner (Example)
 
 ```javascript
 // evals/runFastEval.mjs
 
 const CONFIGURATIONS = [
+  { strategy: 'exact', priority: 'symbolicPriority' },
+  { strategy: 'exact', priority: 'holographicPriority' },
   { strategy: 'dense-binary', priority: 'symbolicPriority' },
-  { strategy: 'dense-binary', priority: 'holographicPriority' },
-  { strategy: 'sparse-polynomial', priority: 'symbolicPriority' },
-  { strategy: 'sparse-polynomial', priority: 'holographicPriority' }
+  { strategy: 'dense-binary', priority: 'holographicPriority' }
 ];
 
 async function runAllConfigurations() {
@@ -538,7 +521,7 @@ async function runAllConfigurations() {
 }
 ```
 
-### 17.8.2 Output Format
+### 17.8.2 Output Format (Example)
 
 ```
 ┌─────────────────────┬────────────────────────────┬────────────────────────────┐
@@ -546,17 +529,17 @@ async function runAllConfigurations() {
 │ Suite               ├──────────────┬─────────────┼──────────────┬─────────────┤
 │                     │ dense-binary │ sparse-poly │ dense-binary │ sparse-poly │
 ├─────────────────────┼──────────────┼─────────────┼──────────────┼─────────────┤
-│ #01 Foundations     │   100% 18ms  │  100% 6ms   │   100% 22ms  │  100% 8ms   │
-│ #02 Hierarchies     │   100% 8ms   │  100% 4ms   │   100% 10ms  │  100% 5ms   │
-│ #03 Rules           │   100% 13ms  │  100% 8ms   │    98% 15ms  │  100% 9ms   │
+│ #01 Foundations     │  PASS 18ms   │  PASS 6ms   │  PASS 22ms   │  PASS 8ms   │
+│ #02 Hierarchies     │  PASS 8ms    │  PASS 4ms   │  PASS 10ms   │  PASS 5ms   │
+│ #03 Rules           │  PASS 13ms   │  PASS 8ms   │  PASS 15ms   │  PASS 9ms   │
 │ ...                 │              │             │              │             │
 ├─────────────────────┼──────────────┼─────────────┼──────────────┼─────────────┤
-│ TOTAL               │  100% 108ms  │ 100% 78ms   │   97% 95ms   │  99% 72ms   │
+│ TOTAL               │  PASS 108ms  │  PASS 78ms  │  PASS 95ms   │  PASS 72ms  │
 └─────────────────────┴──────────────┴─────────────┴──────────────┴─────────────┘
 
 Holographic Stats (dense-binary):
-  HDC Effectiveness: 85% (validations passed / attempts)
-  Fallback Rate: 15% (symbolic fallbacks / total queries)
+  Validations passed: 85 / 100
+  Symbolic fallbacks: 15 / 100
   CSP Heuristic Uses: 12
 ```
 
@@ -683,7 +666,7 @@ export const steps = [
 
 | Metric | symbolicPriority | holographicPriority |
 |--------|------------------|---------------------|
-| Accuracy | 100% | ≥95% (with fallback) |
+| Correctness | Symbolic results | Must not emit unvalidated answers |
 | Speed (small) | Baseline | ~Same |
 | Speed (large) | Slow | Faster (HDC shortcuts) |
 | CSP (large) | Exhaustive | Heuristic ordering |

@@ -325,11 +325,6 @@ function validateStatement(stmt, context) {
   }
 }
 
-function validateRule(rule, context) {
-  validateExpression(rule.condition, context, 'argument', context.allowHoles, true);
-  validateExpression(rule.conclusion, context, 'argument', context.allowHoles, true);
-}
-
 function validateSolveBlock(block, context) {
   for (const decl of block.declarations || []) {
     if (!decl?.source) continue;
@@ -384,9 +379,6 @@ function validateNode(node, context) {
     case 'Statement':
       validateStatement(node, context);
       return;
-    case 'RuleDeclaration':
-      validateRule(node, context);
-      return;
     case 'GraphDeclaration':
       if (node.name) context.localGraphs.add(node.name);
       if (node.persistName) context.localGraphs.add(node.persistName);
@@ -397,8 +389,6 @@ function validateNode(node, context) {
       return;
     case 'TheoryDeclaration':
       validateTheory(node, context);
-      return;
-    case 'ImportStatement':
       return;
     default:
       return;

@@ -7,8 +7,8 @@ describe('___GetType (strict typing)', () => {
     const session = new Session({ geometry: 2048, strictMode: true });
 
     session.learn(`
-      @_ Load "./config/Core/00-types.sys2"
-      @_ Load "./config/Core/02-constructors.sys2"
+      @_ Load "./config/Packs/Bootstrap/00-types.sys2"
+      @_ Load "./config/Packs/Bootstrap/02-constructors.sys2"
     `);
 
     session.learn('@John:John __Person');
@@ -24,8 +24,8 @@ describe('___GetType (strict typing)', () => {
     const session = new Session({ geometry: 2048, strictMode: true });
 
     session.learn(`
-      @_ Load "./config/Core/00-types.sys2"
-      @_ Load "./config/Core/02-constructors.sys2"
+      @_ Load "./config/Packs/Bootstrap/00-types.sys2"
+      @_ Load "./config/Packs/Bootstrap/02-constructors.sys2"
     `);
 
     session.learn('@John:John __Person');

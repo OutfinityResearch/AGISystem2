@@ -1,0 +1,27 @@
+# URC - SolverArtifactCore v1
+# Standard I/O artifact objects for compilation and solver adapters.
+
+# ===== Categories =====
+@Artifact:Artifact __Category
+@Format:Format __Category
+
+# ===== Artifact slots =====
+@artifactFormat:artifactFormat __Relation
+@artifactHash:artifactHash __Relation
+@artifactPath:artifactPath __Relation
+@artifactSize:artifactSize __Relation
+
+# ===== Linkers =====
+@compiledTo:compiledTo __Relation
+@parsedFrom:parsedFrom __Relation
+
+# ===== Format atoms =====
+@SMTLIB2:SMTLIB2 __Atom
+@DIMACS:DIMACS __Atom
+@TPTP:TPTP __Atom
+@MPS:MPS __Atom
+@LPFMT:LPFMT __Atom
+@SDPA:SDPA __Atom
+@TRACEFMT:TRACEFMT __Atom
+@JSON:JSON __Atom
+@BLOB:BLOB __Atom

@@ -1,0 +1,12 @@
+# Errors for evals/stress/anthropology.sys2
+
+## Missing Dependencies
+
+- [exact(A)+holo] Unknown operator 'acquires' at 3910:12
+- [exact(A)+holo] Unknown operator 'divides' at 4023:8
+- [exact(A)+holo] Unknown operator 'dominates' at 5275:9
+- [exact(A)+holo] Unknown operator 'equal' at 5631:9
+- [exact(A)+holo] Unknown operator 'exhibits' (13x) at 4616:14, 4632:14, 4761:9, 5048:15, 5246:14, 5320:19, 5328:19, 5336:19, 5373:9, 5392:13 (+3 more)
+- [exact(A)+holo] Unknown operator 'indicates' (2x) at 4525:10, 4574:15
+- [exact(A)+holo] Unknown operator 'owns' at 5469:9
+- [exact(A)+holo] Unknown operator 'transforms' (5x) at 4677:9, 4727:9, 5237:9, 5283:9, 5485:9

@@ -43,7 +43,10 @@
     </tr>
     <tr>
       <td><strong>Geometry</strong></td>
-      <td>The size parameter for vectors. For Dense-Binary: number of bits (default 2048). For SPHDC: cardinality k (default 4).</td>
+      <td>
+        Strategy-defined size parameter for vectors. Dense-Binary uses a bit-length, Sparse-Polynomial (SPHDC) uses a cardinality <code>k</code>, and Metric-Affine uses a byte-channel dimension.
+        The default session strategy is <code>exact</code> (geometry 256).
+      </td>
       <td><a href="../api/index.html">API</a></td>
     </tr>
     <tr>

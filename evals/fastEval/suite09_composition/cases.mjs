@@ -8,7 +8,7 @@
 export const name = 'Compositional Reasoning';
 export const description = 'Deep property inheritance and multi-role composition with complete proofs';
 
-export const theories = ['05-logic.sys2'];
+export const theories = [];
 
 export const steps = [
   // === SETUP: Deep hierarchy (9 levels) with chained property rules ===

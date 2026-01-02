@@ -1,0 +1,97 @@
+# Reasoning Pack - Reasoning Verbs
+# Meta-level reasoning operations.
+
+# ===== Reasoning Atoms =====
+
+@Abduction:Abduction __Action
+@Induction:Induction __Action
+@Deduction:Deduction __Action
+@Analogy:Analogy __Action
+
+# ===== Reasoning Macros =====
+
+@Observation:Observation __Relation
+
+# abduce: find best explanation for observation
+# Types: observation:Event|State -> explanation:Event
+@AbduceMacro:abduce graph observation
+    # Implementation finds rules with consequent similar to observation
+    # Returns best antecedent as explanation
+    @eid __Event
+    @r1 __Role Action Abduction
+    @r2 __Role Theme $observation
+    @result __Bundle $eid $r1 $r2
+    return $result
+end
+
+# induce: learn rule from examples
+# Types: examples:Bundle -> rule:Implies
+@InduceMacro:induce graph examples
+    # Implementation finds pattern across examples
+    # Returns generalized rule
+    @eid __Event
+    @r1 __Role Action Induction
+    @r2 __Role Theme $examples
+    @result __Bundle $eid $r1 $r2
+    return $result
+end
+
+# deduce: derive conclusion from premises
+# Types: premises:Bundle -> conclusion:Abstract
+@DeduceMacro:deduce graph premises
+    @eid __Event
+    @r1 __Role Action Deduction
+    @r2 __Role Theme $premises
+    @result __Bundle $eid $r1 $r2
+    return $result
+end
+
+# whatif: counterfactual reasoning
+# Types: world:Bundle, fact:Event -> alternativeWorld:Bundle
+@WhatIfMacro:whatif graph world fact
+    # Implementation removes fact and dependents
+    # Returns modified world
+    @eid __Event
+    @r1 __Role Theme $world
+    @r2 __Role Content $fact
+    @result __Bundle $eid $r1 $r2
+    return $result
+end
+
+# analogy: A is to B as C is to ?
+# Types: a:Entity, b:Entity, c:Entity -> d:Entity
+@AnalogyMacro:analogy graph a b c
+    @rel ___Bind $a $b
+    @result ___Bind $c $rel
+    return $result
+end
+
+# similar: find similar items
+# Types: query:Any, vocabulary:Bundle -> matches:Bundle
+@SimilarMacro:similar graph query vocabulary
+    @result ___MostSimilar $query $vocabulary
+    return $result
+end
+
+# observed: mark observation for abduction inputs
+@Observed:observed graph observation
+    @result __Role Observation $observation
+    return $result
+end
+
+# Difference: explicit contrast between two entities
+@Difference:Difference graph a b
+    @pair __Pair $a $b
+    @result __Role Difference $pair
+    return $result
+end
+
+# explain: generate explanation for conclusion
+# Types: conclusion:Abstract -> explanation:Bundle
+@ExplainMacro:explain graph conclusion
+    @eid __Event
+    @r1 __Role Theme $conclusion
+    @r2 __Role Action Deduction
+    @result __Bundle $eid $r1 $r2
+    return $result
+end

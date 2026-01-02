@@ -174,30 +174,6 @@ export class TheoryDeclaration extends ASTNode {
 }
 
 /**
- * Import statement
- * import TheoryName
- */
-export class ImportStatement extends ASTNode {
-  constructor(theoryName, line, column) {
-    super('ImportStatement', line, column);
-    this.theoryName = theoryName;
-  }
-}
-
-/**
- * Rule declaration (sugar for Implies statement)
- * rule Name: (condition) => (conclusion)
- */
-export class RuleDeclaration extends ASTNode {
-  constructor(name, condition, conclusion, line, column) {
-    super('RuleDeclaration', line, column);
-    this.name = name;
-    this.condition = condition;
-    this.conclusion = conclusion;
-  }
-}
-
-/**
  * Graph declaration (formerly Macro)
  * Creates a graph of HDC point relationships
  *
@@ -282,8 +258,6 @@ export default {
   Compound,
   List,
   TheoryDeclaration,
-  ImportStatement,
-  RuleDeclaration,
   GraphDeclaration,
   MacroDeclaration, // deprecated alias
   SolveBlock,

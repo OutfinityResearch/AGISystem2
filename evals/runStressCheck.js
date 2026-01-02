@@ -13,9 +13,24 @@ const CONFIG_ROOT = join(ROOT, 'config');
 const DOMAIN_ROOT = join(ROOT, 'evals', 'domains');
 const STRESS_ROOT = join(ROOT, 'evals', 'stress');
 
-const CONFIG_ORDER = [
-  'Core',
-  'Constraints'
+// Pack load order for validating theory files.
+// Each pack is validated in isolation, but we keep a deterministic order for reporting.
+const PACK_ORDER = [
+  'Bootstrap',
+  'Relations',
+  'Logic',
+  'Temporal',
+  'Modal',
+  'Defaults',
+  'Properties',
+  'Numeric',
+  'Semantics',
+  'Lexicon',
+  'Reasoning',
+  'Canonicalization',
+  'Consistency',
+  'URC',
+  'CSP'
 ];
 
 const DOMAIN_ORDER = [
@@ -139,14 +154,14 @@ const ATOMIC_DECL_POLICY = {
 
   // Core may use atomic declarations without being flagged as issues.
   allowedPrefixes: [
-    'config/Core/'
+    'config/Packs/',
   ],
 
   // Domain lexicons are allowed to define value vocabulary (typed atoms) so strict DSL validation
   // can reject unknown tokens without forcing every domain to embed huge token lists in graphs.
   //
   // Important: lexicon files should NOT introduce ad-hoc schema roles for `__Role` — domain theories
-  // must still use Core semantic roles from `config/Core/09-roles.sys2`.
+  // must still use Bootstrap semantic roles (canonical: `config/Packs/Bootstrap/09-roles.sys2`).
   // Any `00-lexicon*.sys2` file under `config/` or `evals/domains/` is treated as a value-vocabulary module.
   // (We keep these modular to avoid huge single lexicon files.)
   isLexiconFile: (relPath) => /\/00-lexicon[^/]*\.sys2$/.test(relPath),
@@ -680,8 +695,8 @@ async function checkAndLoad(session, filePath, report, label, fileReports, progr
     addIssue('superficial', msg);
   }
 
-  // Only flag "thin" graphs outside Core (Core has many small compositional primitives).
-  if (!relPath.startsWith('config/Core/')) {
+  // Only flag "thin" graphs outside Packs (packs have many small compositional primitives).
+  if (!relPath.startsWith('config/Packs/')) {
     const thinDefs = detectThinGraphDefinitions(content);
     for (const msg of thinDefs) {
       addIssue('superficial', msg);
@@ -766,8 +781,8 @@ async function checkAndLoad(session, filePath, report, label, fileReports, progr
 
 async function buildConfigPlan() {
   const plan = [];
-  for (const dirName of CONFIG_ORDER) {
-    const dirPath = join(CONFIG_ROOT, dirName);
+  for (const packName of PACK_ORDER) {
+    const dirPath = join(CONFIG_ROOT, 'Packs', packName);
     if (!existsSync(dirPath)) continue;
     let files = null;
     files = await loadIndexOrder(dirPath);
@@ -778,6 +793,13 @@ async function buildConfigPlan() {
       plan.push(join(dirPath, file));
     }
   }
+
+  // Stress corpora compatibility helpers (eval-only; intentionally not a pack).
+  const stressCompatPath = join(ROOT, 'evals', 'stress', 'theories', 'stress-compat.sys2');
+  if (existsSync(stressCompatPath)) {
+    plan.push(stressCompatPath);
+  }
+
   for (const dirName of DOMAIN_ORDER) {
     const dirPath = join(DOMAIN_ROOT, dirName);
     if (!existsSync(dirPath)) continue;
@@ -849,7 +871,9 @@ async function runCombination(strategyId, reasoningPriority, geometry, basePlan,
     const relPath = formatRelPath(filePath);
     let group = 'unknown';
     if (relPath.startsWith('config/')) {
-      group = relPath.split('/')[1] || 'config';
+      const parts = relPath.split('/');
+      if (parts[1] === 'Packs') group = `Packs/${parts[2] || 'unknown'}`;
+      else group = parts[1] || 'config';
     } else if (relPath.startsWith('evals/domains/')) {
       group = relPath.split('/')[2] || 'domains';
     } else {
@@ -1575,7 +1599,7 @@ Examples:
     const baseIssueRows = (only.baseFileResults || []).filter(r => (r?.issues || 0) > 0).map(formatFileRow);
     const stressIssueRows = (only.stressFileResults || []).filter(r => (r?.issues || 0) > 0).map(formatFileRow);
     const coreRows = (only.baseFileResults || [])
-      .filter(r => String(r?.file || '').startsWith('config/Core/'))
+      .filter(r => String(r?.file || '').startsWith('config/Packs/'))
       .map(formatFileRow);
     const baseAllRows = (only.baseFileResults || []).map(formatFileRow);
     const stressAllRows = (only.stressFileResults || []).map(formatFileRow);

@@ -1,0 +1,24 @@
+# Bootstrap - Type Markers
+# Foundational type markers used by typed constructors.
+
+# ===== Type Markers =====
+@EntityType:EntityType ___NewVector "EntityType" "Bootstrap"
+@PersonType:PersonType ___NewVector "PersonType" "Bootstrap"
+@ObjectType:ObjectType ___NewVector "ObjectType" "Bootstrap"
+@PlaceType:PlaceType ___NewVector "PlaceType" "Bootstrap"
+@OrganizationType:OrganizationType ___NewVector "OrganizationType" "Bootstrap"
+@SubstanceType:SubstanceType ___NewVector "SubstanceType" "Bootstrap"
+@AbstractType:AbstractType ___NewVector "AbstractType" "Bootstrap"
+@PropertyType:PropertyType ___NewVector "PropertyType" "Bootstrap"
+@StateType:StateType ___NewVector "StateType" "Bootstrap"
+@CategoryType:CategoryType ___NewVector "CategoryType" "Bootstrap"
+@RelationType:RelationType ___NewVector "RelationType" "Bootstrap"
+@ActionType:ActionType ___NewVector "ActionType" "Bootstrap"
+@TimePointType:TimePointType ___NewVector "TimePointType" "Bootstrap"
+@TimePeriodType:TimePeriodType ___NewVector "TimePeriodType" "Bootstrap"
+@NumberType:NumberType ___NewVector "NumberType" "Bootstrap"
+@AmountType:AmountType ___NewVector "AmountType" "Bootstrap"
+@MeasureType:MeasureType ___NewVector "MeasureType" "Bootstrap"
+@EventType:EventType ___NewVector "EventType" "Bootstrap"
+@RoleType:RoleType ___NewVector "RoleType" "Bootstrap"
+

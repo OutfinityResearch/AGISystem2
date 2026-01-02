@@ -87,6 +87,27 @@ Recommended policy:
 
 **Note:** In the current AGISystem2 runtime, position atoms are created on demand. Pre-initializing them is recommended for stable early indices, but not strictly required if load/order is deterministic and consistent.
 
+### 3.5 Budget ceilings: `TOP_INEFFABLE` and `BOTTOM_IMPOSSIBLE` (URC alignment)
+
+EXACT closure and multi-step inference can produce an explosion in:
+
+- monom density (number of atom bits in a monom),
+- polynomial size (number of monoms).
+
+To keep closure practical while remaining deterministic and auditable, URC reserves two atoms:
+
+- `BOTTOM_IMPOSSIBLE`: absorbing contradiction / dead-end.
+- `TOP_INEFFABLE`: absorbing resource boundary / unknown.
+
+Recommended normalization (backend-owned):
+
+- If a monom contains `BOTTOM_IMPOSSIBLE`, normalize it to the singleton monom `{BOTTOM_IMPOSSIBLE}`.
+- Else if a monom contains `TOP_INEFFABLE`, normalize it to `{TOP_INEFFABLE}`.
+- If `popcount(monom) > ineffableBitThreshold`, replace it with `{TOP_INEFFABLE}`.
+- If `polyTermCount > ineffableTermThreshold`, replace the polynomial with `{TOP_INEFFABLE}`.
+
+These ceilings integrate naturally with DS39 STAR/UNSTAR via the `normalize(state)` hook.
+
 ### 3.4 Persistence (Deferred)
 
 Because atom identity depends on the dictionary, EXACT MUST serialize the dictionary alongside KB data:

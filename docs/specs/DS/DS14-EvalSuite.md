@@ -17,6 +17,15 @@ This specification defines an **Evaluation Suite Framework** that provides syste
 
 A suite represents a coherent conversation/session where facts are learned progressively and then queried/proven. This mirrors real-world usage patterns where knowledge accumulates over time.
 
+**Quality principle: suites must be realistic and general**
+
+- Suites must not depend on runtime special cases built only for that suite.
+- Suites must ship any domain-specific vocabulary and constraints locally (DS51).
+- Suites should prefer semantic acceptance criteria (bindings, truth values, evidence anchors) over brittle formatting.
+
+Concrete audit checklist and hygiene rules:
+- DS74 (EvalSuite Audit Guidelines)
+
 ---
 
 ## 14.2 Core Concepts
@@ -258,6 +267,8 @@ Key points:
 - `learn` is **transactional**: if any statement is rejected, the session state remains unchanged.
 - `Not(...)` is a first-class fact used for **blocking inference / exceptions**; it is **not** a rejection trigger by itself.
 
+**Taxonomy note (vNext):** DS51 proposes moving evaluation convenience constraints to optional Domain Packs and keeping Core constraints limited to universal contradiction mechanisms.
+
 ### 14.5.1 How Contradictions Work
 
 When a `learn` action encounters a fact that contradicts existing knowledge, it **REJECTS** the new fact and returns an explanation:
@@ -271,7 +282,7 @@ When a `learn` action encounters a fact that contradicts existing knowledge, it 
   expected_nl: 'Learned 1 facts'
 },
 
-// Now trying to learn: Door is Closed → REJECTION (mutuallyExclusive constraint from Core)
+// Now trying to learn: Door is Closed → REJECTION (mutuallyExclusive constraint from the Kernel pack)
 {
   action: 'learn',
   input_nl: 'Door is Closed.',

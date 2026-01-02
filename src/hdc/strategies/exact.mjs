@@ -680,6 +680,7 @@ function createInstance({ geometry = 0, session = null } = {}) {
 const properties = {
   id: STRATEGY_ID,
   displayName: 'EXACT (Exact-Sparse Bitset Polynomial)',
+  defaultGeometry: 256,
   recommendedBundleCapacity: 1000,
   maxBundleCapacity: 100000,
   bytesPerVector: (_geometry) => 0,

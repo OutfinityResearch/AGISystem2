@@ -94,16 +94,16 @@ describe('Lexer Tokens', () => {
       assert.equal(tokens[0].value, 'theory');
     });
 
-    test('should tokenize import as keyword', () => {
+    test('should tokenize import as identifier', () => {
       const lexer = new Lexer('import Test');
       const tokens = lexer.tokenize();
-      assert.equal(tokens[0].type, TOKEN_TYPES.KEYWORD);
+      assert.equal(tokens[0].type, TOKEN_TYPES.IDENTIFIER);
     });
 
-    test('should tokenize rule as keyword', () => {
+    test('should tokenize rule as identifier', () => {
       const lexer = new Lexer('rule Test');
       const tokens = lexer.tokenize();
-      assert.equal(tokens[0].type, TOKEN_TYPES.KEYWORD);
+      assert.equal(tokens[0].type, TOKEN_TYPES.IDENTIFIER);
     });
 
     test('macro should be a keyword', () => {

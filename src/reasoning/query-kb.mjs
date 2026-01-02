@@ -230,7 +230,7 @@ export function filterNegated(results, session, operatorName, knowns) {
  */
 export function searchBundlePattern(session, operatorName, knowns, holes) {
   const results = [];
-  const strategy = session.hdcStrategy || 'dense-binary';
+  const strategy = session.hdcStrategy || 'exact';
   const thresholds = getThresholds(strategy);
   const bundleScore = thresholds.BUNDLE_COMMON_SCORE;
 

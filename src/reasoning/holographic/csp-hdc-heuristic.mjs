@@ -19,7 +19,7 @@
 import { bind, bundle, similarity, unbind } from '../../core/operations.mjs';
 import { withPosition } from '../../core/position.mjs';
 import { getThresholds, getHolographicThresholds } from '../../core/constants.mjs';
-import { CSPSolver, solveWeddingSeating as symbolicSolveWedding } from '../csp/solver.mjs';
+import { CSPSolver } from '../csp/solver.mjs';
 import { debug_trace } from '../../utils/debug.js';
 
 function dbg(category, ...args) {
@@ -167,7 +167,7 @@ export class HolographicCSPSolver {
     };
 
     // Get strategy-dependent thresholds
-    const strategy = session?.hdcStrategy || 'dense-binary';
+    const strategy = session?.hdcStrategy || 'exact';
     this.thresholds = getThresholds(strategy);
     this.config = getHolographicThresholds(strategy);
 
@@ -446,68 +446,4 @@ export class HolographicCSPSolver {
   }
 }
 
-/**
- * Solve wedding seating with HDC heuristics
- * Same interface as symbolic solveWeddingSeating
- */
-export function solveWeddingSeating(session, options = {}) {
-  // Track stats
-  session.reasoningStats.holographicWedding =
-    (session.reasoningStats.holographicWedding || 0) + 1;
-
-  const solver = new HolographicCSPSolver(session, options);
-
-  // Get all guests and tables from KB
-  const guests = [];
-  const tables = [];
-
-  for (const fact of session.kbFacts) {
-    session.reasoningStats.kbScans++;
-    const meta = fact.metadata;
-    if (meta?.operator === 'isA' && meta.args?.length === 2) {
-      const [entity, type] = meta.args;
-      if (type === 'Guest') guests.push(entity);
-      if (type === 'Table') tables.push(entity);
-    }
-  }
-
-  if (guests.length === 0) {
-    return { success: false, error: 'No guests found in KB', solutions: [] };
-  }
-  if (tables.length === 0) {
-    return { success: false, error: 'No tables found in KB', solutions: [] };
-  }
-
-  dbg('WEDDING', `${guests.length} guests, ${tables.length} tables`);
-
-  // Add a variable for each guest
-  for (const guest of guests) {
-    solver.addVariable(guest, tables);
-  }
-
-  // Get conflicts from KB
-  const conflicts = [];
-  for (const fact of session.kbFacts) {
-    session.reasoningStats.kbScans++;
-    const meta = fact.metadata;
-    if (meta?.operator === 'conflictsWith' && meta.args?.length === 2) {
-      const [p1, p2] = meta.args;
-      if (!conflicts.some(c => (c[0] === p1 && c[1] === p2) || (c[0] === p2 && c[1] === p1))) {
-        conflicts.push([p1, p2]);
-      }
-    }
-  }
-
-  dbg('WEDDING', `${conflicts.length} conflict pairs`);
-
-  // Add no-conflict constraints
-  for (const [p1, p2] of conflicts) {
-    if (guests.includes(p1) && guests.includes(p2)) {
-      solver.addNoConflict(p1, p2);
-    }
-  }
-
-  return solver.solve();
-}
-
-export default { HolographicCSPSolver, buildConstraintSatisfaction, scoreCandidate, orderDomainByHDC, solveWeddingSeating };
+export default { HolographicCSPSolver, buildConstraintSatisfaction, scoreCandidate, orderDomainByHDC };

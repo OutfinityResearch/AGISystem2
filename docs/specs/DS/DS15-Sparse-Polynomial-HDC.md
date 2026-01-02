@@ -13,7 +13,7 @@
 
 This document specifies the **Sparse Polynomial HDC (SPHDC)** strategy - a sparse hyperdimensional computing approach that represents concepts as small sets of k BigInt exponents instead of large dense bit vectors.
 
-**Key Innovation:** SPHDC encodes semantic information using just k 64-bit integers (default k=4, 32 bytes) instead of thousands of bits, achieving 100% accuracy on symbolic reasoning while being 8x smaller and 1.5x faster than dense binary HDC.
+**Key Innovation:** SPHDC encodes semantic information using just k 64-bit integers (default k=4, 32 bytes) instead of thousands of bits, achieving 100% accuracy on symbolic reasoning while being smaller and faster than dense-binary HDC (e.g., in common benchmark configurations such as dense-binary at 2048 bits / 256 bytes).
 
 **Verified Results (126/126 tests):**
 - **Accuracy:** 100% pass rate on evaluation suite
@@ -76,7 +76,7 @@ bundle(A, B, ...) = sparsify(A ∪ B ∪ ...)
 
 ```
 src/hdc/strategies/
-├── dense-binary.mjs          # Dense 2048-bit vectors
+    ├── dense-binary.mjs          # Dense-binary vectors (configurable geometry; often 2048 bits in benchmarks)
 ├── sparse-polynomial.mjs     # SPHDC k-exponent vectors
 └── index.mjs                 # Strategy registry
 ```

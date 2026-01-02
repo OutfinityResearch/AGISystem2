@@ -5,7 +5,7 @@
 **Document Version:** 1.0
 **Author:** Sînică Alboaie
 **Status:** Draft Specification
-**Part Of:** DS07 Core Theory (refactored)
+**Part Of:** DS07 Runtime Core + Kernel Packs (refactored; formerly “Core theory”)
 **Implementation:** `src/core/operations.mjs`, `src/core/position.mjs`
 
 ---
@@ -120,8 +120,8 @@ answer = result ⊕ Pos1
        = John
 ```
 
-**Important scope note (non-XOR strategies):**
-The cancellation derivation above relies on **XOR-class** binding where `UNBIND` is the same operation as `BIND` and is self-inverse. In AGISystem2, not all strategies have that property (e.g., sparse-polynomial, metric-affine, EXACT). For those strategies:
+**Important scope note (non-dense-binary strategies):**
+The cancellation derivation above is written in the **dense-binary mental model** (bitwise XOR with clean cancellation plus majority-bundle storage). In AGISystem2, other strategies can still be self-inverse at the `bind/unbind` level, but `unbind(KB, partial)` may yield a **residual / superposition** due to their storage and bundling semantics. For those strategies:
 
 - `unbind(KB, partial)` may produce a **residual / superposition** that contains *more than just* the missing argument.
 - Extracting the hole value requires a **decoding / projection** step, which can be strategy-specific.
@@ -144,12 +144,15 @@ This keeps argument-order internals out of Core `.sys2` theories while preservin
 
 ## 7a.6 HDC Strategy Support
 
-AGISystem2 supports two HDC strategies:
+AGISystem2 supports multiple HDC strategies (selected per session):
 
 | Strategy | Description | Vector Type | Use Case |
 |----------|-------------|-------------|----------|
-| `dense-binary` | Traditional bit vectors | Uint32Array | Fast, memory-efficient |
-| `sparse-polynomial` | Polynomial exponents | Set<number> | Better mathematical properties |
+| `dense-binary` | Traditional bit vectors | `DenseBinaryVector` (Uint32Array-backed) | Fast baseline, bitwise ops |
+| `sparse-polynomial` | Sparse polynomial (SPHDC) | `SPVector` (Set&lt;bigint&gt;-backed) | Compact symbolic-friendly strategy |
+| `metric-affine` | Metric-affine bytes (Z₂₅₆ᴰ) | Uint8Array-backed | Fuzzy similarity with higher baseline |
+| `metric-affine-elastic` | Metric-affine with elastic/chunked bundling | Uint8Array-backed | Large-KB superposition via chunking |
+| `exact` | Exact-sparse polynomial (EXACT) | `ExactVector` (term list) | Structural unbind + strategy-aware decoding |
 
 Strategy is set per-session:
 ```javascript
@@ -162,10 +165,14 @@ const session = new Session({ hdcStrategy: 'sparse-polynomial' });
 
 | File | Purpose |
 |------|---------|
-| `src/core/operations.mjs` | bind, bundle, similarity |
-| `src/core/position.mjs` | Position vector management |
-| `src/core/vectors/dense-binary.mjs` | Uint32Array implementation |
-| `src/core/vectors/sparse-polynomial.mjs` | Polynomial implementation |
+| `src/hdc/facade.mjs` | Strategy-agnostic bind/bundle/similarity entry point |
+| `src/hdc/strategies/dense-binary.mjs` | Dense-binary strategy implementation |
+| `src/hdc/strategies/sparse-polynomial.mjs` | SPHDC strategy implementation |
+| `src/hdc/strategies/metric-affine.mjs` | Metric-affine strategy implementation |
+| `src/hdc/strategies/metric-affine-elastic.mjs` | EMA strategy implementation |
+| `src/hdc/strategies/exact.mjs` | EXACT strategy implementation |
+| `src/core/operations.mjs` | Backward-compatible re-exports (from HDC facade) |
+| `src/core/position.mjs` | Position vector helpers (PosN tagging) |
 | `config/runtime/reserved-atoms.json` | Runtime-reserved atoms (includes `Pos1..Pos20`) |
 
 ---

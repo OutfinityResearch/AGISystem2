@@ -1,12 +1,5 @@
 import { existsSync, readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-function corePath(relativeFile) {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = dirname(__filename);
-  return join(__dirname, '../../config/Core', relativeFile);
-}
+import { resolveKernelFilePath } from './kernel-manifest.mjs';
 
 function parseTypeMarkerNamesFromCoreFile(content) {
   const names = new Set();
@@ -25,22 +18,22 @@ function validateTypeMarkers(session) {
   const errors = [];
   const warnings = [];
 
-  const path = corePath('00-types.sys2');
-  if (!existsSync(path)) {
-    warnings.push('Missing config/Core/00-types.sys2 (cannot validate type markers)');
+  const path = resolveKernelFilePath('00-types.sys2');
+  if (!path || !existsSync(path)) {
+    warnings.push('Missing Kernel types file (00-types.sys2); cannot validate type markers');
     return { errors, warnings };
   }
 
   const content = readFileSync(path, 'utf8');
   const expected = parseTypeMarkerNamesFromCoreFile(content);
   if (expected.size === 0) {
-    warnings.push('No type markers found in config/Core/00-types.sys2');
+    warnings.push('No type markers found in Kernel types file (00-types.sys2)');
     return { errors, warnings };
   }
 
   for (const name of expected) {
     if (!session?.scope?.has?.(name)) {
-      errors.push(`Missing type marker in scope: ${name} (expected from config/Core/00-types.sys2)`);
+      errors.push(`Missing type marker in scope: ${name} (expected from Kernel types file 00-types.sys2)`);
     }
   }
 
@@ -94,4 +87,3 @@ export function validateCore(session, options = {}) {
   }
   return { ok, errors, warnings };
 }
-

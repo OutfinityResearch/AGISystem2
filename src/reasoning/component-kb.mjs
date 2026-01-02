@@ -24,7 +24,7 @@ import { LevelManager, computeConstructivistLevel, computeGoalLevel } from './co
 export class ComponentKB {
   constructor(session) {
     this.session = session;
-    this.thresholds = getThresholds(session?.hdcStrategy || 'dense-binary');
+    this.thresholds = getThresholds(session?.hdcStrategy || 'exact');
 
     // Primary storage
     this.facts = [];

@@ -8,7 +8,7 @@
 export const name = 'Modal Reasoning';
 export const description = 'Deep modal operators with type hierarchies and complete proofs';
 
-export const theories = ['05-logic.sys2'];
+export const theories = [];
 
 export const steps = [
   // === SETUP: Deep biological taxonomy (11 levels) with modal abilities ===

@@ -5,9 +5,9 @@
 **Document Version:** 1.0
 **Author:** Sînică Alboaie
 **Status:** Draft Specification
-**Part Of:** DS07 Core Theory (refactored)
-**Config File:** `config/Core/12-reasoning.sys2`
-**Related:** [DS17 Meta-Query Operators](DS17-Meta-Query-Operators.md)
+**Part Of:** DS07 Kernel Pack (refactored; formerly Core)
+**Pack File (canonical):** `config/Packs/Reasoning/12-reasoning.sys2`
+**Related:** [DS17a Meta-Query Operators](DS17a-Meta-Query-Operators.md)
 
 ---
 
@@ -17,13 +17,13 @@ This document specifies the **Reasoning Verbs** - meta-level operations for high
 
 1. **Reasoning Type Atoms**: Abduction, Induction, Deduction, Analogy
 2. **Reasoning Graphs**: abduce, induce, deduce, whatif, analogy, similar, explain
-3. **Meta-Query Operators**: Operations with dual-layer architecture (see DS17)
+3. **Meta-Query Operators**: Operations with dual-layer architecture (see DS17a)
 
 ---
 
 ## 7h.2 Reasoning Type Atoms
 
-Defined in `config/Core/12-reasoning.sys2`:
+Defined in the Reasoning pack (`config/Packs/Reasoning/12-reasoning.sys2`):
 
 ```sys2
 @Abduction:Abduction __Action   # Find best explanation
@@ -237,17 +237,17 @@ This:
 
 ---
 
-## 7h.5 Link to DS17
+## 7h.5 Link to DS17a
 
-For detailed specifications of meta-query operators, see [DS17 Meta-Query Operators](DS17-Meta-Query-Operators.md):
+For detailed specifications of meta-query operators, see [DS17a Meta-Query Operators](DS17a-Meta-Query-Operators.md):
 
-| Operator | Purpose | DS17 Section |
+| Operator | Purpose | DS17a Section |
 |----------|---------|--------------|
-| `similar` | Find concepts with shared properties | 17.3.1 |
-| `induce` | Extract common properties | 17.3.2 |
-| `bundle` | Create superposition vector | 17.3.3 |
-| `difference` | Find distinguishing properties | 17.3.4 |
-| `analogy` | A:B :: C:? reasoning | 17.3.5 |
+| `similar` | Find concepts with shared properties | 17a.3.1 |
+| `induce` | Extract common properties | 17a.3.2 |
+| `bundle` | Create superposition vector | 17a.3.3 |
+| `difference` | Find distinguishing properties | 17a.3.4 |
+| `analogy` | A:B :: C:? reasoning | 17a.3.5 |
 
 ---
 
@@ -271,7 +271,7 @@ For detailed specifications of meta-query operators, see [DS17 Meta-Query Operat
 
 | File | Purpose |
 |------|---------|
-| `config/Core/12-reasoning.sys2` | Atom and graph definitions |
+| `config/Packs/Reasoning/12-reasoning.sys2` | Atom and graph definitions |
 | `src/reasoning/query.mjs` | `similar` operator |
 | `src/runtime/executor.mjs` | `induce`, `bundle` operators |
 | `src/reasoning/prove.mjs` | Deduction/proof engine |

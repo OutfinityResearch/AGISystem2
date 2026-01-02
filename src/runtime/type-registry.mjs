@@ -3,6 +3,18 @@ import { isVector } from '../hdc/facade.mjs';
 function fingerprintVector(vec) {
   if (!vec) return null;
 
+  // EXACT strategy: bigint monomial polynomial representation.
+  if (Array.isArray(vec.terms) && Number.isInteger(vec.geometry)) {
+    const terms = vec.terms;
+    const parts = new Array(terms.length);
+    for (let i = 0; i < terms.length; i++) {
+      const t = terms[i];
+      parts[i] = (typeof t === 'bigint') ? t.toString(16) : String(t);
+    }
+    // Terms are already sorted/unique by strategy contract.
+    return `exact:${vec.geometry}:${parts.join('.')}`;
+  }
+
   // Dense-binary / metric-affine share the DenseBinaryVector storage format.
   if (vec.data && Number.isInteger(vec.geometry)) {
     const words = vec.data;

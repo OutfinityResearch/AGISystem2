@@ -1,12 +1,16 @@
 # AGISystem2 - System Specifications
 
-# Chapter 4: Architecture and API
+# DS03: Architecture and API
 
 **Document Version:** 2.0
 **Author:** Sînică Alboaie
 **Status:** Implemented
 
 > **Note:** This document describes the architecture and API. The actual implementation supports dual reasoning modes (HDC-Priority and Symbolic-Priority) based on HDC strategy. See DS01 Section 1.10 for details.
+
+**URC alignment note (vNext):**
+- URC (DS49) treats existing reasoning engines as pluggable **backends/strategies** and introduces a coherent contract for **storage semantics**, **evidence**, and **orchestration**.
+- URC enforces a dual-store rule: persisted slot facts are the authoritative “truth candidates”; bundles are derived indices (rebuildable).
 
 ---
 
@@ -18,7 +22,8 @@ AGISystem2 exposes a simple API through `Session`:
 Session
   ├── LEARNING
   │   ├── learn(dsl: string) → LearnResult
-  │   └── loadCore(options?) → LoadResult
+  │   ├── loadCore(options?) → LoadResult  (legacy: loads theory library; DS51 targets explicit packs)
+  │   └── loadPack(packName: string, options?) → LoadResult
   │
   ├── QUERYING
   │   ├── query(dsl: string) → QueryResult
@@ -26,6 +31,7 @@ Session
   │
   ├── REASONING (advanced)
   │   ├── abduce(dsl: string) → AbductionResult
+  │   ├── induce(options?) → InductionResult
   │   └── findAll(dsl: string) → FindAllResult
   │
   ├── OUTPUT
@@ -37,6 +43,7 @@ Session
   │   ├── dump() → object
   │   ├── similarity(a, b) → number
   │   ├── decode(vector) → object
+  │   ├── checkDSL(dsl: string, options?) → CheckDSLResult
   │   └── summarize(vector) → { success, text, structure? }
   │
   └── LIFECYCLE
@@ -50,8 +57,10 @@ Session
 | Method | Input | Output | Purpose |
 |--------|-------|--------|---------|
 | `learn` | DSL statements | LearnResult | Add facts, define graphs |
+| `loadPack` | pack name | LoadResult | Load an explicit theory pack |
 | `query` | DSL with holes | QueryResult | Find answers |
 | `prove` | DSL without holes | ProveResult | Verify truth + proof steps |
+| `induce` | options | InductionResult | Pattern discovery / suggestions |
 | `summarize` | Vector | `{success,text,...}` | Concise decode (best-effort) |
 | `elaborate` | ProveResult | `{text,...}` | Proof narration (best-effort) |
 | `generateText` | operator, args | string | DSL → natural language |
@@ -75,7 +84,7 @@ The system uses a **strategy pattern** for HDC operations, allowing pluggable im
 │  Layer 2: HDC Facade (bind, bundle, sim, createFromName)    │  ← CONTRACT
 │  ═══════════════════════════════════════════════════════════│
 │  Layer 1: HDC Strategy (Implementation)                     │  ← SWAPPABLE
-│           ├── dense-binary (DEFAULT)                        │
+│           ├── exact (DEFAULT)                               │
 │           └── [future strategies]                           │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -88,9 +97,11 @@ src/hdc/
 ├── contract.mjs         # Interface definitions (JSDoc), validation
 └── strategies/
     ├── index.mjs        # Strategy registry
-    ├── dense-binary.mjs      # Default: Uint32Array + XOR
+    ├── exact.mjs             # Default: session-local EXACT strategy
+    ├── dense-binary.mjs      # Uint32Array + XOR
     ├── sparse-polynomial.mjs # Sparse binding/bundling
-    └── metric-affine.mjs     # Metric (L1) strategy
+    ├── metric-affine.mjs     # Metric (L1) strategy
+    └── metric-affine-elastic.mjs # Metric-affine with elastic bundling
 ```
 
 ### Key HDC Operations (via Facade)
@@ -98,8 +109,8 @@ src/hdc/
 | Operation | Description | Used By |
 |-----------|-------------|---------|
 | `bind(a, b)` | XOR-based association | Executor, Query |
-| `bundle(vectors)` | Majority-vote superposition | KB updates |
-| `similarity(a, b)` | Hamming-based similarity [0,1] | Query, Prove |
+| `bundle(vectors)` | Strategy-defined superposition | KB updates |
+| `similarity(a, b)` | Strategy-defined similarity [0,1] | Query, Prove |
 | `createFromName(name, geo)` | Deterministic vector creation | ASCII stamp |
 | `topKSimilar(query, vocab, k)` | Find best matches | Query engine |
 
@@ -107,8 +118,8 @@ src/hdc/
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `SYS2_HDC_STRATEGY` | `dense-binary` | Default HDC strategy for new `Session`s (session-local override via constructor) |
-| `SYS2_GEOMETRY` | `32768` | Default geometry for new `Session`s (session-local override via constructor) |
+| `SYS2_HDC_STRATEGY` | `exact` | Default HDC strategy for new `Session`s (session-local override via constructor) |
+| `SYS2_GEOMETRY` | Strategy-defined | Default geometry for new `Session`s (exact: 256; dense-binary: 32768 bits; sparse-polynomial: 4; metric-affine: 32). When set, it overrides the strategy default. |
 | `SYS2_DEBUG` | `false` | Enable debug logging |
 | `REASONING_PRIORITY` | `symbolicPriority` | Default reasoning priority for new `Session`s (session-local override via constructor) |
 | `SYS2_PROFILE` | `theoryDriven` | Reasoning profile (only `theoryDriven` is supported) |
@@ -125,19 +136,20 @@ src/hdc/
 import { Session } from 'agisystem2';
 
 const session = new Session({
-  hdcStrategy: 'dense-binary',
-  geometry: 32768,
+  hdcStrategy: 'exact',
+  geometry: 256,
   reasoningPriority: 'symbolicPriority'
 });
 
-// Core is not auto-loaded. Call session.loadCore() to load:
-// - Position vectors: Pos1..Pos20
-// - Type constructors: __Person, __Object, __Place, etc.
-// - L2 primitives: _ptrans, _atrans, _mtrans, etc.
-// - Logic: Implies, And, Or, Not
-// - Roles: Agent, Theme, Source, Goal, etc.
-
-session.loadCore();
+// Core bootstrapping:
+// - By default, a Session auto-loads Core at construction time (see DS26).
+// - Under `node --test`, Core auto-load may be disabled by default for unit-test isolation.
+//
+// Position markers:
+// - `Pos1..Pos20` are runtime-reserved atoms initialized during session bootstrapping (not DSL-defined).
+//
+// Explicit load (optional / override):
+// session.loadCore({ includeIndex: true });
 
 session.learn(`
     @_ Load $Commerce
@@ -215,14 +227,14 @@ interface LearnResult {
 **Output:** `Result` structure
 ```typescript
 interface Result {
-    vector: Uint64Array;           // The answer vector
+    vector: object;               // HDC vector (strategy-specific)
     bindings: Map<string, Binding>; // Solutions for each hole
     success: boolean;
 }
 
 interface Binding {
     name: string;           // Literal name (e.g., "Charlie")
-    vector: Uint64Array;    // The vector
+    vector: object;         // HDC vector (strategy-specific)
     similarity: number;     // Match confidence 0-1
 }
 ```
@@ -397,11 +409,13 @@ knowledgeBase = Bundle(fact1, fact2, fact3, ...)
 import { Session } from 'agisystem2';
 
 const session = new Session({
-  hdcStrategy: 'dense-binary',
-  geometry: 2048,
+  hdcStrategy: 'exact',
+  geometry: 256,
   reasoningPriority: 'symbolicPriority'
 });
-session.loadCore();
+
+// Theory libraries:
+// - URC direction (DS51): load explicit packs (e.g., Kernel) instead of treating theories as runtime core.
 
 // Build knowledge
 session.learn(`
@@ -479,4 +493,4 @@ session.close();
 
 ---
 
-*End of Chapter 4*
+*End of DS03*

@@ -1,7 +1,7 @@
 # Biology - Lexicon (Cellular)
 # Domain tokens used in Biology cellular-level concepts.
 #
-# Note: Domain theories should use Core semantic roles from `config/Core/09-roles.sys2`.
+# Note: Domain theories should use Bootstrap semantic roles from `config/Packs/Bootstrap/09-roles.sys2`.
 
 @CellMembrane:CellMembrane __Category
 @Cells:Cells __Category

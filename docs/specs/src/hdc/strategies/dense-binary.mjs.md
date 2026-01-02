@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Reference HDC implementation using dense binary vectors stored in Uint32Array. Default strategy implementing classic hyperdimensional computing approach.
+Reference HDC implementation using dense binary vectors stored in Uint32Array. This is the classic hyperdimensional computing baseline (not the default `Session` strategy).
 
 ## Exports
 

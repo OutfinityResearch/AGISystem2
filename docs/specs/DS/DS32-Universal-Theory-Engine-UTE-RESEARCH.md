@@ -101,6 +101,14 @@ UTE is intentionally split into focused DS documents:
 
 This partition is designed so each DS can be studied independently, while still aligning with a single UTE goal.
 
+## 4.1 Bridge documents (URC direction)
+
+UTE research documents define the long-horizon direction. To converge toward an implementable “serious core” without discarding existing engines, URC introduces bridge specs:
+
+- DS49 (URC): storage semantics, evidence, and backend orchestration contract.
+- DS50 (Compilation): deterministic compilation to solver DSLs (SMT-LIB2 v0).
+- DS51 (Config taxonomy): Core vs optional domain packs and deprecating eval-only theory creep.
+
 ---
 
 ## 5. Status Notes

@@ -40,7 +40,7 @@ export class HolographicProofEngine {
     };
 
     // Get strategy-dependent thresholds
-    const strategy = session?.hdcStrategy || 'dense-binary';
+    const strategy = session?.hdcStrategy || 'exact';
     this.thresholds = getThresholds(strategy);
     this.config = getHolographicThresholds(strategy);
 

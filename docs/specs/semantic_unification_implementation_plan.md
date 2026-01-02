@@ -15,7 +15,7 @@
 3. `Session.prove(...)` returns a **verifiable proof object** (offline-validatable) for:
    - symbolic reasoning,
    - holographic reasoning (HDC-first) with an explicit symbolic validation step.
-4. Relation properties (transitive/symmetric/reflexive/…) are **theory-driven** (derived from loaded `config/Core/*.sys2`), not from hardcoded JS lists or opaque fallbacks.
+4. Relation properties (transitive/symmetric/reflexive/…) are **theory-driven** (derived from loaded `config/Packs/Kernel/*.sys2`), not from hardcoded JS lists or opaque fallbacks.
 5. DS19 tests exist to prevent regressions (canonical equivalence, proof validation, dual-engine consistency).
 
 ---
@@ -26,8 +26,8 @@
 |---|---|---|
 | `src/runtime/executor.mjs` | Builds vectors + metadata, but lacks an explicit canonicalization stage for AST/metadata before committing facts. | Equivalent facts can end up with different vectors/metadata → breaks “semantic unification”. |
 | `src/reasoning/prove.mjs` + `src/reasoning/holographic/prove-hdc-first.mjs` | Returns results with `steps`, `confidence`, `method`, but no unified proof schema + robust validator. | DS19 requires “proof real” with the same schema across engines. |
-| `src/reasoning/transitive.mjs` | Loads some relation properties from `config/Core/00-relations.sys2`, but also uses hardcoded defaults. | DS19 requires theory-driven properties without semantic-changing hardcoding. |
-| `config/Core/*.sys2` | Contains relations/roles/properties and macros (graphs). | We can extract theory metadata for canonicalization (alias, properties, templates). |
+| `src/reasoning/transitive.mjs` | Loads some relation properties from `config/Packs/Kernel/00-relations.sys2`, but also uses hardcoded defaults. | DS19 requires theory-driven properties without semantic-changing hardcoding. |
+| `config/Packs/Kernel/*.sys2` | Contains relations/roles/properties and macros (graphs). | We can extract theory metadata for canonicalization (alias, properties, templates). |
 
 ---
 
@@ -59,7 +59,7 @@
 
 ## 4) Workstreams (parallelizable)
 
-### WS-A — Meta-model in theory (config/Core)
+### WS-A — Meta-model in theory (Kernel pack)
 
 **Objective:** express (and extract from) `*.sys2` the metadata needed for canonicalization.
 
@@ -146,7 +146,7 @@ Exit:
 |---|---|---|
 | Canonicalize `Not` (ref vs inline) into a single representation | Phase 1 | `src/runtime/canonicalize.mjs`, `src/runtime/executor.mjs` |
 | Canonicalize alias/synonym (metadata + proof steps) | Phase 1 | `src/runtime/canonicalize.mjs`, `src/reasoning/*` |
-| Canonicalize typed atoms (`__*`/`___*` discipline) | Phase 1 | `config/Core/00-types.sys2`, `config/Core/02-constructors.sys2`, canonicalizer |
+| Canonicalize typed atoms (`__*`/`___*` discipline) | Phase 1 | `config/Packs/Kernel/00-types.sys2`, `config/Packs/Kernel/02-constructors.sys2`, canonicalizer |
 
 Exit:
 - two equivalent DSL formulations produce identical canonical metadata (DS19 test becomes active).
@@ -178,7 +178,7 @@ Exit:
 | Task | Depinde de | Output |
 |---|---|---|
 | Feature flags `SYS2_CANONICAL=1` + `SYS2_PROOF_VALIDATE=1` | Phases 2/4 | runtime changes |
-| Incremental migration of theory files to the new conventions | Phase 2/3 | `config/Core/*.sys2` |
+| Incremental migration of theory files to the new conventions | Phase 2/3 | `config/Packs/Kernel/*.sys2` |
 | FastEval scenarios for canonical/proof invariants | Phases 2/4 | `evals/fastEval/*` |
 
 Exit:
@@ -186,15 +186,15 @@ Exit:
 
 ---
 
-## 6) Concrete proposed changes in `config/Core/*` (minimum for DS19)
+## 6) Concrete proposed changes in `config/Packs/Kernel/*` (minimum for DS19)
 
 | File | Proposed change | DS19 rationale |
 |---|---|---|
-| `config/Core/00-relations.sys2` | Add meta for relation properties (e.g., `__TransitiveRelation` already exists) + optionally a stable “registry” format consumable by a cache. | Reasoner must read properties from theory, not JS. |
-| `config/Core/10-properties.sys2` | Clarify/standardize `synonym` (canonical vs alias) + proof-step rules for alias expansion. | Synonyms must become explicit proof steps. |
-| `config/Core/02-constructors.sys2` | Introduce/standardize typed atom constructors (e.g., `__Named`, `__TypedAtom`). | Avoid arbitrary high-level atoms; enforce discipline. |
-| `config/Core/05-logic.sys2` | Standardize `Not` representation (and what negation-as-failure means in Core). | Canonical, validatable negation. |
-| `config/Core/12-reasoning.sys2` | Canonical templates for reasoning macros (and semantic classes), used by the canonicalizer. | “Same meaning → same canonical form”. |
+| `config/Packs/Kernel/00-relations.sys2` | Add meta for relation properties (e.g., `__TransitiveRelation` already exists) + optionally a stable “registry” format consumable by a cache. | Reasoner must read properties from theory, not JS. |
+| `config/Packs/Kernel/10-properties.sys2` | Clarify/standardize `synonym` (canonical vs alias) + proof-step rules for alias expansion. | Synonyms must become explicit proof steps. |
+| `config/Packs/Kernel/02-constructors.sys2` | Introduce/standardize typed atom constructors (e.g., `__Named`, `__TypedAtom`). | Avoid arbitrary high-level atoms; enforce discipline. |
+| `config/Packs/Kernel/05-logic.sys2` | Standardize `Not` representation (and what negation-as-failure means in Core). | Canonical, validatable negation. |
+| `config/Packs/Kernel/12-reasoning.sys2` | Canonical templates for reasoning macros (and semantic classes), used by the canonicalizer. | “Same meaning → same canonical form”. |
 
 ---
 

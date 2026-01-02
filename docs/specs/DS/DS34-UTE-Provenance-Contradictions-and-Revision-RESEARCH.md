@@ -71,6 +71,11 @@ This DS is designed to align with:
 - Session-level isolation (DS26) so revisions are scoped per Session,
 - future persistence work (explicitly separate milestone).
 
+Bridge alignment:
+
+- DS49 (URC) defines storage semantics and a materialized “Current view” policy surface that this evidence/revision model can attach to.
+- DS51 (Config taxonomy) defines how provenance should identify Core vs Domain Pack origin.
+
 ---
 
 *End of DS34*

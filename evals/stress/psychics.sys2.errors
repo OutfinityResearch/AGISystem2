@@ -1,0 +1,7 @@
+# Errors for evals/stress/psychics.sys2
+
+## Missing Dependencies
+
+- [exact(A)+holo] Unknown operator 'basedOn' at 10083:12
+- [exact(A)+holo] Unknown operator 'hasValue' at 10844:10
+- [exact(A)+holo] Unknown operator 'simultaneous' at 10268:12

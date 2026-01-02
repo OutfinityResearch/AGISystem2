@@ -7,40 +7,19 @@ import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { Session } from '../../../src/runtime/session.mjs';
 import fs from 'fs';
-import path from 'path';
 
 describe('Core Theories Loading', () => {
 
   function loadCoreTheories(session) {
-    const corePath = './config/Core';
-    const files = fs.readdirSync(corePath)
-      .filter(f => f.endsWith('.sys2') && f !== 'index.sys2')
-      .sort();
-
-    for (const file of files) {
-      const content = fs.readFileSync(path.join(corePath, file), 'utf8');
-      session.learn(content);
-    }
+    const res = session.loadPack('Kernel', { includeIndex: true, validate: false });
+    assert.equal(res.success, true, `Kernel pack load failed: ${JSON.stringify(res.errors || [])}`);
   }
 
   describe('Loading', () => {
     test('should load all Core theories without errors', () => {
       const session = new Session({ geometry: 2048 });
-      const corePath = './config/Core';
-      const files = fs.readdirSync(corePath)
-        .filter(f => f.endsWith('.sys2') && f !== 'index.sys2')
-        .sort();
-
-      let errors = [];
-      for (const file of files) {
-        const content = fs.readFileSync(path.join(corePath, file), 'utf8');
-        const result = session.learn(content);
-        if (!result.success) {
-          errors.push({ file, errors: result.errors });
-        }
-      }
-
-      assert.equal(errors.length, 0, `Core theories had errors: ${JSON.stringify(errors)}`);
+      const res = session.loadPack('Kernel', { includeIndex: true, validate: false });
+      assert.equal(res.success, true, `Kernel pack load failed: ${JSON.stringify(res.errors || [])}`);
     });
 
     test('should load facts from Core theories', () => {
@@ -84,7 +63,7 @@ describe('Core Theories Loading', () => {
   describe('Specific theories', () => {
     test('00-types.sys2 should define base types', () => {
       const session = new Session({ geometry: 2048 });
-      const content = fs.readFileSync('./config/Core/00-types.sys2', 'utf8');
+      const content = fs.readFileSync('./config/Packs/Bootstrap/00-types.sys2', 'utf8');
       const result = session.learn(content);
 
       assert.equal(result.success, true);
@@ -93,7 +72,7 @@ describe('Core Theories Loading', () => {
 
     test('05-logic.sys2 should load without Implies execution', () => {
       const session = new Session({ geometry: 2048 });
-      const content = fs.readFileSync('./config/Core/05-logic.sys2', 'utf8');
+      const content = fs.readFileSync('./config/Packs/Logic/05-logic.sys2', 'utf8');
       const result = session.learn(content);
 
       assert.equal(result.success, true);
@@ -101,7 +80,7 @@ describe('Core Theories Loading', () => {
 
     test('12-reasoning.sys2 should load macros', () => {
       const session = new Session({ geometry: 2048 });
-      const content = fs.readFileSync('./config/Core/12-reasoning.sys2', 'utf8');
+      const content = fs.readFileSync('./config/Packs/Reasoning/12-reasoning.sys2', 'utf8');
       const result = session.learn(content);
 
       assert.equal(result.success, true);

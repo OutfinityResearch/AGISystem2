@@ -8,7 +8,7 @@
 export const name = 'Fuzzy Matching';
 export const description = 'Approximate matching with deep chains and complete proofs';
 
-export const theories = ['05-logic.sys2'];
+export const theories = [];
 
 // Custom flag to indicate this suite tests experimental features
 export const experimental = true;

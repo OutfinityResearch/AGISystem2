@@ -1,0 +1,96 @@
+# URC - ContentCore v1
+# Universal content IR primitives (facts, constraints, typed content, quantities).
+#
+# Design note:
+# - Many common relations exist in the Kernel pack (e.g. isA, equals).
+# - This pack adds missing, more "solver-facing" relations (inequalities, defeq, units),
+#   plus canonical constructor graphs for determinism in NL->DSL mapping.
+
+# ===== Categories =====
+@Entity:Entity __Category
+@Type:Type __Category
+@Unit:Unit __Category
+@QuantityObj:QuantityObj __Category
+@Set:Set __Category
+@Expr:Expr __Category
+
+# ===== Core relations (facts / constraints) =====
+@defeq:defeq __Relation
+@leq:leq __Relation
+@lt:lt __Relation
+@geq:geq __Relation
+@gt:gt __Relation
+@approx:approx __Relation
+@in:in __Relation
+@subset:subset __Relation
+@hasType:hasType __Relation
+@hasUnit:hasUnit __Relation
+@value:value __Relation
+@unitOf:unitOf __Relation
+
+# ===== Term operators (kept minimal to avoid name conflicts with Kernel numeric macros) =====
+@App:App __Relation
+@Let:Let __Relation
+@Annot:Annot __Relation
+@List:List __Relation
+
+# ===== Canonical constructors =====
+
+@C_DefEq:C_DefEq graph a b
+    @x defeq $a $b
+    return $x
+end
+
+@C_Leq:C_Leq graph a b
+    @x leq $a $b
+    return $x
+end
+
+@C_Lt:C_Lt graph a b
+    @x lt $a $b
+    return $x
+end
+
+@C_Geq:C_Geq graph a b
+    @x geq $a $b
+    return $x
+end
+
+@C_Gt:C_Gt graph a b
+    @x gt $a $b
+    return $x
+end
+
+@C_Approx:C_Approx graph a b
+    @x approx $a $b
+    return $x
+end
+
+@C_In:C_In graph x S
+    @r in $x $S
+    return $r
+end
+
+@C_Subset:C_Subset graph A B
+    @r subset $A $B
+    return $r
+end
+
+@C_Type:C_Type graph term type
+    @r hasType $term $type
+    return $r
+end
+
+@C_Unit:C_Unit graph term unit
+    @r hasUnit $term $unit
+    return $r
+end
+
+@C_Quantity:C_Quantity graph q v u
+    @a isA $q QuantityObj
+    @b value $q $v
+    @c unitOf $q $u
+    @res __Bundle $a $b $c
+    return $res
+end
+

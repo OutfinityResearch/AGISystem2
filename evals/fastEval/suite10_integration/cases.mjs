@@ -9,7 +9,6 @@ export const name = 'Complex Integration';
 export const description = 'Multi-domain with all operators and deep chains';
 
 export const theories = [
-  '05-logic.sys2',
   'Medicine/01-relations.sys2'
 ];
 

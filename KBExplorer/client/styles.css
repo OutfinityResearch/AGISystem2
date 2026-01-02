@@ -490,6 +490,101 @@ textarea {
   margin-bottom: 14px;
 }
 
+.dialog {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 0;
+  max-width: min(820px, calc(100vw - 30px));
+  width: 820px;
+  background: var(--panel);
+  color: var(--text);
+}
+
+.dialog::backdrop {
+  background: rgba(15, 23, 42, 0.35);
+}
+
+.dialog__header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(246, 248, 255, 0.65);
+}
+
+.dialog__title {
+  font-weight: 750;
+  font-size: 18px;
+}
+
+.dialog__subtitle {
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.dialog__body {
+  padding: 14px 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.dialog__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.dialog__row--buttons {
+  justify-content: flex-start;
+}
+
+.dialog__search {
+  flex: 1;
+  min-width: 240px;
+}
+
+.packList {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--panel2);
+  max-height: min(460px, calc(100vh - 280px));
+  overflow: auto;
+  padding: 10px;
+}
+
+.packRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.packRow:hover {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.packRow__check {
+  width: 18px;
+  height: 18px;
+}
+
+.packRow__name {
+  font-family: var(--mono);
+  font-size: 14px;
+}
+
+.dialog__footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  background: rgba(246, 248, 255, 0.55);
+}
+
 @media (max-width: 900px) {
   .explorer { grid-template-columns: 1fr; }
 }

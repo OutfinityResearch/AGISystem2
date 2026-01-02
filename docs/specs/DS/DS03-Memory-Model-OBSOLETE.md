@@ -138,7 +138,7 @@ Multiple theories can be loaded, forming a stack. Resolution: most recent first.
 | Load Finance | `[Finance, Geography, Core]` | Finance.Bank |
 | Unload Finance | `[Geography, Core]` | Geography.Bank |
 
-**Note:** Core is always at bottom, cannot be unloaded.
+**Note (outdated):** This “Core at bottom, cannot be unloaded” assumption reflects an older theory-stack model. Under the DS49/DS51 direction, semantic libraries are explicit packs (loadable/unloadable), while “Core” is runtime code + reserved atoms.
 
 ---
 

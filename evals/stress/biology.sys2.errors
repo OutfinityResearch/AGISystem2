@@ -1,0 +1,10 @@
+# Errors for evals/stress/biology.sys2
+
+## Missing Dependencies
+
+- [exact(A)+holo] Unknown operator 'affectedBy' at 7548:14
+- [exact(A)+holo] Unknown operator 'basedOn' at 6697:12
+- [exact(A)+holo] Unknown operator 'causedBy' at 6056:12
+- [exact(A)+holo] Unknown operator 'derivedFrom' (3x) at 6878:13, 6933:9, 6934:9
+- [exact(A)+holo] Unknown operator 'dominates' (3x) at 8554:12, 8555:17, 8559:15
+- [exact(A)+holo] Unknown operator 'exhibits' at 8510:16

@@ -211,6 +211,32 @@ The engine must guarantee:
 - **stable deduping** (fingerprint-based when exact; approximate hashing otherwise),
 - **debuggability**: counts of expansions, prunes, and final frontier.
 
+### 8.1 Budget ceilings and absorbing boundary states
+
+To keep closure practical across strategies, the engine SHOULD support backend-defined “ceiling normalization”.
+
+For EXACT in particular, closure can trigger an explosion in:
+
+- monom bit density,
+- polynomial term count.
+
+URC introduces two runtime-reserved sentinel atoms (DS26):
+
+- `BOTTOM_IMPOSSIBLE`: contradiction / dead-end (absorbing).
+- `TOP_INEFFABLE`: resource boundary / unknown (absorbing).
+
+Recommended engine rule:
+
+- If a state contains `BOTTOM_IMPOSSIBLE`, normalize to `{BOTTOM_IMPOSSIBLE}` and do not expand.
+- If a state contains `TOP_INEFFABLE`, normalize to `{TOP_INEFFABLE}` and do not expand.
+
+Recommended backend rule (EXACT):
+
+- If `popcount(monom) > ineffableBitThreshold`, replace the monom with `{TOP_INEFFABLE}`.
+- If `polyTermCount > ineffableTermThreshold`, replace the polynomial with `{TOP_INEFFABLE}`.
+
+These thresholds are part of the closure budget and should be recorded in traces.
+
 The engine must not assume that:
 
 - `BIND == UNBIND` for all strategies,

@@ -2,7 +2,7 @@
  * AGISystem2 - Symmetric Relation Reasoner
  * @module reasoning/symmetric
  *
- * Supports symmetric relations declared in config/Core/00-relations.sys2:
+ * Supports symmetric relations declared in config/Packs/Relations/00-relations.sys2:
  * R(A,B) => R(B,A)
  */
 
@@ -12,7 +12,7 @@ import { Statement, Identifier } from '../parser/ast.mjs';
 export class SymmetricReasoner {
   constructor(proofEngine) {
     this.engine = proofEngine;
-    const strategy = proofEngine.session?.hdcStrategy || 'dense-binary';
+    const strategy = proofEngine.session?.hdcStrategy || 'exact';
     this.thresholds = getThresholds(strategy);
   }
 

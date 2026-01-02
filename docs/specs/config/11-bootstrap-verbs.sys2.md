@@ -1,4 +1,4 @@
-# Spec: config/Core/11-bootstrap-verbs.sys2
+# Spec: `config/Packs/Lexicon/11-bootstrap-verbs.sys2`
 
 ## Purpose
 Defines L3 verbs (tell, ask, give, go, see, want, etc.) composed from L2 semantic primitives.  Captures DS07g requirements and ensures high-level DSL remains concise while staying grounded in CD structures.

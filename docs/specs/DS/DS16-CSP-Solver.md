@@ -1,51 +1,62 @@
 # AGISystem2 - System Specifications
 
-# Chapter 16: Constraint Satisfaction Problem Solver
+# DS16: Constraint Programming / CSP Backend (Current Implementation)
 
 **Document Version:** 1.0
 **Author:** Sînică Alboaie
-**Status:** Draft Specification
+**Status:** Draft Specification (URC-aligned)
 
 ---
 
 ## 16.1 Overview
 
-AGISystem2 includes a Constraint Satisfaction Problem (CSP) solver that enables finding ALL valid solutions to combinatorial problems, not just the best match. This complements the similarity-based query system with exhaustive search capabilities.
+AGISystem2 includes a Constraint Satisfaction Problem (CSP) solver as a **Constraint Programming (CP) backend**. It enables enumerating **all** solutions that satisfy a set of constraints (and is extendable toward optimization and counting).
 
-**Key Difference from Query:**
+This backend is complementary to the retrieval-driven query engine:
 
 | Feature | Query | CSP Solver |
 |---------|-------|------------|
 | Returns | Best match + alternatives | ALL valid solutions |
-| Method | Similarity search | Backtracking with pruning |
+| Method | Candidate retrieval + matching | Backtracking search with pruning |
 | Use case | "What is X?" | "What are all X that satisfy constraints?" |
 
-**Example Problem:** Wedding Seating
-
-Given guests with conflict relationships and available tables, find ALL seating arrangements where no conflicting guests share a table.
-
-```
-Guests: Alice, Bob, Carol, Dave
-Tables: Table1, Table2
-Conflicts: Alice-Bob, Carol-Dave
-
-Solutions:
-1. Alice@T1, Bob@T2, Carol@T1, Dave@T2
-2. Alice@T1, Bob@T2, Carol@T2, Dave@T1
-3. Alice@T2, Bob@T1, Carol@T1, Dave@T2
-4. Alice@T2, Bob@T1, Carol@T2, Dave@T1
-```
+This DS focuses on the **current implementation** in `src/reasoning/csp/*` and on how it should evolve under URC (DS49 / DS55).
 
 ---
 
-## 16.2 Architecture
+## 16.2 URC integration (contract, not yet fully implemented)
+
+URC treats CP as a backend selected for a constraint fragment.
+
+### 16.2.1 Fragment and goals
+
+- **Fragment:** `Frag_CP` (see `config/Packs/URC/03-capability-registry.sys2`)
+- **Goal kinds:** `Find`, `OptimizeMin`, `OptimizeMax`, `Count` (future #CSP)
+
+### 16.2.2 Evidence shapes
+
+The CP backend should emit Evidence objects rather than ad-hoc text:
+
+- satisfiable: `Model` / `Witness` assignment
+- infeasible: `UnsatCore` (nogoods) or `Derivation` / propagation trace
+- optional: `Trace` for explanation (propagation and branching decisions)
+
+### 16.2.3 Pack-driven modeling helpers (optional)
+
+Puzzle/domain-specific modeling aliases live in a pack, not in runtime core:
+
+- `evals/domains/CSP/*` (domain relations and aliases used by evals/examples)
+
+---
+
+## 16.3 Architecture (current code)
 
 The CSP module consists of four components:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                      Session API                             │
-│   findAll(), solveWeddingSeating(), solveCSP()              │
+│   findAll(), createCSPSolver(), solve csp (DSL)             │
 └─────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
@@ -73,11 +84,11 @@ The CSP module consists of four components:
 
 ---
 
-## 16.3 FindAll Engine
+## 16.4 FindAll engine (enumeration primitive)
 
 Before CSP, we need enumeration. The `findAll` functions retrieve ALL matches, not just the best.
 
-### 16.3.1 findAllOfType
+### 16.4.1 findAllOfType
 
 Find all entities of a given type in the knowledge base.
 
@@ -94,7 +105,7 @@ const guests = session.findAllOfType('Guest');
 
 **Implementation:** Scans KB facts for `isA X Type` patterns.
 
-### 16.3.2 findAll Pattern
+### 16.4.2 findAll pattern
 
 Find all matches for a pattern with holes.
 
@@ -112,7 +123,7 @@ const result = session.findAll('seatedAt ?person Table1');
 // ]}
 ```
 
-### 16.3.3 findAllRelated
+### 16.4.3 findAllRelated
 
 Find all entities related via a specific relation.
 
@@ -128,17 +139,17 @@ const enemies = session.findAllRelated('conflictsWith', 'Alice', 0);
 
 ---
 
-## 16.4 Domain Management
+## 16.5 Domain management
 
 Variables in CSP have domains - the set of possible values.
 
-### 16.4.1 Explicit Domains
+### 16.5.1 Explicit domains
 
 ```javascript
 solver.addVariable('color', ['red', 'green', 'blue']);
 ```
 
-### 16.4.2 Type-Inferred Domains
+### 16.5.2 Type-inferred domains
 
 Domains can be inferred from KB types:
 
@@ -153,7 +164,7 @@ solver.addVariableFromType('table', 'Table');
 // Domain automatically set to ['Table1', 'Table2', 'Table3']
 ```
 
-### 16.4.3 Domain Operations
+### 16.5.3 Domain operations
 
 | Operation | Description |
 |-----------|-------------|
@@ -166,9 +177,9 @@ solver.addVariableFromType('table', 'Table');
 
 ---
 
-## 16.5 Constraint Types
+## 16.6 Constraint types (current)
 
-### 16.5.1 AllDifferent
+### 16.6.1 AllDifferent
 
 All variables must have different values.
 
@@ -177,7 +188,7 @@ solver.addAllDifferent('x', 'y', 'z');
 // Ensures x ≠ y ≠ z
 ```
 
-### 16.5.2 Predicate Constraint
+### 16.6.2 Predicate constraint
 
 Custom boolean function over assignments.
 
@@ -187,7 +198,7 @@ solver.addPredicate(['a', 'b'], (assignment) => {
 });
 ```
 
-### 16.5.3 Relational Constraint
+### 16.6.3 Relational constraint
 
 Fact must exist in KB.
 
@@ -196,7 +207,7 @@ solver.addRelational('friendsWith', '?person', 'Alice');
 // Person must be friends with Alice (per KB)
 ```
 
-### 16.5.4 NoConflict Constraint
+### 16.6.4 NoConflict constraint
 
 Two variables cannot have the same value if they conflict in KB.
 
@@ -205,7 +216,7 @@ solver.addNoConflict('?person1', '?person2');
 // If conflictsWith person1 person2, they need different tables
 ```
 
-### 16.5.5 Logical Combinations
+### 16.6.5 Logical combinations
 
 | Constraint | Description |
 |------------|-------------|
@@ -215,11 +226,11 @@ solver.addNoConflict('?person1', '?person2');
 
 ---
 
-## 16.6 Backtracking Search
+## 16.7 Backtracking search
 
 The search algorithm explores the solution space systematically.
 
-### 16.6.1 Basic Algorithm
+### 16.7.1 Basic algorithm
 
 ```
 function backtrack(assignment):
@@ -239,6 +250,33 @@ function backtrack(assignment):
 
     return solutions
 ```
+
+---
+
+## Appendix A: Example — Wedding seating (as a CP modeling case)
+
+This example is intentionally not the definition of CP in AGISystem2; it is one modeling case that exercises:
+
+- variable domains inferred from types (`Guest`, `Table`)
+- relational constraints from KB (`conflictsWith`)
+- `AllDifferent` / inequality constraints
+
+Problem:
+
+```
+Guests: Alice, Bob, Carol, Dave
+Tables: Table1, Table2
+Conflicts: Alice-Bob, Carol-Dave
+```
+
+Find all seating assignments `seatedAt(guest) -> table` such that no conflicting pair shares a table.
+
+Expected solutions (4):
+
+1. Alice@T1, Bob@T2, Carol@T1, Dave@T2
+2. Alice@T1, Bob@T2, Carol@T2, Dave@T1
+3. Alice@T2, Bob@T1, Carol@T1, Dave@T2
+4. Alice@T2, Bob@T1, Carol@T2, Dave@T1
 
 ### 16.6.2 MRV Heuristic
 
@@ -283,67 +321,32 @@ The solver tracks:
 
 ## 16.7 Session API
 
-### 16.7.1 solveWeddingSeating
+### 16.7.1 createCSPSolver (Fluent API)
 
-Specialized solver for the wedding seating problem.
-
-```javascript
-session.learn(`
-  isA Alice Guest
-  isA Bob Guest
-  isA Table1 Table
-  isA Table2 Table
-  conflictsWith Alice Bob
-  conflictsWith Bob Alice
-`);
-
-const result = session.solveWeddingSeating();
-// Returns:
-// {
-//   success: true,
-//   solutionCount: 2,
-//   solutions: [
-//     { Alice: 'Table1', Bob: 'Table2' },
-//     { Alice: 'Table2', Bob: 'Table1' }
-//   ],
-//   stats: { nodesExplored: 4, backtracks: 2, timeMs: 1 }
-// }
-```
-
-**Automatic Setup:**
-1. Finds all `Guest` entities → creates one variable per guest
-2. Finds all `Table` entities → sets domain to tables
-3. Finds all `conflictsWith` relations → adds no-same-table constraints
-
-### 16.7.2 solveCSP (Generic)
-
-General-purpose CSP solver.
+Programmatic solver construction (strategy-aware; returns either a symbolic or holographic CSP solver).
 
 ```javascript
-const result = session.solveCSP({
-  variables: {
-    x: ['a', 'b', 'c'],
-    y: ['a', 'b', 'c']
-  },
-  constraints: [
-    (assignment) => assignment.get('x') !== assignment.get('y')
-  ]
-});
-// Returns 6 solutions where x ≠ y
-```
+import { createCSPSolver } from '../../src/reasoning/index.mjs';
 
-### 16.7.3 createCSPSolver (Fluent API)
-
-Programmatic solver construction.
-
-```javascript
-const solver = session.createCSPSolver()
+const solver = createCSPSolver(session, { maxSolutions: 100, timeout: 10000 })
   .addVariable('x', [1, 2, 3])
   .addVariable('y', [1, 2, 3])
   .addPredicate(['x', 'y'], (a) => a.get('x') < a.get('y'))
   .addAllDifferent('x', 'y');
 
 const result = solver.solve();
+```
+
+### 16.7.2 Sys2DSL solve blocks (`solve csp`)
+
+The DSL also supports CSP solving inside `learn`:
+
+```sys2dsl
+@solutions solve csp [
+  (variablesFrom Guest),
+  (domainFrom Table),
+  (noConflict conflictsWith)
+]
 ```
 
 ---
@@ -358,7 +361,8 @@ const result = solver.solve();
 
 **Example:**
 ```javascript
-session.solveWeddingSeating({ maxSolutions: 50, timeout: 5000 });
+import { createCSPSolver } from '../../src/reasoning/index.mjs';
+createCSPSolver(session, { maxSolutions: 50, timeout: 5000 });
 ```
 
 ---
@@ -376,7 +380,13 @@ session.learn(`
   conflictsWith Alice Bob
 `);
 
-const result = session.solveWeddingSeating();
+import { createCSPSolver } from '../../src/reasoning/index.mjs';
+const solver = createCSPSolver(session)
+  .addVariableFromType('Alice', 'Table')
+  .addVariableFromType('Bob', 'Table')
+  .addNoConflict('Alice', 'Bob');
+
+const result = solver.solve();
 // 2 solutions: Alice@T1+Bob@T2, Alice@T2+Bob@T1
 ```
 
@@ -389,7 +399,8 @@ session.learn(`
   isA Blue Color
 `);
 
-const solver = session.createCSPSolver()
+import { createCSPSolver } from '../../src/reasoning/index.mjs';
+const solver = createCSPSolver(session)
   .addVariableFromType('A', 'Color')
   .addVariableFromType('B', 'Color')
   .addVariableFromType('C', 'Color')
@@ -403,17 +414,15 @@ const result = solver.solve();
 ### 16.9.3 Scheduling with Constraints
 
 ```javascript
-const result = session.solveCSP({
-  variables: {
-    meeting1: ['9am', '10am', '11am'],
-    meeting2: ['9am', '10am', '11am'],
-    meeting3: ['10am', '11am', '12pm']
-  },
-  constraints: [
-    (a) => a.get('meeting1') !== a.get('meeting2'),
-    (a) => a.get('meeting2') !== a.get('meeting3')
-  ]
-});
+import { createCSPSolver } from '../../src/reasoning/index.mjs';
+const solver = createCSPSolver(session)
+  .addVariable('meeting1', ['9am', '10am', '11am'])
+  .addVariable('meeting2', ['9am', '10am', '11am'])
+  .addVariable('meeting3', ['10am', '11am', '12pm'])
+  .addAllDifferent('meeting1', 'meeting2')
+  .addAllDifferent('meeting2', 'meeting3');
+
+const result = solver.solve();
 ```
 
 ### 16.9.4 Unsatisfiable Problem
@@ -430,7 +439,16 @@ session.learn(`
   conflictsWith C A
 `);
 
-const result = session.solveWeddingSeating();
+import { createCSPSolver } from '../../src/reasoning/index.mjs';
+const solver = createCSPSolver(session)
+  .addVariableFromType('A', 'Table')
+  .addVariableFromType('B', 'Table')
+  .addVariableFromType('C', 'Table')
+  .addNoConflict('A', 'B')
+  .addNoConflict('B', 'C')
+  .addNoConflict('C', 'A');
+
+const result = solver.solve();
 // { success: false, solutionCount: 0 }
 ```
 
@@ -513,18 +531,61 @@ solver.minimize('cost', (a) => calculateCost(a));
 | Backtracking | Systematic search with undo |
 | MRV | Choose most constrained variable first |
 | Forward Checking | Prune inconsistent values early |
-| Wedding Seating | Specialized solver: guests + tables + conflicts |
+| “Wedding seating” | Modeling pattern (not a special solver) |
 
 **Key API Methods:**
-- `session.findAllOfType(type)` - enumerate KB entities
-- `session.solveWeddingSeating(options)` - wedding problem
-- `session.solveCSP({ variables, constraints })` - generic CSP
-- `session.createCSPSolver()` - fluent builder API
+- `findAllOfType(session, type)` - enumerate KB entities
+- `createCSPSolver(session, options)` - fluent builder API
+- `solve csp [...]` - DSL solve blocks (modeling-focused)
 
 **When to use CSP vs Query:**
 - **Query:** "Who loves Mary?" → best match
 - **CSP:** "Find all seating arrangements" → exhaustive search
 
 ---
+
+## 16.14 Appendix: “Wedding seating” as a modeling example (not a solver mode)
+
+The wedding seating problem is a convenient scenario for demonstrating:
+- variable extraction from KB types,
+- domain extraction from KB types,
+- constraint injection from KB relations,
+- witness extraction (assignments) in a generic CP backend.
+
+Important rule:
+- “Wedding seating” must remain a **modeling pattern**. The runtime must not contain a special-case solver for it.
+
+### 16.14.1 Minimal Sys2DSL example
+
+```sys2dsl
+# Entities
+isA Alice Guest
+isA Bob Guest
+isA Carol Guest
+
+isA T1 Table
+isA T2 Table
+
+# Conflict relation (domain-specific)
+conflictsWith Alice Bob
+conflictsWith Bob Alice
+
+# Solve (generic)
+@seating solve csp [
+  (variablesFrom Guest),
+  (domainFrom Table),
+  (noConflict conflictsWith)
+]
+```
+
+Expected output shape:
+- satisfiable: a list of assignments (e.g. `seatedAt Alice T1`, `seatedAt Bob T2`, ...), returned as witness evidence.
+- infeasible: a failure result with a trace/nogoods surface (future URC evidence shape).
+
+### 16.14.2 Repo reference
+
+- Evaluation scenario: `evals/fastEval/suite11_wedding_seating`
+- Generic CSP mini-problems: `evals/fastEval/suite30_csp_minis`
+- Eval-only modeling helpers: `evals/domains/CSP/*`
 
 *End of Chapter 16*

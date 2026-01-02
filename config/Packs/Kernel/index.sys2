@@ -1,0 +1,42 @@
+# Kernel Theory Pack - Index (legacy aggregate)
+# Loads the classic Kernel stack in dependency order.
+#
+# Note:
+# - This file is an aggregate manifest for backwards compatibility.
+# - New work should prefer explicit pack loading (Bootstrap + URC + domain packs).
+
+# L1 - Type System & Foundations (moved to Bootstrap pack)
+@_ Load "../Bootstrap/00-types.sys2"
+
+# L1 - Constructors & Structures (moved to Bootstrap pack)
+@_ Load "../Bootstrap/02-constructors.sys2"
+@_ Load "../Bootstrap/03-structural.sys2"
+@_ Load "../Bootstrap/09-roles.sys2"
+
+# L1 - Relations (loaded AFTER structural operators like __Pair, __Bundle)
+@_ Load "../Relations/00-relations.sys2"
+@_ Load "../Relations/10-common-relations.sys2"
+
+# L1 - Numeric Layer
+@_ Load "../Numeric/04a-numeric.sys2"
+
+# L2 - Semantic Primitives
+@_ Load "../Semantics/04-semantic-primitives.sys2"
+
+# L2 - Logic, Temporal, Modal
+@_ Load "../Logic/05-logic.sys2"
+@_ Load "../Temporal/06-temporal.sys2"
+@_ Load "../Modal/07-modal.sys2"
+
+# L2 - Defaults & Properties
+@_ Load "../Defaults/08-defaults.sys2"
+@_ Load "../Properties/10-properties.sys2"
+
+# L3 - Bootstrap Verbs & Reasoning
+@_ Load "../Lexicon/11-bootstrap-verbs.sys2"
+@_ Load "../Reasoning/12-reasoning.sys2"
+
+# L3 - Canonicalization & Constraints
+@_ Load "../Canonicalization/13-canonicalization.sys2"
+@_ Load "../Canonicalization/13c-canonical-rewrites.sys2"
+@_ Load "../Consistency/14-constraints.sys2"

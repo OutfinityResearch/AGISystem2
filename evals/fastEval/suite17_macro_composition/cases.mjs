@@ -8,7 +8,7 @@
 export const name = 'Macro Composition';
 export const description = 'Sys2DSL graph execution with hidden internals and explicit proofs over outputs';
 
-export const theories = ['05-logic.sys2'];
+export const theories = [];
 
 export const steps = [
   // === SETUP: Define missionPlan graph and invoke ===

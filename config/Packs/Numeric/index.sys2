@@ -1,0 +1,5 @@
+# Numeric Pack - Index
+# Numeric modeling helpers and numeric term operators (current implementation).
+
+@_ Load "./04a-numeric.sys2"
+

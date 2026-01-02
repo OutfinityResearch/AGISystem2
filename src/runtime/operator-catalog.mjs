@@ -1,29 +1,26 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
+import { getKernelManifestEntries, getKernelRootDir } from './kernel-manifest.mjs';
 
 const OPERATOR_DECL_RE =
   /^@([A-Za-z0-9_]+)(?::([A-Za-z0-9_]+))?\s+(graph|macro|__Relation|__TransitiveRelation|__SymmetricRelation|__ReflexiveRelation|__InheritableProperty)\b/;
 
-const GRAPH_HEADER_RE =
-  /^@([A-Za-z0-9_]+)(?::([A-Za-z0-9_]+))?\s+(graph|macro)\b(.*)$/;
-
-function coreConfigPath() {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = dirname(__filename);
-  return join(__dirname, '../../config/Core');
-}
+const GRAPH_HEADER_RE = /^@([A-Za-z0-9_]+)(?::([A-Za-z0-9_]+))?\s+(graph|macro)\b(.*)$/;
 
 function collectCoreOperators() {
   const operators = new Set();
-  const coreDir = coreConfigPath();
-  if (!existsSync(coreDir)) return operators;
+  const kernelDir = getKernelRootDir();
+  if (!existsSync(kernelDir)) return operators;
 
-  const entries = readdirSync(coreDir);
-  for (const entry of entries) {
-    if (!entry.endsWith('.sys2')) continue;
-    if (entry.endsWith('.errors')) continue;
-    const content = readFileSync(join(coreDir, entry), 'utf8');
+  const manifest = getKernelManifestEntries({ coreDir: kernelDir });
+  const files = manifest.length
+    ? manifest.map(f => join(kernelDir, f))
+    : readdirSync(kernelDir)
+      .filter(f => f.endsWith('.sys2') && !f.endsWith('.errors') && f !== 'index.sys2')
+      .map(f => join(kernelDir, f));
+
+  for (const filePath of files) {
+    const content = readFileSync(filePath, 'utf8');
     for (const line of content.split('\n')) {
       const trimmed = line.trim();
       if (!trimmed || trimmed.startsWith('#')) continue;
@@ -53,14 +50,18 @@ function normalizeOperatorKind(kind) {
 
 function collectCoreOperatorKinds() {
   const kinds = new Map(); // operator -> 'graph'|'relation'
-  const coreDir = coreConfigPath();
-  if (!existsSync(coreDir)) return kinds;
+  const kernelDir = getKernelRootDir();
+  if (!existsSync(kernelDir)) return kinds;
 
-  const entries = readdirSync(coreDir);
-  for (const entry of entries) {
-    if (!entry.endsWith('.sys2')) continue;
-    if (entry.endsWith('.errors')) continue;
-    const content = readFileSync(join(coreDir, entry), 'utf8');
+  const manifest = getKernelManifestEntries({ coreDir: kernelDir });
+  const files = manifest.length
+    ? manifest.map(f => join(kernelDir, f))
+    : readdirSync(kernelDir)
+      .filter(f => f.endsWith('.sys2') && !f.endsWith('.errors') && f !== 'index.sys2')
+      .map(f => join(kernelDir, f));
+
+  for (const filePath of files) {
+    const content = readFileSync(filePath, 'utf8');
     for (const line of content.split('\n')) {
       const trimmed = line.trim();
       if (!trimmed || trimmed.startsWith('#')) continue;
@@ -90,14 +91,18 @@ export const CORE_OPERATOR_KIND = collectCoreOperatorKinds();
 
 function collectCoreGraphArities() {
   const arities = new Map();
-  const coreDir = coreConfigPath();
-  if (!existsSync(coreDir)) return arities;
+  const kernelDir = getKernelRootDir();
+  if (!existsSync(kernelDir)) return arities;
 
-  const entries = readdirSync(coreDir);
-  for (const entry of entries) {
-    if (!entry.endsWith('.sys2')) continue;
-    if (entry.endsWith('.errors')) continue;
-    const content = readFileSync(join(coreDir, entry), 'utf8');
+  const manifest = getKernelManifestEntries({ coreDir: kernelDir });
+  const files = manifest.length
+    ? manifest.map(f => join(kernelDir, f))
+    : readdirSync(kernelDir)
+      .filter(f => f.endsWith('.sys2') && !f.endsWith('.errors') && f !== 'index.sys2')
+      .map(f => join(kernelDir, f));
+
+  for (const filePath of files) {
+    const content = readFileSync(filePath, 'utf8');
     for (const line of content.split('\n')) {
       const trimmed = line.trim();
       if (!trimmed || trimmed.startsWith('#')) continue;

@@ -1,0 +1,36 @@
+# URC - UnitCore v1
+# Units + dimensions reasoning surface (runtime emits evidence + UnitOK/UnitOfExpr facts).
+
+# ===== Categories =====
+@Unit:Unit __Category
+@Dim:Dim __Category
+@DimVec:DimVec __Category
+
+# ===== Unit/dimension facts =====
+@unitDim:unitDim __Relation
+@unitScale:unitScale __Relation
+
+@dimAdd:dimAdd __Relation
+@dimSub:dimSub __Relation
+@dimMul:dimMul __Relation
+@dimDiv:dimDiv __Relation
+@dimPow:dimPow __Relation
+
+@unitMul:unitMul __Relation
+@unitDiv:unitDiv __Relation
+@unitPow:unitPow __Relation
+
+@UnitOK:UnitOK __Relation
+@UnitOfExpr:UnitOfExpr __Relation
+
+# DimVec exponent facts (recommended minimal encoding)
+@exp:exp __Relation
+
+# ===== SI base dimension atoms (explicit names to avoid collisions) =====
+@SI_m:SI_m __Atom
+@SI_kg:SI_kg __Atom
+@SI_s:SI_s __Atom
+@SI_A:SI_A __Atom
+@SI_K:SI_K __Atom
+@SI_mol:SI_mol __Atom
+@SI_cd:SI_cd __Atom

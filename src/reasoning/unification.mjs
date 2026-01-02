@@ -21,7 +21,7 @@ export class UnificationEngine {
   constructor(proofEngine) {
     this.engine = proofEngine;
     // Get strategy-dependent thresholds
-    const strategy = proofEngine.session?.hdcStrategy || 'dense-binary';
+    const strategy = proofEngine.session?.hdcStrategy || 'exact';
     this.thresholds = getThresholds(strategy);
   }
 

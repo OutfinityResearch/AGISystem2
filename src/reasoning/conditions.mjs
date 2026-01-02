@@ -42,7 +42,7 @@ import { instantiatePart } from './conditions/utils.mjs';
 export class ConditionProver {
   constructor(proofEngine) {
     this.engine = proofEngine;
-    const strategy = proofEngine.session?.hdcStrategy || 'dense-binary';
+    const strategy = proofEngine.session?.hdcStrategy || 'exact';
     this.thresholds = getThresholds(strategy);
   }
 
@@ -144,4 +144,3 @@ export class ConditionProver {
 }
 
 export default ConditionProver;
-

@@ -1,33 +1,14 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { validateCore } from './core-validator.mjs';
-
-function parseCoreIndexLoads(indexContent) {
-  const loads = [];
-  const seen = new Set();
-  const lines = String(indexContent || '').split('\n');
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (!trimmed.startsWith('@_')) continue;
-    // Syntax used in Core: @_ Load "./00-types.sys2"
-    const m = trimmed.match(/^@_\s+Load\s+(['"])(.+?)\1\s*$/);
-    if (!m) continue;
-    let p = m[2] || '';
-    p = p.replace(/^\.\//, '').trim();
-    if (!p.endsWith('.sys2')) continue;
-    if (seen.has(p)) continue;
-    seen.add(p);
-    loads.push(p);
-  }
-  return loads;
-}
+import { parseCoreIndexLoads } from './kernel-manifest.mjs';
 
 /**
- * Load Core theories from `config/Core` into this session.
- * Convenience helper to make "theory-driven" behavior easy to enable.
+ * Load the Kernel theory pack from `config/Packs/Kernel` into this session.
+ * Convenience helper to make theory-driven behavior easy to enable.
  */
 export function loadCore(session, options = {}) {
-  const corePath = options.corePath || './config/Core';
+  const corePath = options.corePath || './config/Packs/Kernel';
   const includeIndex = options.includeIndex || false;
   const validate = options.validate ?? true;
   const throwOnValidationError = options.throwOnValidationError ?? false;

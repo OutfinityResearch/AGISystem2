@@ -70,7 +70,7 @@ export function resolveIdentifier(executor, expr) {
     ? canonicalizeTokenName(executor.session, expr.name)
     : expr.name;
 
-  // Strict typing: type markers must be declared explicitly (typically via `config/Core/00-types.sys2`).
+  // Strict typing: type markers must be declared explicitly (typically via `config/Packs/Bootstrap/00-types.sys2`).
   // This catches silent creation of "FooType" atoms via vocabulary fallback.
   if (
     executor.session?.strictMode &&

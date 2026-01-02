@@ -1,0 +1,5 @@
+# Relations Pack - Index
+# Relation property declarations (transitive/symmetric/reflexive/inheritable/etc).
+
+@_ Load "./00-relations.sys2"
+@_ Load "./10-common-relations.sys2"

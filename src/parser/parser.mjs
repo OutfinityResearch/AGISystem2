@@ -17,8 +17,6 @@ import {
   List,
   Compound,
   TheoryDeclaration,
-  ImportStatement,
-  RuleDeclaration,
   GraphDeclaration,
   SolveBlock,
   SolveDeclaration
@@ -132,10 +130,6 @@ export class Parser {
       switch (token.value) {
         case 'theory':
           return this.parseTheoryBracket(); // Alternative bracket syntax
-        case 'import':
-          return this.parseImport();
-        case 'rule':
-          return this.parseRule();
       }
     }
 
@@ -259,35 +253,6 @@ export class Parser {
       initType: 'deterministic',
       useBracketSyntax: true
     });
-  }
-
-  /**
-   * Parse import statement
-   * import TheoryName
-   */
-  parseImport() {
-    const startToken = this.expect(TOKEN_TYPES.KEYWORD, 'import');
-    const name = this.expect(TOKEN_TYPES.IDENTIFIER).value;
-    return new ImportStatement(name, startToken.line, startToken.column);
-  }
-
-  /**
-   * Parse rule declaration
-   * rule Name: (condition) => (conclusion)
-   */
-  parseRule() {
-    const startToken = this.expect(TOKEN_TYPES.KEYWORD, 'rule');
-    const name = this.expect(TOKEN_TYPES.IDENTIFIER).value;
-    this.expect(TOKEN_TYPES.COLON);
-
-    const condition = this.parseExpression();
-    // Skip '=>' if present (treat as identifier)
-    if (this.check(TOKEN_TYPES.IDENTIFIER) && this.peek().value === '=>') {
-      this.advance();
-    }
-    const conclusion = this.parseExpression();
-
-    return new RuleDeclaration(name, condition, conclusion, startToken.line, startToken.column);
   }
 
   /**

@@ -5,29 +5,44 @@
  * Deterministic index derived from theory/config files.
  * Purpose: provide theory-driven operator/relation properties to canonicalizer + reasoners.
  *
- * Initial implementation: relation properties from config/Core/00-relations.sys2
+ * Initial implementation: relation properties from config/Packs/Relations/00-relations.sys2
  * (transitive/symmetric/reflexive/inheritable) + basic constraints.
  */
 
 import { readFileSync, existsSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-function coreConfigPath(relativeFile) {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = dirname(__filename);
-  return join(__dirname, '../../config/Core', relativeFile);
-}
+import { resolveKernelFilePath } from './kernel-manifest.mjs';
 
 function parsePropertyLines(content, className) {
   const names = new Set();
-  // Matches lines like: "@isA:isA __TransitiveRelation"
-  // Captures the exported name before ":" (canonical operator token used by code/tests).
-  const re = new RegExp(String.raw`^@(\w+):\w+\s+${className}\b`, 'm');
+  // Supported declaration shapes:
+  // - `@rel:rel __TransitiveRelation`          (legacy; relation token comes from LHS export name)
+  // - `__TransitiveRelation rel`              (preferred; relation token is the 1st arg)
+  // - `@:<name> __TransitiveRelation rel`     (preferred persistent fact; relation token is the 1st arg)
+  // - `@name:name __TransitiveRelation rel`   (same as above; avoids using `rel` as persist name)
+  for (const raw of content.split('\n')) {
+    const line = raw.trim();
+    if (!line || line.startsWith('#')) continue;
+    const tokens = line.split(/\s+/g);
 
-  for (const line of content.split('\n')) {
-    const m = line.match(re);
-    if (m) names.add(m[1]);
+    // Shape: `__Tag rel`
+    if (tokens[0] === className && typeof tokens[1] === 'string') {
+      names.add(tokens[1]);
+      continue;
+    }
+
+    // Shapes with a leading reference: `@... __Tag ...`
+    if (!tokens[0]?.startsWith('@') || tokens[1] !== className) continue;
+
+    // `@rel:rel __Tag` (legacy export style)
+    const ref = tokens[0];
+    const exportNameMatch = ref.match(/^@(\w+):\w+$/);
+    if (exportNameMatch && tokens.length === 2) {
+      names.add(exportNameMatch[1]);
+      continue;
+    }
+
+    // `@:name __Tag rel` or `@name:name __Tag rel` (preferred)
+    if (typeof tokens[2] === 'string') names.add(tokens[2]);
   }
   return names;
 }
@@ -171,9 +186,9 @@ export class SemanticIndex {
 
   /**
    * Incrementally update this SemanticIndex from a newly asserted KB fact.
-   * This enables theory-defined operator properties outside config/Core.
+   * This enables theory-defined operator properties outside the Kernel pack.
    *
-   * Supported declaration shapes (mirroring config/Core files):
+   * Supported declaration shapes (mirroring Kernel pack files):
    * - `@rel:rel __TransitiveRelation` (fact.name supplies the relation token)
    * - `@rel:rel __SymmetricRelation`
    * - `@rel:rel __ReflexiveRelation`
@@ -197,7 +212,9 @@ export class SemanticIndex {
       operator === '__ReflexiveRelation' ||
       operator === '__InheritableProperty'
     ) {
-      const rel = typeof fact?.name === 'string' ? fact.name : (Array.isArray(meta.args) ? meta.args[0] : null);
+      // Prefer `meta.args[0]` when present, because declaration facts are often persisted under
+      // a unique label (e.g. `@:isA_transitive __TransitiveRelation isA`) to avoid name collisions.
+      const rel = Array.isArray(meta.args) && typeof meta.args[0] === 'string' ? meta.args[0] : fact?.name;
       if (typeof rel !== 'string' || !rel) return;
 
       if (operator === '__Relation') this.relations.add(rel);
@@ -305,13 +322,14 @@ export class SemanticIndex {
 
   static fromCoreRelationsFile({ allowFallbackDefaults = true } = {}) {
     const defaults = new SemanticIndex({
-      relations: new Set(['parent', 'child', 'loves', 'hates', 'trusts']),
+      relations: new Set(),
       assignmentRelations: new Set(),
       transitiveRelations: new Set([
         'isA',
         'locatedIn',
         'partOf',
         'subclassOf',
+        'subsetOf',
         'containedIn',
         'before',
         'after',
@@ -320,19 +338,12 @@ export class SemanticIndex {
         'leadsTo',
         'enables'
       ]),
-      symmetricRelations: new Set(['siblingOf', 'marriedTo', 'near', 'adjacent', 'conflictsWith']),
+      symmetricRelations: new Set(['conflictsWith']),
       reflexiveRelations: new Set(['equals', 'sameAs']),
       inheritableProperties: new Set([
-        'can',
-        'has',
-        'likes',
-        'knows',
-        'owns',
-        'uses',
         'hasProperty',
         'hasAbility',
-        'hasTrait',
-        'exhibits',
+        'hasState',
         'causes',
         'prevents',
         'enables',
@@ -350,8 +361,8 @@ export class SemanticIndex {
       contradictsSameArgsSources: new Map()
     });
 
-    const configPath = coreConfigPath('00-relations.sys2');
-    if (!existsSync(configPath)) {
+    const configPath = resolveKernelFilePath('00-relations.sys2');
+    if (!configPath || !existsSync(configPath)) {
       return allowFallbackDefaults ? defaults : new SemanticIndex();
     }
 
@@ -393,8 +404,8 @@ export class SemanticIndex {
   }
 
   static withCoreTypes(baseIndex, { allowFallbackDefaults = true } = {}) {
-    const configPath = coreConfigPath('00-types.sys2');
-    if (!existsSync(configPath)) return baseIndex;
+    const configPath = resolveKernelFilePath('00-types.sys2');
+    if (!configPath || !existsSync(configPath)) return baseIndex;
 
     const content = readFileSync(configPath, 'utf-8');
     const markers = parseTypeMarkers(content);
@@ -421,13 +432,13 @@ export class SemanticIndex {
   }
 
   static withCoreConstraints(baseIndex, { allowFallbackDefaults = true } = {}) {
-    const configPath = coreConfigPath('14-constraints.sys2');
-    if (!existsSync(configPath)) {
+    const configPath = resolveKernelFilePath('14-constraints.sys2');
+    if (!configPath || !existsSync(configPath)) {
       return baseIndex;
     }
 
     const content = readFileSync(configPath, 'utf-8');
-    const file = 'config/Core/14-constraints.sys2';
+    const file = 'config/Packs/Consistency/14-constraints.sys2';
     const mutuallyExclusive = parseMutuallyExclusive(content);
     const inverseRelations = parseInverseRelations(content);
     const contradictsSameArgs = parseContradictsSameArgs(content);

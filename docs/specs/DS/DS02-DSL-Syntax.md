@@ -21,14 +21,14 @@ In Sys2DSL, **everything** is a semantic vector:
 **Position in statement determines syntactic role:**
 
 ```
-@destination Operator arg1 arg2 arg3 ...
+[@destination] Operator arg1 arg2 arg3 ...
 ```
 
-| Position | Role | What Happens |
-|----------|------|--------------|
-| 1 | Destination | New variable declared with `@` |
-| 2 | Operator | Vector bound into result |
-| 3+ | Arguments | Position-tagged and bound |
+| Field | Role | What Happens |
+|-------|------|--------------|
+| Destination (optional) | Result binding | New variable declared with `@` (or persisted via `@:name` / `@var:name`) |
+| Operator | Relation/verb | Vector bound into result |
+| Arguments | Operands | Position-tagged and bound |
 
 **The binding formula:**
 ```
@@ -127,7 +127,7 @@ This ensures `prove love John Alice` returns **false** - the positive fact never
 | Level | Prefix | Purpose | Who Uses |
 |-------|--------|---------|----------|
 | **L0** | `___` | HDC primitives | Runtime only |
-| **L1** | `__` | Structural ops | Core theory |
+| **L1** | `__` | Structural ops | Theory packs (Kernel) |
 | **L2** | `_` | Semantic primitives | Knowledge engineers |
 | **L3+** | (none) | Domain concepts | End users |
 
@@ -139,20 +139,29 @@ This ensures `prove love John Alice` returns **false** - the positive fact never
 
 ---
 
-## 2.4 The Core Theory
+## 2.4 Runtime Core vs. Theory Packs (Kernel)
 
-`Core` is **always loaded** and **cannot be unloaded**. It defines:
+AGISystem2 distinguishes:
+
+- **Runtime Core** (code + reserved atoms): always present.
+- **Theory Packs** (Sys2DSL libraries): loadable and unloadable modules (e.g., the “Kernel” pack).
+
+Runtime Core defines:
 
 | Level | Definitions |
 |-------|-------------|
 | L0 (`___`) | `___Bind`, `___Bundle`, `___Similarity`, `___NewVector`, `___MostSimilar`, `___Extend` |
-| L1 (`__`) | `__Atom`, `__Role`, `__Pair`, `__Event`, `__Bundle` |
-| L2 (`_`) | `_ptrans`, `_atrans`, `_mtrans`, `_propel`, `_grasp`, `_ingest`, `_expel`, `_mbuild`, `_attend`, `_speak` |
-| Position | `Pos1`, `Pos2`, `Pos3`, ... `Pos20` |
-| Roles | `Agent`, `Theme`, `Source`, `Goal`, `Recipient`, `Content`, `Instrument` |
-| Meta | `Load`, `Unload`, `Export`, `Import` |
+| Position | `Pos1`, `Pos2`, `Pos3`, ... `Pos20` (runtime-reserved markers) |
+| Meta | `Load`, `Unload`, `Set`, `solve` (builtins; availability can be policy-gated) |
 
-**Core also defines theory management verbs** — they're just vectors like anything else.
+Theory Packs (Kernel / domains) typically define:
+
+- L1 (`__`) structural macros and type markers,
+- L2 (`_`) semantic primitives,
+- common roles and relations,
+- convenience vocabulary and graphs.
+
+Under DS51, the long-term goal is that semantic theories live under `config/Packs/*` and are not treated as always-on runtime core.
 
 ---
 
@@ -399,16 +408,16 @@ end
 program      = { statement | graph_def | theory_block } ;
 
 destination  = "_" | ident [ ":" , ident ] | ":" , ident ;  (* @_, @var, @var:name, @:name *)
-statement    = "@" , destination , operation , { argument } , [ "#" , text ] , NL ;
+statement    = [ "@" , destination ] , operation , { argument } , [ "#" , text ] , NL ;
 operation    = ident | "$" , ident ;
 argument     = "$" , ident | "?" , ident | ident | number | list | compound ;
 
-list         = "[" , { argument } , "]" ;
+list         = "[" , [ argument , { [ "," ] , argument } ] , "]" ;
 compound     = "(" , ident , { argument } , ")" ;   (* nested graph call *)
 
-graph_def    = "@" , ( ident [ ":" , ident ] | ":" , ident ) , "graph" , { ident } , NL ,
+graph_def    = [ "@" , ( ident [ ":" , ident ] | ":" , ident ) ] , ( "graph" | "macro" ) , { ident } , NL ,
                { statement } ,
-               "return" , "$" , ident , NL ,
+               "return" , argument , NL ,
                "end" , NL ;
 
 (* Primary theory syntax - explicit geometry and init type *)
@@ -436,6 +445,8 @@ init_type    = "random" | "deterministic" ;
 ident        = ( letter | "_" ) , { letter | digit | "_" } ;
 number       = digit , { digit } ;
 ```
+
+**Note:** The lexer/parser reserve additional keywords such as `import` and `rule` for future extensions, but the current runtime execution model is statement/graph/theory-driven. Prefer `@_ Load $Theory` for loading and `@rule Implies <cond> <concl>` for rules.
 
 ---
 
@@ -538,7 +549,7 @@ isA Carol Guest
 
 For combinatorial problems requiring ALL valid solutions, use the CSP solver:
 
-**Wedding Seating Example:**
+**CSP Example (seating-style model):**
 ```
 # Define guests and tables
 isA Alice Guest
@@ -550,24 +561,21 @@ isA Table2 Table
 conflictsWith Alice Bob
 conflictsWith Bob Alice
 
-# Solve (via API)
-@solutions solveWeddingSeating
+# Solve (inside learn)
+@solutions solve csp [
+  (variablesFrom Guest),
+  (domainFrom Table),
+  (noConflict conflictsWith)
+]
 # Result: [
 #   { Alice: 'Table1', Bob: 'Table2' },
 #   { Alice: 'Table2', Bob: 'Table1' }
 # ]
 ```
 
-**Generic CSP (Planned DSL Syntax):**
-```
-@solutions solve WeddingSeating
-  domain ?guest from Guest
-  domain ?table from Table
-  constraint Not sameTable ?g1 ?g2 when conflictsWith ?g1 ?g2
-end
-```
-
-**Note:** Currently CSP is accessed via the JavaScript API (`session.solveWeddingSeating()`, `session.solveCSP()`). See DS16 for full CSP documentation.
+**Note on legacy labels:**
+- Older documents used `solve WeddingSeating`. This label must not introduce runtime-special behavior.
+- See DS16 for CSP solver details and modeling patterns.
 
 ### 2.13.4 Comparison: Query vs FindAll vs CSP
 
@@ -575,7 +583,7 @@ end
 |--------|---------|----------|
 | `query` | Best match | "Who loves Mary?" |
 | `findAll` | All matches | "List everyone at Table1" |
-| `solveCSP` | All valid assignments | "Find all valid seating arrangements" |
+| `solve csp` | All valid assignments | "Find all valid seating arrangements" |
 
 ---
 

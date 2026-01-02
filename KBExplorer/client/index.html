@@ -14,8 +14,8 @@
         <span id="kbFactsStat" class="mono muted">Facts: 0</span>
         <label class="label label--topbar">HDC
           <select id="strategySelect" class="mono">
-            <option value="dense-binary">dense-binary</option>
             <option value="exact">exact</option>
+            <option value="dense-binary">dense-binary</option>
             <option value="sparse-polynomial">sparse-polynomial</option>
             <option value="metric-affine">metric-affine</option>
             <option value="metric-affine-elastic">metric-affine-elastic</option>
@@ -27,10 +27,40 @@
             <option value="holographicPriority">holographicPriority</option>
           </select>
         </label>
+        <button id="packsBtn" type="button" class="btn btn--ghost" title="Select which config packs to load into each new Session universe">Packs…</button>
         <button id="newSessionBtn" type="button" class="btn btn--ghost" title="Create a new isolated Session universe">New session</button>
         <button id="resetSessionBtn" type="button" class="btn btn--ghost" title="Reset current Session universe">Reset</button>
       </div>
     </header>
+
+    <dialog id="packsDialog" class="dialog" aria-label="Select packs">
+      <div class="dialog__header">
+        <div>
+          <div class="dialog__title">Packs</div>
+          <div class="dialog__subtitle muted">Select which config packs are loaded into new sessions.</div>
+        </div>
+      </div>
+
+      <div class="dialog__body">
+        <div class="dialog__row">
+          <input id="packsSearch" type="search" class="dialog__search" placeholder="Filter packs..." />
+          <span id="packsCount" class="muted"></span>
+        </div>
+
+        <div class="dialog__row dialog__row--buttons">
+          <button id="packsDefaultsBtn" type="button" class="btn btn--ghost">Defaults</button>
+          <button id="packsAllBtn" type="button" class="btn btn--ghost">All</button>
+          <button id="packsNoneBtn" type="button" class="btn btn--ghost">None</button>
+        </div>
+
+        <div id="packsList" class="packList" aria-label="Available packs"></div>
+      </div>
+
+      <div class="dialog__footer">
+        <button id="packsCancelBtn" type="button" class="btn btn--ghost">Cancel</button>
+        <button id="packsApplyBtn" type="button" class="btn btn--primary">Apply</button>
+      </div>
+    </dialog>
 
     <main class="layout">
       <section class="tabs">
@@ -152,7 +182,7 @@ prevents MoveToPark at Alice Home
   (maxDepth 3)
 ]</pre>
 
-            <h3>solve (WeddingSeating) inside learn</h3>
+            <h3>solve (CSP) inside learn</h3>
             <pre class="code">isA Alice Guest
 isA Bob Guest
 isA T1 Table
@@ -160,7 +190,7 @@ isA T2 Table
 conflictsWith Alice Bob
 conflictsWith Bob Alice
 
-@seating solve WeddingSeating [
+@seating solve csp [
   (variablesFrom Guest),
   (domainFrom Table),
   (noConflict conflictsWith)
@@ -207,7 +237,7 @@ If Harry is the parent of Jack, then Jack is a child.</pre>
             <h3>solve (KBExplorer directives in NL mode)</h3>
             <p class="muted">These are KBExplorer shortcuts (not generic NL→DSL grammar).</p>
             <pre class="code">Solve planning: goal: at Alice Park. maxDepth: 3. as: plan
-Solve wedding seating: variables from Guest, domain from Table, noConflict conflictsWith, as seating</pre>
+Solve csp: variables from Guest, domain from Table, noConflict conflictsWith, as seating</pre>
 
             <h3>Why “A is B” can look strange</h3>
             <p>

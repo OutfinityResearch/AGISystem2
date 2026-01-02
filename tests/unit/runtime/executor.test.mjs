@@ -14,7 +14,8 @@ describe('Executor', () => {
   let executor;
 
   function setup() {
-    session = new Session({ geometry: 2048 });
+    // Use a globally comparable strategy for determinism/similarity expectations.
+    session = new Session({ geometry: 2048, hdcStrategy: 'dense-binary' });
     executor = new Executor(session);
   }
 
@@ -277,8 +278,8 @@ describe('Executor', () => {
 
   describe('determinism', () => {
     test('should produce same vectors across executions', () => {
-      const session1 = new Session({ geometry: 2048 });
-      const session2 = new Session({ geometry: 2048 });
+      const session1 = new Session({ geometry: 2048, hdcStrategy: 'dense-binary' });
+      const session2 = new Session({ geometry: 2048, hdcStrategy: 'dense-binary' });
       const exec1 = new Executor(session1);
       const exec2 = new Executor(session2);
 

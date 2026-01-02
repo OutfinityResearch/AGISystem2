@@ -8,7 +8,7 @@
 export const name = 'Temporal & Causal';
 export const description = 'Deep temporal and causal transitive chains with complete proofs';
 
-export const theories = ['05-logic.sys2'];
+export const theories = [];
 
 export const steps = [
   // === SETUP: Deep historical timeline (8 steps) ===

@@ -1,7 +1,7 @@
-# Spec: config/Core/00-types.sys2
+# Spec: `config/Packs/Bootstrap/00-types.sys2`
 
 ## Purpose
-Provides deterministic type markers used by typed constructors and structural macros.  Aligns with DS07b (Type System) and ensures the vocabulary already contains vectors like `EntityType`, `PersonType`, etc., before user code binds to them.
+Provides deterministic type markers used by typed constructors and structural macros. Aligns with DS07b (Type System) and ensures the vocabulary already contains vectors like `EntityType`, `PersonType`, etc., before other packs bind to them.
 
 ## Key Constructs
 - Declares 19 type atoms (EntityType, PersonType, ObjectType, ... RoleType) using `___NewVector`.
@@ -9,7 +9,7 @@ Provides deterministic type markers used by typed constructors and structural ma
 
 ## Runtime Integration
 - `src/runtime/vocabulary.mjs` requests or creates vectors for symbols; preloading types avoids random drift when multiple sessions load theories in different orders.
-- `src/runtime/executor.mjs` relies on these constants when macros like `__Person` bind with `PersonType`.
+- `src/runtime/executor.mjs` relies on these markers when macros like `__Person` bind with `PersonType`.
 
 ## Tests & Coverage
 - `tests/unit/runtime/core-theories.test.mjs:60` loads the file in isolation and asserts facts exist.

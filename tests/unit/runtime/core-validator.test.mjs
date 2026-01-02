@@ -10,7 +10,7 @@ describe('Core validation (strict mode)', () => {
   test('passes after loading type markers', () => {
     const session = new Session({ geometry: 2048, strictMode: true });
 
-    session.learn('@_ Load "./config/Core/00-types.sys2"');
+    session.learn('@_ Load "./config/Packs/Bootstrap/00-types.sys2"');
 
     const report = validateCore(session);
     assert.equal(report.ok, true);
@@ -34,4 +34,3 @@ describe('Core validation (strict mode)', () => {
     assert.ok(res.errors.some(e => e.file === 'CoreValidation'));
   });
 });
-

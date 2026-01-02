@@ -187,14 +187,14 @@ Given operator `op`:
 
 ### 5.2.1 Theory/import handling (compatibility)
 
-Sys2DSL includes `theory` and `import` blocks. For the pure symbolic backend:
+Sys2DSL includes `theory` blocks. For the pure symbolic backend:
 - A `theory` declaration SHOULD define a namespace for atoms/graphs (no vector identity required).
-- `import TheoryName` SHOULD be treated as “load that namespace into the active resolution stack”.
-- `Load`/`Unload` (Core theory management verbs) MAY be implemented as builtins that alias `import`/unimport behavior to remain compatible with existing `.sys2` files and FastEval runners.
+- Cross-theory loading SHOULD be implemented via host-level APIs and/or builtins (e.g. `Load`/`Unload`), not via a dedicated `import` keyword.
+- A future `import TheoryName` syntax MAY be introduced, but it is not part of the current parser/runtime surface.
 
 ### 5.2.2 `rule` declarations (syntax sugar)
 
-If the parser produces a `rule` AST node (DS02 / current parser support), the backend SHOULD desugar it into the canonical Core connective form:
+There is no dedicated `rule` keyword in the current DSL surface. If a rule-sugar syntax is added later, it SHOULD desugar into the canonical Core connective form:
 
 ```
 @cond ...        # condition term
@@ -303,7 +303,7 @@ Minimum supported inference (matching current system capabilities):
 3) **Compound conditions**: `And/Or/Not` over sub-goals.
 4) **Transitive relations**: if `SemanticIndex.isTransitive(op)`, allow chain proof for binary relations (e.g., `isA`, `before`, `causes`).
 5) **Symmetric/reflexive/inverse** if declared by theory (same source as current engine).
-6) **Default reasoning / exceptions** if enabled (DS06 + config/Core/08-defaults.sys2 semantics).
+6) **Default reasoning / exceptions** if enabled (DS06 + Defaults pack; `config/Packs/Defaults/08-defaults.sys2`, see DS51).
 7) **Negation handling**:
    - explicit negation facts (`Not inner`) MUST block positive proofs (as in current engine),
    - optional CWA (`Set CWA on`) MAY enable negation-as-failure as an assumption, recorded in proofs.

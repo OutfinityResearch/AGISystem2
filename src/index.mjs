@@ -42,6 +42,9 @@ export { Scope } from './runtime/scope.mjs';
 export { Vocabulary } from './runtime/vocabulary.mjs';
 export { Executor, ExecutionError } from './runtime/executor.mjs';
 
+// Compilation exports (URC direction)
+export { compileToSMTLIB2 } from './compilation/index.mjs';
+
 // Reasoning exports
 export { QueryEngine } from './reasoning/query.mjs';
 export { ProofEngine } from './reasoning/prove.mjs';

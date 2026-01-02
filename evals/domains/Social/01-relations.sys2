@@ -1,0 +1,5 @@
+# Social - Domain Semantics
+# Eval-only semantics tags for social relations.
+
+# Treat `likes` as an inheritable property for suite13 (property inheritance).
+@:likes_inheritable __InheritableProperty likes

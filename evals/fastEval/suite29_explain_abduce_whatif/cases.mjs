@@ -11,7 +11,7 @@
 export const name = 'Explain + Abduce + Whatif';
 export const description = 'Multi-step causal chain with explain/abduce/whatif outputs and proof text.';
 
-export const theories = ['05-logic.sys2'];
+export const theories = [];
 
 export const steps = [
   {
@@ -72,4 +72,3 @@ export const steps = [
 ];
 
 export default { name, description, theories, steps };
-

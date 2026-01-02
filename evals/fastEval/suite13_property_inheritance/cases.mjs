@@ -8,7 +8,7 @@
 export const name = 'Property Inheritance';
 export const description = 'Cross-relation inheritance through deep isA hierarchies with complete proofs';
 
-export const theories = ['05-logic.sys2'];
+export const theories = ['Social/01-relations.sys2'];
 
 export const steps = [
   // === SETUP: Deep animal hierarchy (10 levels) with properties at each level ===

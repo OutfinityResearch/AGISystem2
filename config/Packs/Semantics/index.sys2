@@ -1,0 +1,5 @@
+# Semantics Pack - Index
+# Semantic primitives and conceptual dependency vocabulary.
+
+@_ Load "./04-semantic-primitives.sys2"
+

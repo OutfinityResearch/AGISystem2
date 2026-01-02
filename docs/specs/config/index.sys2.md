@@ -1,35 +1,31 @@
-# Spec: config/Core/index.sys2
+# Spec: `config/Packs/Kernel/index.sys2` (legacy aggregate manifest)
 
 ## Purpose
-Defines the load order for Core theories when a `Load` statement references the directory. This file is intended to be the canonical “Core bootstrap” for sessions that want theory-driven semantics without directory scanning.
+
+Defines a deterministic load order for the classic “Kernel stack” as a **backwards-compatible aggregate manifest**.
+
+Per DS51, new code should prefer explicit pack loading (e.g. `Bootstrap` + selected packs, or `URC` + domain packs) rather than depending on this legacy aggregate.
 
 ## Key Constructs
-- `@_ Load "./00-types.sys2"`
-- `@_ Load "./02-constructors.sys2"`
-- `@_ Load "./03-structural.sys2"`
-- `@_ Load "./00-relations.sys2"`
-- `@_ Load "./04a-numeric.sys2"`
-- `@_ Load "./04-semantic-primitives.sys2"`
-- `@_ Load "./05-logic.sys2"`
-- `@_ Load "./06-temporal.sys2"`
-- `@_ Load "./07-modal.sys2"`
-- `@_ Load "./08-defaults.sys2"`
-- `@_ Load "./09-roles.sys2"`
-- `@_ Load "./10-properties.sys2"`
-- `@_ Load "./11-bootstrap-verbs.sys2"`
-- `@_ Load "./12-reasoning.sys2"`
-- `@_ Load "./13-canonicalization.sys2"`
-- `@_ Load "./13c-canonical-rewrites.sys2"`
-- `@_ Load "./14-constraints.sys2"`
-- `@_ Load "./15-stress-compat.sys2"`
+
+This file is intentionally simple: it is a list of `@_ Load` statements pointing at other packs, for example:
+
+- `@_ Load "../Bootstrap/00-types.sys2"`
+- `@_ Load "../Relations/00-relations.sys2"`
+- `@_ Load "../Logic/05-logic.sys2"`
+- `@_ Load "../Canonicalization/13-canonicalization.sys2"`
+- `@_ Load "../Consistency/14-constraints.sys2"`
 
 ## Runtime Integration
-- `Session.loadCore({ includeIndex: true })` uses this file to load Core in a stable dependency order.
-- Some evaluation and test runners choose to enumerate `.sys2` files directly; those should keep their own ordering consistent with this index.
+
+- `Session.loadCore({ includeIndex: true })` loads `config/Packs/Kernel/index.sys2` and then learns the referenced pack files.
+- Evaluation suites and tooling may load packs explicitly (recommended) and should not rely on `Kernel/index.sys2` for domain vocabularies.
 
 ## Design Rationale
-- Maintain a deterministic and dependency-safe load order (types → constructors → structural ops → relations → reasoning).
-- Keep position markers out of `.sys2`: `Pos1..PosN` are runtime-reserved atoms initialized by the Session from `config/runtime/reserved-atoms.json`.
+
+- Preserve a stable entrypoint for legacy workflows while moving semantics into explicit packs.
+- Keep argument position markers out of `.sys2`: `Pos1..PosN` are runtime-reserved atoms initialized by the Session from `config/runtime/reserved-atoms.json`.
 
 ## Status
-Implemented.
+
+Implemented; treated as legacy compatibility glue.

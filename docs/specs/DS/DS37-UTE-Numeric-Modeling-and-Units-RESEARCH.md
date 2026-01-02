@@ -22,6 +22,10 @@ UTE requires numeric modeling as a first-class capability:
 
 Numeric modeling is integrated with UTE through DS34 evidence objects and DS35 causal mechanisms.
 
+Bridge alignment:
+
+- DS50 (CompilationCore SMT-LIB2) defines a deterministic compilation target for typed numeric constraints (v0 fragment).
+
 ---
 
 ## 2. Quantity Type and Unit Algebra

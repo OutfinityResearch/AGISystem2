@@ -52,12 +52,25 @@ In the Chat tab:
 KBExplorer exposes session-local configuration:
 - `hdcStrategy` (HDC strategy)
 - `reasoningPriority` (reasoning engine priority)
+- `packs` (explicit set of config packs to load)
 
 Rules:
 - The selected values are persisted in `localStorage`.
 - Changing either value **prompts the user** and then **resets** the session.
+- Changing packs also **prompts the user** and **restarts** the session (clears KB + chat).
 
 ## 6. KB Explorer Semantics
+### 6.0 What “Session State” means (and why duplicates exist)
+KBExplorer is a **session browser**, not only a KB browser.
+
+In a running `Session`, the same surface token (e.g. `isA`, `Pos1`, `StressCompat`) may appear in multiple *stores* with different meanings:
+- **KB Facts (`session.kbFacts`)**: persisted statements (what the session “believes”).
+- **Graphs (`session.graphs`)**: executable `graph ... end` definitions (procedural library).
+- **Lexicon (`session.vocabulary`)**: token → vector dictionary (not “knowledge”; it grows as tokens are referenced).
+- **Working Memory (`session.scope`)**: temporary bindings created during execution.
+
+Because these stores are separate, it is normal for a token to show up more than once across the tree.
+
 ### 6.1 Tree view
 The tree is a filesystem-like explorer:
 - **Fact** nodes represent persisted KB facts.
@@ -86,32 +99,42 @@ From the repo root:
 When started in a TTY, the server provides a console prompt:
 - typing `y` + Enter restarts the HTTP server and drops all in-memory sessions.
 
-### 7.3 Core auto-load
-Each session universe is created with:
-- `session.loadCore({ includeIndex: true })`
+### 7.3 Theory library load (KBExplorer policy)
+Each session universe is created with a **baseline pack list** (DS51 direction):
 
-Core is loaded from the repo’s `config/Core` directory (resolved via the server module path, not the process CWD).
+- default: a minimal, generic list of packs (server-owned)
+- optional: a client-selected list of packs (via the `Packs…` dialog)
+
+Rationale:
+- KBExplorer is a research/developer UI; the goal is to make *what is loaded* explicit and inspectable.
+- Packs are the canonical home for semantic libraries. Runtime core should not auto-load semantic theories by default (URC direction).
 
 ## 8. API (v0)
 All APIs are JSON. The client identifies its session via `X-Session-Id`.
 
 ### 8.1 Session
 - `POST /api/session/new` → creates a new universe
-  - body: `{ sessionOptions: { hdcStrategy, reasoningPriority } }`
+  - body: `{ sessionOptions: { hdcStrategy, reasoningPriority }, packs?: string[] }`
+  - response includes: `loadedPacks`
 - `POST /api/session/reset` → resets an existing universe (same `sessionId`)
-  - body: `{ sessionOptions: { hdcStrategy, reasoningPriority } }`
+  - body: `{ sessionOptions: { hdcStrategy, reasoningPriority }, packs?: string[] }`
+  - response includes: `loadedPacks`
 
-### 8.2 KB
+### 8.2 Packs
+- `GET /api/packs` → lists available packs and server defaults
+  - response: `{ availablePacks, defaultPacks }`
+
+### 8.3 KB
 - `GET /api/kb/facts?q=&namedOnly=&namedFirst=&limit=&offset=` → lists KB facts (sorted by estimated complexity)
 - `GET /api/kb/facts/:id/bundle` → returns a faithful view of a fact:
   - metadata, statement DSL, operator + binds, and vector previews (fact/operator/positioned binds)
 
-### 8.3 Theory ingest (UI “Load...”)
+### 8.4 Theory ingest (UI “Load...”)
 - `POST /api/theory/ingest` → learns a `.sys2` file sent as text
   - body: `{ filename, text }`
   - DSL `Load`/`Unload` is enabled by default (disable with `KBEXPLORER_ALLOW_FILE_OPS=0`)
 
-### 8.4 Chat command execution
+### 8.5 Chat command execution
 - `POST /api/command` → executes one user command
   - body: `{ mode: learn|query|prove|abduce|findAll, inputMode: nl|dsl, text }`
   - for `inputMode=nl`, the server performs `translateNL2DSL(...)` and returns the translated DSL alongside the reasoning result.

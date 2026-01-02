@@ -613,18 +613,20 @@ end
     </tr>
   </table>
 
-  <h2>Import Statements</h2>
+	  <h2>Loading Theories</h2>
 
-  <p>Import theories to load their definitions:</p>
+	  <p>Load a theory (namespace) using the Core <code>Load</code> operator:</p>
 
-  <pre><code>import Core       # Load core theory
-import Animals    # Load animals theory</code></pre>
+	  <pre><code>@_ Load $Commerce
+@_ Load $Animals</code></pre>
 
-  <h2>Rule Declarations</h2>
+	  <h2>Rules (Implies)</h2>
 
-  <p>Define named rules with explicit syntax:</p>
+	  <p>Define rules as <code>Implies</code> statements:</p>
 
-  <pre><code>rule MortalRule: (isA ?x Human) => (isA ?x Mortal)</code></pre>
+	  <pre><code>@cond isA ?x Human
+@concl isA ?x Mortal
+@rule Implies $cond $concl</code></pre>
 
   <h2>List Syntax</h2>
 
@@ -675,7 +677,7 @@ statement    = "@" , destination , operation , { argument } , [ "#" , text ] , N
 operation    = ident | "$" , ident ;
 argument     = "$" , ident | "?" , ident | ident | number | list | compound ;
 
-list         = "[" , { argument } , "]" ;
+	list         = "[" , argument , { [ "," ] , argument } , "]" ;
 compound     = "(" , ident , { argument } , ")" ;
 
 graph_def    = "@" , ( ident [ ":" , ident ] | ":" , ident ) , "graph" , { ident } , NL ,

@@ -38,7 +38,7 @@ export class ProofEngine {
       ignoreNegation: options.ignoreNegation === true
     };
 
-    const strategy = session?.hdcStrategy || 'dense-binary';
+    const strategy = session?.hdcStrategy || 'exact';
     this.thresholds = getThresholds(strategy);
 
     this.steps = [];

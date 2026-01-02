@@ -1,4 +1,4 @@
-# Spec: config/Core/12-reasoning.sys2
+# Spec: `config/Packs/Reasoning/12-reasoning.sys2`
 
 ## Purpose
 Captures meta-level reasoning verbs (abduce, induce, deduce, whatif, analogy, similar, explain) so the DSL can call higher-order reasoning flows declaratively (DS07h + DS17-Meta-Query-Operators).

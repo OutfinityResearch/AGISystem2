@@ -18,14 +18,14 @@ This DS clarifies:
 
 1) **why** some strategies (e.g., EXACT) require session-local state,
 2) how `Session` constructs and injects (IoC) strategy instances,
-3) which atoms are **runtime-reserved** (internal) vs. **Core theory** (semantic),
-4) how Core is loaded by default,
+3) which atoms are **runtime-reserved** (internal) vs. **theory packs** (semantic),
+4) how theory libraries are loaded (current vs. target policy),
 5) how evaluation runners remain deterministic across sequential sessions.
 
 ## 2. Terminology
 
 - **Runtime-reserved atom**: an internal token required by the runtime/engines (not a semantic symbol). Examples: `Pos1`, `__EMPTY_BUNDLE__`.
-- **Core semantic atom / macro**: symbols and graphs defined in `config/Core/*.sys2` (e.g., `__Sequence`, `__Role`, relation declarations).
+- **Pack semantic atom / macro**: symbols and graphs defined in theory packs (canonical: `config/Packs/*`; see DS51).
 - **IoC (Inversion of Control)**: the runtime creates a session-local strategy instance and passes it into dependent components (Vocabulary, engines).
 
 ## 3. The Session Universe Model
@@ -65,7 +65,7 @@ then the runtime MUST construct a session-local instance and use it for all oper
 - `src/hdc/context.mjs` creates the session-local HDC context and calls `createInstance()` when available.
 - `src/runtime/vocabulary.mjs` uses the session’s HDC context (`session.hdc.createFromName`) so stateful strategies remain session-local.
 
-## 5. Runtime-reserved atoms vs. Core theory symbols
+## 5. Runtime-reserved atoms vs. theory pack symbols
 
 ### 5.1 Two categories
 
@@ -78,7 +78,7 @@ then the runtime MUST construct a session-local instance and use it for all oper
 
 These tokens are not part of the semantic DSL; they are implementation details required for consistent vector construction and engine behavior.
 
-**B) Core semantic atoms/macros (theory):**
+**B) Semantic pack atoms/macros (theory):**
 
 - graphs/macros like `__Sequence`, `__Bundle`, `__Role`, relation declarations, etc.
 
@@ -87,6 +87,15 @@ These are part of the semantic library and live in `.sys2` files.
 ### 5.2 Why both exist
 
 Argument positions are encoded using `PosN` markers to avoid permutation (which breaks extension) while keeping encoding deterministic and strategy-compatible.
+
+### 5.3 URC closure semantics (DS39 / DS25)
+
+URC uses the reserved sentinels:
+
+- `BOTTOM_IMPOSSIBLE` as an absorbing contradiction / dead-end for closure engines,
+- `TOP_INEFFABLE` as an absorbing “resource boundary” when a backend refuses deeper expansion.
+
+These atoms are not “semantic claims” by themselves. They are strategy/runtime controls used to keep inference deterministic and budgeted, especially for EXACT.
 
 ## 6. Non-DSL configuration for runtime-reserved atoms
 
@@ -98,15 +107,17 @@ The Session reads this file (with a safe fallback) and pre-creates the atoms in 
 
 Goal: keep “mandatory internals” out of `.sys2` theories and reduce hard-coded lists in JS.
 
-## 7. Core auto-load policy
+## 7. Theory library load policy
 
 ### 7.1 Default behavior
 
-By default, `Session` loads Core theories from `./config/Core` at initialization (theory-driven semantics without relying on runners).
+**Current behavior (URC direction):** the runtime should not auto-load semantic theories by default; tools and orchestrators load packs explicitly.
+
+**Target behavior (DS49/DS51):** runtime core is code-only and does not auto-load semantic `.sys2` theories. Theory libraries are loaded explicitly as packs (e.g., `Kernel`, `Semantics`, domain packs).
 
 ### 7.2 Opt-out and test mode
 
-Core auto-load can be disabled:
+Legacy Core auto-load can be disabled:
 
 - explicitly: `new Session({ autoLoadCore: false })`
 - via env: `SYS2_AUTO_LOAD_CORE=0`

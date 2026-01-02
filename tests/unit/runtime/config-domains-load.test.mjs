@@ -12,15 +12,8 @@ function loadSys2File(session, filePath) {
 }
 
 function loadCore(session) {
-  const corePath = './config/Core';
-  const files = fs
-    .readdirSync(corePath)
-    .filter(f => f.endsWith('.sys2') && f !== 'index.sys2')
-    .sort();
-
-  for (const file of files) {
-    loadSys2File(session, path.join(corePath, file));
-  }
+  const res = session.loadPack('Kernel', { includeIndex: true, validate: false });
+  assert.equal(res.success, true, `Kernel pack load failed: ${JSON.stringify(res.errors || [])}`);
 }
 
 function loadDomainIndex(session, domainName) {

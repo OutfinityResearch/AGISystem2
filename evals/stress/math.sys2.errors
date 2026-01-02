@@ -1,0 +1,14 @@
+# Errors for evals/stress/math.sys2
+
+## Missing Dependencies
+
+- [exact(A)+holo] Unknown operator 'cartesianProduct' at 2018:34
+- [exact(A)+holo] Unknown operator 'complementOf' (7x) at 1957:31, 1974:28, 1975:12, 1976:12, 1984:28, 1985:12, 1986:12
+- [exact(A)+holo] Unknown operator 'differenceOf' at 1967:31
+- [exact(A)+holo] Unknown operator 'intersectionOf' (8x) at 1947:31, 1977:31, 1984:42, 1994:39, 1997:31, 2004:28, 2005:11, 2006:12
+- [exact(A)+holo] Unknown operator 'isNatural' (35x) at 2039:12, 2045:14, 2046:17, 2070:11, 2076:37, 2097:9, 2098:9, 2107:9, 2108:9, 2109:9 (+25 more)
+- [exact(A)+holo] Unknown operator 'mult' (46x) at 2128:25, 2134:11, 2135:20, 2145:25, 2145:38, 2156:11, 2156:17, 2157:12, 2157:21, 2169:11 (+36 more)
+- [exact(A)+holo] Unknown operator 'powerSetOf' (2x) at 1917:30, 3507:15
+- [exact(A)+holo] Unknown operator 'successor' (8x) at 2046:28, 2054:35, 2061:22, 2061:37, 2073:24, 2089:19, 2090:12, 2134:20
+- [exact(A)+holo] Undeclared operator 'successor' at 2054:35 (declare with '@successor:successor __Relation' or '@successor graph ...')
+- [exact(A)+holo] Unknown operator 'unionOf' (8x) at 1909:31, 1974:42, 1987:31, 1994:28, 1995:11, 1996:12, 2004:46, 2007:31

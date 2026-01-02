@@ -176,8 +176,6 @@ export const TOKEN_TYPES = {
 // Keywords - only those with special parsing in parser.mjs
 export const KEYWORDS = [
   'theory',
-  'import',
-  'rule',
   'graph',   // HDC point relationship graph
   'macro',   // deprecated synonym for 'graph'
   'begin',

@@ -5,8 +5,8 @@
 **Document Version:** 1.0
 **Author:** Sînică Alboaie
 **Status:** Draft Specification
-**Part Of:** DS07 Core Theory (refactored)
-**Config Files:** `config/Core/00-types.sys2`, `config/Core/02-constructors.sys2`, `config/Core/03-structural.sys2`
+**Part Of:** DS07 Standard Library Packs
+**Pack Files (canonical):** `config/Packs/Bootstrap/00-types.sys2`, `config/Packs/Bootstrap/02-constructors.sys2`, `config/Packs/Bootstrap/03-structural.sys2`
 
 ---
 
@@ -71,7 +71,7 @@ __Atom (abstract base - don't use directly)
 
 ## 7b.4 Type Markers
 
-Defined in `config/Core/00-types.sys2`:
+Defined in the Bootstrap pack (`config/Packs/Bootstrap/00-types.sys2`):
 
 ```sys2
 # Entity types
@@ -110,7 +110,7 @@ Defined in `config/Core/00-types.sys2`:
 
 ## 7b.5 Typed Constructors
 
-Defined in `config/Core/02-constructors.sys2`:
+Defined in the Bootstrap pack (`config/Packs/Bootstrap/02-constructors.sys2`):
 
 ### 7b.5.1 Entity Constructors
 
@@ -251,7 +251,7 @@ end
 
 ## 7b.6 Structural Operations
 
-Defined in `config/Core/03-structural.sys2`:
+Defined in the Bootstrap pack (`config/Packs/Bootstrap/03-structural.sys2`):
 
 ### 7b.6.1 Role Binding
 
@@ -406,9 +406,9 @@ end
 
 | Config File | Purpose |
 |-------------|---------|
-| `config/Core/00-types.sys2` | Type marker definitions |
-| `config/Core/02-constructors.sys2` | Typed constructor graphs |
-| `config/Core/03-structural.sys2` | Structural operations |
+| `config/Packs/Bootstrap/00-types.sys2` | Type marker definitions |
+| `config/Packs/Bootstrap/02-constructors.sys2` | Typed constructor graphs |
+| `config/Packs/Bootstrap/03-structural.sys2` | Structural operations |
 
 | Source File | Purpose |
 |-------------|---------|

@@ -1,11 +1,11 @@
-# Spec: config/Core/02-constructors.sys2
+# Spec: `config/Packs/Bootstrap/02-constructors.sys2`
 
 ## Purpose
-Defines macros like `@__Person` and `@__Number` that manufacture typed vectors.  These macros encapsulate the repeated `___Bind` sequences required to attach base type markers, as described in DS07b-Type-System.
+Defines macros like `@__Person`, `@__Atom`, and `@__Number` that manufacture typed vectors. These macros encapsulate the repeated `___Bind` sequences required to attach base type markers, as described in DS07b-Type-System.
 
 ## Key Constructs
 - Entity constructors: `__Entity`, `__Person`, `__Object`, etc., each binding a fresh vector with both `EntityType` and a subtype marker.
-- Abstract constructors: property, state, category, relation, action.
+- Abstract constructors: property, state, category, relation, action, and `__Atom` (generic abstract symbol).
 - Temporal/quantity constructors (`__TimePoint`, `__Number`, `__Measure`) that embed literal values inside the vector via `graph value` arguments.
 
 ## Runtime Integration

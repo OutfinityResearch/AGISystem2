@@ -1,4 +1,4 @@
-# Spec: config/Core/05-logic.sys2
+# Spec: `config/Packs/Logic/05-logic.sys2`
 
 ## Purpose
 Declares logical relations (`Implies`, `And`, `Or`, `Not`, quantifiers) and macros for building logic graphs entirely inside the DSL (DS07d-Logic).  Eliminates earlier JS shims that constructed implication bundles manually.

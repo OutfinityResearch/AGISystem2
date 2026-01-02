@@ -1,4 +1,4 @@
-# Spec: config/Core/03-structural.sys2
+# Spec: `config/Packs/Bootstrap/03-structural.sys2`
 
 ## Purpose
 Supplies fundamental macros for composing argument structures: semantic roles, tuples, bundles, and type guards.  This corresponds to DS07b structural section and keeps low-level manipulation out of JS.

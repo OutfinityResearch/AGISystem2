@@ -1,22 +1,28 @@
-# Spec: config/Core/00-relations.sys2
+# Spec: `config/Packs/Relations/00-relations.sys2`
 
 ## Purpose
-Defines relation metadata (transitive, symmetric, reflexive) plus families of domain verbs (family, ownership, trust) so that the runtime knows whether reasoning shortcuts like transitive closure or symmetry should apply.  Mirrors DS07f (Roles & Properties) and removes hard-coded relation handling in code.
+Defines relation metadata (transitive, symmetric, reflexive, inheritable, assignment) so that reasoning layers can apply declarative shortcuts (e.g. transitive closure) without hard-coded operator lists.
+
+Policy: this pack is intentionally **domain-agnostic**; it should not contain “story” relations (e.g. `loves`, `owns`, `parent`). Evaluation suites and tests must ship their own domain vocabularies.
 
 ## Key Constructs
-- `__TransitiveRelation`, `__SymmetricRelation`, `__ReflexiveRelation` tags bound to actual operators (e.g., `isA`, `locatedIn`, `siblingOf`).
-- Plain `__Relation` declarations for commonly referenced verbs (family, affective, possession) to guarantee they exist in the vocabulary before tests run.
+- Relation property tags bound to operators:
+  - `__TransitiveRelation` (e.g. `isA`, `partOf`)
+  - `__SymmetricRelation` (e.g. `conflictsWith`)
+  - `__ReflexiveRelation` (e.g. `equals`)
+  - `__InheritableProperty` (e.g. `hasProperty`, `hasState`)
+  - `__AssignmentRelation` (phrasing hint for NL output)
 
 ## Runtime Integration
-- Loaded through `Session.learn` when Core theories are imported (see `tests/unit/runtime/core-theories.test.mjs:15`).
-- Transitivity and symmetry flags are consumed inside reasoning engines (`src/reasoning/transitive.mjs`, `src/reasoning/query.mjs`) when exploring inference chains.
+- Loaded through `Session.learn` when the baseline Kernel stack (DS51) is imported.
+- Relation tags are consumed inside reasoning engines (e.g. `src/reasoning/transitive.mjs`, `src/reasoning/query.mjs`) when exploring inference chains.
 
 ## Tests & Coverage
-- `tests/unit/runtime/core-theories.test.mjs` ensures the file loads and contributes facts.
-- `tests/unit/reasoning/query.test.mjs` uses `loves`, `owns`, `parent`, and other declared relations when checking matching/binding behavior.
+- `tests/unit/runtime/core-theories.test.mjs` ensures the file loads and contributes tagged relations.
+- Query/binding tests should define their own domain relations in test-local fixtures rather than relying on baseline packs.
 
 ## Design Rationale
-Marking relations declaratively keeps the proof/search layers pure—no special cases in JS.  Adding family/social verbs here lets eval suites (e.g., `evals/fastEval/suite02_hierarchies`) and fixtures rely on consistent operator vectors without redefining them.
+Marking relation properties declaratively keeps the proof/search layers pure—no special cases in JS. Domain vocabularies are intentionally pushed out to evaluation suites and domain packs to avoid test-driven vocabulary creep in baseline config.
 
 ## Status
 Implementation fully matches the spec; follow-up work is to add validation so unknown relations cannot be referenced (tracked in DS07f open items).

@@ -51,7 +51,7 @@ export const cases = [
       conflictsWith Alice Bob
       conflictsWith Bob Alice
 
-      @seating solve WeddingSeating
+      @seating solve csp
         variables from GuestA
         domain from TableA
         noConflict conflictsWith
@@ -101,7 +101,7 @@ export const cases = [
       conflictsWith Carol Dave
       conflictsWith Dave Carol
 
-      @arrangement solve WeddingSeating
+      @arrangement solve csp
         variables from GuestB
         domain from TableB
         noConflict conflictsWith
@@ -139,7 +139,7 @@ export const cases = [
       conflictsWith Mary Ann
       conflictsWith Ann Mary
 
-      @seatingImpossible solve WeddingSeating
+      @seatingImpossible solve csp
         variables from GuestC
         domain from TableC
         noConflict conflictsWith
@@ -176,7 +176,7 @@ export const cases = [
       isA Room3 RoomD
       isA Room4 RoomD
       
-      @rooms solve WeddingSeating
+      @rooms solve csp
         variables from GuestD
         domain from RoomD
         allDifferent variables
@@ -225,7 +225,7 @@ export const cases = [
       isA Room4 RoomE
       isA Room5 RoomE
 
-      @rooms5 solve WeddingSeating
+      @rooms5 solve csp
         variables from GuestE
         domain from RoomE
         allDifferent variables

@@ -8,7 +8,7 @@
 export const name = 'Deep Transitive Chains';
 export const description = 'Stress test 6-10 step transitive reasoning';
 
-export const theories = ['05-logic.sys2'];
+export const theories = [];
 
 export const steps = [
   // === SETUP: Geographic - Dual Modeling ===

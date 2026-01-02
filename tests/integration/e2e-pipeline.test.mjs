@@ -7,10 +7,16 @@ import assert from 'node:assert/strict';
 import { TestSession } from '../../src/test-lib/test-session.mjs';
 import { Assertions } from '../../src/test-lib/assertions.mjs';
 
+function makeSession(options = {}) {
+  // These integration tests validate vector behavior (equals/density/orthogonality),
+  // which is strategy-dependent. Use a globally comparable dense-binary strategy here.
+  return new TestSession({ geometry: 2048, hdcStrategy: 'dense-binary', ...options });
+}
+
 describe('End-to-End Pipeline', () => {
   describe('Learn → Query → Decode', () => {
     test('should encode facts and retrieve them via query', () => {
-      const session = new TestSession({ geometry: 2048 });
+      const session = makeSession();
 
       // 1. LEARN - use @var:name for scope + KB persistence
       session.learnAndVerify(`
@@ -36,7 +42,7 @@ describe('End-to-End Pipeline', () => {
     });
 
     test('should handle multi-argument relations', () => {
-      const session = new TestSession({ geometry: 2048 });
+      const session = makeSession();
 
       // Use anonymous fact for KB persistence
       session.learn('sells Alice Book Bob');
@@ -48,7 +54,7 @@ describe('End-to-End Pipeline', () => {
     });
 
     test('should produce readable natural language', () => {
-      const session = new TestSession({ geometry: 2048 });
+      const session = makeSession();
 
       session.learn('@fact loves Romeo Juliet');
 
@@ -64,7 +70,7 @@ describe('End-to-End Pipeline', () => {
 
   describe('Learn → Prove → Decode', () => {
     test('should prove direct facts', () => {
-      const session = new TestSession({ geometry: 2048 });
+      const session = makeSession();
 
       session.learn(`
         @f1 isA Socrates Human
@@ -78,7 +84,7 @@ describe('End-to-End Pipeline', () => {
     });
 
     test('should track rules', () => {
-      const session = new TestSession({ geometry: 2048 });
+      const session = makeSession();
 
       // DSL uses references for compound expressions (parentheses not supported)
       session.learn(`
@@ -96,7 +102,7 @@ describe('End-to-End Pipeline', () => {
 
   describe('Vocabulary and Atoms', () => {
     test('should create consistent atom vectors', () => {
-      const session = new TestSession({ geometry: 2048 });
+      const session = makeSession();
 
       const v1 = session.vocabulary.getOrCreate('John');
       const v2 = session.vocabulary.getOrCreate('John');
@@ -107,7 +113,7 @@ describe('End-to-End Pipeline', () => {
     });
 
     test('different atoms should be quasi-orthogonal', () => {
-      const session = new TestSession({ geometry: 2048 });
+      const session = makeSession();
 
       const v1 = session.vocabulary.getOrCreate('Apple');
       const v2 = session.vocabulary.getOrCreate('Banana');
@@ -122,7 +128,7 @@ describe('End-to-End Pipeline', () => {
 
   describe('TestSession Verification', () => {
     test('should track assertions', () => {
-      const session = new TestSession({ geometry: 2048 });
+      const session = makeSession();
 
       session.learn('@f loves A B');
 
@@ -135,7 +141,7 @@ describe('End-to-End Pipeline', () => {
     });
 
     test('should log operations', () => {
-      const session = new TestSession({ geometry: 2048 });
+      const session = makeSession();
 
       // Use *AndVerify methods which log to testLog
       session.learnAndVerify('@f loves A B');
@@ -149,7 +155,7 @@ describe('End-to-End Pipeline', () => {
 
   describe('Error Handling', () => {
     test('should handle empty KB gracefully', () => {
-      const session = new TestSession({ geometry: 2048 });
+      const session = makeSession();
 
       const result = session.query('@q loves ?who Mary');
       assert.equal(result.success, false);
@@ -159,7 +165,7 @@ describe('End-to-End Pipeline', () => {
     });
 
     test('should handle malformed DSL', () => {
-      const session = new TestSession({ geometry: 2048 });
+      const session = makeSession();
 
       assert.throws(() => session.learn('@f loves John "unterminated'));
 
@@ -188,7 +194,7 @@ describe('Assertions Library', () => {
   });
 
   test('vectorBalanced should check density', () => {
-    const session = new TestSession({ geometry: 1024 });
+    const session = makeSession({ geometry: 1024 });
     const v = session.vocabulary.getOrCreate('test');
 
     assert.doesNotThrow(() => {

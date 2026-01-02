@@ -2,7 +2,7 @@
  * AGISystem2 - Inverse Relation Reasoner
  * @module reasoning/inverse
  *
- * Supports inverse relations declared in config/Core/14-constraints.sys2:
+ * Supports inverse relations declared in config/Packs/Consistency/14-constraints.sys2:
  * inverseRelation R Rinv  =>  R(A,B) <-> Rinv(B,A)
  */
 
@@ -12,7 +12,7 @@ import { Statement, Identifier } from '../parser/ast.mjs';
 export class InverseReasoner {
   constructor(proofEngine) {
     this.engine = proofEngine;
-    const strategy = proofEngine.session?.hdcStrategy || 'dense-binary';
+    const strategy = proofEngine.session?.hdcStrategy || 'exact';
     this.thresholds = getThresholds(strategy);
   }
 

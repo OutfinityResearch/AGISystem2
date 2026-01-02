@@ -9,7 +9,7 @@ Strategy registry for HDC implementations. Manages registration, retrieval, and 
 | Function | Description |
 |----------|-------------|
 | `getStrategy(strategyId)` | Get strategy by ID |
-| `getDefaultStrategy()` | Get default strategy (dense-binary) |
+| `getDefaultStrategy()` | Get process-global default strategy (dense-binary, for backward compatibility) |
 | `registerStrategy(id, strategy)` | Register new strategy |
 | `listStrategies()` | List available strategy IDs |
 
@@ -49,11 +49,15 @@ listStrategies() → string[]
 
 | ID | Module | Description |
 |----|--------|-------------|
-| `dense-binary` | `./dense-binary.mjs` | Default. Uint32Array + XOR binding |
+| `dense-binary` | `./dense-binary.mjs` | Uint32Array + XOR binding |
+| `sparse-polynomial` | `./sparse-polynomial.mjs` | SPHDC (Set&lt;bigint&gt;) |
+| `metric-affine` | `./metric-affine.mjs` | Uint8Array + L1 similarity |
+| `metric-affine-elastic` | `./metric-affine-elastic.mjs` | Metric-affine with elastic bundling |
+| `exact` | `./exact.mjs` | EXACT (session-local instance required) |
 
 ## Dependencies
 
-- `./dense-binary.mjs` - Default strategy implementation
+- `./dense-binary.mjs`, `./sparse-polynomial.mjs`, `./metric-affine.mjs`, `./metric-affine-elastic.mjs`, `./exact.mjs`
 
 ## Algorithm
 
@@ -62,6 +66,10 @@ INTERNAL: strategies = Map<string, HDCStrategy>
 
 ON MODULE LOAD:
   strategies.set('dense-binary', denseBinaryStrategy)
+  strategies.set('sparse-polynomial', sparsePolynomialStrategy)
+  strategies.set('metric-affine', metricAffineStrategy)
+  strategies.set('metric-affine-elastic', metricAffineElasticStrategy)
+  strategies.set('exact', exactStrategy)
 
 getStrategy(id):
   IF strategies.has(id):
@@ -87,7 +95,7 @@ listStrategies():
 import { getStrategy, listStrategies, registerStrategy } from './strategies/index.mjs';
 
 // List available
-console.log(listStrategies()); // ['dense-binary']
+console.log(listStrategies()); // ['dense-binary', 'sparse-polynomial', 'metric-affine', 'metric-affine-elastic', 'exact']
 
 // Get specific
 const strategy = getStrategy('dense-binary');
@@ -99,7 +107,7 @@ registerStrategy('my-strategy', myStrategy);
 
 ## Test Cases
 
-1. Default strategy is dense-binary
+1. Process-global default strategy is dense-binary
 2. Unknown strategy throws error
 3. Duplicate registration throws error
 4. listStrategies returns all registered

@@ -1,4 +1,4 @@
-# Spec: config/Core/10-properties.sys2
+# Spec: `config/Packs/Properties/10-properties.sys2`
 
 ## Purpose
 Supplies macros for attribute assignment (`hasProperty`, `inState`), membership (`isA`, `subclass`), part-whole relations, location/capability/possession, and synonyms—capturing DS07f requirements and the follow-ups from `hardcoded_theory_analysis.md`.

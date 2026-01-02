@@ -272,7 +272,7 @@ EXAMPLES:
 @_ PhraseTemplate sells question "What did {Pos1} sell to {Pos2}?"
 @_ PhraseTemplate sells passive "{Pos3} was sold by {Pos1} to {Pos2}"
 
-# In Core theory
+# In Kernel pack (legacy Core theory)
 @_ PhraseTemplate hasProperty summary "{Pos1} has property {Pos2}"
 @_ PhraseTemplate isA summary "{Pos1} is a {Pos2}"
 @_ PhraseTemplate Implies summary "If {Pos1}, then {Pos2}"

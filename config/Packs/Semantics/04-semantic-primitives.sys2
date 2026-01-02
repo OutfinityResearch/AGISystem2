@@ -1,0 +1,126 @@
+# Semantics Pack - L2 Semantic Primitives
+# Conceptual Dependency primitives for events.
+
+# ===== Physical Actions =====
+
+# _ptrans: Physical transfer of location
+# Types: agent:Entity, object:Entity, from:Place, to:Place
+@_ptrans:_ptrans graph agent object from to
+    @eid __Event
+    @r1 __Role Agent $agent
+    @r2 __Role Theme $object
+    @r3 __Role Source $from
+    @r4 __Role Goal $to
+    @result __Bundle $eid $r1 $r2 $r3 $r4
+    return $result
+end
+
+# _propel: Apply physical force
+# Types: agent:Entity, object:Object, direction:Property
+@_propel:_propel graph agent object direction
+    @eid __Event
+    @r1 __Role Agent $agent
+    @r2 __Role Theme $object
+    @r3 __Role Direction $direction
+    @result __Bundle $eid $r1 $r2 $r3
+    return $result
+end
+
+# _grasp: Take physical control
+# Types: agent:Entity, object:Object
+@_grasp:_grasp graph agent object
+    @eid __Event
+    @r1 __Role Agent $agent
+    @r2 __Role Theme $object
+    @result __Bundle $eid $r1 $r2
+    return $result
+end
+
+# _ingest: Take into body
+# Types: agent:Person, object:Substance|Object
+@_ingest:_ingest graph agent object
+    @eid __Event
+    @r1 __Role Agent $agent
+    @r2 __Role Theme $object
+    @result __Bundle $eid $r1 $r2
+    return $result
+end
+
+# _expel: Expel from body
+# Types: agent:Person, object:Substance|Object
+@_expel:_expel graph agent object
+    @eid __Event
+    @r1 __Role Agent $agent
+    @r2 __Role Theme $object
+    @result __Bundle $eid $r1 $r2
+    return $result
+end
+
+# ===== Abstract Actions =====
+
+# _atrans: Abstract transfer (ownership, control)
+# Types: agent:Entity, object:Entity|Abstract, from:Entity, to:Entity
+@_atrans:_atrans graph agent object from to
+    @eid __Event
+    @r1 __Role Agent $agent
+    @r2 __Role Theme $object
+    @r3 __Role Source $from
+    @r4 __Role Goal $to
+    @result __Bundle $eid $r1 $r2 $r3 $r4
+    return $result
+end
+
+# ===== Mental Actions =====
+
+# _mtrans: Mental/information transfer
+# Types: agent:Person, info:Abstract, from:Person|Place, to:Person
+@_mtrans:_mtrans graph agent info from to
+    @eid __Event
+    @r1 __Role Agent $agent
+    @r2 __Role Content $info
+    @r3 __Role Source $from
+    @r4 __Role Recipient $to
+    @result __Bundle $eid $r1 $r2 $r3 $r4
+    return $result
+end
+
+# _mbuild: Mental construction
+# Types: agent:Person, idea:Abstract
+@_mbuild:_mbuild graph agent idea
+    @eid __Event
+    @r1 __Role Agent $agent
+    @r2 __Role Content $idea
+    @result __Bundle $eid $r1 $r2
+    return $result
+end
+
+# _attend: Focus sense organ
+# Types: agent:Person, sense:Object, target:Entity
+@_attend:_attend graph agent sense target
+    @eid __Event
+    @r1 __Role Agent $agent
+    @r2 __Role Instrument $sense
+    @r3 __Role Target $target
+    @result __Bundle $eid $r1 $r2 $r3
+    return $result
+end
+
+# _speak: Produce sounds
+# Types: agent:Person, utterance:Abstract
+@_speak:_speak graph agent utterance
+    @eid __Event
+    @r1 __Role Agent $agent
+    @r2 __Role Content $utterance
+    @result __Bundle $eid $r1 $r2
+    return $result
+end
+
+# _conc: Conceptualize/think about
+# Types: agent:Person, concept:Abstract
+@_conc:_conc graph agent concept
+    @eid __Event
+    @r1 __Role Agent $agent
+    @r2 __Role Content $concept
+    @result __Bundle $eid $r1 $r2
+    return $result
+end

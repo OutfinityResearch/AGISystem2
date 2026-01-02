@@ -126,7 +126,7 @@ describe('Lexer', () => {
       const tokens = lexer.tokenize();
       assert.equal(tokens[0].type, TOKEN_TYPES.KEYWORD);
       assert.equal(tokens[0].value, 'theory');
-      assert.equal(tokens[1].type, TOKEN_TYPES.KEYWORD);
+      assert.equal(tokens[1].type, TOKEN_TYPES.IDENTIFIER);
       assert.equal(tokens[1].value, 'import');
     });
   });

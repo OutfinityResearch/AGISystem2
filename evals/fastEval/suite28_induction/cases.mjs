@@ -8,7 +8,7 @@
 export const name = 'Induction';
 export const description = 'Type-level induction for missing hasProperty queries';
 
-export const theories = ['05-logic.sys2'];
+export const theories = [];
 
 export const steps = [
   {

@@ -14,39 +14,17 @@ const ROOT = join(__dirname, '..');
 const CONFIG_ROOT = join(ROOT, '..', '..', 'config');
 
 /**
- * Load Core theory files in order
+ * Load a "core theory" summary for reporting purposes.
+ *
+ * Note:
+ * - `config/Core` no longer exists (DS51 taxonomy).
+ * - fastEval now loads baseline packs directly in the runner.
+ * - This function remains as a compatibility shim for the loader API.
+ *
  * @returns {Promise<{files: string[], theories: Object<string, string>}>}
  */
 export async function loadCoreTheory() {
-  const coreDir = join(CONFIG_ROOT, 'Core');
-  const indexPath = join(coreDir, 'index.sys2');
-
-  const files = [];
-  const theories = {};
-
-  try {
-    const indexContent = await readFile(indexPath, 'utf8');
-
-    // Parse Load directives
-    const loadRegex = /@_\s+Load\s+"([^"]+)"/g;
-    let match;
-
-    while ((match = loadRegex.exec(indexContent)) !== null) {
-      const filename = match[1].replace('./', '');
-      files.push(filename);
-
-      const filePath = join(coreDir, filename);
-      try {
-        theories[filename] = await readFile(filePath, 'utf8');
-      } catch (err) {
-        theories[filename] = `# Error loading ${filename}: ${err.message}`;
-      }
-    }
-  } catch (err) {
-    throw new Error(`Failed to load Core theory index: ${err.message}`);
-  }
-
-  return { files, theories };
+  return { files: [], theories: {} };
 }
 
 /**

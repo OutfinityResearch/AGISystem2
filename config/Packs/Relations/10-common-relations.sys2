@@ -1,0 +1,11 @@
+# Relations Pack - Common Relation Declarations
+# Domain-agnostic relations that are widely used by NL→DSL, decoders, and eval suites.
+#
+# Policy: keep this list small and generic; domain-specific vocab belongs in domain packs.
+
+@likes:likes __Relation
+@loves:loves __Relation
+@parent:parent __Relation
+
+@marriedTo:marriedTo __Relation
+

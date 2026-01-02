@@ -601,7 +601,7 @@ This chapter is intentionally conceptual. For concrete implementation details an
 - `docs/specs/DS/DS15-Sparse-Polynomial-HDC.md` — sparse polynomial strategy family.
 - `docs/specs/DS/DS18-Metric-Affine-HDC.md` and `docs/specs/DS/DS23-Elastic-Metric-Affine-HDC.md` — metric-affine strategy family.
 - `docs/specs/DS/DS25-Exact-Sparse-Bitset-Polynomial-HDC.md` — EXACT strategy (quotient-like unbinding).
-- `docs/specs/DS/DS17-Holographic-Priority-Mode.md` and `docs/specs/DS/DS17-Meta-Query-Operators.md` — engine policies and meta-operators.
+- `docs/specs/DS/DS17-Holographic-Priority-Mode.md` and `docs/specs/DS/DS17a-Meta-Query-Operators.md` — engine policies and meta-operators.
 - `docs/specs/DS/DS39-Reasoning-Closure-STAR-UNSTAR-RESEARCH.md` — STAR/UNSTAR closure (research).
 - `docs/specs/DS/DS41-URK-Reasoning-Programs-IR-RESEARCH.md` to `docs/specs/DS/DS45-URK-Probabilistic-and-Mathematical-Reasoning-RESEARCH.md` — URK kernel (research).
 - `docs/specs/DS/DS46-Discrete-Phase-Lattice-Hologram-HDC-RESEARCH.md` and `docs/specs/DS/DS47-Optical-Field-HDC-Strategy-OFHDC-RESEARCH.md` — additional strategy proposals (research).

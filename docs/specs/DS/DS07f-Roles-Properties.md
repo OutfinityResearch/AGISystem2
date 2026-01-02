@@ -5,8 +5,8 @@
 **Document Version:** 1.0
 **Author:** Sînică Alboaie
 **Status:** Draft Specification
-**Part Of:** DS07 Core Theory (refactored)
-**Config Files:** `config/Core/09-roles.sys2`, `config/Core/10-properties.sys2`, `config/Core/00-relations.sys2`
+**Part Of:** DS07 Kernel Pack (refactored; formerly Core)
+**Pack Files (canonical):** `config/Packs/Bootstrap/09-roles.sys2`, `config/Packs/Properties/10-properties.sys2`, `config/Packs/Relations/00-relations.sys2`
 
 ---
 
@@ -22,7 +22,7 @@ This document specifies:
 
 ## 7f.2 Semantic Roles
 
-Defined in `config/Core/09-roles.sys2`.
+Defined in the Bootstrap pack (`config/Packs/Bootstrap/09-roles.sys2`).
 
 ### 7f.2.1 Agent Roles
 
@@ -114,7 +114,7 @@ Defined in `config/Core/09-roles.sys2`.
 
 ## 7f.3 Property Relations
 
-Defined in `config/Core/10-properties.sys2`.
+Defined in the Properties pack (`config/Packs/Properties/10-properties.sys2`).
 
 ### 7f.3.1 Property/State Graphs
 
@@ -226,7 +226,7 @@ end
 
 ## 7f.4 Relation Types
 
-Defined in `config/Core/00-relations.sys2`.
+Defined in the Relations pack (`config/Packs/Relations/00-relations.sys2`).
 
 ### 7f.4.1 Transitive Relations
 

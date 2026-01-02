@@ -1,0 +1,113 @@
+# Numeric Pack - Numeric Layer
+# Basic numeric operations and comparisons.
+
+# ===== Numeric Type =====
+@NumericType:NumericType ___NewVector "NumericType" "Core"
+
+# ===== Role Labels / Tokens =====
+# (Defined here so the graphs below don't depend on implicit literal stamping.)
+@Number:Number __Relation
+@Comparison:Comparison __Relation
+@Operand:Operand __Relation
+@Operation:Operation __Relation
+@Operator:Operator __Relation
+
+@Addition:Addition ___NewVector "Addition" "Core"
+@Subtraction:Subtraction ___NewVector "Subtraction" "Core"
+
+# ===== Comparison Operators =====
+
+@GreaterThan:GreaterThan graph a b
+    # Compares two numeric values
+    # Returns true if a > b
+    @numA __Role Number $a
+    @numB __Role Number $b
+    @comparisonType __Role Comparison GreaterThan
+    @result __Bundle $numA $numB $comparisonType
+    return $result
+end
+
+@LessThan:LessThan graph a b
+    # Compares two numeric values
+    # Returns true if a < b
+    @numA __Role Number $a
+    @numB __Role Number $b
+    @comparisonType __Role Comparison LessThan
+    @result __Bundle $numA $numB $comparisonType
+    return $result
+end
+
+@Equals:Equals graph a b
+    # Compares two numeric values for equality
+    # Returns true if a == b
+    @numA __Role Number $a
+    @numB __Role Number $b
+    @comparisonType __Role Comparison Equals
+    @result __Bundle $numA $numB $comparisonType
+    return $result
+end
+
+@GreaterThanOrEqual:GreaterThanOrEqual graph a b
+    # Returns true if a >= b
+    @gt GreaterThan $a $b
+    @eq Equals $a $b
+    @result Or $gt $eq
+    return $result
+end
+
+@LessThanOrEqual:LessThanOrEqual graph a b
+    # Returns true if a <= b
+    @lt LessThan $a $b
+    @eq Equals $a $b
+    @result Or $lt $eq
+    return $result
+end
+
+# ===== Arithmetic Operators =====
+
+@Add:Add graph a b
+    # Addition: a + b
+    @operandA __Role Operand $a
+    @operandB __Role Operand $b
+    @operationType __Role Operation Addition
+    @result __Bundle $operandA $operandB $operationType
+    return $result
+end
+
+@Subtract:Subtract graph a b
+    # Subtraction: a - b
+    @operandA __Role Operand $a
+    @operandB __Role Operand $b
+    @operationType __Role Operation Subtraction
+    @result __Bundle $operandA $operandB $operationType
+    return $result
+end
+
+# ===== Threshold Checking =====
+
+@Threshold:Threshold graph value threshold operator
+    # Generic threshold checking
+    # operator can be: GreaterThan, LessThan, Equals, etc.
+    @val __Role Value $value
+    @thresh __Role Threshold $threshold
+    @op __Role Operator $operator
+    @result __Bundle $val $thresh $op
+    return $result
+end
+
+# ===== Range Checking =====
+
+@InRange:InRange graph value min max
+    # Check if value is in range [min, max]
+    @ge GreaterThanOrEqual $value $min
+    @le LessThanOrEqual $value $max
+    @result And $ge $le
+    return $result
+end
+
+@OutOfRange:OutOfRange graph value min max
+    # Check if value is outside range [min, max]
+    @inRange InRange $value $min $max
+    @result Not $inRange
+    return $result
+end

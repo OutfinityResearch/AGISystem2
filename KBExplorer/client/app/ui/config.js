@@ -7,16 +7,28 @@ function safeSelectValue(selectEl, preferredValue, fallbackValue) {
 }
 
 export function loadConfig({ $, state }) {
-  const defaultStrategy = 'dense-binary';
+  const defaultStrategy = 'exact';
   const defaultReasoning = 'symbolicPriority';
   const storedStrategy = localStorage.getItem('kbexplorer.hdcStrategy');
   const storedReasoning = localStorage.getItem('kbexplorer.reasoningPriority');
+  const storedPacks = localStorage.getItem('kbexplorer.packs');
 
   const strategyEl = $('strategySelect');
   const reasoningEl = $('reasoningSelect');
 
   state.config.hdcStrategy = safeSelectValue(strategyEl, storedStrategy, defaultStrategy);
   state.config.reasoningPriority = safeSelectValue(reasoningEl, storedReasoning, defaultReasoning);
+  state.config.packs = (() => {
+    if (!storedPacks) return null;
+    try {
+      const parsed = JSON.parse(storedPacks);
+      if (!Array.isArray(parsed)) return null;
+      const cleaned = parsed.map(p => String(p || '').trim()).filter(Boolean);
+      return cleaned.length > 0 ? cleaned : null;
+    } catch {
+      return null;
+    }
+  })();
 
   strategyEl.value = state.config.hdcStrategy;
   reasoningEl.value = state.config.reasoningPriority;
@@ -25,6 +37,11 @@ export function loadConfig({ $, state }) {
 export function saveConfig({ state }) {
   localStorage.setItem('kbexplorer.hdcStrategy', state.config.hdcStrategy);
   localStorage.setItem('kbexplorer.reasoningPriority', state.config.reasoningPriority);
+  if (Array.isArray(state.config.packs) && state.config.packs.length > 0) {
+    localStorage.setItem('kbexplorer.packs', JSON.stringify(state.config.packs));
+  } else {
+    localStorage.removeItem('kbexplorer.packs');
+  }
 }
 
 export function currentSessionOptions({ $ }) {

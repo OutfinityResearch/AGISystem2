@@ -39,7 +39,7 @@ The module uses centralized thresholds from `src/core/constants.mjs`:
 
 ## Transitive Relations
 
-Loaded from `config/Core/00-relations.sys2`:
+Loaded from `config/Packs/Kernel/00-relations.sys2`:
 
 ```
 isA, locatedIn, partOf, subclassOf, containedIn,

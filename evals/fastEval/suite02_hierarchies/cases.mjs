@@ -8,7 +8,7 @@
 export const name = 'Type Hierarchies';
 export const description = 'Deep isA chains with property inheritance and complete proofs';
 
-export const theories = ['05-logic.sys2'];
+export const theories = [];
 
 export const steps = [
   // === SETUP: Deep hierarchy (8 levels) + properties + inheritance rule ===

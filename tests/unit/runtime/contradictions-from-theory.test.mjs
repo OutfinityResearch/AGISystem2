@@ -4,7 +4,7 @@ import { Session } from '../../../src/runtime/session.mjs';
 import { validateProof } from '../../../src/reasoning/proof-validator.mjs';
 
 describe('Contradictions (theory-driven via SemanticIndex)', () => {
-  test('warns on mutuallyExclusive pairs defined in config/Core/14-constraints.sys2', () => {
+  test('warns on mutuallyExclusive pairs defined in Kernel constraints theory', () => {
     const session = new Session({ geometry: 2048, reasoningProfile: 'theoryDriven' });
 
     const r1 = session.learn('hasState Door Open');
@@ -16,7 +16,7 @@ describe('Contradictions (theory-driven via SemanticIndex)', () => {
     assert.ok(r2.warnings.some(w => w.includes('contradiction')), JSON.stringify(r2.warnings));
     assert.ok(typeof r2.proof_nl === 'string' && r2.proof_nl.length > 0);
     assert.ok(r2.proof_nl.includes('mutuallyExclusive hasState Open Closed'), r2.proof_nl);
-    assert.ok(r2.proof_nl.includes('config/Core/14-constraints.sys2'), r2.proof_nl);
+    assert.ok(r2.proof_nl.includes('config/Packs/Consistency/14-constraints.sys2'), r2.proof_nl);
     assert.ok(r2.proofObject && typeof r2.proofObject === 'object');
     assert.equal(r2.proofObject.valid, false);
     assert.deepEqual(r2.proofObject.goal, { operator: 'hasState', args: ['Door', 'Closed'] });
@@ -26,7 +26,7 @@ describe('Contradictions (theory-driven via SemanticIndex)', () => {
     assert.equal(session.kbFacts.length, 1);
   });
 
-  test('warns on contradictsSameArgs pairs defined in config/Core/14-constraints.sys2', () => {
+  test('warns on contradictsSameArgs pairs defined in Kernel constraints theory', () => {
     const session = new Session({ geometry: 2048, reasoningProfile: 'theoryDriven' });
 
     const r1 = session.learn('before A B');
@@ -38,7 +38,7 @@ describe('Contradictions (theory-driven via SemanticIndex)', () => {
     assert.ok(r2.warnings.some(w => w.includes('before') && w.includes('after')), JSON.stringify(r2.warnings));
     assert.ok(typeof r2.proof_nl === 'string' && r2.proof_nl.length > 0);
     assert.ok(r2.proof_nl.includes('contradictsSameArgs before after'), r2.proof_nl);
-    assert.ok(r2.proof_nl.includes('config/Core/14-constraints.sys2'), r2.proof_nl);
+    assert.ok(r2.proof_nl.includes('config/Packs/Consistency/14-constraints.sys2'), r2.proof_nl);
     assert.ok(r2.proofObject && typeof r2.proofObject === 'object');
     assert.equal(r2.proofObject.valid, false);
     assert.deepEqual(r2.proofObject.goal, { operator: 'after', args: ['A', 'B'] });

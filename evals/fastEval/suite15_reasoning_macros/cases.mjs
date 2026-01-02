@@ -8,7 +8,7 @@
 export const name = 'Reasoning Macros & Defaults';
 export const description = 'Abduction, counterfactual, default/exception, deduce/analogy stress cases';
 
-export const theories = ['05-logic.sys2', 'Physics/01-relations.sys2'];
+export const theories = ['Physics/01-relations.sys2'];
 
 export const steps = [
   // === SETUP: Causal KB with conflicting explanations ===

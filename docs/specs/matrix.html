@@ -63,6 +63,11 @@
       background-color: #fff3e0;
       color: #e65100;
     }
+    .badge-spec {
+      background-color: #f3f4f6;
+      color: #374151;
+      border: 1px solid #d1d5db;
+    }
   </style>
 </head>
 <body>
@@ -121,9 +126,9 @@
       <td><span class="badge badge-success">Complete</span></td>
     </tr>
 		    <tr>
-		      <td>DS00 - DS47 (+ DS07a-h)</td>
+		      <td>DS00 - DS74 (+ DS07a-h)</td>
 		      <td>Design Specifications</td>
-		      <td>58 documents</td>
+		      <td>85 documents</td>
 		      <td><span class="badge badge-info">Mixed</span></td>
 		    </tr>
 	  </table>
@@ -134,6 +139,9 @@
 	    <span class="badge badge-success">Implemented</span>
 	    <span class="badge badge-info">Partial</span>
 	    <span class="badge badge-warning">Research</span>
+	  </p>
+	  <p style="color:#555; margin-top: -10px;">
+	    Badges show implementation maturity (<code>Impl:</code>) and specification maturity (<code>Spec:</code> extracted from each DS header).
 	  </p>
 	
 	  <div class="doc-list">
@@ -246,7 +254,7 @@
 	      <p>Holographic-first reasoning priority configuration</p>
 	    </div>
 	    <div class="doc-item">
-	      <h4><a href="../specsLoader.html?spec=DS/DS17-Meta-Query-Operators.md">DS17 - Meta Query Operators</a> <span class="badge badge-success">Implemented</span></h4>
+	      <h4><a href="../specsLoader.html?spec=DS/DS17a-Meta-Query-Operators.md">DS17a - Meta Query Operators</a> <span class="badge badge-success">Implemented</span></h4>
 	      <p>similar/analogy and other meta-query operators</p>
 	    </div>
 	    <div class="doc-item">
@@ -369,6 +377,114 @@
 		      <h4><a href="../specsLoader.html?spec=DS/DS47-Optical-Field-HDC-Strategy-OFHDC-RESEARCH.md">DS47 - OF-HDC (Optical-Field Strategy)</a> <span class="badge badge-warning">Research</span></h4>
 		      <p>Proposed HDC strategy: complex 2D phasor field with add-superposition, phase binding, correlation similarity, and explicit geometry growth policy</p>
 		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS48-KBExplorer.md">DS48 - KBExplorer</a> <span class="badge badge-success">Implemented</span></h4>
+		      <p>Local HTTP UI for session inspection, chat, and KB browsing</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS49-Universal-Reasoning-Core-URC.md">DS49 - Universal Reasoning Core (URC)</a> <span class="badge badge-info">Partial</span></h4>
+		      <p>Storage semantics, evidence/provenance, and backend orchestration contract</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS50-CompilationCore-SMTLIB2.md">DS50 - CompilationCore (SMT-LIB2)</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>Deterministic compilation to SMT-LIB2 (v0 fragment) as URC artifacts</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS51-Config-Taxonomy-Core-vs-Packs.md">DS51 - Config Taxonomy (Core vs Packs)</a> <span class="badge badge-info">Partial</span></h4>
+		      <p>Config taxonomy and pack loading direction to support URC evolution</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS52-Reasoning-Paradigms-Roadmap-RESEARCH.md">DS52 - Reasoning Paradigms Roadmap</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>URC backend roadmap: fragments, capability registry, and orchestration strategy</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS53-SAT-CDCL-Backend-RESEARCH.md">DS53 - SAT (CDCL) Backend</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>CDCL SAT backend spec (URC fragment: Bool)</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS54-SMT-DPLLT-Backend-RESEARCH.md">DS54 - SMT (DPLL(T)) Backend</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>SMT backend integration beyond compilation-only DS50</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS55-CP-Constraint-Programming-Backend-RESEARCH.md">DS55 - CP Backend</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>Constraint programming backend spec (propagation + search)</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS56-Model-Checking-Fixpoint-Backend-RESEARCH.md">DS56 - Model Checking + Fixpoint Backend</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>Automata + fixpoint backends for transition systems (URC fragment: TS)</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS57-IC3-PDR-Backend-RESEARCH.md">DS57 - IC3 / PDR Backend</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>IC3/PDR-style backend and tactics for safety properties</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS58-CEGAR-Orchestration-RESEARCH.md">DS58 - CEGAR Orchestration</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>Counterexample-guided orchestration between abstractions and backends</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS59-Abstract-Interpretation-Backend-RESEARCH.md">DS59 - Abstract Interpretation Backend</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>Abstract interpretation as a backend/tactic (URC fragment: AI)</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS60-Proof-Assistant-Verification-RESEARCH.md">DS60 - Proof Assistant Verification</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>Proof assistant integration for verification-grade artifacts</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS61-ATP-Saturation-Backend-RESEARCH.md">DS61 - ATP Saturation Backend</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>Saturation-style automated theorem proving (URC fragment: FOL)</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS62-Term-Rewriting-Knuth-Bendix-RESEARCH.md">DS62 - Term Rewriting (Knuth–Bendix)</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>Rewrite and completion backend/tactics for equational reasoning</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS63-Groebner-Bases-Backend-RESEARCH.md">DS63 - Gröbner Bases Backend</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>Polynomial reasoning backend for algebraic fragments</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS64-Quantifier-Elimination-CAD-RESEARCH.md">DS64 - Quantifier Elimination (CAD)</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>Quantifier elimination backend for real arithmetic fragments</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS65-ILP-MIP-Backend-RESEARCH.md">DS65 - ILP / MIP Backend</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>Integer and mixed-integer optimization backend integration</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS66-SDP-SoS-Backend-RESEARCH.md">DS66 - SDP / SoS Backend</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>Semidefinite programming and sum-of-squares backend integration</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS67-Structural-Decomposition-Treewidth-RESEARCH.md">DS67 - Structural Decomposition (Treewidth)</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>Decomposition-based tactics for scalable reasoning</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS68-Tensor-Factor-Graphs-Belief-Propagation-RESEARCH.md">DS68 - Factor Graphs / Belief Propagation</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>Probabilistic inference backends (message passing)</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS69-Model-Counting-Hashing-RESEARCH.md">DS69 - Model Counting / Hashing</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>Model counting backends for probabilistic and evidence-weighted tasks</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS70-Symbolic-Execution-RESEARCH.md">DS70 - Symbolic Execution</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>Symbolic execution backend for program-like fragments</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS71-Program-Synthesis-SyGuS-RESEARCH.md">DS71 - Program Synthesis (SyGuS)</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>Syntax-guided synthesis backend integration</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS72-ML-Guided-Proof-Search-RESEARCH.md">DS72 - ML-Guided Proof Search</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>ML guidance for proof search, premise selection, and tactic proposals</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS73-URC-Migration-Plan.md">DS73 - URC Migration Plan</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>Execution plan for URC adoption across packs, storage semantics, orchestration, and evals</p>
+		    </div>
+		    <div class="doc-item">
+		      <h4><a href="../specsLoader.html?spec=DS/DS74-EvalSuite-Audit-Guidelines.md">DS74 - EvalSuite Audit Guidelines</a> <span class="badge badge-warning">Research</span></h4>
+		      <p>Audit checklist for eval suites: realism, coherence, and URC alignment</p>
+		    </div>
 		  </div>
 
   <h2>Implementation Status</h2>
@@ -401,10 +517,13 @@
       <text x="665" y="95" text-anchor="middle" font-size="10" fill="#333">✓ Complete</text>
 
       <!-- Progress bar -->
-      <text x="400" y="140" text-anchor="middle" font-size="14" font-weight="bold" fill="#2e7d32">OVERALL PROGRESS: 100%</text>
+      <text x="400" y="140" text-anchor="middle" font-size="14" font-weight="bold" fill="#2e7d32">CORE v1 PROGRESS: 100%</text>
       <rect x="100" y="150" width="600" height="10" rx="5" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
       <rect x="100" y="150" width="600" height="10" rx="5" fill="#4caf50"/>
     </svg>
+    <p style="margin: 10px 0 0 0; color:#555;">
+      Note: URC (DS49+) and solver backends are tracked separately and are not included in the “Core v1” completion bar.
+    </p>
   </div>
 
   <h2>Traceability Overview</h2>
@@ -440,7 +559,7 @@
       <rect x="250" y="150" width="300" height="80" rx="10" fill="#fce4ec" stroke="#e91e63" stroke-width="2"/>
       <text x="400" y="175" text-anchor="middle" font-weight="bold" font-size="14" fill="#c2185b">DS</text>
       <text x="400" y="195" text-anchor="middle" font-size="11" fill="#333">Design Specifications</text>
-      <text x="400" y="215" text-anchor="middle" font-size="10" fill="#666">DS00 to DS47 (+ DS07a-h) (58 documents)</text>
+      <text x="400" y="215" text-anchor="middle" font-size="10" fill="#666">DS00 to DS74 (+ DS07a-h) (85 documents)</text>
 
       <!-- Code Plan Box -->
       <rect x="300" y="260" width="200" height="30" rx="5" fill="#f3e5f5" stroke="#9c27b0" stroke-width="2"/>
@@ -659,5 +778,59 @@
     <p>All specifications follow GAMP Category 5 guidelines for custom applications.</p>
   </div>
   </div>
+
+  <script>
+    function extractSpecStatus(markdownText) {
+      if (!markdownText) return null;
+      const head = markdownText.split('\n').slice(0, 40).join('\n');
+      const m1 = head.match(/^\*\*Status:\*\*\s*(.+)\s*$/im);
+      if (m1 && m1[1]) return m1[1].trim();
+      const m2 = head.match(/^\s*Status:\s*(.+)\s*$/im);
+      if (m2 && m2[1]) return m2[1].trim();
+      return null;
+    }
+
+    async function addSpecMaturityBadges() {
+      const docItems = Array.from(document.querySelectorAll('.doc-item'));
+
+      for (const item of docItems) {
+        const implBadge = item.querySelector('h4 .badge');
+        if (implBadge && !implBadge.textContent.trim().startsWith('Impl:')) {
+          implBadge.textContent = `Impl: ${implBadge.textContent.trim()}`;
+        }
+
+        const link = item.querySelector('h4 a[href*="specsLoader.html?spec="]');
+        if (!link) continue;
+
+        let specPath;
+        try {
+          specPath = new URL(link.href, window.location.href).searchParams.get('spec');
+        } catch {
+          continue;
+        }
+        if (!specPath) continue;
+
+        try {
+          const res = await fetch(`./${specPath}`);
+          if (!res.ok) continue;
+          const md = await res.text();
+          const status = extractSpecStatus(md) || 'Unknown';
+
+          const specBadge = document.createElement('span');
+          specBadge.className = 'badge badge-spec';
+          specBadge.textContent = `Spec: ${status}`;
+          if (implBadge) {
+            implBadge.insertAdjacentElement('afterend', specBadge);
+          } else {
+            link.insertAdjacentElement('afterend', specBadge);
+          }
+        } catch {
+          // ignore missing files (e.g. offline or non-markdown entries)
+        }
+      }
+    }
+
+    addSpecMaturityBadges();
+  </script>
 </body>
 </html>

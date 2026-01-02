@@ -1,5 +1,6 @@
 import http from 'node:http';
-import { randomUUID } from 'node:crypto';
+import { randomUUID, createHash } from 'node:crypto';
+import { existsSync, readdirSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -11,7 +12,53 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const CLIENT_DIR = path.resolve(__dirname, '../client');
-const CORE_DIR = path.resolve(__dirname, '../../config/Core');
+const PACKS_DIR = path.resolve(__dirname, '../../config/Packs');
+
+// Baseline packs for KBExplorer. Keep this list generic and minimal.
+const DEFAULT_PACKS = [
+  'Bootstrap',
+  'Relations',
+  'Logic',
+  'Temporal',
+  'Modal',
+  'Defaults',
+  'Properties',
+  'Numeric',
+  'Semantics',
+  'Lexicon',
+  'Reasoning',
+  'Canonicalization',
+  'Consistency',
+  // URC contract packs are useful by default in KBExplorer (research UI).
+  'URC'
+];
+
+function sha256Hex(text) {
+  return createHash('sha256').update(String(text || ''), 'utf8').digest('hex');
+}
+
+function tryRecordNlTranslationProvenance(session, { nlText, dslText }) {
+  const srcNl = `SrcNL_${randomUUID().replace(/-/g, '')}`;
+  const srcDsl = `SrcDSL_${randomUUID().replace(/-/g, '')}`;
+  const nl = String(nlText || '');
+  const dsl = String(dslText || '');
+
+  const provDsl = [
+    `sourceText ${srcNl} ${JSON.stringify(nl)}`,
+    `sourceHash ${srcNl} ${JSON.stringify(sha256Hex(nl))}`,
+    `sourceText ${srcDsl} ${JSON.stringify(dsl)}`,
+    `sourceHash ${srcDsl} ${JSON.stringify(sha256Hex(dsl))}`,
+    `normalizedFrom ${srcDsl} ${srcNl}`
+  ].join('\n');
+
+  try {
+    session.learn(provDsl);
+    return { success: true, sourceNl: srcNl, sourceDsl: srcDsl };
+  } catch {
+    // Best-effort only: provenance must not block user commands.
+    return { success: false };
+  }
+}
 
 function json(res, status, payload) {
   const body = JSON.stringify(payload ?? null);
@@ -100,6 +147,63 @@ function sanitizeSessionOptions(sessionOptions) {
   return out;
 }
 
+function listAvailablePacks() {
+  try {
+    const entries = readdirSync(PACKS_DIR, { withFileTypes: true });
+    const names = entries
+      .filter(e => e.isDirectory())
+      .map(e => e.name)
+      .filter(name => existsSync(path.join(PACKS_DIR, name, 'index.sys2')))
+      .sort((a, b) => a.localeCompare(b));
+    return names;
+  } catch {
+    return [];
+  }
+}
+
+function sanitizePackList(packs, { availablePacks }) {
+  if (!Array.isArray(packs)) return null;
+  const allowed = new Set(availablePacks || []);
+  const out = [];
+  for (const raw of packs) {
+    const name = String(raw || '').trim();
+    if (!name) continue;
+    if (!allowed.has(name)) continue;
+    if (out.includes(name)) continue;
+    out.push(name);
+  }
+  return out;
+}
+
+function loadPacksIntoSession(session, packNames) {
+  const loaded = [];
+  const errors = [];
+
+  for (const packName of packNames || []) {
+    const packPath = path.join(PACKS_DIR, packName);
+    if (!existsSync(packPath)) {
+      errors.push({ pack: packName, error: 'Missing pack directory' });
+      continue;
+    }
+    const report = session.loadPack(packName, { packPath, includeIndex: true, validate: false });
+    if (!report?.success) {
+      errors.push({
+        pack: packName,
+        error: 'Failed to load pack',
+        details: report?.errors || []
+      });
+      continue;
+    }
+    loaded.push(packName);
+  }
+
+  return {
+    success: errors.length === 0,
+    loadedPacks: loaded,
+    errors
+  };
+}
+
 function sanitizeInputMode(inputMode) {
   const m = String(inputMode || '').trim().toLowerCase();
   if (m === 'nl' || m === 'dsl') return m;
@@ -177,9 +281,14 @@ function tryTranslateKbExplorerDirective(text, { mode }) {
     };
   }
 
-  // Wedding seating directive (NL-ish):
-  // "Solve wedding seating: variables from Guest, domain from Table, noConflict conflictsWith, as seating"
-  if (lower.startsWith('solve weddingseating') || lower.startsWith('solve wedding seating')) {
+  // CSP directive (NL-ish):
+  // - "Solve csp: variables from Guest, domain from Table, noConflict conflictsWith, as seating"
+  // - legacy alias: "Solve wedding seating: ..." (kept for backward compatibility)
+  if (
+    lower.startsWith('solve csp') ||
+    lower.startsWith('solve weddingseating') ||
+    lower.startsWith('solve wedding seating')
+  ) {
     const variablesMatch =
       raw.match(/\bvariables\s+from\s+([A-Za-z_][A-Za-z0-9_]*)\b/i) ||
       raw.match(/\bguests\s+from\s+([A-Za-z_][A-Za-z0-9_]*)\b/i);
@@ -198,13 +307,13 @@ function tryTranslateKbExplorerDirective(text, { mode }) {
 
     if (!variables || !domain) return null;
 
-    const dsl = `@${relName} solve WeddingSeating [ (variablesFrom ${variables}), (domainFrom ${domain}), (noConflict ${conflict}) ]`;
+    const dsl = `@${relName} solve csp [ (variablesFrom ${variables}), (domainFrom ${domain}), (noConflict ${conflict}) ]`;
     return {
       dsl,
       translation: {
         success: true,
         type: 'kbexplorer_directive',
-        directive: 'solve_wedding_seating',
+        directive: 'solve_csp',
         errors: [],
         warnings: []
       }
@@ -480,11 +589,15 @@ function getSessionIdFromRequest(req, url) {
   return null;
 }
 
-function newSessionUniverse(options, sessionOptions) {
+function newSessionUniverse(options, sessionOptions, requestedPacks = null) {
   const resolvedSessionOptions = {
     ...(options?.sessionOptions || {}),
     ...(sanitizeSessionOptions(sessionOptions) || {})
   };
+
+  const availablePacks = listAvailablePacks();
+  const requested = sanitizePackList(requestedPacks, { availablePacks });
+  const packs = requested && requested.length > 0 ? requested : DEFAULT_PACKS.filter(p => availablePacks.includes(p));
 
   const warnings = [];
   let session = null;
@@ -495,14 +608,13 @@ function newSessionUniverse(options, sessionOptions) {
     session = new Session({});
   }
 
-  const coreLoad = session.loadCore({ includeIndex: true, corePath: CORE_DIR });
-  if (!coreLoad?.success) {
-    warnings.push('Core load reported errors (KBExplorer will still run, but NL→DSL and reasoning may be degraded).');
-  }
+  const coreLoad = loadPacksIntoSession(session, packs);
+  if (!coreLoad?.success) warnings.push('Baseline pack load reported errors (KBExplorer will still run, but behavior may be degraded).');
 
   return {
     sessionOptions: resolvedSessionOptions,
     coreLoad,
+    loadedPacks: packs,
     warnings,
     session,
     chat: [],
@@ -569,10 +681,20 @@ export function createKBExplorerServer(options = {}) {
       return json(res, 200, {
         ok: true,
         sessionId: found.sessionId,
+        loadedPacks: Array.isArray(found.universe.loadedPacks) ? found.universe.loadedPacks : [],
         kbFactCount,
         graphCount,
         vocabCount,
         scopeCount: Array.isArray(scopeNames) ? scopeNames.length : 0
+      });
+    }
+
+    if (req.method === 'GET' && url.pathname === '/api/packs') {
+      const availablePacks = listAvailablePacks();
+      return json(res, 200, {
+        ok: true,
+        availablePacks,
+        defaultPacks: DEFAULT_PACKS.filter(p => availablePacks.includes(p))
       });
     }
 
@@ -584,13 +706,15 @@ export function createKBExplorerServer(options = {}) {
         return json(res, 400, { ok: false, error: e?.message || 'Invalid JSON' });
       }
       const sessionOptions = (payload && typeof payload === 'object') ? payload.sessionOptions : null;
+      const packs = (payload && typeof payload === 'object') ? payload.packs : null;
       const sessionId = randomUUID();
-      const universe = newSessionUniverse(options, sessionOptions);
+      const universe = newSessionUniverse(options, sessionOptions, packs);
       sessions.set(sessionId, universe);
       return json(res, 200, {
         ok: true,
         sessionId,
         coreLoad: universe.coreLoad || null,
+        loadedPacks: universe.loadedPacks || [],
         warnings: universe.warnings || [],
         dump: universe.session.dump()
       });
@@ -606,6 +730,7 @@ export function createKBExplorerServer(options = {}) {
         // ignore (empty body is fine)
       }
       const sessionOptions = (payload && typeof payload === 'object') ? payload.sessionOptions : null;
+      const packs = (payload && typeof payload === 'object') ? payload.packs : null;
       try {
         found.universe.session.close();
       } catch {
@@ -626,17 +751,25 @@ export function createKBExplorerServer(options = {}) {
         session = new Session({});
       }
 
-      const coreLoad = session.loadCore({ includeIndex: true, corePath: CORE_DIR });
-      if (!coreLoad?.success) warnings.push('Core load reported errors.');
+      const availablePacks = listAvailablePacks();
+      const requested = sanitizePackList(packs, { availablePacks });
+      const nextPacks = requested && requested.length > 0
+        ? requested
+        : (Array.isArray(found.universe.loadedPacks) ? found.universe.loadedPacks : DEFAULT_PACKS).filter(p => availablePacks.includes(p));
+
+      const coreLoad = loadPacksIntoSession(session, nextPacks);
+      if (!coreLoad?.success) warnings.push('Baseline pack load reported errors.');
 
       found.universe.session = session;
       found.universe.coreLoad = coreLoad;
       found.universe.warnings = warnings;
+      found.universe.loadedPacks = nextPacks;
       found.universe.chat = [];
       return json(res, 200, {
         ok: true,
         sessionId: found.sessionId,
         coreLoad: coreLoad || null,
+        loadedPacks: nextPacks,
         warnings,
         dump: session.dump()
       });
@@ -973,6 +1106,10 @@ export function createKBExplorerServer(options = {}) {
           }
           dsl = tr.dsl || '';
         }
+
+        // URC direction: record NL→DSL provenance as facts when available.
+        // Best-effort: if URC provenance relations are not loaded, ignore silently.
+        tryRecordNlTranslationProvenance(session, { nlText: textIn, dslText: dsl });
       }
 
       if (!allowFileOps && containsFileOps(dsl)) {

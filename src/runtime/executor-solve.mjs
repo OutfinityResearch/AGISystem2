@@ -139,10 +139,16 @@ export function executeSolveStatement(executor, stmt) {
  * @returns {Object} Solve result
  */
 export function executeSolveBlock(executor, stmt) {
-  const problemType = String(stmt.problemType || '').trim();
-  if (problemType.toLowerCase() === 'planning' || problemType.toLowerCase() === 'plan') {
+  const rawProblemType = String(stmt.problemType || '').trim();
+  const problemType = rawProblemType.toLowerCase();
+  if (problemType === 'planning' || problemType === 'plan') {
     return executePlanningSolveBlock(executor, stmt);
   }
+
+  // CP/CSP solve blocks are intentionally generic:
+  // - old suite-specific names like "WeddingSeating" should not be treated as special runtime modes.
+  // - we keep `problemType` only as metadata; the solver semantics come from declarations.
+  const canonicalProblemType = problemType || 'csp';
 
   // DS19 strict declarations: a solve block defines a relation name (its destination)
   // used to query solution bindings (e.g. `@seating solve ...` then `seating Alice ?t`).
@@ -204,7 +210,7 @@ export function executeSolveBlock(executor, stmt) {
       destination: stmt.destination,
       problemType: stmt.problemType,
       success: false,
-      error: 'solve WeddingSeating requires `variables from <Type>` (or `guests from <Type>`)',
+      error: 'solve block requires `variables from <Type>` (or `guests from <Type>`)',
       solutionCount: 0,
       solutions: []
     };
@@ -216,7 +222,7 @@ export function executeSolveBlock(executor, stmt) {
       destination: stmt.destination,
       problemType: stmt.problemType,
       success: false,
-      error: 'solve WeddingSeating requires `domain from <Type>` (or `tables from <Type>`)',
+      error: 'solve block requires `domain from <Type>` (or `tables from <Type>`)',
       solutionCount: 0,
       solutions: []
     };
@@ -397,7 +403,8 @@ export function executeSolveBlock(executor, stmt) {
         metadata: {
           operator: 'cspSolution',
           solutionRelation: solutionRelation,
-          problemType: stmt.problemType,
+          problemType: canonicalProblemType,
+          declaredProblemType: rawProblemType || null,
           solutionIndex: i + 1,
           assignments: assignments,
           facts: assignments.map(a => `${solutionRelation} ${a.entity} ${a.value}`),

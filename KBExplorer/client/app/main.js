@@ -4,6 +4,7 @@ import { createApi } from './api.js';
 
 import { wireTabs, setMainTab } from './ui/tabs.js';
 import { loadConfig, currentSessionOptions, wireConfig } from './ui/config.js';
+import { wirePacks, setPackUi } from './ui/packs.js';
 import { wireChat, addChatItem } from './ui/chat.js';
 import { wireLoad, setLoadUi } from './ui/load.js';
 import { setKbFactsStat } from './ui/stats.js';
@@ -32,6 +33,16 @@ export async function bootstrap() {
   must('panelNl');
   must('sendBtn');
   must('textInput');
+  must('packsBtn');
+  must('packsDialog');
+  must('packsSearch');
+  must('packsList');
+  must('packsApplyBtn');
+  must('packsCancelBtn');
+  must('packsDefaultsBtn');
+  must('packsAllBtn');
+  must('packsNoneBtn');
+  must('packsCount');
   must('loadBtn');
   must('theoryFile');
   must('cancelLoadBtn');
@@ -45,13 +56,33 @@ export async function bootstrap() {
   }
 
   async function ensureSession() {
-    const res = await api('/api/session/new', { method: 'POST', body: { sessionOptions: currentSessionOptions(ctx) } });
+    const res = await api('/api/session/new', {
+      method: 'POST',
+      body: {
+        sessionOptions: currentSessionOptions(ctx),
+        packs: state.config.packs
+      }
+    });
     state.sessionId = res.sessionId;
+    if (Array.isArray(res.loadedPacks) && res.loadedPacks.length > 0) {
+      state.config.packs = res.loadedPacks;
+    }
+    setPackUi(ctx, { loadedPacks: res.loadedPacks || state.config.packs });
     updateSessionLabel();
   }
 
   async function resetSession() {
-    await api('/api/session/reset', { method: 'POST', body: { sessionOptions: currentSessionOptions(ctx) } });
+    const res = await api('/api/session/reset', {
+      method: 'POST',
+      body: {
+        sessionOptions: currentSessionOptions(ctx),
+        packs: state.config.packs
+      }
+    });
+    if (Array.isArray(res.loadedPacks) && res.loadedPacks.length > 0) {
+      state.config.packs = res.loadedPacks;
+    }
+    setPackUi(ctx, { loadedPacks: res.loadedPacks || state.config.packs });
     updateSessionLabel();
   }
 
@@ -78,6 +109,7 @@ export async function bootstrap() {
   loadConfig(ctx);
   setMainTab(ctx, 'chat');
   setLoadUi({ $, state }, { loading: false });
+  setPackUi(ctx, { loadedPacks: state.config.packs });
 
   // Header controls
   $('newSessionBtn').addEventListener('click', async () => {
@@ -100,6 +132,17 @@ export async function bootstrap() {
   });
 
   wireConfig(ctx, {
+    onRestartSession: async () => {
+      await ensureSession();
+      $('chat').innerHTML = '';
+      state.kb.kbOffset = 0;
+      state.kb.pinnedFactIds = [];
+      state.kb.selectedNodeId = null;
+      await refreshExplorer();
+    }
+  });
+
+  wirePacks(ctx, {
     onRestartSession: async () => {
       await ensureSession();
       $('chat').innerHTML = '';

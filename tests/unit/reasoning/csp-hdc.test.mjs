@@ -69,7 +69,10 @@ describe('CSP HDC Compound Encoding', () => {
     const aliceVec = session.vocabulary.getOrCreate('Alice');
     const t1Vec = session.vocabulary.getOrCreate('T1');
 
-    const expectedBinding = bind(bind(placementVec, withPosition(1, aliceVec)), withPosition(2, t1Vec));
+    const expectedBinding = bind(
+      bind(placementVec, withPosition(1, aliceVec, session)),
+      withPosition(2, t1Vec, session)
+    );
 
     // Compound solution vector should be similar to the binding
     const sim = similarity(sol.vector, expectedBinding);
@@ -202,7 +205,10 @@ describe('HDC Verification', () => {
     const entityVec = session.vocabulary.getOrCreate('Entity1');
     const slotVec = session.vocabulary.getOrCreate('Slot1');
 
-    const factVec = bind(bind(relVec, withPosition(1, entityVec)), withPosition(2, slotVec));
+    const factVec = bind(
+      bind(relVec, withPosition(1, entityVec, session)),
+      withPosition(2, slotVec, session)
+    );
 
     // Fact vector should be similar to compound solution
     const sim = similarity(factVec, sol.vector);

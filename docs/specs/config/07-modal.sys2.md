@@ -1,4 +1,4 @@
-# Spec: config/Core/07-modal.sys2
+# Spec: `config/Packs/Modal/07-modal.sys2`
 
 ## Purpose
 Captures modal, deontic, and epistemic operators (Possible, Necessary, Must, Knows, etc.) and their DSL macros as defined in DS07e-Temporal-Modal.

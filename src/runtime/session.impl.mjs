@@ -23,6 +23,7 @@ import { ComponentKB } from '../reasoning/component-kb.mjs';
 import { debug_trace, isDebugEnabled } from '../utils/debug.js';
 import { readEnvBoolean } from '../utils/env.js';
 import { DEFAULT_SEMANTIC_INDEX, FALLBACK_SEMANTIC_INDEX } from './semantic-index.mjs';
+import { SemanticIndex } from './semantic-index.mjs';
 import { canonicalizeMetadata } from './canonicalize.mjs';
 import { FactIndex } from './fact-index.mjs';
 import { ContradictionError } from './contradiction-error.mjs';
@@ -38,13 +39,14 @@ import { prove as proveImpl } from './session-prove.mjs';
 import { checkDSL as checkDSLImpl } from './session-check-dsl.mjs';
 import { dslToNl as dslToNlImpl } from './dsl-to-nl.mjs';
 import { beginTransaction, rollbackTransaction } from './session-transaction.mjs';
+import { materializePolicyView as materializePolicyViewImpl } from './policy-view.mjs';
 
 function dbg(category, ...args) {
   debug_trace(`[Session:${category}]`, ...args);
 }
 
 export function constructSession(session, options = {}) {
-  session.hdcStrategy = options.hdcStrategy || process.env.SYS2_HDC_STRATEGY || 'dense-binary';
+  session.hdcStrategy = options.hdcStrategy || process.env.SYS2_HDC_STRATEGY || 'exact';
   // Strategy-specific options (kept session-local to preserve IoC/session isolation).
   session.exactUnbindMode = (options.exactUnbindMode || process.env.SYS2_EXACT_UNBIND_MODE || 'A');
   session.reasoningPriority = options.reasoningPriority || getReasoningPriority();
@@ -110,6 +112,16 @@ export function constructSession(session, options = {}) {
   // Session-local reserved atoms.
   session.runtimeReserved = initRuntimeReservedAtoms(session);
 
+  // URC direction: policy/current-view is a derived surface (tooling/debug), not an authoritative store.
+  session.policyView = {
+    newerWins: true,
+    lastComputedAt: null,
+    currentFactIds: new Set(),
+    supersedes: [],
+    negates: [],
+    warnings: []
+  };
+
   // Reasoning statistics
   session.reasoningStats = {
     queries: 0,
@@ -167,9 +179,11 @@ export function constructSession(session, options = {}) {
     typeof process.env.NODE_TEST_CONTEXT === 'string' ||
     (Array.isArray(process.execArgv) && process.execArgv.includes('--test')) ||
     (Array.isArray(process.argv) && process.argv.includes('--test'));
-  const defaultAutoLoadCore = runningUnderNodeTest ? false : true;
+  // URC direction: Runtime Core is code-only; semantic theory packs are explicit dependencies.
+  // Default OFF unless the caller explicitly opts in.
+  const defaultAutoLoadCore = false;
   session.autoLoadCore = options.autoLoadCore ?? envAutoLoadCore ?? defaultAutoLoadCore;
-  session.corePath = options.corePath || './config/Core';
+  session.corePath = options.corePath || './config/Packs/Kernel';
   session.coreIncludeIndex = options.coreIncludeIndex ?? true;
   if (session.autoLoadCore) {
     const report = session.loadCore({
@@ -218,6 +232,34 @@ export function sessionLoadCore(session, options = {}) {
   if (report?.success) {
     session._coreLoaded = true;
     session._coreWarnings = report?.warnings || [];
+  }
+  return report;
+}
+
+export function sessionLoadPack(session, packName, options = {}) {
+  const name = String(packName || '').trim();
+  if (!name) return { success: false, errors: ['Missing pack name'], warnings: [] };
+
+  const packPath = options.packPath || `./config/Packs/${name}`;
+  const includeIndex = options.includeIndex ?? true;
+  const validate = options.validate ?? (name === 'Kernel' ? true : false);
+  const throwOnValidationError = options.throwOnValidationError ?? false;
+
+  session._packsLoaded ||= new Set();
+  const key = `${name}@${packPath}`;
+  if (session._packsLoaded.has(key) && !options.force) {
+    return { success: true, errors: [], warnings: [] };
+  }
+
+  const report = loadCoreImpl(session, {
+    corePath: packPath,
+    includeIndex,
+    validate,
+    throwOnValidationError
+  });
+
+  if (report?.success) {
+    session._packsLoaded.add(key);
   }
   return report;
 }
@@ -277,11 +319,9 @@ export function sessionAddToKB(session, vector, name = null, metadata = null) {
     dbg('CANONICAL', `Registered alias: ${meta.args[0]} -> ${meta.args[1]}`);
   }
 
-  if (session.kb === null) {
-    session.kb = vector.clone();
-  } else {
-    session.kb = bundle([session.kb, vector]);
-  }
+  // Deprecated: `session.kb` is a derived index (bundle) and should be treated as rebuildable.
+  // Use `session.getKBBundle()` which provides caching over the authoritative `kbFacts` store.
+  session.kb = null;
 }
 
 export function sessionGetKBBundle(session) {
@@ -439,4 +479,62 @@ export function sessionClose(session) {
   session._kbBundleCacheVersion = -1;
   session.rules = [];
   session.scope.clear();
+  session.policyView.lastComputedAt = null;
+  session.policyView.currentFactIds = new Set();
+  session.policyView.supersedes = [];
+  session.policyView.negates = [];
+  session.policyView.warnings = [];
+}
+
+export function sessionMaterializePolicyView(session, options = {}) {
+  const view = materializePolicyViewImpl(session, {
+    newerWins: options.newerWins ?? session.policyView.newerWins
+  });
+  session.policyView.lastComputedAt = Date.now();
+  session.policyView.currentFactIds = view.currentFactIds;
+  session.policyView.supersedes = view.supersedes;
+  session.policyView.negates = view.negates;
+  session.policyView.warnings = view.warnings;
+  return {
+    success: true,
+    ...view,
+    lastComputedAt: session.policyView.lastComputedAt
+  };
+}
+
+export function sessionRebuildIndices(session, options = {}) {
+  const includeFactIndex = options.includeFactIndex ?? true;
+  const includeComponentKB = options.includeComponentKB ?? true;
+  const includeSemanticIndex = options.includeSemanticIndex ?? true;
+  const includeCanonicalRewriteIndex = options.includeCanonicalRewriteIndex ?? true;
+
+  if (includeFactIndex) {
+    session.factIndex = new FactIndex();
+  }
+  if (includeComponentKB) {
+    session.componentKB = new ComponentKB(session);
+  }
+  if (includeSemanticIndex) {
+    session.semanticIndex = session.useSemanticIndex
+      ? (session.allowSemanticFallbacks ? FALLBACK_SEMANTIC_INDEX.clone() : DEFAULT_SEMANTIC_INDEX.clone())
+      : new SemanticIndex();
+  }
+  if (includeCanonicalRewriteIndex) {
+    session.canonicalRewriteIndex = session.canonicalizationEnabled && session.allowSemanticFallbacks
+      ? new CanonicalRewriteIndex(session)
+      : new CanonicalRewriteIndex();
+  }
+
+  // Re-index all persisted facts.
+  for (const fact of session.kbFacts || []) {
+    if (includeFactIndex) session.factIndex?.addFact?.(fact);
+    if (includeComponentKB) session.componentKB?.addFact?.(fact);
+    if (includeSemanticIndex) session.semanticIndex?.observeFact?.(fact);
+    if (includeCanonicalRewriteIndex) session.canonicalRewriteIndex?.observeFact?.(fact);
+  }
+
+  // Invalidate derived KB bundle cache.
+  session._kbBundleCache = null;
+  session._kbBundleCacheVersion = -1;
+  return { success: true };
 }

@@ -1,0 +1,5 @@
+# Canonicalization Pack - Index
+
+@_ Load "./13-canonicalization.sys2"
+@_ Load "./13c-canonical-rewrites.sys2"
+

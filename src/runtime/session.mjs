@@ -30,6 +30,7 @@ import {
   constructSession,
   sessionLearn,
   sessionLoadCore,
+  sessionLoadPack,
   sessionAddToKB,
   sessionGetKBBundle,
   sessionCheckContradiction,
@@ -46,6 +47,8 @@ import {
 	  sessionResolve,
 	  sessionDump,
 	  sessionFindAll,
+	  sessionMaterializePolicyView,
+	  sessionRebuildIndices,
 	  sessionClose
 	} from './session.impl.mjs';
 
@@ -64,6 +67,10 @@ export class Session {
 
   loadCore(options = {}) {
     return sessionLoadCore(this, options);
+  }
+
+  loadPack(packName, options = {}) {
+    return sessionLoadPack(this, packName, options);
   }
 
   trackRules(ast) {
@@ -201,6 +208,14 @@ export class Session {
 
   findAll(pattern, options = {}) {
     return sessionFindAll(this, pattern, options);
+  }
+
+  materializePolicyView(options = {}) {
+    return sessionMaterializePolicyView(this, options);
+  }
+
+  rebuildIndices(options = {}) {
+    return sessionRebuildIndices(this, options);
   }
 
   close() {

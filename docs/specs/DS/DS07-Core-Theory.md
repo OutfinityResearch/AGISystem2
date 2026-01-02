@@ -25,7 +25,7 @@ This monolithic document (previously 1590 lines) has been split into smaller, fo
 | [DS07f-Roles-Properties](DS07f-Roles-Properties.md) | Roles, properties, relations |
 | [DS07g-Bootstrap-Verbs](DS07g-Bootstrap-Verbs.md) | L3 verbs |
 | [DS07h-Reasoning](DS07h-Reasoning.md) | Reasoning verbs, meta-operators |
-| [DS17-Meta-Query-Operators](DS17-Meta-Query-Operators.md) | Detailed meta-operator specs |
+| [DS17a-Meta-Query-Operators](DS17a-Meta-Query-Operators.md) | Detailed meta-operator specs |
 
 ---
 

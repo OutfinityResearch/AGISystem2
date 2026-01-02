@@ -1,0 +1,86 @@
+# URC - EvidenceCore v1
+# Canonical evidence shapes (witnesses, certificates, artifacts, metrics).
+
+# ===== Categories =====
+@Evidence:Evidence __Category
+@Artifact:Artifact __Category
+@Claim:Claim __Category
+@Witness:Witness __Category
+@Certificate:Certificate __Category
+@Metric:Metric __Category
+@Tool:Tool __Category
+@Method:Method __Category
+
+# ===== Evidence slots =====
+@eKind:eKind __Relation
+@eMethod:eMethod __Relation
+@eTool:eTool __Relation
+@eSupports:eSupports __Relation
+@eWitness:eWitness __Relation
+@eCert:eCert __Relation
+@eArtifact:eArtifact __Relation
+@eMetric:eMetric __Relation
+@eStatus:eStatus __Relation
+@eScope:eScope __Relation
+@eDependsOn:eDependsOn __Relation
+@eRefersTo:eRefersTo __Relation
+
+# ===== Status atoms =====
+@Sat:Sat __Atom
+@Unsat:Unsat __Atom
+@Unknown:Unknown __Atom
+@Optimal:Optimal __Atom
+@Infeasible:Infeasible __Atom
+@Feasible:Feasible __Atom
+@Verified:Verified __Atom
+@Falsified:Falsified __Atom
+@Converged:Converged __Atom
+@Diverged:Diverged __Atom
+
+# ===== Method atoms =====
+@SAT:SAT __Atom
+@SMT:SMT __Atom
+@ATP:ATP __Atom
+@CP:CP __Atom
+@MIP:MIP __Atom
+@LP:LP __Atom
+@SDP:SDP __Atom
+@SOS:SOS __Atom
+@MC:MC __Atom
+@SYMEXEC:SYMEXEC __Atom
+@NUMERIC:NUMERIC __Atom
+@PROB:PROB __Atom
+@TENSOR:TENSOR __Atom
+
+# ===== Evidence kind atoms =====
+@Model:Model __Atom
+@UnsatCore:UnsatCore __Atom
+@ProofLog:ProofLog __Atom
+@Derivation:Derivation __Atom
+@Invariant:Invariant __Atom
+@Trace:Trace __Atom
+@DualCert:DualCert __Atom
+@Bounds:Bounds __Atom
+@Residual:Residual __Atom
+@Confidence:Confidence __Atom
+@Samples:Samples __Atom
+@HashCount:HashCount __Atom
+@Contraction:Contraction __Atom
+@TypeDerivation:TypeDerivation __Atom
+
+# ===== Universal constructor =====
+
+@MkEvidence:MkEvidence graph e kind method tool status claim witness cert artifact metric scope
+    @a eKind $e $kind
+    @b eMethod $e $method
+    @c eTool $e $tool
+    @d eStatus $e $status
+    @s eSupports $e $claim
+    @w eWitness $e $witness
+    @k eCert $e $cert
+    @t eArtifact $e $artifact
+    @m eMetric $e $metric
+    @sc eScope $e $scope
+    @res __Bundle $a $b $c $d $s $w $k $t $m $sc
+    return $res
+end

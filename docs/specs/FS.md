@@ -36,13 +36,13 @@ This Functional Specification (FS) defines the detailed functional requirements 
 |  +-----------------------------+--------------------------------+  |
 |                                |                                  |
 |  +-----------------------------+--------------------------------+  |
-|  |              HDC Strategy: dense-binary (DEFAULT)             | |
-|  |  DenseBinaryVector | Uint32Array | XOR bind | Majority bundle | |
+|  |                 HDC Strategy: exact (DEFAULT)                 | |
+|  |  ExactVector | sparse terms | structural bind/unbind | union bundle | |
 |  +---------------------------------------------------------------+  |
 +------------------------------------------------------------------+
 ```
 
-**Note:** The HDC layer uses a strategy pattern. The `dense-binary` strategy is the default. Alternative strategies can be selected via `SYS2_HDC_STRATEGY` environment variable.
+**Note:** The HDC layer uses a strategy pattern. The `exact` strategy is the default. Alternative strategies can be selected via `SYS2_HDC_STRATEGY` environment variable.
 
 ---
 
@@ -66,7 +66,7 @@ This Functional Specification (FS) defines the detailed functional requirements 
 |----|-------------|-----------|--------------|
 | **FS-91** | The system SHALL provide a facade module (`src/hdc/facade.mjs`) as single entry point for all HDC operations | URS-42 | Integration Test |
 | **FS-92** | The system SHALL support strategy selection via `SYS2_HDC_STRATEGY` environment variable | URS-44 | Unit Test |
-| **FS-93** | The system SHALL default to `dense-binary` strategy when no strategy is specified | URS-43 | Unit Test |
+| **FS-93** | The system SHALL default to `exact` strategy when no strategy is specified | URS-43 | Unit Test |
 | **FS-94** | The system SHALL provide strategy registration via `registerStrategy(id, strategy)` | URS-42 | Unit Test |
 | **FS-95** | The system SHALL provide strategy enumeration via `listStrategies()` | URS-42 | Unit Test |
 | **FS-96** | The system SHALL provide `validateStrategy(strategy, geometry)` for contract validation | URS-46 | Unit Test |
@@ -77,9 +77,9 @@ This Functional Specification (FS) defines the detailed functional requirements 
 
 | ID | Requirement | Traces To | Verification |
 |----|-------------|-----------|--------------|
-| **FS-08** | The parser SHALL tokenize DSL input into: AT, DOLLAR, QUESTION, COLON, IDENTIFIER, STRING, NUMBER | URS-11 | Unit Test |
-| **FS-09** | The parser SHALL recognize keywords: macro, end, return, theory | URS-11 | Unit Test |
-| **FS-10** | The parser SHALL parse statements in the form `@dest operator arg1 arg2 ...` | URS-12 | Unit Test |
+| **FS-08** | The lexer SHALL tokenize DSL input into: AT, REFERENCE (`$name`), HOLE (`?name`), COLON, COMMA, IDENTIFIER, STRING, NUMBER, LPAREN/RPAREN, LBRACKET/RBRACKET, LBRACE/RBRACE, NEWLINE | URS-11 | Unit Test |
+| **FS-09** | The parser SHALL recognize keywords: theory, import, rule, graph, macro, begin, end, return | URS-11 | Unit Test |
+| **FS-10** | The parser SHALL parse statements in the form `[ @dest ] operator arg1 arg2 ...` (destination is optional) | URS-12 | Unit Test |
 | **FS-11** | The parser SHALL support variable references with `$varName` syntax | URS-11 | Unit Test |
 | **FS-12** | The parser SHALL support query holes with `?holeName` syntax | URS-13 | Unit Test |
 | **FS-13** | The parser SHALL support export syntax `@varName:exportName` | URS-11 | Unit Test |
@@ -95,7 +95,7 @@ This Functional Specification (FS) defines the detailed functional requirements 
 | **FS-18** | The system SHALL support deterministic and random initialization modes for theories | URS-06 | Unit Test |
 | **FS-19** | The system SHALL maintain a registry of loaded theories | URS-07 | Integration Test |
 | **FS-20** | The system SHALL resolve theory references with `$TheoryName` syntax | URS-07 | Unit Test |
-| **FS-21** | Core theory is NOT auto-loaded; callers SHALL invoke `session.loadCore()` (or equivalent) explicitly | URS-06 | Unit Test |
+| **FS-21** | Core pack auto-load SHALL be enabled by default for normal runs, and configurable via `SYS2_AUTO_LOAD_CORE` / `Session({ autoLoadCore })` | URS-06 | Unit Test |
 | **FS-22** | The system SHALL export atoms and macros with specified names | URS-06 | Unit Test |
 | **FS-23** | The system SHALL validate theory geometry and initialization mode | URS-10 | Unit Test |
 | **FS-24** | The system SHALL support loading theories from file paths | URS-09 | Integration Test |

@@ -1,4 +1,4 @@
-# Spec: config/Core/04-semantic-primitives.sys2
+# Spec: `config/Packs/Semantics/04-semantic-primitives.sys2`
 
 ## Purpose
 Introduces L2 Conceptual Dependency primitives (_ptrans, _atrans, _mtrans, etc.) representing physical, abstract, and mental actions.  These provide reusable templates for L3 verbs (DS07c + DS07g).
@@ -9,7 +9,7 @@ Introduces L2 Conceptual Dependency primitives (_ptrans, _atrans, _mtrans, etc.)
 - Each macro produces a bundled event with `__Event` id plus semantic roles (Agent, Theme, Source, etc.).
 
 ## Runtime Integration
-- Higher-level macros in `11-bootstrap-verbs.sys2` compose these primitives; for example `@GiveMacro` calls `_atrans` twice.
+- Higher-level macros in `config/Packs/Lexicon/11-bootstrap-verbs.sys2` compose these primitives; for example `@GiveMacro` calls `_atrans` twice.
 - Decoder and reasoning modules rely on the consistent role layout when generating explanations or natural-language phrasing.
 
 ## Tests & Coverage

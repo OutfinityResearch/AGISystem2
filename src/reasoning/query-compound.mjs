@@ -225,7 +225,8 @@ export function decodeCompoundSolution(session, compoundVec, operatorName) {
       // Calculate similarity of full unbind
       const fullUnbind = bind(afterPos1, pos2Vec);
       session.reasoningStats.similarityChecks++;
-      const sim = similarity(fullUnbind, session.kb || compoundVec);
+      const kbBundle = session.getKBBundle?.();
+      const sim = similarity(fullUnbind, kbBundle || compoundVec);
 
       if (sim > 0.4) {
         extracted.push({

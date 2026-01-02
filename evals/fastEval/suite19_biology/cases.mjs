@@ -8,7 +8,7 @@
 export const name = 'Biological Pathways';
 export const description = 'Taxonomy + metabolism + causal chains with proofs';
 
-export const theories = ['05-logic.sys2'];
+export const theories = [];
 
 export const steps = [
   // === SETUP: Taxonomy and respiration pathway ===

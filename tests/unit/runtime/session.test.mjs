@@ -10,7 +10,7 @@ describe('Session', () => {
   describe('constructor', () => {
     test('should create session with default geometry', () => {
       const session = new Session();
-      assert.equal(session.geometry, 32768);
+      assert.equal(session.geometry, 256);
     });
 
     test('should create session with custom geometry', () => {
@@ -97,6 +97,7 @@ describe('Session', () => {
     test('should fail to prove unknown fact', () => {
       const session = new Session({ geometry: 1024 });
       session.learn('@f loves John Mary');
+      session.learn('@hates:hates __Relation');
 
       const result = session.prove('@g hates John Mary');
       assert.equal(result.valid, false);

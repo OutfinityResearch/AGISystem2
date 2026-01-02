@@ -1,0 +1,32 @@
+# Canonicalization Pack - Canonical Rewrite Templates (DS19)
+#
+# Purpose:
+# - Provide theory-declared semantic-class rewrites into canonical macros.
+# - Enables semantic unification: equivalent DSL formulations normalize to canonical surface facts.
+#
+# Format:
+#   canonicalRewrite fromOp toOp [argMap...] [[i,j]...]
+#
+# Where:
+# - `argMap` maps output args by index from the input args.
+# - `[[i,j]...]` are equality constraints (input arg i must equal input arg j).
+
+@CanonicalRewrite:canonicalRewrite __Relation
+
+# Communication: _mtrans(agent, info, from, to) where agent==from  => tell(agent, info, to)
+canonicalRewrite _mtrans tell [0, 1, 3] [[0, 2]]
+
+# Transfer: _atrans(agent, obj, from, to) where agent==from  => give(agent, obj, to)
+canonicalRewrite _atrans give [0, 1, 3] [[0, 2]]
+
+# Transfer: _atrans(agent, obj, from, to) where agent==to  => take(agent, obj, from)
+canonicalRewrite _atrans take [0, 1, 2] [[0, 3]]
+
+# Motion: _ptrans(agent, obj, from, to) where agent==obj  => go(agent, from, to)
+canonicalRewrite _ptrans go [0, 2, 3] [[0, 1]]
+
+# Motion: _ptrans(agent, obj, from, to)  => move(agent, obj, from, to)
+canonicalRewrite _ptrans move [0, 1, 2, 3] []
+
+# Speech: _speak(agent, utterance) => say(agent, utterance)
+canonicalRewrite _speak say [0, 1] []

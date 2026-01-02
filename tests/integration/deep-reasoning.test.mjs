@@ -39,8 +39,9 @@ describe('Deep Reasoning', () => {
   });
 
   test('determinism', () => {
-    const session1 = new Session({ geometry: 2048 });
-    const session2 = new Session({ geometry: 2048 });
+    // Use a globally comparable strategy (EXACT is session-local by design).
+    const session1 = new Session({ geometry: 2048, hdcStrategy: 'dense-binary' });
+    const session2 = new Session({ geometry: 2048, hdcStrategy: 'dense-binary' });
     session1.learn('@f loves John Mary');
     session2.learn('@f loves John Mary');
     const v1 = session1.scope.get('f');

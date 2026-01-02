@@ -178,7 +178,7 @@ export function verifyHDCCandidate(session, operatorName, knowns, candidate, hol
  */
 export function searchHDC(session, operatorName, knowns, holes, operatorVec, options = {}) {
   const results = [];
-  const thresholds = getThresholds(session.hdcStrategy || 'dense-binary');
+  const thresholds = getThresholds(session.hdcStrategy || 'exact');
 
   if (session.kbFacts.length === 0) return results;
 
@@ -207,10 +207,9 @@ export function searchHDC(session, operatorName, knowns, holes, operatorVec, opt
   }
 
   if (!kbBundle) {
-    // Bundle all KB facts into single KB vector
-    const factVectors = session.kbFacts.map(f => f.vector).filter(v => v);
-    if (factVectors.length === 0) return results;
-    kbBundle = bundle(factVectors);
+    // Derived index: use the cached KB bundle (rebuildable from persisted facts).
+    kbBundle = session.getKBBundle?.();
+    if (!kbBundle) return results;
   }
 
   // Master Equation: Answer = KB ⊕ Query⁻¹ (for XOR: unbind = bind)

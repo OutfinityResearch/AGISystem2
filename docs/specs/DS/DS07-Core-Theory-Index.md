@@ -9,22 +9,36 @@
 
 ---
 
-## 7.1 Purpose of Core Theory
+## 7.1 Purpose of the Standard Library Packs (formerly “Core” / “Kernel”)
 
-Core is the foundational theory that is **always loaded** and **cannot be unloaded**. It provides:
+This chapter documents the **standard library theory packs** shipped with AGISystem2.
 
-1. **HDC Primitives** (L0) — raw vector operations
-2. **Type System** (L1) — typed atom constructors
-3. **Structural Operations** (L1) — building blocks
-4. **Semantic Primitives** (L2) — Conceptual Dependency verbs
-5. **Logic Primitives** — And, Or, Not, Implies, quantifiers
-6. **Temporal Primitives** — Before, After, Causes
-7. **Modal Primitives** — Possible, Necessary, Permitted
-8. **Default Reasoning** — normally, except, unless
-9. **Standard Roles** — Agent, Theme, Goal, etc.
-10. **Bootstrap Verbs** (L3) — tell, give, buy, go, see, want
-11. **Reasoning Verbs** — abduce, induce, whatif, etc.
-12. **Meta-Query Operators** — similar, bundle, induce, analogy
+These packs are **not** part of Runtime Core (code). Under the DS49/DS51 direction:
+
+- Runtime Core stays small, intelligible, and audit-friendly (code + reserved atoms).
+- Semantic libraries (types, structure, logic, roles, etc.) are **packs** that can be loaded explicitly.
+
+Historically, these theories lived under `config/Core` and were treated as always-loaded.
+As of the DS51/URC migration, the canonical location is `config/Packs/*`.
+
+The standard library is now split into explicit packs:
+
+1. **HDC Primitives** (L0) — raw vector operations (`config/runtime/reserved-atoms.json`)
+2. **Bootstrap** (L1) — type markers + typed constructors + structural ops + roles (`config/Packs/Bootstrap`)
+3. **Relations** — relation property declarations (`config/Packs/Relations`)
+4. **Logic** — connectives and quantifiers (`config/Packs/Logic`)
+5. **Temporal** — temporal relations (`config/Packs/Temporal`)
+6. **Modal** — modality operators (`config/Packs/Modal`)
+7. **Defaults** — non-monotonic defaults (`config/Packs/Defaults`)
+8. **Properties** — property/state macros and helpers (`config/Packs/Properties`)
+9. **Numeric** — numeric helpers (`config/Packs/Numeric`)
+10. **Semantics** — L2 conceptual dependency primitives (`config/Packs/Semantics`)
+11. **Lexicon** — higher-level convenience verbs (`config/Packs/Lexicon`)
+12. **Reasoning** — meta-level reasoning macros (`config/Packs/Reasoning`)
+13. **Canonicalization** — alias/canonical mapping (`config/Packs/Canonicalization`)
+14. **Consistency** — contradiction primitives (`config/Packs/Consistency`)
+
+`config/Packs/Kernel` now exists only as a **legacy aggregate manifest** to preserve older load flows and tooling assumptions. New work should load packs explicitly.
 
 ---
 
@@ -32,38 +46,40 @@ Core is the foundational theory that is **always loaded** and **cannot be unload
 
 This chapter has been refactored into the following documents:
 
-| Document | Content | Config Files |
+| Document | Content | Pack Files (canonical) |
 |----------|---------|--------------|
 | [DS07a-HDC-Primitives](DS07a-HDC-Primitives.md) | L0 primitives, binding formula, position markers | `config/runtime/reserved-atoms.json` |
-| [DS07b-Type-System](DS07b-Type-System.md) | Type hierarchy, markers, constructors, structural ops | `00-types.sys2`, `02-constructors.sys2`, `03-structural.sys2` |
-| [DS07c-Semantic-Primitives](DS07c-Semantic-Primitives.md) | L2 CD primitives (_ptrans, _atrans, _mtrans, etc.) | `04-semantic-primitives.sys2` |
-| [DS07d-Logic](DS07d-Logic.md) | Logic atoms, graphs, negation | `05-logic.sys2` |
-| [DS07e-Temporal-Modal](DS07e-Temporal-Modal.md) | Temporal, modal, and default primitives | `06-temporal.sys2`, `07-modal.sys2`, `08-defaults.sys2` |
-| [DS07f-Roles-Properties](DS07f-Roles-Properties.md) | Semantic roles, property relations, relation types | `09-roles.sys2`, `10-properties.sys2`, `00-relations.sys2` |
-| [DS07g-Bootstrap-Verbs](DS07g-Bootstrap-Verbs.md) | L3 verbs built from L2 | `11-bootstrap-verbs.sys2` |
-| [DS07h-Reasoning](DS07h-Reasoning.md) | Reasoning verbs, meta-operators, dual-layer arch | `12-reasoning.sys2` |
-| [DS17-Meta-Query-Operators](DS17-Meta-Query-Operators.md) | Detailed meta-operator specs | N/A (implementation) |
+| [DS07b-Type-System](DS07b-Type-System.md) | Type hierarchy, markers, constructors, structural ops | `config/Packs/Bootstrap/*` |
+| [DS07c-Semantic-Primitives](DS07c-Semantic-Primitives.md) | L2 CD primitives (_ptrans, _atrans, _mtrans, etc.) | `config/Packs/Semantics/04-semantic-primitives.sys2` |
+| [DS07d-Logic](DS07d-Logic.md) | Logic atoms, graphs, negation | `config/Packs/Logic/05-logic.sys2` |
+| [DS07e-Temporal-Modal](DS07e-Temporal-Modal.md) | Temporal, modal, and default primitives | `config/Packs/Temporal/*`, `config/Packs/Modal/*`, `config/Packs/Defaults/*` |
+| [DS07f-Roles-Properties](DS07f-Roles-Properties.md) | Semantic roles, property relations, relation types | `config/Packs/Bootstrap/09-roles.sys2`, `config/Packs/Properties/10-properties.sys2`, `config/Packs/Relations/00-relations.sys2` |
+| [DS07g-Bootstrap-Verbs](DS07g-Bootstrap-Verbs.md) | L3 verbs built from L2 | `config/Packs/Lexicon/11-bootstrap-verbs.sys2` |
+| [DS07h-Reasoning](DS07h-Reasoning.md) | Reasoning verbs, meta-operators, dual-layer arch | `config/Packs/Reasoning/12-reasoning.sys2` |
+| [DS17a-Meta-Query-Operators](DS17a-Meta-Query-Operators.md) | Detailed meta-operator specs | N/A (implementation) |
 
 ---
 
-## 7.3 Config Files → Document Mapping
+## 7.3 Pack Files → Document Mapping (canonical paths)
 
 | Config File | Document | Purpose |
 |-------------|----------|---------|
-| `00-types.sys2` | DS07b | Type markers |
-| `00-relations.sys2` | DS07f | Transitive/symmetric relations |
-| `02-constructors.sys2` | DS07b | Typed constructors |
-| `03-structural.sys2` | DS07b | __Role, __Pair, __Bundle |
-| `04-semantic-primitives.sys2` | DS07c | L2 CD primitives |
-| `05-logic.sys2` | DS07d | Logic atoms/graphs |
-| `06-temporal.sys2` | DS07e | Temporal relations |
-| `07-modal.sys2` | DS07e | Modal operators |
-| `08-defaults.sys2` | DS07e | Default reasoning |
-| `09-roles.sys2` | DS07f | Semantic roles |
-| `10-properties.sys2` | DS07f | Property graphs |
-| `11-bootstrap-verbs.sys2` | DS07g | L3 verbs |
-| `12-reasoning.sys2` | DS07h | Reasoning verbs |
-| `index.sys2` | N/A | Load order |
+| `config/Packs/Bootstrap/00-types.sys2` | DS07b | Type markers |
+| `config/Packs/Bootstrap/02-constructors.sys2` | DS07b | Typed constructors |
+| `config/Packs/Bootstrap/03-structural.sys2` | DS07b | __Role, __Pair, __Bundle |
+| `config/Packs/Bootstrap/09-roles.sys2` | DS07f | Semantic roles |
+| `config/Packs/Relations/00-relations.sys2` | DS07f | Relation properties |
+| `config/Packs/Properties/10-properties.sys2` | DS07f | Property graphs |
+| `config/Packs/Numeric/04a-numeric.sys2` | DS07 (numeric) | Numeric layer |
+| `config/Packs/Semantics/04-semantic-primitives.sys2` | DS07c | L2 CD primitives |
+| `config/Packs/Logic/05-logic.sys2` | DS07d | Logic atoms/graphs |
+| `config/Packs/Temporal/06-temporal.sys2` | DS07e | Temporal relations |
+| `config/Packs/Modal/07-modal.sys2` | DS07e | Modal operators |
+| `config/Packs/Defaults/08-defaults.sys2` | DS07e | Default reasoning |
+| `config/Packs/Lexicon/11-bootstrap-verbs.sys2` | DS07g | Convenience verbs |
+| `config/Packs/Reasoning/12-reasoning.sys2` | DS07h | Reasoning verbs |
+| `config/Packs/Canonicalization/*` | DS19 | Canonicalization primitives |
+| `config/Packs/Consistency/14-constraints.sys2` | DS19 | Contradiction primitives |
 
 ---
 
@@ -117,36 +133,16 @@ Cross-cutting concerns:
 
 ---
 
-## 7.6 Resolved Gaps
+## 7.6 Policy: packs must stay universal
 
-The following relations were identified as "hardcoded" in the [hardcoded_theory_analysis.md](../../../hardcoded_theory_analysis.md) review and have been added to core theory:
+We do not promote evaluation- or test-driven vocabulary into universal packs.
 
-### Added to `10-properties.sys2`
+Rules:
 
-| Relation | Type | Purpose |
-|----------|------|---------|
-| `can` | Graph + Atom | Capability relation |
-| `has` | Graph + Atom | Possession relation |
-| `synonym` | Graph + Atom | Synonym for fuzzy matching |
+- If a test or eval needs a convenience relation/verb, it must ship it as a suite-local theory file.
+- Packs under `config/Packs/*` should remain domain-agnostic and long-horizon stable.
 
-### Added to `00-relations.sys2`
-
-| Relation | Type | Purpose |
-|----------|------|---------|
-| `parent`, `child` | __Relation | Family relations |
-| `loves`, `hates` | __Relation | Emotional relations |
-| `owns` | __Relation | Ownership |
-| `likes`, `trusts` | __Relation | Social relations |
-| `conflictsWith` | __SymmetricRelation | Conflict |
-
-### Remaining Action Items
-
-1. [x] Add `can` and `has` graphs to `10-properties.sys2` ✓
-2. [x] Add `parent`, `child` relations to `00-relations.sys2` ✓
-3. [ ] Update phrasing.mjs to derive templates from theory
-4. [ ] Add validation for undefined relations
-
-See DS07f Section 7f.5 for details.
+This aligns with DS49 (URC) and DS51 (taxonomy) to avoid “eval-driven vocabulary creep”.
 
 ---
 
@@ -161,14 +157,14 @@ See DS07f Section 7f.5 for details.
 - Roles/Relations → [DS07f](DS07f-Roles-Properties.md)
 - Common Verbs → [DS07g](DS07g-Bootstrap-Verbs.md)
 - Reasoning → [DS07h](DS07h-Reasoning.md)
-- Meta-Operators → [DS17](DS17-Meta-Query-Operators.md)
+- Meta-Operators → [DS17a](DS17a-Meta-Query-Operators.md)
 
 **By Use Case:**
 - "How do I create a person?" → DS07b (Type System)
 - "How do I express 'John gave Mary a book'?" → DS07g (give graph)
 - "How do I express 'before' and 'after'?" → DS07e (Temporal)
 - "How do I define a rule?" → DS07d (implies graph)
-- "How do I find similar concepts?" → DS17 (similar operator)
+- "How do I find similar concepts?" → DS17a (similar operator)
 
 ---
 
@@ -189,7 +185,9 @@ See DS07f Section 7f.5 for details.
 | DS02 DSL Syntax | DSL syntax for all primitives |
 | DS05 Basic Reasoning | How primitives are used in reasoning |
 | DS06 Advanced Reasoning | Complex reasoning with primitives |
-| DS17 Meta-Query Operators | Detailed meta-operator specs |
+| DS17a Meta-Query Operators | Detailed meta-operator specs |
+| DS49 Universal Reasoning Core | Long-horizon storage/evidence/orchestration contract |
+| DS51 Config Taxonomy | Core vs optional domain packs |
 
 ---
 

@@ -21,7 +21,7 @@ export class HolographicQueryEngine {
 
     initHdcFirstEngines(this);
 
-    const strategy = session?.hdcStrategy || 'dense-binary';
+    const strategy = session?.hdcStrategy || 'exact';
     this.config = getHolographicThresholds(strategy);
     this.thresholds = getThresholds(strategy);
 
@@ -46,4 +46,3 @@ export class HolographicQueryEngine {
 }
 
 export default HolographicQueryEngine;
-

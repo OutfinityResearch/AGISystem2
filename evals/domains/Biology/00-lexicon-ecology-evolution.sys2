@@ -1,7 +1,7 @@
 # Biology - Lexicon (Ecology + Evolution)
 # Domain tokens used in Biology ecology/evolution concepts and relations.
 #
-# Note: Domain theories should use Core semantic roles from `config/Core/09-roles.sys2`.
+# Note: Domain theories should use Bootstrap semantic roles from `config/Packs/Bootstrap/09-roles.sys2`.
 
 @InterdependentInteractions:InterdependentInteractions __Property
 @Organisms:Organisms __Category

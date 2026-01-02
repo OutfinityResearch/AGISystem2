@@ -4,6 +4,8 @@
 
 Single entry point for all HDC operations in AGISystem2. All upper layers import only from this module - direct imports from `strategies/` are prohibited.
 
+**Default strategy note:** The application-level default HDC strategy for `Session` is `exact` (session-local). The process-global facade defaults to `dense-binary` for backward-compatible standalone usage.
+
 ## Exports
 
 ### Initialization
@@ -35,11 +37,11 @@ Single entry point for all HDC operations in AGISystem2. All upper layers import
 
 | Function | Description |
 |----------|-------------|
-| `bind(a, b)` | Bind two vectors (XOR) |
+| `bind(a, b)` | Bind two vectors (strategy-defined) |
 | `bindAll(...vectors)` | Bind multiple vectors |
-| `bundle(vectors, tieBreaker?)` | Superposition (majority vote) |
+| `bundle(vectors, tieBreaker?)` | Superposition (strategy-defined) |
 | `similarity(a, b)` | Calculate similarity [0,1] |
-| `unbind(composite, component)` | Inverse of bind |
+| `unbind(composite, component)` | Unbind / inverse (strategy-defined) |
 
 ### Utilities
 
@@ -119,7 +121,7 @@ printBenchmark(results: BenchmarkResults) → void
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `SYS2_HDC_STRATEGY` | `dense-binary` | Strategy to use |
+| `SYS2_HDC_STRATEGY` | `dense-binary` | Facade default strategy (process-global; avoid `exact` here — it requires a session-local instance) |
 | `SYS2_GEOMETRY` | `32768` | Default vector geometry (must be divisible by 32) |
 
 ## Dependencies

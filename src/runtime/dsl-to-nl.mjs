@@ -319,14 +319,6 @@ function collectStatements(node, out = []) {
   if (node.type === 'TheoryDeclaration') return collectStatements(node.statements || [], out);
   if (node.type === 'GraphDeclaration') return collectStatements(node.body || [], out);
   if (node.type === 'SolveBlock') return collectStatements(node.declarations || [], out);
-  if (node.type === 'RuleDeclaration') {
-    out.push(node);
-    return out;
-  }
-  if (node.type === 'ImportStatement') {
-    out.push(node);
-    return out;
-  }
   if (node.type === 'Statement') {
     out.push(node);
     return out;
@@ -350,18 +342,6 @@ export function dslToNl(session, dsl, options = {}) {
 
   for (const node of nodes) {
     if (!node || typeof node !== 'object') continue;
-
-    if (node.type === 'ImportStatement') {
-      if (options.includeMeta) lines.push(`Import theory ${node.theoryName}.`);
-      continue;
-    }
-
-    if (node.type === 'RuleDeclaration') {
-      const ant = exprToHuman(session, node.condition, env, { style: options.style || 'pretty' });
-      const cons = exprToHuman(session, node.conclusion, env, { style: options.style || 'pretty' });
-      lines.push(`IF (${ant}) THEN (${cons}).`);
-      continue;
-    }
 
     if (node.type !== 'Statement') continue;
 

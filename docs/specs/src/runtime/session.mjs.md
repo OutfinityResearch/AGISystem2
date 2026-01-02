@@ -30,8 +30,8 @@ class Session {
 }
 
 interface SessionOptions {
-  geometry?: number;                   // Default: 32768 (or strategy default)
-  hdcStrategy?: string;                // Default: env SYS2_HDC_STRATEGY or 'dense-binary'
+  geometry?: number;                   // Default: strategy default (exact: 256; dense-binary: 32768) unless SYS2_GEOMETRY is set
+  hdcStrategy?: string;                // Default: env SYS2_HDC_STRATEGY or 'exact'
   reasoningPriority?: string;          // Default: env REASONING_PRIORITY or 'symbolicPriority'
   reasoningProfile?: string;           // Default: 'theoryDriven'
   canonicalizationEnabled?: boolean;   // Override profile-derived toggle
@@ -43,7 +43,7 @@ interface SessionOptions {
 
   // Core bootstrapping (non-DSL runtime policy)
   autoLoadCore?: boolean;              // Default: true (except under `node --test`)
-  corePath?: string;                   // Default: './config/Core'
+  corePath?: string;                   // Default: './config/Packs/Kernel'
   coreIncludeIndex?: boolean;          // Default: true (load only index.sys2)
 }
 ```
@@ -247,7 +247,7 @@ this.reasoningStats = {
 - Core theories are **auto-loaded by default** in normal runs.
   - Default OFF under `node --test` to keep unit tests fast/stable.
   - Opt-out via `new Session({ autoLoadCore: false })` or `SYS2_AUTO_LOAD_CORE=0`.
-- `loadCore({ includeIndex: true })` loads **only** `config/Core/index.sys2` (which orchestrates the rest).
+- `loadCore({ includeIndex: true })` loads `config/Packs/Kernel/index.sys2`.
 - `learn`, `query`, `prove`, `abduce`, and `findAll` validate DSL with `checkDSL` first; invalid DSL throws.
 - `checkDSLStrict(...)` rejects unknown operators/concepts not already loaded or declared.
 - `learn` is transactional. On any error (syntax, dependency, contradiction), the session rolls back.

@@ -30,7 +30,7 @@ export const INHERITABLE_PROPERTIES = new Set(DEFAULT_SEMANTIC_INDEX?.inheritabl
 export class PropertyInheritanceReasoner {
   constructor(proofEngine) {
     this.engine = proofEngine;
-    const strategy = proofEngine.session?.hdcStrategy || 'dense-binary';
+    const strategy = proofEngine.session?.hdcStrategy || 'exact';
     this.thresholds = getThresholds(strategy);
   }
 

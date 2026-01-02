@@ -1,0 +1,5 @@
+# Lexicon Pack - Index
+# Convenience verbs and higher-level lexical graphs.
+
+@_ Load "./11-bootstrap-verbs.sys2"
+

@@ -253,6 +253,11 @@ src/
 | **NFS-71** | Browser support (modern) | Optional | CI/CD | URS-29 |
 | **NFS-72** | ESM and CommonJS support | Required | Build test | URS-28 |
 
+**Implementation note (NFS-72):**
+- The package is ESM-first (`type: module`).
+- CommonJS is supported via an async wrapper: `require('agisystem2')` returns a Promise resolving to the ESM namespace.
+- Subpath exports (e.g. `agisystem2/runtime`) remain ESM-only.
+
 ### 9.2 Interoperability
 
 | ID | Requirement | Target | Verification | Traces To |
@@ -313,10 +318,10 @@ src/
 | Technology | Runtime | Node.js 18+ |
 | Technology | Module System | ES Modules (.mjs) |
 | License | Type | GNU AGPL v3 |
-| Architecture | HDC Strategy | Pluggable (default: dense-binary) |
+| Architecture | HDC Strategy | Pluggable (default: exact) |
 | Architecture | Reasoning Modes | HDC-Priority, Symbolic-Priority |
 | Architecture | Operations | Bind (XOR), Bundle (Majority) |
-| Architecture | Default Geometry | 32,768 bits |
+| Architecture | Default Geometry | Strategy-defined (dense-binary: 32,768 bits; exact: 256) |
 | Architecture | Position Vectors | 20 (Pos1-Pos20) |
 | Capacity | KB Optimal Limit (dense-binary) | 200 facts |
 | Capacity | KB Hard Limit (dense-binary) | ~500 facts |

@@ -5,8 +5,8 @@
 **Document Version:** 1.0
 **Author:** Sînică Alboaie
 **Status:** Draft Specification
-**Part Of:** DS07 Core Theory (refactored)
-**Config Files:** `config/Core/06-temporal.sys2`, `config/Core/07-modal.sys2`, `config/Core/08-defaults.sys2`
+**Part Of:** DS07 Kernel Pack (refactored; formerly Core)
+**Pack Files (canonical):** `config/Packs/Temporal/06-temporal.sys2`, `config/Packs/Modal/07-modal.sys2`, `config/Packs/Defaults/08-defaults.sys2`
 
 ---
 
@@ -22,7 +22,7 @@ This document specifies three related categories of primitives:
 
 ## 7e.2 Temporal Primitives
 
-Defined in `config/Core/06-temporal.sys2`.
+Defined in the Temporal pack (`config/Packs/Temporal/06-temporal.sys2`).
 
 ### 7e.2.1 Temporal Relation Atoms
 
@@ -135,7 +135,7 @@ end
 
 ## 7e.3 Modal Primitives
 
-Defined in `config/Core/07-modal.sys2`.
+Defined in the Modal pack (`config/Packs/Modal/07-modal.sys2`).
 
 ### 7e.3.1 Modal Categories
 
@@ -248,7 +248,7 @@ end
 
 ## 7e.4 Default Primitives
 
-Defined in `config/Core/08-defaults.sys2`.
+Defined in the Defaults pack (`config/Packs/Defaults/08-defaults.sys2`).
 
 ### 7e.4.1 Default Atoms
 

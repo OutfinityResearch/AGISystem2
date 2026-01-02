@@ -8,7 +8,7 @@
 export const name = 'Foundations';
 export const description = 'Basic operations with deep chains and complete proofs';
 
-export const theories = ['05-logic.sys2'];
+export const theories = [];
 
 export const steps = [
   // === SETUP: Deep chain organisms (8 levels) + animals (5 levels) ===

@@ -76,9 +76,8 @@ export function buildSearchTrace(engine, goal, goalStr) {
   if (!target) {
     return traces.length > 0 ? `Search: ${traces.join('. ')}.` : `Searched ${goalStr}. Not found.`;
   }
-  const isTransitive = (semanticIndex?.isTransitive?.(op)) || ['locatedIn', 'causes', 'before', 'partOf'].includes(op);
-  const isInheritable = (semanticIndex?.isInheritableProperty?.(op)) ||
-    ['can', 'has', 'likes', 'knows', 'owns', 'uses'].includes(op);
+  const isTransitive = semanticIndex?.isTransitive?.(op);
+  const isInheritable = semanticIndex?.isInheritableProperty?.(op);
 
   if (op === 'isA') {
     traces.push(`No path exists from ${entity} to ${target}`);
@@ -589,8 +588,8 @@ export function buildNegationSearchTrace(engine, goal, negationInfo) {
     traces.push(isAChain.join('. '));
   }
 
-  // Check if there's a rule that would have applied
-  if (['can', 'has', 'likes', 'knows'].includes(op) && foundRelevantType) {
+  // Check if there's a rule that would have applied (property inheritance only).
+  if (engine.session?.semanticIndex?.isInheritableProperty?.(op) && foundRelevantType) {
     traces.push(`Rule: isA ${foundRelevantType} implies ${op} ${target} would apply`);
   }
 

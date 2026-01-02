@@ -5,8 +5,8 @@
 **Document Version:** 1.0
 **Author:** Sînică Alboaie
 **Status:** Draft Specification
-**Part Of:** DS07 Core Theory (refactored)
-**Config File:** `config/Core/05-logic.sys2`
+**Part Of:** DS07 Kernel Pack (refactored; formerly Core)
+**Pack File (canonical):** `config/Packs/Logic/05-logic.sys2`
 
 ---
 
@@ -22,7 +22,7 @@ This document specifies the **Logic Primitives** of AGISystem2 - the logical con
 
 ## 7d.2 Logic Atoms
 
-Defined in `config/Core/05-logic.sys2`:
+Defined in the Logic pack (`config/Packs/Logic/05-logic.sys2`):
 
 ```sys2
 @Implies:Implies __Relation
@@ -248,7 +248,7 @@ Used for:
 ## 7d.7 Implementation Notes
 
 The logic primitives are:
-1. **Defined in** `config/Core/05-logic.sys2`
+1. **Defined in** the Logic pack (`config/Packs/Logic/05-logic.sys2`)
 2. **Used by** proof engine (`src/reasoning/prove.mjs`)
 3. **Evaluated by** condition prover (`src/reasoning/conditions.mjs`)
 

@@ -1,0 +1,63 @@
+# URC - ProvenanceCore v1
+# Audit surface for NL→DSL interpretation + canonicalization + orchestration decisions.
+
+# ===== Categories =====
+@Source:Source __Category
+@Span:Span __Category
+@Obj:Obj __Category
+@Decision:Decision __Category
+
+# ===== Source =====
+@sourceText:sourceText __Relation
+@sourceHash:sourceHash __Relation
+
+# ===== Span =====
+@spanOf:spanOf __Relation
+@spanStart:spanStart __Relation
+@spanEnd:spanEnd __Relation
+
+# ===== Interpretation + alternatives =====
+@interprets:interprets __Relation
+@altOf:altOf __Relation
+@confidence:confidence __Relation
+
+# ===== Normalization =====
+@normalizedFrom:normalizedFrom __Relation
+@normalization:normalization __Relation
+
+# ===== Decisions (inspectable) =====
+@decides:decides __Relation
+@because:because __Relation
+@decisionKind:decisionKind __Relation
+
+# ===== Decision kind atoms =====
+@Parse:Parse __Atom
+@Disambiguate:Disambiguate __Atom
+@Canonicalize:Canonicalize __Atom
+@ChooseBackend:ChooseBackend __Atom
+@SplitProblem:SplitProblem __Atom
+@MergeResults:MergeResults __Atom
+
+# ===== Templates =====
+@MkSpan:MkSpan graph sp src start end
+    @a spanOf $sp $src
+    @b spanStart $sp $start
+    @c spanEnd $sp $end
+    @res __Bundle $a $b $c
+    return $res
+end
+
+@LinkInterpret:LinkInterpret graph sp obj conf
+    @i interprets $sp $obj
+    @c confidence $obj $conf
+    @res __Bundle $i $c
+    return $res
+end
+
+@MkDecision:MkDecision graph d kind obj reason
+    @k decisionKind $d $kind
+    @x decides $d $obj
+    @b because $d $reason
+    @res __Bundle $k $x $b
+    return $res
+end

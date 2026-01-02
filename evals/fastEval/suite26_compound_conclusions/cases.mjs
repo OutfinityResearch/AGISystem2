@@ -8,7 +8,7 @@
 export const name = 'Compound Conclusions';
 export const description = 'Prove/query against leaf conclusions inside And/Or consequents';
 
-export const theories = ['05-logic.sys2'];
+export const theories = [];
 
 export const steps = [
   {

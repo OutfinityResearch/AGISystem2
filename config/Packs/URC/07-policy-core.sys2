@@ -1,0 +1,45 @@
+# URC - PolicyCore v1
+# Conflict resolution + "current view" materialization (no delete).
+
+# ===== Categories =====
+@Policy:Policy __Category
+@Rank:Rank __Category
+
+# ===== Policy facts =====
+@policyEvidenceRank:policyEvidenceRank __Relation
+@policyRoleRank:policyRoleRank __Relation
+@policySourceRank:policySourceRank __Relation
+@policyNewerWins:policyNewerWins __Relation
+
+# ===== Derived/materialized view =====
+@Current:Current __Relation
+@Supersedes:Supersedes __Relation
+
+# ===== Rank atoms (lower = stronger) =====
+@R0:R0 __Atom
+@R1:R1 __Atom
+@R2:R2 __Atom
+@R3:R3 __Atom
+@R4:R4 __Atom
+@R5:R5 __Atom
+
+# ===== Default policy initializer (optional convenience) =====
+@DefaultPolicy_Init:DefaultPolicy_Init graph p
+    @a policyNewerWins $p True
+
+    # evidence strength: ProofLog > DualCert > Invariant > Derivation > UnsatCore > Model > Trace > Bounds > Residual > Confidence > Samples
+    @e0 policyEvidenceRank $p ProofLog R0
+    @e1 policyEvidenceRank $p DualCert R1
+    @e2 policyEvidenceRank $p Invariant R1
+    @e3 policyEvidenceRank $p Derivation R2
+    @e4 policyEvidenceRank $p UnsatCore R2
+    @e5 policyEvidenceRank $p Model R3
+    @e6 policyEvidenceRank $p Trace R3
+    @e7 policyEvidenceRank $p Bounds R4
+    @e8 policyEvidenceRank $p Residual R4
+    @e9 policyEvidenceRank $p Confidence R5
+    @e10 policyEvidenceRank $p Samples R5
+
+    @res __Bundle $a $e0 $e1 $e2 $e3 $e4 $e5 $e6 $e7 $e8 $e9 $e10
+    return $res
+end

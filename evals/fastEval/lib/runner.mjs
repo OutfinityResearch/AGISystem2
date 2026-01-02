@@ -20,7 +20,7 @@ const __dirname = path.dirname(__filename);
 const PROJECT_ROOT = path.resolve(__dirname, '../../../');
 const CONFIG_ROOT = path.join(PROJECT_ROOT, 'config');
 const DOMAIN_ROOT = path.join(PROJECT_ROOT, 'evals', 'domains');
-const CONFIG_SCOPES = new Set(['Core', 'Constraints', 'runtime']);
+const CONFIG_SCOPES = new Set(['Packs', 'runtime']);
 
 // DEFAULTS
 const DEFAULT_TIMEOUTS = {
@@ -56,54 +56,54 @@ function statesEqual(a, b) {
 }
 
 /**
- * Load Core Theories
- * Core theories are essential for proper reasoning and always loaded.
+ * Load baseline packs required for fastEval runs.
+ *
+ * Policy:
+ * - Packs loaded here must be general-purpose (Bootstrap/Logic/etc), not suite-specific.
+ * - Suite-specific vocabulary belongs in suite-local `.sys2` files or under `evals/domains/*`.
  */
-function loadCoreTheories(session) {
-  console.log('[Runner] Loading Core Theories...');
-  const corePath = path.join(PROJECT_ROOT, 'config', 'Core');
-  if (!fs.existsSync(corePath)) return;
-  const coreFiles = fs
-    .readdirSync(corePath)
-    .filter(f => f.endsWith('.sys2'))
-    .sort();
-  const loaded = new Set(coreFiles.map(f => path.join(corePath, f)));
+function loadBaselinePacks(session) {
+  const packs = [
+    'Bootstrap',
+    'Relations',
+    'Logic',
+    'Temporal',
+    'Modal',
+    'Defaults',
+    'Properties',
+    'Numeric',
+    'Semantics',
+    'Lexicon',
+    'Reasoning',
+    'Canonicalization',
+    'Consistency'
+  ];
 
-  try {
-    // `includeIndex: true` executes `@_ Load "./..."` statements inside `index.sys2`.
-    // Those loads resolve relative to the Session executor basePath, so temporarily
-    // set it to `corePath` to keep core loading stable regardless of how the runner is invoked.
-    const prevBasePath = session?.executor?.basePath;
-    let res = null;
-    let elapsed = 0;
-    try {
-      const startTime = Date.now();
-      if (session?.executor) session.executor.basePath = corePath;
-      res = session.loadCore({
-        corePath,
-        includeIndex: true,
-        validate: true,
-        throwOnValidationError: false
-      });
-      elapsed = Date.now() - startTime;
-    } finally {
-      if (session?.executor) session.executor.basePath = prevBasePath;
+  console.log(`[Runner] Loading baseline packs (${packs.length})...`);
+  const loaded = new Set();
+  const start = Date.now();
+
+  for (const packName of packs) {
+    const packPath = path.join(PROJECT_ROOT, 'config', 'Packs', packName);
+    if (!fs.existsSync(packPath)) {
+      console.error(`[Runner] Missing baseline pack directory: ${packName}`);
+      continue;
     }
-
-    if (!res?.success) {
-      for (const err of res?.errors || []) {
-        console.error(`[Runner] Failed to load ${err.file}:`, err.errors);
+    const report = session.loadPack(packName, {
+      packPath,
+      includeIndex: true,
+      validate: false
+    });
+    if (!report?.success) {
+      for (const err of report?.errors || []) {
+        console.error(`[Runner] Failed to load ${packName} (${err.file}):`, err.errors);
       }
+      continue;
     }
-    if (res?.warnings?.length > 0) {
-      console.warn('[Runner] Core validation warnings:', res.warnings);
-    }
-
-    dbg('CORE', `Loaded Core stack in ${elapsed}ms`);
-  } catch (e) {
-    console.error('[Runner] Exception loading Core theories:', e.message);
+    loaded.add(packName);
   }
-  console.log('[Runner] Core Theories loaded.');
+
+  dbg('CORE', `Loaded baseline packs in ${Date.now() - start}ms`);
   return loaded;
 }
 
@@ -116,7 +116,8 @@ function resolveConfigTheoryPath(entry) {
     if (CONFIG_SCOPES.has(top)) return path.join(CONFIG_ROOT, cleaned);
     return path.join(DOMAIN_ROOT, cleaned);
   }
-  return path.join(CONFIG_ROOT, 'Core', cleaned);
+  // Enforce explicit scope to avoid accidental dependencies on legacy layouts.
+  return null;
 }
 
 function loadDeclaredTheories(session, theories = [], loaded = new Set()) {
@@ -124,6 +125,10 @@ function loadDeclaredTheories(session, theories = [], loaded = new Set()) {
   console.log(`[Runner] Loading ${theories.length} declared theories...`);
   for (const entry of theories) {
     const fullPath = resolveConfigTheoryPath(entry);
+    if (!fullPath) {
+      console.error(`[Runner] Invalid theory reference (must be scoped): ${entry}`);
+      continue;
+    }
     if (!fs.existsSync(fullPath)) {
       console.error(`[Runner] Missing declared theory: ${entry}`);
       continue;
@@ -845,8 +850,11 @@ function compareOutputs(testCase, actualText) {
 // --- MAIN RUNNERS ---
 
 export async function runCase(testCase, session = null, config = {}) {
-  const sess = session || new Session({ geometry: 2048 });
-  if (!session) loadCoreTheories(sess);
+  const sess = session || new Session({
+    hdcStrategy: process.env.SYS2_HDC_STRATEGY || 'exact',
+    geometry: 256
+  });
+  if (!session) loadBaselinePacks(sess);
 
   // Apply timeouts (Cascade: Case Config > Suite Config (passed in func) > Defaults)
   const timeouts = {
@@ -882,7 +890,7 @@ export async function runSuite(suite, options = {}) {
   const results = [];
 
   // Session configuration (avoid process-global state)
-  const strategyId = options.strategy || process.env.SYS2_HDC_STRATEGY || 'dense-binary';
+  const strategyId = options.strategy || process.env.SYS2_HDC_STRATEGY || 'exact';
 
   const reasoningPriority = options.reasoningPriority || process.env.REASONING_PRIORITY || 'symbolicPriority';
   const exactUnbindMode = options.exactUnbindMode || null;
@@ -892,7 +900,9 @@ export async function runSuite(suite, options = {}) {
   // Sparse-polynomial: exponent count k (default 4)
   // Metric-affine: byte channels (default 32)
   let defaultGeometry;
-  if (strategyId === 'sparse-polynomial') {
+  if (strategyId === 'exact') {
+    defaultGeometry = 256;
+  } else if (strategyId === 'sparse-polynomial') {
     defaultGeometry = 4;
   } else if (strategyId === 'metric-affine') {
     defaultGeometry = 32;
@@ -920,8 +930,8 @@ export async function runSuite(suite, options = {}) {
 
   dbg('CONFIG', `Strategy: ${strategyId}, Geometry: ${geometry}, Priority: ${reasoningPriority}`);
 
-  // 1. Load Core Theories
-  const loadedTheories = loadCoreTheories(session) || new Set();
+  // 1. Load baseline packs
+  const loadedTheories = loadBaselinePacks(session) || new Set();
 
   // 2. Load suite-declared config theories (relative to config/)
   loadDeclaredTheories(session, suite.declaredTheories, loadedTheories);

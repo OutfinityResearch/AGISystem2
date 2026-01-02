@@ -3,7 +3,7 @@
  * @module reasoning/transitive
  *
  * Handles transitive chain proofs for relations like isA, locatedIn, partOf.
- * Relation properties are loaded from config/Core/00-relations.sys2
+ * Relation properties are loaded from config/Packs/Relations/00-relations.sys2
  */
 
 import { getThresholds } from '../core/constants.mjs';
@@ -32,7 +32,7 @@ export class TransitiveReasoner {
   constructor(proofEngine) {
     this.engine = proofEngine;
     // Get strategy-dependent thresholds
-    const strategy = proofEngine.session?.hdcStrategy || 'dense-binary';
+    const strategy = proofEngine.session?.hdcStrategy || 'exact';
     this.thresholds = getThresholds(strategy);
   }
 

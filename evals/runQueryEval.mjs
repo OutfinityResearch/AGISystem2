@@ -157,26 +157,31 @@ function configLabel({ hdcStrategy, geometry, reasoningPriority, exactUnbindMode
 }
 
 /**
- * Load Core theories from config/Core
+ * Load baseline packs required for query eval runs.
  */
-function loadCoreTheories(session) {
-  const corePath = join(CONFIG_ROOT, 'Core');
-  if (!fs.existsSync(corePath)) {
-    console.error(`${COLORS.red}Core theories not found at ${corePath}${COLORS.reset}`);
-    return 0;
-  }
-
-  const files = fs.readdirSync(corePath)
-    .filter(f => f.endsWith('.sys2') && f !== 'index.sys2')
-    .sort();
+function loadBaselinePacks(session) {
+  const packs = [
+    'Bootstrap',
+    'Relations',
+    'Logic',
+    'Temporal',
+    'Modal',
+    'Defaults',
+    'Properties',
+    'Numeric',
+    'Semantics',
+    'Lexicon',
+    'Reasoning',
+    'Canonicalization',
+    'Consistency'
+  ];
 
   let loaded = 0;
-  for (const file of files) {
-    const content = fs.readFileSync(join(corePath, file), 'utf8');
-    const res = session.learn(content);
-    if (res.success) {
-      loaded++;
-    }
+  for (const packName of packs) {
+    const packPath = join(CONFIG_ROOT, 'Packs', packName);
+    if (!fs.existsSync(packPath)) continue;
+    const report = session.loadPack(packName, { packPath, includeIndex: true, validate: false });
+    if (report?.success) loaded++;
   }
   return loaded;
 }
@@ -187,6 +192,16 @@ function loadCoreTheories(session) {
 function loadStressTheories(session) {
   if (!fs.existsSync(STRESS_ROOT)) {
     return 0;
+  }
+
+  // Load stress compatibility helpers (eval-only).
+  const stressCompatPath = join(ROOT, 'evals', 'stress', 'theories', 'stress-compat.sys2');
+  if (fs.existsSync(stressCompatPath)) {
+    try {
+      session.learn(fs.readFileSync(stressCompatPath, 'utf8'));
+    } catch {
+      // best-effort; stress corpora may still be validated in relaxed mode
+    }
   }
 
   const files = fs.readdirSync(STRESS_ROOT)
@@ -263,7 +278,7 @@ async function executeQuery(session, step, index, total, sessionId) {
 async function runSuiteSession(
   suite,
   sessionId,
-  hdcStrategy = 'dense-binary',
+  hdcStrategy = 'exact',
   geometry = 256,
   reasoningPriority = REASONING_PRIORITY.SYMBOLIC,
   { verbose = false, loadStress = false, exactUnbindMode = null } = {}
@@ -280,7 +295,7 @@ async function runSuiteSession(
   });
 
   // Load theories
-  const coreCount = loadCoreTheories(session);
+  const coreCount = loadBaselinePacks(session);
   const { loaded: stressCount, factsLoaded } = loadStress ? loadStressTheories(session) : { loaded: 0, factsLoaded: 0 };
 
   if (verbose) {

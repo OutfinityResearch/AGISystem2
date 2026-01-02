@@ -5,8 +5,8 @@
 **Document Version:** 1.0
 **Author:** Sînică Alboaie
 **Status:** Draft Specification
-**Part Of:** DS07 Core Theory (refactored)
-**Config File:** `config/Core/04-semantic-primitives.sys2`
+**Part Of:** DS07 Semantics Pack (refactored; formerly Core)
+**Pack File (canonical):** `config/Packs/Semantics/04-semantic-primitives.sys2`
 
 ---
 
@@ -312,7 +312,7 @@ This enables:
 ## 7c.8 Implementation Notes
 
 The L2 primitives are:
-1. **Defined in** `config/Core/04-semantic-primitives.sys2`
+1. **Defined in** the Semantics pack (`config/Packs/Semantics/04-semantic-primitives.sys2`)
 2. **Expanded by** `src/runtime/executor.mjs`
 3. **Used by** L3 Bootstrap Verbs (see DS07g)
 

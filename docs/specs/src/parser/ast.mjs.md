@@ -21,8 +21,6 @@ export class Literal extends Expression { value: any; literalType: string; }
 export class Compound extends Expression { operator: Expression; args: Expression[]; }
 export class List extends Expression { items: Expression[]; }
 export class TheoryDeclaration extends ASTNode { name: string; statements: Statement[]; }
-export class ImportStatement extends ASTNode { theoryName: string; }
-export class RuleDeclaration extends ASTNode { name; condition; conclusion; }
 ```
 
 ## Dependencies

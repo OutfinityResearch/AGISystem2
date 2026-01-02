@@ -1,4 +1,4 @@
-# Spec: config/Core/08-defaults.sys2
+# Spec: `config/Packs/Defaults/08-defaults.sys2`
 
 ## Purpose
 Provides macros for default reasoning (normally, except, unless, typical/atypical markers) described in DS07e and DS08.  Enables non-monotonic reasoning paths for inheritance problems.

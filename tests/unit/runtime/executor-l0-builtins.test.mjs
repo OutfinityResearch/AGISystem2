@@ -32,7 +32,7 @@ describe('Executor L0 builtins (DS19)', () => {
     const x = session.scope.get('x');
     const a = session.vocabulary.getOrCreate('A');
     const b = session.vocabulary.getOrCreate('B');
-    assert.ok(equals(x, bundle([withPosition(1, a), withPosition(2, b)])));
+    assert.ok(equals(x, bundle([withPosition(1, a, session), withPosition(2, b, session)])));
   });
 
   test('___NewVector without args is fresh per call', () => {

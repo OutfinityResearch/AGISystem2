@@ -1,7 +1,7 @@
 # Anthropology - Lexicon (Categories)
 # Domain category tokens used inside Anthropology graph bodies.
 #
-# Note: Domain theories should use Core semantic roles from `config/Core/09-roles.sys2`.
+# Note: Domain theories should use Bootstrap semantic roles from `config/Packs/Bootstrap/09-roles.sys2`.
 
 @KinshipSystem:KinshipSystem __Category
 @Descent:Descent __Category

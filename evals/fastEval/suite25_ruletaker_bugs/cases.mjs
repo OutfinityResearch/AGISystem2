@@ -14,7 +14,7 @@
 export const name = 'RuleTaker Bugs';
 export const description = 'Confirmed critical reasoning bugs from RuleTaker benchmark';
 
-export const theories = ['05-logic.sys2'];
+export const theories = [];
 
 // RuleTaker benchmark labels require closed-world reasoning for "X is not Y" questions.
 export const sessionOptions = { closedWorldAssumption: true };

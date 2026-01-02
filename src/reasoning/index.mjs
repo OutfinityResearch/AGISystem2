@@ -27,7 +27,7 @@ import { InductionEngine } from './induction.mjs';
 import { HolographicQueryEngine } from './holographic/query-hdc-first.mjs';
 import { HolographicProofEngine } from './holographic/prove-hdc-first.mjs';
 import { HolographicCSPSolver, buildConstraintSatisfaction, scoreCandidate, orderDomainByHDC } from './holographic/csp-hdc-heuristic.mjs';
-import { CSPSolver, solveWeddingSeating } from './csp/solver.mjs';
+import { CSPSolver } from './csp/solver.mjs';
 
 // Constructivist Level Optimization
 import { LevelManager, computeConstructivistLevel, computeGoalLevel, computeRuleLevels, extractDependencies } from './constructivist-level.mjs';
@@ -37,7 +37,7 @@ import { ForwardChainEngine, createForwardChainEngine } from './forward-chain.mj
 export { QueryEngine, ProofEngine, AbductionEngine, InductionEngine };
 export { HolographicQueryEngine, HolographicProofEngine };
 export { HolographicCSPSolver, buildConstraintSatisfaction, scoreCandidate, orderDomainByHDC };
-export { CSPSolver, solveWeddingSeating };
+export { CSPSolver };
 
 // Export constructivist level optimization
 export { LevelManager, computeConstructivistLevel, computeGoalLevel, computeRuleLevels, extractDependencies };

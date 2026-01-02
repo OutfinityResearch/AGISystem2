@@ -82,7 +82,7 @@ export class CanonicalRewriteIndex {
   static withCoreDefaults() {
     const idx = new CanonicalRewriteIndex();
 
-    // These match config/Core/11-bootstrap-verbs.sys2 canonical macros.
+    // These match config/Packs/Lexicon/11-bootstrap-verbs.sys2 canonical macros.
     const defaults = [
       { fromOp: '_mtrans', toOp: 'tell', argMap: [0, 1, 3], eq: [[0, 2]] },
       { fromOp: '_atrans', toOp: 'give', argMap: [0, 1, 3], eq: [[0, 2]] },

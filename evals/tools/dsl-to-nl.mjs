@@ -3,7 +3,7 @@
  *
  * Examples:
  *   node evals/tools/dsl-to-nl.mjs --file=evals/fastEval/suite01_foundations/cases.mjs
- *   node evals/tools/dsl-to-nl.mjs --file=config/Core/00-relations.sys2
+ *   node evals/tools/dsl-to-nl.mjs --file=config/Packs/Relations/00-relations.sys2
  *   cat some.sys2 | node evals/tools/dsl-to-nl.mjs
  */
 

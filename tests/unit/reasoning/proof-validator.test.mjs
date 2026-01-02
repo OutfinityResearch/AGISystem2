@@ -31,9 +31,9 @@ describe('ProofValidator (DS19 incremental)', () => {
 
   test('validates symmetric flip proofs (reverse fact exists)', () => {
     const session = new Session({ geometry: 2048 });
-    session.learn('spouse John Michael');
+    session.learn('marriedTo John Michael');
 
-    const result = session.prove('@goal spouse Michael John');
+    const result = session.prove('@goal marriedTo Michael John');
     assert.equal(result.valid, true);
     assert.ok(result.proofObject);
     assert.equal(validateProof(result.proofObject, session), true);

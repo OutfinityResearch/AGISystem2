@@ -1,0 +1,7 @@
+# Errors for evals/stress/medicine.sys2
+
+## Missing Dependencies
+
+- [exact(A)+holo] Unknown operator 'causedBy' at 3759:12
+- [exact(A)+holo] Unknown operator 'improves' (3x) at 3541:14, 3558:14, 3771:11
+- [exact(A)+holo] Unknown operator 'prescribes' at 3648:13

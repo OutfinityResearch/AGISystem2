@@ -141,7 +141,7 @@ export class QueryTranslator extends BaseTranslator {
   }
 
   filterHdcMatches(results) {
-    const strategy = this.session.hdcStrategy || 'dense-binary';
+    const strategy = this.session.hdcStrategy || 'exact';
     const thresholds = getThresholds(strategy);
     const hdcThreshold = thresholds.HDC_MATCH;
 

@@ -14,6 +14,13 @@ describe('StructuralDecoder', () => {
   function setup() {
     session = new Session({ geometry: 2048 });
     decoder = new StructuralDecoder(session);
+    // Keep tests hermetic: declare operators used in facts under strict declaration rules.
+    learn(`
+      @loves:loves __Relation
+      @likes:likes __Relation
+      @parent:parent __Relation
+      @give:give __Relation
+    `);
   }
 
   function learn(dsl) {

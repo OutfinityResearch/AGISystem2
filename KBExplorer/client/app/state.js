@@ -3,8 +3,9 @@ export function createState() {
     sessionId: null,
     uiTab: 'chat',
     config: {
-      hdcStrategy: 'dense-binary',
-      reasoningPriority: 'symbolicPriority'
+      hdcStrategy: 'exact',
+      reasoningPriority: 'symbolicPriority',
+      packs: null
     },
     kb: {
       q: '',

@@ -77,20 +77,24 @@ import { Session } from './src/runtime/session.mjs';</code></pre>
     <tr>
       <td><code>geometry</code></td>
       <td>number</td>
-      <td>2048</td>
-      <td>Vector dimension (Dense-Binary: 2048, SPHDC: 4)</td>
+      <td>Strategy default (exact: 256)</td>
+      <td>
+        Strategy-defined geometry parameter. Examples: Dense-Binary uses a bit-length (e.g. 2048 for small demos), Sparse-Polynomial uses a cardinality <code>k</code> (default: 4),
+        Metric-Affine uses a byte-channel dimension, and <code>exact</code> defaults to 256. You can override via <code>SYS2_GEOMETRY</code> or per-session options.
+      </td>
     </tr>
   </table>
 
   <pre><code>import { Session } from 'agisystem2';
-import { initHDC } from './src/hdc/facade.mjs';
 
-// Default: Dense-Binary strategy
-const session = new Session({ geometry: 2048 });
+// Default (recommended): exact strategy, geometry 256.
+const session = new Session();
 
-// Alternative: SPHDC strategy (smaller, faster)
-initHDC('sparse-polynomial');
-const sphdcSession = new Session({ geometry: 4 });</code></pre>
+// Dense-Binary demo (small geometry for fast experimentation)
+const denseBinarySession = new Session({ hdcStrategy: 'dense-binary', geometry: 2048 });
+
+// Sparse-Polynomial (SPHDC): geometry is k (default 4)
+const sphdcSession = new Session({ hdcStrategy: 'sparse-polynomial', geometry: 4 });</code></pre>
 
   <h3>session.learn(dsl)</h3>
 

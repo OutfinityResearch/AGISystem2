@@ -9,7 +9,7 @@
 export const name = 'Meta-Query Operators';
 export const description = 'Similar, analogy, difference, induce, bundle with ranked answers and traces';
 
-export const theories = ['05-logic.sys2', 'Geography/01-relations.sys2'];
+export const theories = ['Geography/01-relations.sys2'];
 
 export const steps = [
   // === SETUP: Multi-domain facts with shared/unique properties ===
