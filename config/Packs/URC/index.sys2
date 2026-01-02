@@ -20,3 +20,6 @@
 @_ Load "./11-type-core.sys2"
 @_ Load "./12-unit-core.sys2"
 @_ Load "./13-verifier-core.sys2"
+@_ Load "./14-backend-capabilities-defaults.sys2"
+@_ Load "./15-backend-preferences-defaults.sys2"
+@_ Load "./16-backend-fallbacks-defaults.sys2"

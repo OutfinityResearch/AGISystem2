@@ -25,14 +25,24 @@ The plan is documentation-first and aims to avoid “eval-driven semantics”: e
 Already aligned:
 - URC pack skeleton exists under `config/Packs/URC/*` (Pragmatics/Content/Goal/Capability/Evidence/Metric/Orchestrator).
 - Eval policy direction is enforced in practice for CSP modeling helpers: `evals/domains/CSP/*` is eval-only.
-- Suite 11 CP generalization is implemented (`solve csp`), and `suite30_csp_minis` exists.
+- Suite 11 CP generalization is implemented (`solve csp`), and `suite30_csp_minis` / `suite31_csp_alldifferent` exist.
 - DS19 strict-mode “declaration must be persistent” is now respected by baseline operator property tags.
 - Inheritance semantics are now pack-driven (no JS fallback lists): baseline tags `can/has/knows` as inheritable; eval-only vocab (e.g., `likes`, `equal`) is declared under `evals/domains/*`.
+- Runtime wiring exists in v0 form for URC audit surfaces:
+  - `Session.executeNL()` helper for consistent NL→DSL execution + provenance recording.
+  - In-memory URC stores for artifacts/evidence (hashing, formats).
+  - Derived policy view materialization (`/api/policy/view` in KBExplorer).
+  - KBExplorer endpoints for URC inspection (`/api/urc/*`).
+  - KBExplorer UI tree includes “Reasoning (URC)” categories (Artifacts/Evidence/Provenance) and a policy view node.
+  - CSP solve blocks emit CSP URC audit records (`CSP_JSON_V0` + per-solution evidence/artifacts).
+  - Orchestrator supports `FallbackTo` chains and records backend-selection decisions as provenance entries.
 
 Still missing / incomplete relative to DS49:
-- URC runtime wiring: policy materializer, provenance capture, evidence/artifact normalization, and verification hooks are not yet end-to-end (the URC pack surface exists, but services are still partial).
-- Runtime services: policy materializer (`Current`/`Supersedes`), provenance capture for NL→DSL, evidence/artifact normalization for all backends, and a deterministic compilation pipeline (DS50) are not yet end-to-end.
+- URC runtime wiring is still partial: policy ranking, verified evidence hooks, and end-to-end determinism across all backends (including solver output parsing) are not yet implemented.
+- Runtime services are MVP-level: policy is derived (not injected as persisted KB facts by default), and evidence/provenance materialization is best-effort and backend-dependent.
 - Baseline “Kernel pack” is still treated as the default library load; long-term it should become compatibility glue only (explicit pack loading becomes the norm).
+- Orchestrator selection is still v0: it consults `PreferBackend` facts when present but does not yet score or chain fallbacks (`FallbackTo`) beyond simple selection.
+  - Note: `FallbackTo` is now supported as a shallow chain, but full scoring and evidence-driven selection remain future work.
 
 ---
 
@@ -42,7 +52,7 @@ Still missing / incomplete relative to DS49:
 2. **Truth vs. index split is strict.** Persisted slot facts are truth-candidates; bundles/superpositions/postings are derived indices (rebuildable).
 3. **Auditability is mandatory.** Results must be anchored in evidence/artifacts/provenance; no invented explanations.
 4. **Baseline packs stay minimal.** Domain-specific relations, inverses, and convenience macros live in domain/eval packs.
-5. **No-delete KB growth.** Revision uses policy materialization (`Current`, `Supersedes`) rather than destructive edits.
+5. **No-delete KB growth.** Revision uses `negates` links plus a derived policy view (`currentFactIds`, `supersedes`) rather than destructive edits.
 
 ---
 
@@ -84,8 +94,8 @@ Goal: implement DS49 “dual-store semantics” concretely.
 ### 5.1 PolicyCore (Current view)
 
 - Implement policy materialization as first-class runtime service:
-  - `Current(x, True/False)`
-  - `Supersedes(new, old)`
+  - derived `currentFactIds`
+  - derived `supersedes` edges (`new -> old`)
 - Start with a deterministic default policy (DS49).
 
 ### 5.2 ProvenanceCore
@@ -94,7 +104,8 @@ Goal: implement DS49 “dual-store semantics” concretely.
   - source id + spans
   - candidate parses + confidence
   - normalizations applied (canonicalization, units)
-- Store provenance as facts so it can be inspected in KBExplorer.
+- Store provenance in-memory by default (inspectable in KBExplorer via `/api/urc/*`).
+  - Derived audit-line materialization is optional (`@_ Set urcMaterializeFacts True`) and must not be injected into the KB truth store.
 
 ### 5.3 EvidenceCore + artifacts
 
@@ -240,8 +251,7 @@ Added `suite30_csp_minis` after the generic CP solve mechanism exists:
 
 - small problems with diverse constraint shapes (not wedding-specific), e.g.:
   - map coloring (binary not-equal constraints)
-  - small Latin-square / allDifferent variants
-  - simple resource assignment with `in`/membership constraints
+  - small allDifferent/permutation variants (`suite31_csp_alldifferent`)
 - focus on:
   - witness extraction correctness
   - UNSAT/infeasible evidence surfaces

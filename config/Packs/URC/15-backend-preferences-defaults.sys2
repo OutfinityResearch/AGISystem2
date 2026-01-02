@@ -1,0 +1,16 @@
+# URC - Default Backend Preferences (v0)
+#
+# Declarative backend selection rules as inspectable facts.
+# Runtime orchestration may consult these facts (DS49/DS73).
+
+# Find goals (default)
+PreferBackend Find Frag_Bool Internal
+PreferBackend Find Frag_SMT_LIA Compile_SMTLIB2
+PreferBackend Find Frag_SMT_LRA Compile_SMTLIB2
+PreferBackend Find Frag_CP CP_Internal
+PreferBackend Find Frag_TS Planning_Internal
+
+# Prove goals (compile-only for SMT fragments in v0)
+PreferBackend Prove Frag_SMT_LIA Compile_SMTLIB2
+PreferBackend Prove Frag_SMT_LRA Compile_SMTLIB2
+

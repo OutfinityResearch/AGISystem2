@@ -67,6 +67,10 @@ This DS complements:
 - If the suite checks a “solver-like” capability, expected output must include:
   - a witness/model or a reason for failure,
   - and a minimal evidence anchor (URC evidence kind + provenance link) once URC is implemented.
+- If the suite checks orchestration behavior, prefer using the `orchestrate` runner action:
+  - validate `PreferBackend(goalKind, fragment, backend)` selection,
+  - validate plan/step structure and compilation artifact presence (when applicable),
+  - avoid embedding backend-selection rules in suite code.
 
 ---
 
@@ -98,4 +102,3 @@ Each suite should ship a short `AUDIT.md` in its suite directory containing:
 - list of local theory files,
 - assumptions/limitations,
 - planned refactors (if any).
-

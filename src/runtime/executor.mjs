@@ -391,6 +391,11 @@ export class Executor {
       return { type: 'config', factsLoaded: 0, success: true, key: 'closedWorldAssumption', value: enabled };
     }
 
+    if (keyNorm === 'urcmaterializefacts' || keyNorm === 'urc_materialize_facts') {
+      this.session.urcMaterializeFacts = enabled;
+      return { type: 'config', factsLoaded: 0, success: true, key: 'urcMaterializeFacts', value: enabled };
+    }
+
     this.session.warnings.push(`Warning: Unknown Set key "${key}"`);
     return { type: 'config', factsLoaded: 0, success: false, key: key ?? null, value: enabled };
   }

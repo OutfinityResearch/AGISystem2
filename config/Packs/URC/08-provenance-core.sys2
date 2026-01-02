@@ -39,10 +39,10 @@
 @MergeResults:MergeResults __Atom
 
 # ===== Templates =====
-@MkSpan:MkSpan graph sp src start end
+@MkSpan:MkSpan graph sp src start endPos
     @a spanOf $sp $src
     @b spanStart $sp $start
-    @c spanEnd $sp $end
+    @c spanEnd $sp $endPos
     @res __Bundle $a $b $c
     return $res
 end

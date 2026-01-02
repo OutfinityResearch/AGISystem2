@@ -202,8 +202,8 @@ export class PredicateConstraint extends Constraint {
 }
 
 /**
- * No-conflict constraint for wedding seating
- * Two people who conflict cannot be at the same table
+ * No-conflict constraint (pairwise exclusion)
+ * Two entities that conflict cannot share the same assigned value (e.g., same table/room).
  */
 export class NoConflictConstraint extends Constraint {
   /**

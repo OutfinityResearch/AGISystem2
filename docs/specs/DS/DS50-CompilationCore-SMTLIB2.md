@@ -164,6 +164,18 @@ A backend that supports DS50 must advertise at least:
 
 The Orchestrator uses fragment + goal kind + evidence requirements to decide routing.
 
+### 7.1 v0 internal backend name
+
+In the current repository implementation, a compile-only internal backend adapter is used:
+
+- backend id: `Compile_SMTLIB2`
+- output: an `Artifact(format=SMTLIB2, hash=...)`
+
+Default preference/capability facts are shipped under the URC pack:
+
+- `config/Packs/URC/14-backend-capabilities-defaults.sys2`
+- `config/Packs/URC/15-backend-preferences-defaults.sys2`
+
 ---
 
 ## 8. Non-goals (v0)

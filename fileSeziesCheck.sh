@@ -298,7 +298,7 @@ render_category() {
   for ((i = 0; i < num_rows; i++)); do
     local row_line=""
     for ((c = 0; c < cols; c++)); do
-      # Column-major assignment: smallest în prima coloană, cele mai mari în ultima
+      # Column-major assignment: smallest in the first column, largest in the last.
       idx=$((i + c * num_rows))
       local cell=""
       if (( idx < count )); then
@@ -351,11 +351,11 @@ if [[ ${#md_files[@]} -gt 0 ]]; then
   render_files_recursive "Markdown Files" "." "." "${md_files[@]}"
 fi
 
-# SYS2 config files section - afișare compactă pe folder
+# SYS2 config files section - compact folder grouping
 if [[ ${#sys2_files[@]} -gt 0 ]]; then
   render_files_recursive "SYS2 Files" "." "." "${sys2_files[@]}"
 
-  # Calculează totalul SYS2
+  # Compute total SYS2 lines
   sys2_lines_output=$(printf '%s\0' "${sys2_files[@]}" | xargs -0 wc -l | sort -n)
   total_sys2_lines_raw=$(echo "$sys2_lines_output" | tail -n 1 | awk '{print $1}')
   if [[ -n "$total_sys2_lines_raw" ]]; then
@@ -363,11 +363,11 @@ if [[ ${#sys2_files[@]} -gt 0 ]]; then
   fi
 fi
 
-# JS section last (cele mai importante) - grupate pe folder din rădăcină
+# JS section last (most important) - grouped by folder from the repo root
 if [[ ${#js_files[@]} -gt 0 ]]; then
   render_files_recursive "JS Files" "." "." "${js_files[@]}"
 
-  # Calculează totalul JS
+  # Compute total JS lines
   js_lines_output=$(printf '%s\0' "${js_files[@]}" | xargs -0 wc -l | sort -n)
   total_js_lines_raw=$(echo "$js_lines_output" | tail -n 1 | awk '{print $1}')
   if [[ -n "$total_js_lines_raw" ]]; then
@@ -375,26 +375,76 @@ if [[ ${#js_files[@]} -gt 0 ]]; then
   fi
 fi
 
-echo "--- Summary ---"
-echo "Total HTML lines:   ${total_html_lines:-0}"
-echo "Total MD lines:     ${total_md_lines:-0}"
-echo "Total Sys2 lines:   ${total_sys2_lines:-0}"
-echo "Total JS lines:     ${total_js_lines:-0}"
-grand_total=$((total_js_lines + total_html_lines + total_md_lines + total_sys2_lines))
-echo "Grand Total lines:  $grand_total"
+oversized_rows() {
+  local min_lines="$1"
+  local array_name="$2"
+  local -n files_ref="$array_name"
 
-if (( ${#RED_FILES_BY_PATH[@]} > 0 )); then
-  echo ""
-  echo "--- Red Files (> ${RED_THRESHOLD} lines) ---"
-  {
-    for path in "${!RED_FILES_BY_PATH[@]}"; do
-      printf "%s %s\n" "${RED_FILES_BY_PATH[$path]}" "$path"
-    done
-  } | sort -nr | while read -r line_count path; do
-    if [[ -n "$COLOR_RED" && -n "$COLOR_RESET" ]]; then
-      printf "%s%6s %s%s\n" "$COLOR_RED" "$line_count" "$path" "$COLOR_RESET"
-    else
-      printf "%6s %s\n" "$line_count" "$path"
+  if (( ${#files_ref[@]} == 0 )); then
+    return 0
+  fi
+
+  # wc format: "<lines> <path>", final line is the total which we drop.
+  printf '%s\0' "${files_ref[@]}" | xargs -0 wc -l | sed '$d' | awk -v min="$min_lines" '$1 > min { print }'
+}
+
+render_oversized_table() {
+  local title="$1"
+  local min_lines="$2"
+  local array_name="$3"
+
+  local -a rows=()
+  mapfile -t rows < <(
+    oversized_rows "$min_lines" "$array_name" \
+      | sort -nr
+  )
+
+  echo "--- ${title} oversized files (>${min_lines} lines) ---"
+
+  local count=${#rows[@]}
+  if (( count == 0 )); then
+    echo "(none)"
+    echo ""
+    return
+  fi
+
+  local col_lines=7
+  local col_level=6
+  local col_path=$((TERM_COLS - col_lines - col_level - 6))
+  if (( col_path < 32 )); then
+    col_path=32
+  fi
+
+  printf "%-${col_lines}s | %-${col_level}s | %s\n" "Lines" "Level" "Path"
+  printf "%-${col_lines}s-+-%-${col_level}s-+-%s\n" \
+    "$(printf '%*s' "$col_lines" | tr ' ' '-')" \
+    "$(printf '%*s' "$col_level" | tr ' ' '-')" \
+    "$(printf '%*s' "$col_path" | tr ' ' '-')"
+
+  for entry in "${rows[@]}"; do
+    local line_count path
+    line_count=$(awk '{print $1}' <<<"$entry")
+    path=$(awk '{ $1=""; sub(/^ +/,""); print }' <<<"$entry")
+
+    local level="WARN"
+    if (( line_count > RED_THRESHOLD )); then
+      level="RED"
     fi
+
+    local display_path
+    display_path=$(shorten_path "$path" "$col_path")
+
+    local num_padded
+    printf -v num_padded "%6s" "$line_count"
+    num_padded=$(colorize_count "$line_count" "$num_padded")
+    printf "%-${col_lines}s | %-${col_level}s | %s\n" "$num_padded" "$level" "$display_path"
   done
-fi
+
+  echo ""
+}
+
+# Show only the categories that are most relevant for code-size/style checks.
+echo "--- Oversized Files ---"
+render_oversized_table "JS/MJS" "$YELLOW_THRESHOLD" js_files
+render_oversized_table "SYS2" "$YELLOW_THRESHOLD" sys2_files
+render_oversized_table "Markdown" "$YELLOW_THRESHOLD" md_files

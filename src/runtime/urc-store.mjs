@@ -39,16 +39,17 @@ export function registerArtifact(session, { format, text, hash } = {}, options =
     format: String(format || ''),
     hash: computedHash,
     text: String(text || ''),
-    at: nowMs()
+    at: nowMs(),
+    materializedFactLines: []
   };
   session.urc.artifacts.set(id, artifact);
 
   if (options.materializeFacts) {
-    const dsl = [
+    // DS73: truth vs index split is strict. These are derived audit lines and must not be injected into kbFacts.
+    artifact.materializedFactLines = [
       `artifactFormat ${id} ${String(format || '')}`,
-      `artifactHash ${id} ${JSON.stringify(String(hash || ''))}`
-    ].join('\n');
-    try { session.learn(dsl); } catch { /* ignore */ }
+      `artifactHash ${id} ${computedHash}`
+    ];
   }
 
   return artifact;
@@ -71,7 +72,8 @@ export function registerEvidence(
     supports: String(supports || '_'),
     artifactId: String(artifactId || '_'),
     scope: String(scope || '_'),
-    at: nowMs()
+    at: nowMs(),
+    materializedFactLines: []
   };
   session.urc.evidence.set(id, evidence);
 
@@ -85,7 +87,8 @@ export function registerEvidence(
     if (evidence.supports !== '_') lines.push(`eSupports ${id} ${evidence.supports}`);
     if (evidence.artifactId !== '_') lines.push(`eArtifact ${id} ${evidence.artifactId}`);
     if (evidence.scope !== '_') lines.push(`eScope ${id} ${evidence.scope}`);
-    try { session.learn(lines.join('\n')); } catch { /* ignore */ }
+    // DS73: derived audit lines only; must not be injected into kbFacts.
+    evidence.materializedFactLines = lines;
   }
 
   return evidence;

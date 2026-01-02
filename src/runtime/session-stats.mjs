@@ -34,7 +34,6 @@ export function getReasoningStats(session, reset = false) {
       hdcProofSuccesses: 0, symbolicProofFallbacks: 0,
       holographicCSP: 0, cspBundleBuilt: 0, cspSymbolicFallback: 0,
       cspNodesExplored: 0, cspBacktracks: 0, cspPruned: 0, cspHdcPruned: 0,
-      holographicWedding: 0
     };
   }
 

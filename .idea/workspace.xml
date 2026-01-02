@@ -5,20 +5,87 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="refatoring towards URC Complete migration">
-      <change afterPath="$PROJECT_DIR$/.npm-cache/_update-notifier-last-checked" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/fragment-classifier.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/orchestrator.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/provenance-log.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/urc-store.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gemini/settings.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/client/app/kb/tree/builder.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/client/app/kb/tree/details.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/client/app/kb/tree/loaders.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/client/app/kb/tree/loaders/categories.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/client/app/kb/tree/loaders/definitions.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/client/app/kb/tree/loaders/entities.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/client/app/kb/tree/model.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/client/app/kb/tree/view.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/api/command.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/api/graphs.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/api/kb.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/api/packs.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/api/policy.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/api/router.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/api/scope.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/api/sessions.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/api/theory.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/api/urc.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/api/vocab.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/lib/clientAssets.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/lib/directives.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/lib/dsl.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/lib/http.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/lib/modes.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/lib/nlProvenance.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/lib/packs.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/lib/paths.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/lib/sessionOptions.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/lib/universe.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/lib/universeStore.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/KBExplorer/server/lib/views.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/Packs/URC/14-backend-capabilities-defaults.sys2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/Packs/URC/15-backend-preferences-defaults.sys2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/Packs/URC/16-backend-fallbacks-defaults.sys2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS75-Core-Config-Initialization-Audit.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/fastEval/suite31_csp_alldifferent/AUDIT.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/fastEval/suite31_csp_alldifferent/cases.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/fastEval/suite32_orchestrator/AUDIT.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/fastEval/suite32_orchestrator/cases.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/fastEval/suite33_policy_view/AUDIT.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/fastEval/suite33_policy_view/cases.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/fastEval/suite34_provenance/AUDIT.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/fastEval/suite34_provenance/cases.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/runtime/nl-exec.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/evalSuite/runner-orchestrate.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/runtime/csp-urc-audit.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/runtime/orchestrator-fallback.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/runtime/orchestrator-preferences.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/runtime/policy-view-materialization.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/runtime/provenance-materialization.test.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/kb/tree.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/kb/tree.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/state.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/state.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/ui/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/ui/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KBExplorer/client/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/KBExplorer/server/server.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/server/server.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS25-Exact-Sparse-Bitset-Polynomial-HDC.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS25-Exact-Sparse-Bitset-Polynomial-HDC.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hdc/strategies/exact.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/strategies/exact.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Packs/URC/03-capability-registry.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Packs/URC/03-capability-registry.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Packs/URC/08-provenance-core.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Packs/URC/08-provenance-core.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Packs/URC/index.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Packs/URC/index.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core_config_semantic-prgamtic_init.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS14-EvalSuite.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS14-EvalSuite.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS48-KBExplorer.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS48-KBExplorer.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS49-Universal-Reasoning-Core-URC.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS49-Universal-Reasoning-Core-URC.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS50-CompilationCore-SMTLIB2.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS50-CompilationCore-SMTLIB2.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS55-CP-Constraint-Programming-Backend-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS55-CP-Constraint-Programming-Backend-RESEARCH.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS73-URC-Migration-Plan.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS73-URC-Migration-Plan.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS74-EvalSuite-Audit-Guidelines.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS74-EvalSuite-Audit-Guidelines.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fileSeziesCheck.sh" beforeDir="false" afterPath="$PROJECT_DIR$/fileSeziesCheck.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/csp/constraint.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/csp/constraint.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/executor-solve.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor-solve.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/executor.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/policy-view.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/policy-view.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/provenance-log.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/provenance-log.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/session-stats.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-stats.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/session.impl.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.impl.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/hdc/exact-strategy.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/hdc/exact-strategy.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/session.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/session.test.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/urc-store.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/urc-store.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/kbexplorer/server-smoke.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/kbexplorer/server-smoke.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,15 +206,7 @@
       <workItem from="1767005469743" duration="10476000" />
       <workItem from="1767083849618" duration="20002000" />
       <workItem from="1767176590511" duration="2118000" />
-      <workItem from="1767350041350" duration="14838000" />
-    </task>
-    <task id="LOCAL-00057" summary="better documentation, consolidating steps for next steps of research and improvements">
-      <option name="closed" value="true" />
-      <created>1766423360832</created>
-      <option name="number" value="00057" />
-      <option name="presentableId" value="LOCAL-00057" />
-      <option name="project" value="LOCAL" />
-      <updated>1766423360832</updated>
+      <workItem from="1767350041350" duration="15785000" />
     </task>
     <task id="LOCAL-00058" summary="better documentation, consolidating steps for next steps of research and improvements">
       <option name="closed" value="true" />
@@ -533,7 +592,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767375357951</updated>
     </task>
-    <option name="localTasksCounter" value="106" />
+    <task id="LOCAL-00106" summary="refatoring towards URC Complete migration">
+      <option name="closed" value="true" />
+      <created>1767376471212</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1767376471212</updated>
+    </task>
+    <option name="localTasksCounter" value="107" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

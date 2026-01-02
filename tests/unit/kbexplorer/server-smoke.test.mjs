@@ -180,4 +180,79 @@ describe('KBExplorer server (smoke)', () => {
       await new Promise(resolve => s.close(resolve));
     }
   });
+
+  test('exposes URC audit endpoints (provenance, evidence, artifacts)', async (t) => {
+    if (listenError) {
+      t.skip(`Socket listen is not permitted in this environment (${listenError.code || 'ERR'}).`);
+      return;
+    }
+    const c = makeClient(baseUrl);
+
+    const newRes = await c.json('/api/session/new', {
+      method: 'POST',
+      body: { sessionOptions: { hdcStrategy: 'dense-binary', reasoningPriority: 'symbolicPriority' } }
+    });
+    const sessionId = newRes.json.sessionId;
+
+    // NL command should be translated and recorded as provenance.
+    const nlRes = await c.json('/api/command', {
+      method: 'POST',
+      sessionId,
+      body: { mode: 'learn', inputMode: 'nl', text: 'Anne is a Dog.' }
+    });
+    assert.equal(nlRes.status, 200);
+    assert.equal(nlRes.json.ok, true);
+
+    const provList = await c.json('/api/urc/provenance', { sessionId });
+    assert.equal(provList.status, 200);
+    assert.equal(provList.json.ok, true);
+    assert.ok(provList.json.count >= 1);
+
+    // URC query should record evidence.
+    const qRes = await c.json('/api/command', {
+      method: 'POST',
+      sessionId,
+      body: { mode: 'query', inputMode: 'dsl', text: 'isA Anne ?t' }
+    });
+    assert.equal(qRes.status, 200);
+
+    const evList = await c.json('/api/urc/evidence', { sessionId });
+    assert.equal(evList.status, 200);
+    assert.equal(evList.json.ok, true);
+    assert.ok(evList.json.count >= 1);
+
+    // A solve block should produce a JSON artifact.
+    const solveDsl = [
+      'isA Alice Guest',
+      'isA Bob Guest',
+      'isA T1 Table',
+      'isA T2 Table',
+      'conflictsWith Alice Bob',
+      'conflictsWith Bob Alice',
+      '@seat solve csp',
+      '  variables from Guest',
+      '  domain from Table',
+      '  noConflict conflictsWith',
+      'end'
+    ].join('\\n');
+    const solveRes = await c.json('/api/command', {
+      method: 'POST',
+      sessionId,
+      body: { mode: 'learn', inputMode: 'dsl', text: solveDsl }
+    });
+    assert.equal(solveRes.status, 200);
+
+    const artList = await c.json('/api/urc/artifacts', { sessionId });
+    assert.equal(artList.status, 200);
+    assert.equal(artList.json.ok, true);
+    assert.ok(artList.json.count >= 1);
+
+    const statsRes = await c.json('/api/session/stats', { sessionId });
+    assert.equal(statsRes.status, 200);
+    assert.equal(statsRes.json.ok, true);
+    assert.ok(Number.isFinite(statsRes.json.urcArtifactCount));
+    assert.ok(Number.isFinite(statsRes.json.urcEvidenceCount));
+    assert.ok(Number.isFinite(statsRes.json.urcProvenanceCount));
+    assert.ok(statsRes.json.urcArtifactCount >= artList.json.count);
+  });
 });

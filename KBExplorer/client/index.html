@@ -27,6 +27,10 @@
             <option value="holographicPriority">holographicPriority</option>
           </select>
         </label>
+        <label class="label label--topbar" title="When enabled, URC audit surfaces also include derived fact DSL lines for debugging (not injected into the KB truth store). This can be slower.">
+          <input id="urcMaterializeFactsToggle" type="checkbox" />
+          <span>URC audit</span>
+        </label>
         <button id="packsBtn" type="button" class="btn btn--ghost" title="Select which config packs to load into each new Session universe">Packs…</button>
         <button id="newSessionBtn" type="button" class="btn btn--ghost" title="Create a new isolated Session universe">New session</button>
         <button id="resetSessionBtn" type="button" class="btn btn--ghost" title="Reset current Session universe">Reset</button>

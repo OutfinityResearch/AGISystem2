@@ -32,6 +32,21 @@ const DEFAULT_TIMEOUTS = {
 // Reasoning Step Budget (for infinite loop prevention in sync code inside Session)
 const DEFAULT_STEP_BUDGET = 1000;
 
+function caseWantsMaterializedFacts(testCase) {
+  if (!testCase || typeof testCase !== 'object') return false;
+  if (testCase.materializeFacts === true) return true;
+  if (testCase.materialize_facts === true) return true;
+
+  // Orchestrator assertions that rely on persisted plan facts (optional in v0).
+  if (testCase.expect_step_status) return true;
+
+  // Solve URC assertions (we keep these independent of fact materialization by default),
+  // but allow suites to opt into materialization explicitly if needed.
+  if (testCase.expect_solve_urc_materialize_facts === true) return true;
+
+  return false;
+}
+
 function snapshotSessionState(session) {
   return {
     kbFacts: session?.kbFacts?.length || 0,
@@ -55,6 +70,150 @@ function statesEqual(a, b) {
   return true;
 }
 
+function validateSolveUrcExpectations(testCase, result) {
+  const expectsSolveUrc = testCase.expect_solve_urc === true;
+  const expectsCspArtifact = testCase.expect_solve_urc_csp_artifact === true;
+  const expectsEqSolCount = testCase.expect_solve_urc_solution_evidence_eq_solution_count === true;
+  const expectsInfeasible = testCase.expect_solve_urc_infeasible_evidence === true;
+
+  if (!expectsSolveUrc && !expectsCspArtifact && !expectsEqSolCount && !expectsInfeasible) return null;
+
+  const solve = result?.solveResult || null;
+  if (!solve) {
+    return { ok: false, error: 'Expected solveResult but no solveResult was produced' };
+  }
+
+  const urc = solve?.urc || null;
+  if (expectsSolveUrc && !urc) {
+    return { ok: false, error: 'Expected solveResult.urc but it was missing' };
+  }
+
+  if (expectsCspArtifact && !urc?.cspArtifactId) {
+    return { ok: false, error: 'Expected solveResult.urc.cspArtifactId but it was missing' };
+  }
+
+  if (expectsEqSolCount && solve?.success === true) {
+    const n = solve?.solutionCount ?? null;
+    const m = Array.isArray(urc?.solutionEvidenceIds) ? urc.solutionEvidenceIds.length : null;
+    if (n === null || m === null || n !== m) {
+      return { ok: false, error: `Expected solveResult.urc.solutionEvidenceIds length (${m}) to equal solutionCount (${n})` };
+    }
+  }
+
+  if (expectsInfeasible) {
+    if (solve?.success !== false) {
+      return { ok: false, error: 'Expected solveResult.success to be false for infeasible case' };
+    }
+    if (!urc?.infeasibleEvidenceId) {
+      return { ok: false, error: 'Expected solveResult.urc.infeasibleEvidenceId but it was missing' };
+    }
+    const m = Array.isArray(urc?.solutionEvidenceIds) ? urc.solutionEvidenceIds.length : 0;
+    if (m !== 0) {
+      return { ok: false, error: `Expected solveResult.urc.solutionEvidenceIds to be empty for infeasible case (got ${m})` };
+    }
+  }
+
+  return { ok: true };
+}
+
+function validatePolicyViewExpectations(testCase, view, session) {
+  if (!testCase || testCase.action !== 'policyView') return null;
+  if (!view || view.success !== true) return { ok: false, error: 'PolicyView returned success=false' };
+
+  const expectedPolicyId = testCase.expect_policy_id ?? testCase.expectPolicyId ?? null;
+  if (typeof expectedPolicyId === 'string' && expectedPolicyId) {
+    if (String(view?.policy?.policyId || '') !== expectedPolicyId) {
+      return { ok: false, error: `Expected policyId=${expectedPolicyId} but got ${String(view?.policy?.policyId || '')}` };
+    }
+  }
+
+  const expectedNewerWins = testCase.expect_newer_wins ?? testCase.expectNewerWins ?? null;
+  if (typeof expectedNewerWins === 'boolean') {
+    if ((view?.newerWins ?? view?.policy?.newerWins) !== expectedNewerWins) {
+      return { ok: false, error: `Expected newerWins=${expectedNewerWins} but got ${(view?.newerWins ?? view?.policy?.newerWins)}` };
+    }
+  }
+
+  const expectedSupersedesCount = testCase.expect_supersedes_count ?? testCase.expectSupersedesCount ?? null;
+  if (Number.isFinite(expectedSupersedesCount)) {
+    const actual = Array.isArray(view.supersedes) ? view.supersedes.length : 0;
+    if (actual !== expectedSupersedesCount) {
+      return { ok: false, error: `Expected supersedesCount=${expectedSupersedesCount} but got ${actual}` };
+    }
+  }
+
+  const expectedNegatesCount = testCase.expect_negates_count ?? testCase.expectNegatesCount ?? null;
+  if (Number.isFinite(expectedNegatesCount)) {
+    const actual = Array.isArray(view.negates) ? view.negates.length : 0;
+    if (actual !== expectedNegatesCount) {
+      return { ok: false, error: `Expected negatesCount=${expectedNegatesCount} but got ${actual}` };
+    }
+  }
+
+  const currentFactIds = new Set(Array.isArray(view.currentFactIds) ? view.currentFactIds : []);
+  const byName = (name) => session?.kbFacts?.find?.(f => f?.name === name) ?? null;
+
+  const expectCurrentIncludes = testCase.expect_current_includes_names ?? testCase.expectCurrentIncludesNames ?? null;
+  if (Array.isArray(expectCurrentIncludes)) {
+    for (const n of expectCurrentIncludes) {
+      const fact = byName(String(n || '').trim());
+      if (!fact) return { ok: false, error: `Expected named fact not found: ${String(n)}` };
+      if (!currentFactIds.has(fact.id)) return { ok: false, error: `Expected current to include ${String(n)} (Fact#${fact.id})` };
+    }
+  }
+
+  const expectCurrentExcludes = testCase.expect_current_excludes_names ?? testCase.expectCurrentExcludesNames ?? null;
+  if (Array.isArray(expectCurrentExcludes)) {
+    for (const n of expectCurrentExcludes) {
+      const fact = byName(String(n || '').trim());
+      if (!fact) return { ok: false, error: `Expected named fact not found: ${String(n)}` };
+      if (currentFactIds.has(fact.id)) return { ok: false, error: `Expected current to exclude ${String(n)} (Fact#${fact.id})` };
+    }
+  }
+
+  const expectMaterialized = testCase.expect_materialized_lines_nonempty ?? testCase.expectMaterializedLinesNonempty ?? null;
+  if (typeof expectMaterialized === 'boolean') {
+    const m = Array.isArray(view.materializedFactLines) ? view.materializedFactLines.length : 0;
+    if ((m > 0) !== expectMaterialized) {
+      return { ok: false, error: `Expected materializedFactLines nonempty=${expectMaterialized} but got length=${m}` };
+    }
+  }
+
+  return { ok: true };
+}
+
+function validateExecuteNlExpectations(testCase, result, session) {
+  if (!testCase || testCase.action !== 'executeNL') return null;
+  if (!result || result.success !== true) return { ok: false, error: 'executeNL returned success=false' };
+
+  const expectedMin = testCase.expect_provenance_count_min ?? testCase.expectProvenanceCountMin ?? null;
+  if (Number.isFinite(expectedMin)) {
+    const actual = Array.isArray(session?.provenanceLog) ? session.provenanceLog.length : 0;
+    if (actual < expectedMin) {
+      return { ok: false, error: `Expected provenanceLog length >= ${expectedMin} but got ${actual}` };
+    }
+  }
+
+  const expectedMaterialized = testCase.expect_provenance_materialized ?? testCase.expectProvenanceMaterialized ?? null;
+  if (typeof expectedMaterialized === 'boolean') {
+    const entry = Array.isArray(session?.provenanceLog) ? session.provenanceLog[session.provenanceLog.length - 1] : null;
+    const actual = entry?.materialized === true && Array.isArray(entry?.materializedFactLines) && entry.materializedFactLines.length > 0;
+    if (actual !== expectedMaterialized) {
+      return { ok: false, error: `Expected provenance materialized=${expectedMaterialized} but got ${actual}` };
+    }
+  }
+
+  const expectedKbHasFacts = testCase.expect_kb_has_provenance_facts ?? testCase.expectKbHasProvenanceFacts ?? null;
+  if (typeof expectedKbHasFacts === 'boolean') {
+    const has = (session?.kbFacts || []).some(f => ['sourceText', 'interprets', 'decisionKind'].includes(String(f?.metadata?.operator || '')));
+    if (has !== expectedKbHasFacts) {
+      return { ok: false, error: `Expected kbHasProvenanceFacts=${expectedKbHasFacts} but got ${has}` };
+    }
+  }
+
+  return { ok: true };
+}
+
 /**
  * Load baseline packs required for fastEval runs.
  *
@@ -76,7 +235,9 @@ function loadBaselinePacks(session) {
     'Lexicon',
     'Reasoning',
     'Canonicalization',
-    'Consistency'
+    'Consistency',
+    // URC contract packs (audit surface): Evidence/Artifacts/Orchestrator/Policy/Provenance.
+    'URC'
   ];
 
   console.log(`[Runner] Loading baseline packs (${packs.length})...`);
@@ -303,11 +464,40 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
     }
 
     const beforeState = testCase.assert_state_unchanged ? snapshotSessionState(session) : null;
+    const materializeFacts = caseWantsMaterializedFacts(testCase);
 
     if (testCase.action === 'learn') {
-      const result = session.learn(dslToExecute);
+      const maybeSolve = /\bsolve\b/.test(dslToExecute);
+      const result = maybeSolve
+        ? (session.solveURC?.(dslToExecute, { materializeFacts }) ?? session.learn(dslToExecute))
+        : session.learn(dslToExecute);
       const afterState = testCase.assert_state_unchanged ? snapshotSessionState(session) : null;
       return { result, beforeState, afterState };
+    }
+    else if (testCase.action === 'executeNL') {
+      const mode = String(testCase.mode || 'learn');
+      const result = session.executeNL?.(
+        { mode, text: String(testCase.input_nl || '') },
+        { materializeFacts }
+      ) ?? { success: false };
+      return { result, beforeState: null, afterState: null };
+    }
+    else if (testCase.action === 'orchestrate') {
+      const goalKind = String(testCase.goalKind || testCase.goal_kind || 'Find');
+      const result = session.orchestrate(
+        { goalKind, dsl: dslToExecute },
+        { materializeFacts }
+      );
+      return { result, beforeState: null, afterState: null };
+    }
+    else if (testCase.action === 'policyView') {
+      // Policy view is a derived runtime surface (DS49/DS73).
+      // For eval cases, allow suites to request derived audit-line materialization explicitly.
+      const wantsMaterialize = Object.prototype.hasOwnProperty.call(testCase, 'materializeFacts')
+        ? !!testCase.materializeFacts
+        : undefined;
+      const result = session.materializePolicyView?.({ materializeFacts: wantsMaterialize }) ?? { success: false };
+      return { result, beforeState: null, afterState: null };
     }
     else if (testCase.action === 'listSolutions') {
       // List all CSP solutions for a given solve destination (solutionRelation)
@@ -343,6 +533,9 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
       const queryDsl = testCase.query_dsl || dslToExecute;
 
       const sessionOptions = { timeout: timeoutMs };
+      // URC contract: prefer URC-shaped outputs. Materializing URC facts is optional and
+      // should be enabled only when a suite explicitly requires it (performance-sensitive).
+      sessionOptions.materializeFacts = materializeFacts;
       const maxResults =
         testCase.maxResults ??
         testCase.max_results ??
@@ -360,16 +553,16 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
       }
 
       if (testCase.action === 'prove' || testCase.action === 'elaborate') {
-        const result = session.prove(queryDsl, sessionOptions);
+        const result = session.proveURC?.(queryDsl, sessionOptions) ?? session.prove(queryDsl, sessionOptions);
         return { result, beforeState: null, afterState: null };
       } else {
         // Solve blocks are executed via learn(), not query()
         // Detect solve block: starts with @dest solve ProblemType
-        if (queryDsl.trim().match(/^@\w+\s+solve\s+/)) {
-          const result = session.learn(queryDsl);
+        if (queryDsl.includes(' solve ')) {
+          const result = session.solveURC?.(queryDsl, sessionOptions) ?? session.learn(queryDsl);
           return { result, beforeState: null, afterState: null };
         }
-        const result = session.query(queryDsl, sessionOptions);
+        const result = session.queryURC?.(queryDsl, sessionOptions) ?? session.query(queryDsl, sessionOptions);
         return { result, beforeState: null, afterState: null };
       }
     }
@@ -426,6 +619,19 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
         };
       }
     }
+
+    if (passed) {
+      const check = validateSolveUrcExpectations(testCase, result);
+      if (check && !check.ok) {
+        return {
+          passed: false,
+          error: check.error,
+          actual: result,
+          usedFallback,
+          durationMs: execution.duration
+        };
+      }
+    }
   }
   else if (testCase.action === 'prove' || testCase.action === 'elaborate') {
       // Prove passes if it returns a valid structure (true or false),
@@ -468,6 +674,78 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
   } else if (testCase.action === 'listSolutions') {
       // listSolutions passes if it returns valid structure
       passed = result !== undefined && result !== null;
+  } else if (testCase.action === 'orchestrate') {
+      passed = result?.success === true;
+      if (!passed) {
+        return { passed: false, error: 'Orchestrate returned success=false', actual: result, usedFallback, durationMs: execution.duration };
+      }
+
+      const expectedFragment = testCase.expect_fragment ?? testCase.expectFragment ?? null;
+      if (typeof expectedFragment === 'string' && expectedFragment) {
+        if (String(result?.plan?.fragment || '') !== expectedFragment) {
+          return {
+            passed: false,
+            error: `Expected fragment ${expectedFragment} but got ${String(result?.plan?.fragment || '')}`,
+            actual: result,
+            usedFallback,
+            durationMs: execution.duration
+          };
+        }
+      }
+
+      const expectedBackend = testCase.expect_backend ?? testCase.expectBackend ?? null;
+      if (typeof expectedBackend === 'string' && expectedBackend) {
+        if (String(result?.plan?.selectedBackend || '') !== expectedBackend) {
+          return {
+            passed: false,
+            error: `Expected backend ${expectedBackend} but got ${String(result?.plan?.selectedBackend || '')}`,
+            actual: result,
+            usedFallback,
+            durationMs: execution.duration
+          };
+        }
+      }
+
+      const expectedHasArtifact = testCase.expect_has_artifact ?? testCase.expectHasArtifact ?? null;
+      if (typeof expectedHasArtifact === 'boolean') {
+        const hasArtifact = !!result?.artifact;
+        if (hasArtifact !== expectedHasArtifact) {
+          return {
+            passed: false,
+            error: `Expected hasArtifact=${expectedHasArtifact} but got ${hasArtifact}`,
+            actual: result,
+            usedFallback,
+            durationMs: execution.duration
+          };
+        }
+      }
+
+      const expectedArtifactFormat = testCase.expect_artifact_format ?? testCase.expectArtifactFormat ?? null;
+      if (typeof expectedArtifactFormat === 'string' && expectedArtifactFormat) {
+        if (String(result?.artifact?.format || '') !== expectedArtifactFormat) {
+          return {
+            passed: false,
+            error: `Expected artifact.format=${expectedArtifactFormat} but got ${String(result?.artifact?.format || '')}`,
+            actual: result,
+            usedFallback,
+            durationMs: execution.duration
+          };
+        }
+      }
+
+      const expectedStepStatus = testCase.expect_step_status ?? testCase.expectStepStatus ?? null;
+      if (typeof expectedStepStatus === 'string' && expectedStepStatus) {
+        const status = result?.plan?.steps?.[0]?.status ?? null;
+        if (String(status || '') !== expectedStepStatus) {
+          return {
+            passed: false,
+            error: `Expected step.status=${expectedStepStatus} but got ${String(status || '')}`,
+            actual: result,
+            usedFallback,
+            durationMs: execution.duration
+          };
+        }
+      }
   } else {
       // For query: success=false with valid structure means "no results found"
       // which is a valid outcome - let DSL->NL handle output
@@ -564,6 +842,8 @@ function runDecoding(testCase, reasoningPhase, session, timeoutMs) {
 function validateProofExpectation(testCase) {
   if (!testCase.expected_nl) return null;
   if (testCase.action !== 'query' && testCase.action !== 'prove') return null;
+  const expectsProof = caseExpectsProof(testCase);
+  if (!expectsProof) return null;
   const proofNl = testCase.proof_nl;
   const altProofNl = testCase.alternative_proof_nl;
   const proofMissing = proofNl === undefined ||
@@ -656,8 +936,26 @@ function validateProofExpectation(testCase) {
           expected: `alternative_proof_nl length ${answerCount}`,
           actual: altProofNl.length
         };
+        }
       }
-    }
+  } else if (testCase.action === 'policyView') {
+      passed = result?.success === true;
+      if (!passed) {
+        return { passed: false, error: 'PolicyView returned success=false', actual: result, usedFallback, durationMs: execution.duration };
+      }
+      const check = validatePolicyViewExpectations(testCase, result, session);
+      if (check && !check.ok) {
+        return { passed: false, error: check.error, actual: result, usedFallback, durationMs: execution.duration };
+      }
+  } else if (testCase.action === 'executeNL') {
+      passed = result?.success === true;
+      if (!passed) {
+        return { passed: false, error: 'executeNL returned success=false', actual: result, usedFallback, durationMs: execution.duration };
+      }
+      const check = validateExecuteNlExpectations(testCase, result, session);
+      if (check && !check.ok) {
+        return { passed: false, error: check.error, actual: result, usedFallback, durationMs: execution.duration };
+      }
   }
   return null;
 }

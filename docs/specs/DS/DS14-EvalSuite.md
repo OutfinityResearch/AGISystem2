@@ -218,6 +218,29 @@ export default { name, description, theories, steps };
 
 ### 14.4.2 Step Fields
 
+#### Supported `action` values (current runner)
+
+- `learn`: add facts/rules/graphs to the session.
+- `query`: query the session KB (bindings/results).
+- `prove`: run proof search/validation.
+- `listSolutions`: list solutions stored by a CP/CSP `solve` block.
+- `orchestrate`: run URC orchestration (fragment classification + backend selection + optional compilation).
+
+`orchestrate` is URC-aligned and should be used to test:
+
+- `PreferBackend(goalKind, fragment, backend)` selection,
+- `Plan`/`Step` surface stability,
+- compilation artifact generation (e.g., SMT-LIB2) without introducing suite-specific runtime hooks.
+
+Recommended fields for `orchestrate` steps:
+
+- `goalKind` (optional): defaults to `Find`
+- `expect_fragment` (string)
+- `expect_backend` (string, e.g. `Compile_SMTLIB2`, `Internal`)
+- `expect_has_artifact` (boolean)
+- `expect_artifact_format` (string, e.g. `SMTLIB2`)
+- `expect_step_status` (string, e.g. `Done`, `Planned`)
+
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `action` | string | Yes | `learn`, `query`, `prove` (`explain` is reserved; not executed by the runner; no `session.explain()` yet) |

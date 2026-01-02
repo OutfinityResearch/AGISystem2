@@ -50,6 +50,7 @@ import {
 	  sessionMaterializePolicyView,
 	  sessionRebuildIndices,
 	  sessionRecordNlTranslationProvenance,
+	  sessionExecuteNL,
 	  sessionRegisterArtifact,
 	  sessionRegisterEvidence,
 	  sessionCompileToSMTLIB2,
@@ -229,6 +230,10 @@ export class Session {
 
   recordNlTranslationProvenance(payload, options = {}) {
     return sessionRecordNlTranslationProvenance(this, payload, options);
+  }
+
+  executeNL(payload, options = {}) {
+    return sessionExecuteNL(this, payload, options);
   }
 
   registerArtifact(payload, options = {}) {

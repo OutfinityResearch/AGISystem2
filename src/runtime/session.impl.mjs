@@ -45,6 +45,7 @@ import { registerArtifact as registerArtifactImpl, registerEvidence as registerE
 import { compileToSMTLIB2 } from '../compilation/smtlib2.mjs';
 import { classifyDslFragment } from './fragment-classifier.mjs';
 import { buildPlan } from './orchestrator.mjs';
+import { executeNL as executeNLImpl } from './nl-exec.mjs';
 
 function dbg(category, ...args) {
   debug_trace(`[Session:${category}]`, ...args);
@@ -131,12 +132,19 @@ export function constructSession(session, options = {}) {
     currentFactIds: new Set(),
     supersedes: [],
     negates: [],
-    warnings: []
+    warnings: [],
+    policy: null,
+    materializedFactLines: [],
+    _materializedAtKbVersion: null
   };
 
   session.provenanceLog = [];
   session._provenanceSeq = 0;
   initUrcStores(session);
+
+  // URC materialization is optional. By default we keep URC audit data in memory only
+  // (artifacts/evidence/provenance log) to avoid performance regressions in evals/tools.
+  session.urcMaterializeFacts = options.urcMaterializeFacts ?? false;
 
   // Reasoning statistics
   session.reasoningStats = {
@@ -181,8 +189,7 @@ export function constructSession(session, options = {}) {
     cspNodesExplored: 0,
     cspBacktracks: 0,
     cspPruned: 0,
-    cspHdcPruned: 0,
-    holographicWedding: 0
+    cspHdcPruned: 0
   };
 
   session.initOperators();
@@ -407,9 +414,27 @@ export function sessionSolveURC(session, dsl, options = {}) {
   const solve = res?.solveResult || null;
   if (!solve) return { ...res, urcEvidence: null, urcArtifact: null };
 
+  // If the backend already emitted URC audit records (preferred), do not duplicate
+  // them by stringifying large solve structures (which may include vectors).
+  if (solve?.urc && typeof solve.urc === 'object') {
+    return { ...res, urcEvidence: null, urcArtifact: null, urc: solve.urc };
+  }
+
+  // Otherwise, keep a conservative summary artifact (avoid embedding vectors).
+  function stripVectors(value) {
+    if (!value || typeof value !== 'object') return value;
+    if (Array.isArray(value)) return value.map(stripVectors);
+    const out = {};
+    for (const [k, v] of Object.entries(value)) {
+      if (k === 'vector' || k === 'vectors') continue;
+      out[k] = stripVectors(v);
+    }
+    return out;
+  }
+
   const artifact = sessionRegisterArtifact(session, {
     format: 'JSON',
-    text: JSON.stringify(solve, null, 2)
+    text: JSON.stringify(stripVectors(solve), null, 2)
   }, { materializeFacts });
 
   const problemType = String(solve.problemType || '').toLowerCase();
@@ -558,6 +583,9 @@ export function sessionClose(session) {
   session.policyView.supersedes = [];
   session.policyView.negates = [];
   session.policyView.warnings = [];
+  session.policyView.policy = null;
+  session.policyView.materializedFactLines = [];
+  session.policyView._materializedAtKbVersion = null;
 }
 
 export function sessionMaterializePolicyView(session, options = {}) {
@@ -565,13 +593,37 @@ export function sessionMaterializePolicyView(session, options = {}) {
     newerWins: options.newerWins ?? session.policyView.newerWins
   });
   session.policyView.lastComputedAt = Date.now();
+  session.policyView.newerWins = view?.policy?.newerWins ?? session.policyView.newerWins;
   session.policyView.currentFactIds = view.currentFactIds;
   session.policyView.supersedes = view.supersedes;
   session.policyView.negates = view.negates;
   session.policyView.warnings = view.warnings;
+  session.policyView.policy = view.policy || null;
+
+  const materializeFacts = options.materializeFacts ?? session.urcMaterializeFacts ?? false;
+  // DS73: truth vs index split is strict. "Materialized facts" are returned as derived DSL lines for audit/debug,
+  // but are NOT injected into the KB truth store (kbFacts) to avoid semantic drift and feedback loops.
+  const kbVersion = session._kbBundleVersion ?? 0;
+  if (materializeFacts && session.policyView._materializedAtKbVersion !== kbVersion) {
+    const lines = [];
+    for (const { newFactId, oldFactId } of view.supersedes || []) {
+      lines.push(`Supersedes Fact#${newFactId} Fact#${oldFactId}`);
+    }
+    for (const factId of view.currentFactIds || []) {
+      lines.push(`Current Fact#${factId} True`);
+    }
+    session.policyView.materializedFactLines = lines;
+    session.policyView._materializedAtKbVersion = kbVersion;
+  } else if (!materializeFacts) {
+    session.policyView.materializedFactLines = [];
+    session.policyView._materializedAtKbVersion = null;
+  }
+
   return {
     success: true,
     ...view,
+    materializedFactLines: Array.isArray(session.policyView.materializedFactLines) ? session.policyView.materializedFactLines : [],
+    materializedAtKbVersion: session.policyView._materializedAtKbVersion ?? null,
     lastComputedAt: session.policyView.lastComputedAt
   };
 }
@@ -617,6 +669,10 @@ export function sessionRecordNlTranslationProvenance(session, payload, options =
   return recordNlTranslationProvenanceImpl(session, payload, options);
 }
 
+export function sessionExecuteNL(session, payload, options = {}) {
+  return executeNLImpl(session, payload, options);
+}
+
 export function sessionRegisterArtifact(session, payload, options = {}) {
   return registerArtifactImpl(session, payload, options);
 }
@@ -654,6 +710,53 @@ export function sessionOrchestrate(session, { goalKind, dsl } = {}, options = {}
 
   const materializeFacts = options.materializeFacts ?? false;
 
+  function selectPreferredBackend() {
+    const facts = session.kbFacts || [];
+    for (let i = facts.length - 1; i >= 0; i--) {
+      const meta = facts[i]?.metadata;
+      if (!meta || meta.operator !== 'PreferBackend') continue;
+      const args = Array.isArray(meta.args) ? meta.args : [];
+      if (args.length < 3) continue;
+      if (String(args[0]) !== kind) continue;
+      if (String(args[1]) !== fragmentRes.fragment) continue;
+      return String(args[2]);
+    }
+    return null;
+  }
+
+  function selectFallbackBackend(primary, seen = new Set()) {
+    if (!primary) return null;
+    const facts = session.kbFacts || [];
+    for (let i = facts.length - 1; i >= 0; i--) {
+      const meta = facts[i]?.metadata;
+      if (!meta || meta.operator !== 'FallbackTo') continue;
+      const args = Array.isArray(meta.args) ? meta.args : [];
+      if (args.length < 2) continue;
+      if (String(args[0]) !== primary) continue;
+      const candidate = String(args[1]);
+      if (!candidate) continue;
+      if (seen.has(candidate)) continue;
+      return candidate;
+    }
+    return null;
+  }
+
+  function computeFallbackChain(primary) {
+    const start = String(primary || '').trim();
+    if (!start) return [];
+    const chain = [start];
+    const seen = new Set(chain);
+    while (true) {
+      const next = selectFallbackBackend(chain[chain.length - 1], seen);
+      if (!next) break;
+      chain.push(next);
+      seen.add(next);
+    }
+    return chain;
+  }
+
+  const preferredBackend = selectPreferredBackend();
+
   // Treat the input DSL as an artifact for auditability.
   const inputArtifact = sessionRegisterArtifact(session, {
     format: 'SYS2DSL',
@@ -672,12 +775,48 @@ export function sessionOrchestrate(session, { goalKind, dsl } = {}, options = {}
   // - SMT fragments: compile to SMT-LIB2 artifact (no solver execution)
   // - CP / Planning fragments: execute solve blocks via learn adapter (internal backend)
   // - otherwise: return a plan with no steps (caller can choose internal backends)
-  if (fragmentRes.fragment === 'Frag_SMT_LRA' || fragmentRes.fragment === 'Frag_SMT_LIA') {
+  const defaultBackend =
+    ((fragmentRes.fragment === 'Frag_SMT_LRA' || fragmentRes.fragment === 'Frag_SMT_LIA') ? 'Compile_SMTLIB2' : null) ||
+    ((fragmentRes.fragment === 'Frag_CP') ? 'CP_Internal' : null) ||
+    ((fragmentRes.fragment === 'Frag_TS') ? 'Planning_Internal' : null) ||
+    'Internal';
+
+  const requestedBackend = preferredBackend || defaultBackend;
+  const fallbackChain = computeFallbackChain(requestedBackend);
+  const candidates = fallbackChain.length > 0 ? fallbackChain : [requestedBackend];
+
+  const builtins = new Set(['Compile_SMTLIB2', 'CP_Internal', 'Planning_Internal', 'Internal']);
+  const selectedBackend = candidates.find(b => builtins.has(String(b))) || 'Internal';
+  plan.preferredBackend = preferredBackend;
+  plan.fallbackChain = candidates;
+  plan.selectedBackend = selectedBackend;
+
+  // Record the decision as provenance (audit surface).
+  session._provenanceSeq = (session._provenanceSeq || 0) + 1;
+  session.provenanceLog ||= [];
+  session.provenanceLog.push({
+    id: `Orchestrator_${goalId}_${session._provenanceSeq}`,
+    kind: 'orchestrator',
+    at: Date.now(),
+    nlText: '',
+    dslText: String(dsl || ''),
+    decision: {
+      goalKind: kind,
+      fragment: fragmentRes.fragment,
+      preferredBackend: preferredBackend || null,
+      requestedBackend,
+      candidates,
+      selectedBackend
+    },
+    materialized: false
+  });
+
+  if (selectedBackend === 'Compile_SMTLIB2') {
     const compiled = sessionCompileToSMTLIB2(session, { dsl }, { materializeFacts: options.materializeFacts ?? false });
     if (!compiled?.success) return compiled;
     plan.steps.push({
       id: `Step_${Date.now()}`,
-      backend: 'Compile_SMTLIB2',
+      backend: selectedBackend,
       status: 'Done',
       inputArtifactId: inputArtifact.id,
       artifactId: compiled.artifact.id,
@@ -685,7 +824,7 @@ export function sessionOrchestrate(session, { goalKind, dsl } = {}, options = {}
     });
     if (materializeFacts) {
       const stepId = plan.steps[0].id;
-      const lines = [
+      plan.materializedFactLines = [
         `goalKind ${goalId} ${kind}`,
         `goalTarget ${goalId} ${inputArtifact.id}`,
         `planHasStep ${plan.id} ${stepId}`,
@@ -696,15 +835,21 @@ export function sessionOrchestrate(session, { goalKind, dsl } = {}, options = {}
         `compiledTo ${stepId} ${compiled.artifact.id}`,
         `stepStatus ${stepId} Done`,
         `FragmentTag ${goalId} ${fragmentRes.fragment}`
-      ].join('\n');
-      try { session.learn(lines); } catch { /* ignore */ }
+      ];
+    } else {
+      plan.materializedFactLines = [];
     }
-    return { success: true, plan, artifact: compiled.artifact };
+    const planArtifact = sessionRegisterArtifact(session, {
+      format: 'URC_PLAN_JSON_V0',
+      text: JSON.stringify(plan, null, 2)
+    }, { materializeFacts: false });
+    plan.planArtifactId = planArtifact.id;
+    return { success: true, plan, planArtifact, artifact: compiled.artifact };
   }
 
-  if (fragmentRes.fragment === 'Frag_CP' || fragmentRes.fragment === 'Frag_TS') {
+  if (selectedBackend === 'CP_Internal' || selectedBackend === 'Planning_Internal') {
     const solved = sessionSolveURC(session, dsl, { materializeFacts });
-    const backend = fragmentRes.fragment === 'Frag_TS' ? 'Planning_Internal' : 'CP_Internal';
+    const backend = selectedBackend;
     const status = solved?.success ? 'Done' : 'Failed';
     const step = {
       id: `Step_${Date.now()}`,
@@ -718,7 +863,7 @@ export function sessionOrchestrate(session, { goalKind, dsl } = {}, options = {}
     plan.steps.push(step);
 
     if (materializeFacts) {
-      const lines = [
+      plan.materializedFactLines = [
         `goalKind ${goalId} ${kind}`,
         `goalTarget ${goalId} ${inputArtifact.id}`,
         `planHasStep ${plan.id} ${step.id}`,
@@ -728,33 +873,45 @@ export function sessionOrchestrate(session, { goalKind, dsl } = {}, options = {}
         ...(step.outputArtifactId ? [`stepOutput ${step.id} ${step.outputArtifactId}`] : []),
         `stepStatus ${step.id} ${status}`,
         `FragmentTag ${goalId} ${fragmentRes.fragment}`
-      ].join('\n');
-      try { session.learn(lines); } catch { /* ignore */ }
+      ];
+    } else {
+      plan.materializedFactLines = [];
     }
 
-    return { success: true, plan, solve: solved };
+    const planArtifact = sessionRegisterArtifact(session, {
+      format: 'URC_PLAN_JSON_V0',
+      text: JSON.stringify(plan, null, 2)
+    }, { materializeFacts: false });
+    plan.planArtifactId = planArtifact.id;
+    return { success: true, plan, planArtifact, solve: solved };
   }
 
   plan.steps.push({
     id: `Step_${Date.now()}`,
-    backend: 'Internal',
+    backend: selectedBackend,
     status: 'Planned',
     inputArtifactId: inputArtifact.id,
     goalId
   });
   if (materializeFacts) {
     const stepId = plan.steps[0].id;
-    const lines = [
+    plan.materializedFactLines = [
       `goalKind ${goalId} ${kind}`,
       `goalTarget ${goalId} ${inputArtifact.id}`,
       `planHasStep ${plan.id} ${stepId}`,
       `stepGoal ${stepId} ${goalId}`,
-      `stepBackend ${stepId} Internal`,
+      `stepBackend ${stepId} ${selectedBackend}`,
       `stepInput ${stepId} ${inputArtifact.id}`,
       `stepStatus ${stepId} Planned`,
       `FragmentTag ${goalId} ${fragmentRes.fragment}`
-    ].join('\n');
-    try { session.learn(lines); } catch { /* ignore */ }
+    ];
+  } else {
+    plan.materializedFactLines = [];
   }
-  return { success: true, plan };
+  const planArtifact = sessionRegisterArtifact(session, {
+    format: 'URC_PLAN_JSON_V0',
+    text: JSON.stringify(plan, null, 2)
+  }, { materializeFacts: false });
+  plan.planArtifactId = planArtifact.id;
+  return { success: true, plan, planArtifact };
 }

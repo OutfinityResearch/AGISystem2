@@ -2,11 +2,11 @@
  * AGISystem2 - Provenance Log (v0)
  * @module runtime/provenance-log
  *
- * URC direction (DS49/DS73): provenance must be auditable and ideally represented as facts.
+ * URC direction (DS49/DS73): provenance must be auditable.
  *
  * v0 provides:
  * - an in-memory structured log (`session.provenanceLog`)
- * - optional best-effort materialization as Sys2DSL facts when URC provenance relations are loaded
+ * - optional best-effort materialization as derived Sys2DSL lines for debugging/tooling
  *
  * This is intentionally conservative to avoid breaking strict sessions that do not load URC packs.
  */
@@ -23,16 +23,26 @@ function shaKey(text) {
   return String(fnv1a(String(text || '')).toString(16));
 }
 
-function buildProvenanceDsl({ srcNl, srcDsl, nlText, dslText }) {
+function buildProvenanceFactLines({ srcNl, srcDsl, nlText, dslText }) {
   const nl = String(nlText || '');
   const dsl = String(dslText || '');
+  const spanId = safeId('Span', `${srcNl}:0:${nl.length}`);
+  const decisionId = safeId('Decision', `${srcDsl}:Parse`);
   return [
     `sourceText ${srcNl} ${JSON.stringify(nl)}`,
-    `sourceHash ${srcNl} ${JSON.stringify(shaKey(nl))}`,
+    `sourceHash ${srcNl} ${shaKey(nl)}`,
     `sourceText ${srcDsl} ${JSON.stringify(dsl)}`,
-    `sourceHash ${srcDsl} ${JSON.stringify(shaKey(dsl))}`,
+    `sourceHash ${srcDsl} ${shaKey(dsl)}`,
+    `spanOf ${spanId} ${srcNl}`,
+    `spanStart ${spanId} 0`,
+    `spanEnd ${spanId} ${nl.length}`,
+    `interprets ${spanId} ${srcDsl}`,
+    `confidence ${srcDsl} 1`,
+    `decisionKind ${decisionId} Parse`,
+    `decides ${decisionId} ${srcDsl}`,
+    `because ${decisionId} ${spanId}`,
     `normalizedFrom ${srcDsl} ${srcNl}`
-  ].join('\n');
+  ];
 }
 
 export function recordNlTranslationProvenance(session, { nlText, dslText, translation = null } = {}, options = {}) {
@@ -48,22 +58,21 @@ export function recordNlTranslationProvenance(session, { nlText, dslText, transl
     srcDsl,
     nlText: String(nlText || ''),
     dslText: String(dslText || ''),
-    translation
+    translation,
+    materializedFactLines: []
   };
   session.provenanceLog ||= [];
   session.provenanceLog.push(entry);
 
   const materializeFacts = options.materializeFacts ?? false;
   if (materializeFacts) {
-    const provDsl = buildProvenanceDsl({ srcNl, srcDsl, nlText, dslText });
-    try {
-      session.learn(provDsl);
-      entry.materialized = true;
-    } catch {
-      entry.materialized = false;
-    }
+    // DS73: provenance is an audit surface, not KB truth. Materialization is provided as derived DSL lines only.
+    entry.materializedFactLines = buildProvenanceFactLines({ srcNl, srcDsl, nlText, dslText });
+    entry.materialized = true;
+  } else {
+    entry.materializedFactLines = [];
+    entry.materialized = false;
   }
 
   return entry;
 }
-

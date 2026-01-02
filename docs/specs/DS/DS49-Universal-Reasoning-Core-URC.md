@@ -50,8 +50,7 @@ Persisted facts are normal Sys2DSL statements with structured metadata:
 - slot facts (object → attribute/slot),
 - graph-free relations that are intended to be provable/queryable,
 - revision links (`negates`, `supports`, `dependsOn`, `refersTo`),
-- policy view facts (`Current`, `Supersedes`) materialized by runtime,
-- provenance and evidence links (audit surface).
+- (future) persisted audit links (provenance/evidence) when configured for fact storage.
 
 This is the content of `session.kbFacts` and is the only store that the symbolic engines treat as “knowledge”.
 
@@ -107,17 +106,17 @@ URC follows “no delete” knowledge growth:
 
 ### 4.2 Current view
 
-The runtime maintains a **materialized view**:
+The runtime maintains a **derived policy view**:
 
-- `Current(objOrFact, True/False)`
-- `Supersedes(new, old)` (derived)
+- `currentFactIds` (fact ids that remain current under policy)
+- `supersedes` (derived edges `new -> old`)
 
 Policy ranks sources / roles / evidence kinds to decide which competing claims are “current”.
 
 Symbolic reasoning can be run over:
 
 - full KB (history-sensitive), or
-- Current view (default for user-facing answers and compilation).
+- policy-selected current view (default for user-facing answers and compilation).
 
 ---
 
@@ -216,6 +215,37 @@ Pack modules (v0, subject to iteration):
 - `config/Packs/URC/11-type-core.sys2`
 - `config/Packs/URC/12-unit-core.sys2`
 - `config/Packs/URC/13-verifier-core.sys2`
+- `config/Packs/URC/14-backend-capabilities-defaults.sys2` (v0 defaults)
+- `config/Packs/URC/15-backend-preferences-defaults.sys2` (v0 defaults)
+- `config/Packs/URC/16-backend-fallbacks-defaults.sys2` (v0 defaults)
+
+### 9.1 Orchestrator selection policy (v0)
+
+The runtime orchestrator may consult persisted facts when present:
+
+- `PreferBackend(goalKind, fragment, backend)`
+- `FallbackTo(primaryBackend, backupBackend)`
+
+This makes backend selection inspectable and overrideable at runtime without code changes.
+
+In v0, internal backends such as `Compile_SMTLIB2`, `CP_Internal`, and `Planning_Internal` are registered as default capability/preference facts. They represent adapters, not external solver dependencies.
+
+Runtime behavior (v0):
+- If `PreferBackend` matches, it is treated as the requested backend.
+- If `FallbackTo` facts exist, the orchestrator builds a fallback chain and selects the first supported builtin backend.
+- The selection decision is recorded in the session provenance log for inspection (KBExplorer: Reasoning → URC → Provenance).
+
+URC fact materialization (v0):
+- URC audit objects (Artifacts/Evidence/Provenance) are stored in-memory by default.
+- Best-effort materialization as derived **audit DSL lines** (for debugging; **not injected into the KB truth store**) is optional and can be enabled via:
+  - `@_ Set urcMaterializeFacts True`
+  - or session option `urcMaterializeFacts: true` (tooling/evals).
+
+Default preference/capability facts are shipped as part of the URC pack:
+
+- `config/Packs/URC/14-backend-capabilities-defaults.sys2`
+- `config/Packs/URC/15-backend-preferences-defaults.sys2`
+- `config/Packs/URC/16-backend-fallbacks-defaults.sys2`
 
 Load policy:
 

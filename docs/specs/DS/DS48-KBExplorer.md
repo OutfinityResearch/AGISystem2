@@ -59,6 +59,11 @@ Rules:
 - Changing either value **prompts the user** and then **resets** the session.
 - Changing packs also **prompts the user** and **restarts** the session (clears KB + chat).
 
+URC fact materialization:
+- By default, URC audit data is kept **in-memory only** (Artifacts/Evidence/Provenance), to keep the UI responsive.
+- To enable best-effort URC audit-line materialization (derived DSL lines for debugging; **not injected into the KB truth store**), run:
+  - `@_ Set urcMaterializeFacts True`
+
 ## 6. KB Explorer Semantics
 ### 6.0 What “Session State” means (and why duplicates exist)
 KBExplorer is a **session browser**, not only a KB browser.
@@ -79,12 +84,24 @@ The tree is a filesystem-like explorer:
   - One **bind** node per argument position (`#1`, `#2`, ...), each containing the corresponding **atom** child.
 - Atoms that have a KB definition (`definitionFactId`) are expandable; expanding them reveals the operator/binds/atoms of their definition fact, recursively.
 
+Additional session-audit surfaces are shown under:
+- **Reasoning (URC)**:
+  - **Artifacts** (compiled DSL, logs, etc.)
+  - **Evidence** (solver/run results with status + references)
+  - **Provenance** (NL→DSL translation log)
+  - **Policy: current view** (derived policy materialization; no KB mutation)
+
 ### 6.2 Details panel (always visible)
 Selecting any node shows a fixed right panel with:
 - **Definition**: the statement/graph text as loaded; when a fact is named, it is shown with an `@:` prefix for visibility.
 - **Encoding**: statement encoding form `Op ⊕ (Pos1 ⊕ Arg1) ⊕ (Pos2 ⊕ Arg2) ⊕ ...` (this is the *fact vector* formula, not an “entity definition”).
 - **Vector**: the selected node’s vector only, as an array (truncated).
 - **Raw**: the raw payload returned/assembled by the UI for debugging.
+
+For URC nodes:
+- **Artifact**: shows artifact metadata and text (truncated).
+- **Evidence**: shows canonical evidence fields (kind/method/status/supports/artifactId).
+- **Provenance**: shows the stored NL and DSL texts (when available).
 
 ### 6.3 Graph visibility
 Operators may have a graph definition (`session.graphs`). When available:
@@ -119,6 +136,8 @@ All APIs are JSON. The client identifies its session via `X-Session-Id`.
 - `POST /api/session/reset` → resets an existing universe (same `sessionId`)
   - body: `{ sessionOptions: { hdcStrategy, reasoningPriority }, packs?: string[] }`
   - response includes: `loadedPacks`
+- `GET /api/session/stats` → basic session counters for the UI
+  - response includes: `kbFactCount`, `graphCount`, `vocabCount`, `scopeCount`, `urcArtifactCount`, `urcEvidenceCount`, `urcProvenanceCount`
 
 ### 8.2 Packs
 - `GET /api/packs` → lists available packs and server defaults
@@ -138,6 +157,20 @@ All APIs are JSON. The client identifies its session via `X-Session-Id`.
 - `POST /api/command` → executes one user command
   - body: `{ mode: learn|query|prove|abduce|findAll, inputMode: nl|dsl, text }`
   - for `inputMode=nl`, the server performs `translateNL2DSL(...)` and returns the translated DSL alongside the reasoning result.
+
+### 8.6 Policy (derived view)
+- `GET /api/policy/view` → returns the derived policy view for the session (no KB mutation)
+  - response: `{ currentFactIds, supersedes, negates, warnings }`
+
+### 8.7 URC audit surfaces (in-memory stores)
+These endpoints expose URC stores used for inspection/debug:
+
+- `GET /api/urc/artifacts` → lists artifacts (id/format/hash/size)
+- `GET /api/urc/artifacts/:id` → returns one artifact record
+- `GET /api/urc/evidence` → lists evidence objects
+- `GET /api/urc/evidence/:id` → returns one evidence record
+- `GET /api/urc/provenance` → lists provenance log entries (NL→DSL)
+- `GET /api/urc/provenance/:id` → returns one provenance entry
 
 ## 9. Non-goals (v0)
 - Persistent storage of sessions or KB state across reloads.

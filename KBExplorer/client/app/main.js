@@ -33,6 +33,7 @@ export async function bootstrap() {
   must('panelNl');
   must('sendBtn');
   must('textInput');
+  must('urcMaterializeFactsToggle');
   must('packsBtn');
   must('packsDialog');
   must('packsSearch');
@@ -50,6 +51,19 @@ export async function bootstrap() {
   const state = createState();
   const { api } = createApi({ state });
   const ctx = { $, state, api };
+
+  function resetUrcUiState() {
+    state.kb.urc.artifacts.offset = 0;
+    state.kb.urc.artifacts.total = 0;
+    state.kb.urc.artifacts.items = [];
+    state.kb.urc.evidence.offset = 0;
+    state.kb.urc.evidence.total = 0;
+    state.kb.urc.evidence.items = [];
+    state.kb.urc.provenance.offset = 0;
+    state.kb.urc.provenance.total = 0;
+    state.kb.urc.provenance.items = [];
+    state.kb.urc.policyView = null;
+  }
 
   function updateSessionLabel() {
     $('sessionLabel').textContent = `session: ${state.sessionId || '(none)'}`;
@@ -92,6 +106,9 @@ export async function bootstrap() {
     state.kb.graphCount = res.graphCount ?? state.kb.graphCount;
     state.kb.vocabCount = res.vocabCount ?? state.kb.vocabCount;
     state.kb.scopeCount = res.scopeCount ?? state.kb.scopeCount;
+    state.kb.urcArtifactCount = res.urcArtifactCount ?? state.kb.urcArtifactCount;
+    state.kb.urcEvidenceCount = res.urcEvidenceCount ?? state.kb.urcEvidenceCount;
+    state.kb.urcProvenanceCount = res.urcProvenanceCount ?? state.kb.urcProvenanceCount;
     setKbFactsStat(ctx, state.kb.kbFactCount);
     $('factCount').textContent =
       `KB=${state.kb.kbFactCount} • graphs=${state.kb.graphCount} • vocab=${state.kb.vocabCount} • scope=${state.kb.scopeCount}`;
@@ -116,6 +133,7 @@ export async function bootstrap() {
     await ensureSession();
     $('chat').innerHTML = '';
     state.kb.kbOffset = 0;
+    resetUrcUiState();
     state.kb.pinnedFactIds = [];
     state.kb.selectedNodeId = null;
     await refreshExplorer();
@@ -125,6 +143,7 @@ export async function bootstrap() {
     await resetSession();
     $('chat').innerHTML = '';
     state.kb.kbOffset = 0;
+    resetUrcUiState();
     state.kb.pinnedFactIds = [];
     state.kb.selectedNodeId = null;
     await refreshExplorer();
@@ -136,6 +155,7 @@ export async function bootstrap() {
       await ensureSession();
       $('chat').innerHTML = '';
       state.kb.kbOffset = 0;
+      resetUrcUiState();
       state.kb.pinnedFactIds = [];
       state.kb.selectedNodeId = null;
       await refreshExplorer();
@@ -147,6 +167,7 @@ export async function bootstrap() {
       await ensureSession();
       $('chat').innerHTML = '';
       state.kb.kbOffset = 0;
+      resetUrcUiState();
       state.kb.pinnedFactIds = [];
       state.kb.selectedNodeId = null;
       await refreshExplorer();
@@ -171,6 +192,9 @@ export async function bootstrap() {
     for (const k of Object.keys(state.kb.vocab || {})) {
       state.kb.vocab[k].offset = 0;
     }
+    state.kb.urc.artifacts.offset = 0;
+    state.kb.urc.evidence.offset = 0;
+    state.kb.urc.provenance.offset = 0;
     await refreshExplorer();
   }, 250));
 

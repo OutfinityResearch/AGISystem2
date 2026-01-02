@@ -36,6 +36,3 @@
 @Cost_Fast:Cost_Fast __Atom
 @Cost_Medium:Cost_Medium __Atom
 @Cost_Heavy:Cost_Heavy __Atom
-
-# ===== Optional preference mapping (inspectable) =====
-@PreferBackend:PreferBackend __Relation

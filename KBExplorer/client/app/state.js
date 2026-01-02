@@ -5,6 +5,7 @@ export function createState() {
     config: {
       hdcStrategy: 'exact',
       reasoningPriority: 'symbolicPriority',
+      urcMaterializeFacts: false,
       packs: null
     },
     kb: {
@@ -28,11 +29,20 @@ export function createState() {
       scopeLimit: 400,
       scopeTotal: 0,
       scope: [],
+      urc: {
+        artifacts: { offset: 0, limit: 200, total: 0, items: [] },
+        evidence: { offset: 0, limit: 200, total: 0, items: [] },
+        provenance: { offset: 0, limit: 200, total: 0, items: [] },
+        policyView: null
+      },
       namedOnly: false,
       kbFactCount: 0,
       graphCount: 0,
       vocabCount: 0,
       scopeCount: 0,
+      urcArtifactCount: 0,
+      urcEvidenceCount: 0,
+      urcProvenanceCount: 0,
       treeRoot: null,
       nodeIndex: new Map(),
       pinnedFactIds: [],

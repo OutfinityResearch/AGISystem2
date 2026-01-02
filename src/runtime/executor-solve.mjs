@@ -12,6 +12,7 @@ import { withPosition } from '../core/position.mjs';
 import { CSPSolver } from '../reasoning/csp/solver.mjs';
 import { findAllOfType } from '../reasoning/find-all.mjs';
 import { solvePlanning, resolveGoalRefs } from '../reasoning/planning/solver.mjs';
+import { registerArtifact, registerEvidence } from './urc-store.mjs';
 
 function nodeToAtomOrNumber(node) {
   if (!node) return null;
@@ -146,9 +147,10 @@ export function executeSolveBlock(executor, stmt) {
   }
 
   // CP/CSP solve blocks are intentionally generic:
-  // - old suite-specific names like "WeddingSeating" should not be treated as special runtime modes.
+  // - old scenario-specific names should not be treated as special runtime modes.
   // - we keep `problemType` only as metadata; the solver semantics come from declarations.
   const canonicalProblemType = problemType || 'csp';
+  const solutionRelation = stmt.destination;
 
   // DS19 strict declarations: a solve block defines a relation name (its destination)
   // used to query solution bindings (e.g. `@seating solve ...` then `seating Alice ?t`).
@@ -287,12 +289,30 @@ export function executeSolveBlock(executor, stmt) {
     }
   }
 
+  // URC auditability (DS73 direction): emit a normalized CSP artifact for inspection/debug.
+  // This is intentionally JSON-as-text to keep it dependency-free and easy to inspect.
+  const cspArtifact = registerArtifact(executor.session, {
+    format: 'CSP_JSON_V0',
+    text: JSON.stringify({
+      destination: solutionRelation,
+      declaredProblemType: rawProblemType || null,
+      canonicalProblemType,
+      options: {
+        timeoutMs: solver.options.timeout,
+        maxSolutions: solver.options.maxSolutions
+      },
+      variables: [...variables],
+      domain: [...domain],
+      constraints: constraints.map(c => ({ ...c })),
+      expandedConstraints: constraintInfo.map(c => ({ ...c }))
+    }, null, 2)
+  });
+
   // Solve
   const result = solver.solve();
 
   // The destination becomes the relation for all solution facts
   // e.g., @seating solve ... → "seating Alice T1", "seating Bob T2"
-  const solutionRelation = stmt.destination;
   const relationVec = executor.session.vocabulary.getOrCreate(solutionRelation);
 
   // HDC Compound Encoding: Each solution becomes a bundled hypervector
@@ -381,6 +401,50 @@ export function executeSolveBlock(executor, stmt) {
     };
   });
 
+  // URC auditability (DS73 direction): attach evidence for the CSP outcome.
+  // - If we have solutions: each solution becomes a Model evidence with an associated solution artifact.
+  // - If we have no solutions: emit a single Trace evidence with status Infeasible referencing the CSP artifact.
+  const urc = {
+    cspArtifactId: cspArtifact?.id || null,
+    solutionEvidenceIds: [],
+    infeasibleEvidenceId: null
+  };
+
+  if (result.success && solutionsWithProof.length > 0) {
+    for (const sol of solutionsWithProof) {
+      const solArtifact = registerArtifact(executor.session, {
+        format: 'CSP_SOLUTION_JSON_V0',
+        text: JSON.stringify({
+          destination: solutionRelation,
+          solutionIndex: sol.index,
+          facts: sol.facts,
+          proof: sol.proof
+        }, null, 2)
+      });
+      const ev = registerEvidence(executor.session, {
+        kind: 'Model',
+        method: 'CP',
+        tool: 'CSPSolver',
+        status: 'Sat',
+        supports: solutionRelation || '_',
+        artifactId: solArtifact.id,
+        scope: '_'
+      });
+      urc.solutionEvidenceIds.push(ev.id);
+    }
+  } else {
+    const ev = registerEvidence(executor.session, {
+      kind: 'Trace',
+      method: 'CP',
+      tool: 'CSPSolver',
+      status: 'Infeasible',
+      supports: solutionRelation || '_',
+      artifactId: cspArtifact?.id || '_',
+      scope: '_'
+    });
+    urc.infeasibleEvidenceId = ev.id;
+  }
+
   // Store compound solution vectors in KB (not individual facts)
   let storedSolutions = 0;
   if (result.success && solutionVectors.length > 0) {
@@ -465,6 +529,7 @@ export function executeSolveBlock(executor, stmt) {
     success: result.success,
     solutionCount: result.solutionCount,
     storedSolutions,
+    urc,
     // Constraint info for proof generation
     constraints: constraintInfo,
     // The relation to use in queries (the destination name)

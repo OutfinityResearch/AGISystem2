@@ -1,0 +1,15 @@
+# URC - Default Backend Fallback Chain (v0)
+#
+# FallbackTo(primary, backup) facts are used by orchestration to avoid brittle single-backend choices.
+# The chain is intentionally shallow in v0 because most external backends are not yet executed.
+
+# When a future SMT backend is selected, compiling to SMT-LIB2 is a useful fallback for auditability.
+FallbackTo SMT_Backend Compile_SMTLIB2
+
+# Internal adapters should always have an escape hatch.
+FallbackTo CP_Internal Internal
+FallbackTo Planning_Internal Internal
+
+# Compilation is still useful even if execution is not available.
+FallbackTo Compile_SMTLIB2 Internal
+
