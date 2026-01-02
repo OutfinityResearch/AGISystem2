@@ -89,4 +89,18 @@ These changes are designed to layer on top of existing DS02/DS05 semantics:
 
 ---
 
+## 5. URC linkage (DS49/DS51/DS52)
+
+This DS is “UTE-facing”, but it should be implementable through URC contracts rather than as one-off engine behavior.
+
+URC mapping:
+
+- **URC Content (DS49):** a compiled query should be representable as Content IR + a retrieval sketch (index hints are non-authoritative).
+- **URC Goals (DS49):** queries should declare explicit result requirements (e.g., “must provide a proof”, “must provide evidence anchors”, budget/timeout).
+- **URC Evidence/Artifacts (DS49):** answers should attach at least one evidence anchor (proof trace, retrieval witness, or failure artifact).
+- **Capability registry (DS52):** retrieval + validation steps are routed to backends based on fragment classification (symbolic, HDC-first, CSP, etc.).
+- **Pack taxonomy (DS51):** structure signatures and indexing rules must not silently depend on eval-only vocab; any domain-specific signatures live in explicit packs.
+
+---
+
 *End of DS33*

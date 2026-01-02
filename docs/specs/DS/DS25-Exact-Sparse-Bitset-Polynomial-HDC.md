@@ -108,6 +108,16 @@ Recommended normalization (backend-owned):
 
 These ceilings integrate naturally with DS39 STAR/UNSTAR via the `normalize(state)` hook.
 
+**Current implementation note (v0):**
+- EXACT enforces these ceilings inside the strategy operations (`bind`, `bundle`, `unbind`) so the representation stays bounded even outside STAR/UNSTAR.
+- Default thresholds are intentionally very generous:
+  - `monomBitLimit = 1000`
+  - `polyTermLimit = 200000`
+- Thresholds can be changed at runtime via Sys2DSL `Set` (side-effect command; does not add KB facts):
+  - `@_ Set exactIneffableMonomBitLimit 1000`
+  - `@_ Set exactIneffablePolyTermLimit 200000`
+  - alias: `@_ Set exactIneffableMonomNonZeroLimit 1000`
+
 ### 3.4 Persistence (Deferred)
 
 Because atom identity depends on the dictionary, EXACT MUST serialize the dictionary alongside KB data:

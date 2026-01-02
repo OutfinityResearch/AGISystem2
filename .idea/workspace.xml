@@ -4,303 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="wip  KB explorer tool for demos and visual inspection of the system during research. igeneralising teh reasonng mecansm to become mreore universal for all possible sciences">
+    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="refatoring towards URC Complete migration">
       <change afterPath="$PROJECT_DIR$/.npm-cache/_update-notifier-last-checked" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/KBExplorer/client/app/ui/packs.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Bootstrap/00-types.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Bootstrap/02-constructors.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Bootstrap/03-structural.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Bootstrap/09-roles.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Bootstrap/index.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Canonicalization/13-canonicalization.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Canonicalization/13c-canonical-rewrites.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Canonicalization/index.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Consistency/14-constraints.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Consistency/index.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Defaults/08-defaults.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Defaults/index.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Kernel/index.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Lexicon/11-bootstrap-verbs.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Lexicon/index.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Logic/05-logic.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Logic/index.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Modal/07-modal.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Modal/index.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Numeric/04a-numeric.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Numeric/index.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Properties/10-properties.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Properties/index.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Reasoning/12-reasoning.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Reasoning/index.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Relations/00-relations.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Relations/10-common-relations.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Relations/index.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Semantics/04-semantic-primitives.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Semantics/index.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Temporal/06-temporal.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/Temporal/index.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/URC/00-pragmatics-core.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/URC/01-content-core.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/URC/02-goal-core.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/URC/03-capability-registry.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/URC/04-evidence-core.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/URC/05-metric-core.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/URC/06-orchestrator-core.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/URC/07-policy-core.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/URC/08-provenance-core.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/URC/09-solver-artifact-core.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/URC/10-backend-preference-registry.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/URC/11-type-core.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/URC/12-unit-core.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/URC/13-verifier-core.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Packs/URC/index.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/research/urc-implementation-vision.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS17a-Meta-Query-Operators.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS49-Universal-Reasoning-Core-URC.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS50-CompilationCore-SMTLIB2.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS51-Config-Taxonomy-Core-vs-Packs.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS52-Reasoning-Paradigms-Roadmap-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS53-SAT-CDCL-Backend-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS54-SMT-DPLLT-Backend-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS55-CP-Constraint-Programming-Backend-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS56-Model-Checking-Fixpoint-Backend-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS57-IC3-PDR-Backend-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS58-CEGAR-Orchestration-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS59-Abstract-Interpretation-Backend-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS60-Proof-Assistant-Verification-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS61-ATP-Saturation-Backend-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS62-Term-Rewriting-Knuth-Bendix-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS63-Groebner-Bases-Backend-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS64-Quantifier-Elimination-CAD-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS65-ILP-MIP-Backend-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS66-SDP-SoS-Backend-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS67-Structural-Decomposition-Treewidth-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS68-Tensor-Factor-Graphs-Belief-Propagation-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS69-Model-Counting-Hashing-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS70-Symbolic-Execution-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS71-Program-Synthesis-SyGuS-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS72-ML-Guided-Proof-Search-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS73-URC-Migration-Plan.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS74-EvalSuite-Audit-Guidelines.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/config/04a-numeric.sys2.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/config/13-canonicalization.sys2.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/config/14-constraints.sys2.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/domains/CSP/00-lexicon-constraints.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/domains/CSP/01-relations.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/domains/Math/01-relations.sys2.errors" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/domains/Social/01-relations.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/fastEval/AUDIT.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/fastEval/suite11_wedding_seating/AUDIT.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/fastEval/suite30_csp_minis/AUDIT.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/fastEval/suite30_csp_minis/cases.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/stress/anthropology.sys2.errors" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/stress/biology.sys2.errors" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/stress/geography.sys2.errors" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/stress/law.sys2.errors" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/stress/logic.sys2.errors" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/stress/math.sys2.errors" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/stress/medicine.sys2.errors" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/stress/psychics.sys2.errors" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/stress/psychology.sys2.errors" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/stress/sociology.sys2.errors" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/stress/theories/stress-compat.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/index.cjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/revi_specs_docs.ms" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compilation/index.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compilation/smtlib2.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/kernel-manifest.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/policy-view.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/index-exports-cjs.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/runtime/fragment-classifier.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/runtime/orchestrator.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/runtime/provenance-log.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/runtime/urc-store.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/state.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/state.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/ui/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/ui/config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/KBExplorer/client/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/KBExplorer/client/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/KBExplorer/server/server.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/server/server.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Constraints/00-lexicon-constraints.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Constraints/01-relations.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/00-relations.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/00-types.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/02-constructors.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/03-structural.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/04-semantic-primitives.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/04a-numeric.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/05-logic.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/06-temporal.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/07-modal.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/08-defaults.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/09-roles.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/10-properties.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/11-bootstrap-verbs.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/12-reasoning.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/13-canonicalization.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/13c-canonical-rewrites.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/14-constraints.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/15-stress-compat.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/index.sys2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core_config_semantic-prgamtic_init.md" beforeDir="false" afterPath="$PROJECT_DIR$/core_config_semantic-prgamtic_init.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/api/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/api/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/reasoning/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/reasoning/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/research/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/research/ute-representation-and-query.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/ute-representation-and-query.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS01-Theoretical-Foundation.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS01-Theoretical-Foundation.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS02-DSL-Syntax.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS02-DSL-Syntax.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS03-Architecture.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS03-Architecture.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS03-Memory-Model-OBSOLETE.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS03-Memory-Model-OBSOLETE.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07-Core-Theory-Index.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07-Core-Theory-Index.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07-Core-Theory.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07-Core-Theory.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07a-HDC-Primitives.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07a-HDC-Primitives.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07b-Type-System.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07b-Type-System.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07c-Semantic-Primitives.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07c-Semantic-Primitives.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07d-Logic.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07d-Logic.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07e-Temporal-Modal.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07e-Temporal-Modal.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07f-Roles-Properties.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07f-Roles-Properties.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07g-Bootstrap-Verbs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07g-Bootstrap-Verbs.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07h-Reasoning.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07h-Reasoning.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS09-Core-HDC-Implementation.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS09-Core-HDC-Implementation.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS11-Decoding-Phrasing-Engine.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS11-Decoding-Phrasing-Engine.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS14-EvalSuite.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS14-EvalSuite.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS15-Sparse-Polynomial-HDC.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS15-Sparse-Polynomial-HDC.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS16-CSP-Solver.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS16-CSP-Solver.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS17-Holographic-Priority-Mode.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS17-Holographic-Priority-Mode.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS17-Meta-Query-Operators.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS24-Pure-Symbolic-Term-Engine-EXPLORATORY.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS24-Pure-Symbolic-Term-Engine-EXPLORATORY.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS25-Exact-Sparse-Bitset-Polynomial-HDC.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS25-Exact-Sparse-Bitset-Polynomial-HDC.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS26-Session-Universe.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS26-Session-Universe.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS32-Universal-Theory-Engine-UTE-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS32-Universal-Theory-Engine-UTE-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS34-UTE-Provenance-Contradictions-and-Revision-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS34-UTE-Provenance-Contradictions-and-Revision-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS37-UTE-Numeric-Modeling-and-Units-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS37-UTE-Numeric-Modeling-and-Units-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS39-Reasoning-Closure-STAR-UNSTAR-RESEARCH.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS39-Reasoning-Closure-STAR-UNSTAR-RESEARCH.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS48-KBExplorer.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS48-KBExplorer.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/FS.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/FS.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/NFS.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/NFS.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/URS.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/URS.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/config/00-relations.sys2.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/config/00-relations.sys2.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/config/00-types.sys2.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/config/00-types.sys2.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/config/02-constructors.sys2.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/config/02-constructors.sys2.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/config/03-structural.sys2.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/config/03-structural.sys2.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/config/04-semantic-primitives.sys2.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/config/04-semantic-primitives.sys2.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/config/05-logic.sys2.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/config/05-logic.sys2.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/config/06-temporal.sys2.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/config/06-temporal.sys2.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/config/07-modal.sys2.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/config/07-modal.sys2.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/config/08-defaults.sys2.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/config/08-defaults.sys2.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/config/09-roles.sys2.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/config/09-roles.sys2.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/config/10-properties.sys2.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/config/10-properties.sys2.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/config/11-bootstrap-verbs.sys2.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/config/11-bootstrap-verbs.sys2.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/config/12-reasoning.sys2.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/config/12-reasoning.sys2.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/config/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/config/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/config/index.sys2.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/config/index.sys2.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/matrix.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/matrix.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/semantic_unification_implementation_plan.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/semantic_unification_implementation_plan.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/src/hdc/facade.mjs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/src/hdc/facade.mjs.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/src/hdc/strategies/dense-binary.mjs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/src/hdc/strategies/dense-binary.mjs.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/src/hdc/strategies/index.mjs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/src/hdc/strategies/index.mjs.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/src/parser/ast.mjs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/src/parser/ast.mjs.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/src/reasoning/transitive.mjs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/src/reasoning/transitive.mjs.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/src/runtime/session.mjs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/src/runtime/session.mjs.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/syntax/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/syntax/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/deterministic-vectors.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/deterministic-vectors.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/wiki/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/wiki/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/domains/Anthropology/00-lexicon-categories.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/domains/Anthropology/00-lexicon-categories.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/domains/Anthropology/00-lexicon-properties.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/domains/Anthropology/00-lexicon-properties.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/domains/Biology/00-lexicon-cellular.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/domains/Biology/00-lexicon-cellular.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/domains/Biology/00-lexicon-ecology-evolution.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/domains/Biology/00-lexicon-ecology-evolution.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/domains/Biology/00-lexicon-metabolism.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/domains/Biology/00-lexicon-metabolism.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/domains/Biology/00-lexicon-molecular.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/domains/Biology/00-lexicon-molecular.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/domains/Biology/00-lexicon-physiology.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/domains/Biology/00-lexicon-physiology.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/domains/Biology/00-lexicon-taxonomy.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/domains/Biology/00-lexicon-taxonomy.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/domains/Math/01-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/domains/Math/01-relations.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/loader.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/loader.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite01_foundations/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite01_foundations/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite02_hierarchies/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite02_hierarchies/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite03_rules/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite03_rules/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite04_deep_chains/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite04_deep_chains/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite05_negation/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite05_negation/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite06_compound_logic/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite06_compound_logic/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite07_temporal/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite07_temporal/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite08_modal/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite08_modal/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite09_composition/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite09_composition/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite10_integration/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite10_integration/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite11_wedding_seating/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite11_wedding_seating/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite12_fuzzy_matching/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite12_fuzzy_matching/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite13_property_inheritance/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite13_property_inheritance/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite14_meta_queries/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite14_meta_queries/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite15_reasoning_macros/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite15_reasoning_macros/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite16_macro_aggregation/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite16_macro_aggregation/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite17_macro_composition/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite17_macro_composition/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite18_set_theory/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite18_set_theory/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite19_biology/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite19_biology/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite20_predicate_logic/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite20_predicate_logic/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite21_goat_cabbage_plus/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite21_goat_cabbage_plus/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite22_deduction/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite22_deduction/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite25_ruletaker_bugs/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite25_ruletaker_bugs/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite26_compound_conclusions/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite26_compound_conclusions/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite28_induction/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite28_induction/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite29_explain_abduce_whatif/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite29_explain_abduce_whatif/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/runQueryEval.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/runQueryEval.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/runStressCheck.js" beforeDir="false" afterPath="$PROJECT_DIR$/evals/runStressCheck.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/tools/dsl-to-nl.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/tools/dsl-to-nl.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fileSeziesCheck.sh" beforeDir="false" afterPath="$PROJECT_DIR$/fileSeziesCheck.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/constants.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/constants.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hdc/strategies/exact.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/strategies/exact.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/output/response-translator/query-translator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator/query-translator.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/ast.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/ast.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/parser.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/parser.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/abduction.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/abduction.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/component-kb.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/component-kb.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/conditions.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/conditions.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/csp/index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/csp/index.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/csp/solver.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/csp/solver.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/disjoint.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/disjoint.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/csp-hdc-heuristic.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/csp-hdc-heuristic.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/prove-hdc-first.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/prove-hdc-first.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/index.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/inverse.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/inverse.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/property-inheritance.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/property-inheritance.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/prove-search-trace.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove-search-trace.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/prove.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query-compound.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-compound.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query-hdc.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-hdc.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query-kb.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-kb.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/symmetric.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/symmetric.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/transitive.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/transitive.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/unification.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/unification.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/canonical-rewrite-index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/canonical-rewrite-index.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/core-validator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/core-validator.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/dsl-to-nl.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/dsl-to-nl.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/executor-resolve.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor-resolve.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/executor-solve.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor-solve.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/operator-catalog.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/operator-catalog.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/semantic-index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/semantic-index.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/session-check-dsl.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-check-dsl.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/session-core-load.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-core-load.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/executor.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/session.impl.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.impl.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/type-registry.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/type-registry.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/integration/deep-reasoning.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/integration/deep-reasoning.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/integration/e2e-pipeline.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/integration/e2e-pipeline.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/decoding/structural-decoder.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/decoding/structural-decoder.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/decoding/text-generator.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/decoding/text-generator.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/parser/lexer-tokens.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/parser/lexer-tokens.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/parser/lexer.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/parser/lexer.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/csp-hdc.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/csp-hdc.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/proof-validator.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/proof-validator.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/query.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/query.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/config-domains-load.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/config-domains-load.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/contradictions-from-theory.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/contradictions-from-theory.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/core-theories.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/core-theories.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/core-validator.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/core-validator.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/executor-l0-builtins.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/executor-l0-builtins.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/executor.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/executor.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/get-type.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/get-type.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/load-core.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/load-core.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/session-features.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/session-features.test.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/hdc/exact-strategy.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/hdc/exact-strategy.test.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/unit/runtime/session.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/session.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -422,15 +139,7 @@
       <workItem from="1767005469743" duration="10476000" />
       <workItem from="1767083849618" duration="20002000" />
       <workItem from="1767176590511" duration="2118000" />
-      <workItem from="1767350041350" duration="13798000" />
-    </task>
-    <task id="LOCAL-00056" summary="better documentation, consolidating steps for next steps of research and improvements">
-      <option name="closed" value="true" />
-      <created>1766422344904</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1766422344904</updated>
+      <workItem from="1767350041350" duration="14838000" />
     </task>
     <task id="LOCAL-00057" summary="better documentation, consolidating steps for next steps of research and improvements">
       <option name="closed" value="true" />
@@ -816,7 +525,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767357178210</updated>
     </task>
-    <option name="localTasksCounter" value="105" />
+    <task id="LOCAL-00105" summary="refatoring towards URC Complete migration">
+      <option name="closed" value="true" />
+      <created>1767375357951</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1767375357951</updated>
+    </task>
+    <option name="localTasksCounter" value="106" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -835,7 +552,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="working to refactor the reasoning engine for deeper semantic unification to make use of HDC properties better. wip" />
     <MESSAGE value="added git ignore" />
     <MESSAGE value="new approach for val suite, wip" />
     <MESSAGE value="new approach for val suite, trying to improve teh deft theories, doing various experiemnts to improve and generalise the reasoning engines" />
@@ -860,6 +576,7 @@
     <MESSAGE value="cleanimng in teh fast eval suites, healt check, started a KB explorer toolfor demos and visual inspection of the system during research" />
     <MESSAGE value="wip  KB explorer tool for demos and visual inspection of the system during research" />
     <MESSAGE value="wip  KB explorer tool for demos and visual inspection of the system during research. igeneralising teh reasonng mecansm to become mreore universal for all possible sciences" />
-    <option name="LAST_COMMIT_MESSAGE" value="wip  KB explorer tool for demos and visual inspection of the system during research. igeneralising teh reasonng mecansm to become mreore universal for all possible sciences" />
+    <MESSAGE value="refatoring towards URC Complete migration" />
+    <option name="LAST_COMMIT_MESSAGE" value="refatoring towards URC Complete migration" />
   </component>
 </project>

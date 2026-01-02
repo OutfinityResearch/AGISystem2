@@ -1,5 +1,5 @@
 import http from 'node:http';
-import { randomUUID, createHash } from 'node:crypto';
+import { randomUUID } from 'node:crypto';
 import { existsSync, readdirSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -33,29 +33,16 @@ const DEFAULT_PACKS = [
   'URC'
 ];
 
-function sha256Hex(text) {
-  return createHash('sha256').update(String(text || ''), 'utf8').digest('hex');
-}
-
-function tryRecordNlTranslationProvenance(session, { nlText, dslText }) {
-  const srcNl = `SrcNL_${randomUUID().replace(/-/g, '')}`;
-  const srcDsl = `SrcDSL_${randomUUID().replace(/-/g, '')}`;
-  const nl = String(nlText || '');
-  const dsl = String(dslText || '');
-
-  const provDsl = [
-    `sourceText ${srcNl} ${JSON.stringify(nl)}`,
-    `sourceHash ${srcNl} ${JSON.stringify(sha256Hex(nl))}`,
-    `sourceText ${srcDsl} ${JSON.stringify(dsl)}`,
-    `sourceHash ${srcDsl} ${JSON.stringify(sha256Hex(dsl))}`,
-    `normalizedFrom ${srcDsl} ${srcNl}`
-  ].join('\n');
-
+function tryRecordNlTranslationProvenance(session, { nlText, dslText, translation }) {
   try {
-    session.learn(provDsl);
-    return { success: true, sourceNl: srcNl, sourceDsl: srcDsl };
+    session.recordNlTranslationProvenance?.(
+      { nlText, dslText, translation },
+      // Best-effort: materialize URC provenance facts if the URC pack is loaded.
+      { materializeFacts: true }
+    );
+    return { success: true };
   } catch {
-    // Best-effort only: provenance must not block user commands.
+    // Provenance must not block user commands.
     return { success: false };
   }
 }
@@ -689,6 +676,24 @@ export function createKBExplorerServer(options = {}) {
       });
     }
 
+    if (req.method === 'GET' && url.pathname === '/api/policy/view') {
+      const found = requireUniverse(req, url) ?? getOrCreateUniverse(req, res, url);
+      const { session } = found.universe;
+      const view = session.materializePolicyView?.({ newerWins: true }) || null;
+      if (!view?.success) {
+        return json(res, 200, { ok: true, sessionId: found.sessionId, view: null });
+      }
+      return json(res, 200, {
+        ok: true,
+        sessionId: found.sessionId,
+        newerWins: true,
+        warnings: view.warnings || [],
+        currentFactIds: Array.from(view.currentFactIds || []).sort((a, b) => a - b),
+        supersedes: view.supersedes || [],
+        negates: view.negates || []
+      });
+    }
+
     if (req.method === 'GET' && url.pathname === '/api/packs') {
       const availablePacks = listAvailablePacks();
       return json(res, 200, {
@@ -1109,7 +1114,7 @@ export function createKBExplorerServer(options = {}) {
 
         // URC direction: record NL→DSL provenance as facts when available.
         // Best-effort: if URC provenance relations are not loaded, ignore silently.
-        tryRecordNlTranslationProvenance(session, { nlText: textIn, dslText: dsl });
+        tryRecordNlTranslationProvenance(session, { nlText: textIn, dslText: dsl, translation });
       }
 
       if (!allowFileOps && containsFileOps(dsl)) {
@@ -1118,9 +1123,10 @@ export function createKBExplorerServer(options = {}) {
 
       try {
         let result;
+        const urcFactsEnabled = Array.isArray(found.universe.loadedPacks) && found.universe.loadedPacks.includes('URC');
         if (mode === 'learn') result = session.learn(dsl);
-        else if (mode === 'query') result = session.query(dsl);
-        else if (mode === 'prove') result = session.prove(dsl);
+        else if (mode === 'query') result = session.queryURC?.(dsl, { materializeFacts: urcFactsEnabled }) ?? session.query(dsl);
+        else if (mode === 'prove') result = session.proveURC?.(dsl, { materializeFacts: urcFactsEnabled }) ?? session.prove(dsl);
         else if (mode === 'abduce') result = session.abduce(dsl);
         else if (mode === 'findAll') result = session.findAll(dsl);
 

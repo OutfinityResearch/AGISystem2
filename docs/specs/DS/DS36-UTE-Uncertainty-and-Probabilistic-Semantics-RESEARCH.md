@@ -61,4 +61,16 @@ This implies eval suites and metrics for:
 
 ---
 
+## 5. URC linkage (DS49/DS51/DS52)
+
+URC provides the minimum implementation contract required for uncertainty to stay audit-friendly:
+
+- **Evidence-first semantics (DS49):** probabilistic beliefs must be linked to evidence objects (datasets, measurements, assumptions) and recorded approximations.
+- **Artifacts (DS49):** inference runs should emit replayable artifacts (configuration + trace) rather than only “confidence numbers”.
+- **Policy and revision (DS49):** belief updates are no-delete; the “current view” is policy materialization, not destructive overwrites.
+- **Capability routing (DS52):** probabilistic inference may route to specialized backends (model counting, BP, sampling, SMT/ILP hybrids) when available.
+- **Pack taxonomy (DS51):** uncertainty vocab and priors should be pack-scoped; eval suites should not leak domain priors into baseline Core.
+
+---
+
 *End of DS36*

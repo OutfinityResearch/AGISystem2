@@ -171,6 +171,18 @@ function popcountBigInt(x) {
   return count;
 }
 
+function popcountExceeds(x, limit) {
+  if (!Number.isFinite(limit) || limit <= 0) return false;
+  let v = x < 0n ? -x : x;
+  let count = 0;
+  while (v) {
+    v &= (v - 1n);
+    count++;
+    if (count > limit) return true;
+  }
+  return false;
+}
+
 function bitJaccard(a, b) {
   if (a === b) return 1;
   if (a === 0n && b === 0n) return 1;
@@ -414,6 +426,47 @@ function createInstance({ geometry = 0, session = null } = {}) {
     return makeAtomVector(geo, idx);
   }
 
+  // DS25 ceilings (URC alignment).
+  // - `BOTTOM_IMPOSSIBLE` is absorbing for monomials (dead-end).
+  // - `TOP_INEFFABLE` is absorbing for monomials (resource boundary / unknown).
+  const bottomBit = 1n << BigInt(alloc.ensureIndex('BOTTOM_IMPOSSIBLE'));
+  const topBit = 1n << BigInt(alloc.ensureIndex('TOP_INEFFABLE'));
+
+  function getCeilings() {
+    const cfg = session?.exactCeilings || {};
+    const monomBitLimitRaw = Number(cfg.monomBitLimit);
+    const polyTermLimitRaw = Number(cfg.polyTermLimit);
+    const monomBitLimit = Number.isFinite(monomBitLimitRaw) ? Math.max(0, Math.floor(monomBitLimitRaw)) : 1000;
+    const polyTermLimit = Number.isFinite(polyTermLimitRaw) ? Math.max(0, Math.floor(polyTermLimitRaw)) : 200000;
+    return { monomBitLimit, polyTermLimit };
+  }
+
+  function normalizeMonom(termBits, ceilings) {
+    // Contradiction wins first.
+    if ((termBits & bottomBit) === bottomBit) return bottomBit;
+    // Resource boundary next.
+    if ((termBits & topBit) === topBit) return topBit;
+    // Density ceiling.
+    if (ceilings.monomBitLimit > 0 && popcountExceeds(termBits, ceilings.monomBitLimit)) return topBit;
+    return termBits;
+  }
+
+  function normalizePolynomialTerms(termsIn) {
+    const terms = termsIn || [];
+    if (terms.length === 0) return [];
+    const ceilings = getCeilings();
+
+    // Monom-level normalization first.
+    const mapped = terms.map(t => normalizeMonom(t, ceilings));
+    const out = sortUniqueTerms(mapped);
+
+    // Poly-level ceiling: collapse to TOP when term count is too large.
+    if (ceilings.polyTermLimit > 0 && out.length > ceilings.polyTermLimit) {
+      return [topBit];
+    }
+    return out;
+  }
+
   function bindInst(a, b) {
     if (!a || !b) throw new Error('bind requires two vectors');
     if (a.strategyId !== STRATEGY_ID || b.strategyId !== STRATEGY_ID) {
@@ -425,7 +478,7 @@ function createInstance({ geometry = 0, session = null } = {}) {
     stats.bindPairs += aTerms.length * bTerms.length;
 
     const geometryOut = Math.max(a.geometry || 0, b.geometry || 0);
-    const terms = bindTerms(aTerms, bTerms);
+    const terms = normalizePolynomialTerms(bindTerms(aTerms, bTerms));
     stats.bindOutTerms += terms.length;
     bumpSessionOp('exact_bind_pairs', aTerms.length * bTerms.length);
     bumpSessionOp('exact_bind_out_terms', terms.length);
@@ -458,6 +511,7 @@ function createInstance({ geometry = 0, session = null } = {}) {
       inTerms += vt.length;
       terms = unionTerms(terms, vt);
     }
+    terms = normalizePolynomialTerms(terms);
     stats.bundleInTerms += inTerms;
     stats.bundleOutTerms += terms.length;
     bumpSessionOp('exact_bundle_in_terms', inTerms);
@@ -535,7 +589,7 @@ function createInstance({ geometry = 0, session = null } = {}) {
       : unbindA(composite.terms, component.terms);
     stats.unbindOutTerms += terms.length;
     bumpSessionOp('exact_unbind_out_terms', terms.length);
-    return new ExactVector(geometryOut, terms);
+    return new ExactVector(geometryOut, normalizePolynomialTerms(terms));
   }
 
   function* iterSetBitIndices32(word) {

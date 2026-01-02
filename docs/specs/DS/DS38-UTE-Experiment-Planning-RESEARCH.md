@@ -59,4 +59,16 @@ This DS builds on:
 
 ---
 
+## 5. URC linkage (DS49/DS51/DS52)
+
+Experiment planning is a URC-driven loop in implementation terms:
+
+- **Experiment proposals are Goals (DS49):** an experiment plan is a Goal with budgets (cost/risk/time) and an information gain objective (DS36).
+- **Execution results are Evidence (DS49):** experiment outcomes are ingested as evidence objects with provenance (dataset/measurement metadata).
+- **Revision is policy materialization (DS49):** new evidence updates the “current view” without deleting old claims; contradictions become explicit objects.
+- **Planning backends (DS52):** planning may route to CSP/CP backends (DS16/DS55 direction) under orchestrator control.
+- **Packs (DS51):** domain experiments, safety constraints, and costs live in explicit packs (not in Core defaults).
+
+---
+
 *End of DS38*

@@ -63,4 +63,17 @@ This DS depends on:
 
 ---
 
+## 5. URC linkage (DS49/DS51/DS52)
+
+URC is the implementation bridge for causal/mechanistic reasoning:
+
+- **Mechanisms as objects (DS49):** mechanisms should be represented as persisted slot facts (truth candidates) plus optional derived indices (rebuildable).
+- **Interventions (DS49 Policy):** an intervention is a policy-scoped update that materializes a “current view” for a scenario without deleting prior facts.
+- **Counterfactuals (DS49 Goals):** a counterfactual query is a Goal with an explicit scenario context (evidence set + intervention set + budget).
+- **Evidence (DS49):** causal claims must attach evidence objects (measurements, simulation traces, proofs, or counterexample artifacts).
+- **Backends (DS52):** propagation may route to different backends (symbolic proof, CSP, numeric solvers) depending on fragment/capabilities.
+- **Packs (DS51):** domain mechanisms (e.g., pharmacology, physics) live in explicit packs; Core must not hardcode mechanism vocab.
+
+---
+
 *End of DS35*

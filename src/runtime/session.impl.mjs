@@ -40,6 +40,11 @@ import { checkDSL as checkDSLImpl } from './session-check-dsl.mjs';
 import { dslToNl as dslToNlImpl } from './dsl-to-nl.mjs';
 import { beginTransaction, rollbackTransaction } from './session-transaction.mjs';
 import { materializePolicyView as materializePolicyViewImpl } from './policy-view.mjs';
+import { recordNlTranslationProvenance as recordNlTranslationProvenanceImpl } from './provenance-log.mjs';
+import { registerArtifact as registerArtifactImpl, registerEvidence as registerEvidenceImpl, initUrcStores } from './urc-store.mjs';
+import { compileToSMTLIB2 } from '../compilation/smtlib2.mjs';
+import { classifyDslFragment } from './fragment-classifier.mjs';
+import { buildPlan } from './orchestrator.mjs';
 
 function dbg(category, ...args) {
   debug_trace(`[Session:${category}]`, ...args);
@@ -49,6 +54,13 @@ export function constructSession(session, options = {}) {
   session.hdcStrategy = options.hdcStrategy || process.env.SYS2_HDC_STRATEGY || 'exact';
   // Strategy-specific options (kept session-local to preserve IoC/session isolation).
   session.exactUnbindMode = (options.exactUnbindMode || process.env.SYS2_EXACT_UNBIND_MODE || 'A');
+  // DS25 ceilings (URC alignment): keep very generous defaults so this only triggers when explicitly enabled.
+  // These are runtime configuration values; they are not persisted as KB facts by default.
+  session.exactCeilings = {
+    monomBitLimit: 1000,
+    polyTermLimit: 200000,
+    ...(options.exactCeilings && typeof options.exactCeilings === 'object' ? options.exactCeilings : {})
+  };
   session.reasoningPriority = options.reasoningPriority || getReasoningPriority();
   session.reasoningProfile = computeReasoningProfile({
     reasoningPriority: session.reasoningPriority,
@@ -121,6 +133,10 @@ export function constructSession(session, options = {}) {
     negates: [],
     warnings: []
   };
+
+  session.provenanceLog = [];
+  session._provenanceSeq = 0;
+  initUrcStores(session);
 
   // Reasoning statistics
   session.reasoningStats = {
@@ -353,6 +369,64 @@ export function sessionProve(session, dsl, options = {}) {
   return proveImpl(session, ast, options);
 }
 
+export function sessionQueryURC(session, dsl, options = {}) {
+  const result = sessionQuery(session, dsl, options);
+  try {
+    const count = Array.isArray(result?.results) ? result.results.length : (result?.count ?? 0);
+    const status = count > 0 ? 'Sat' : 'Unknown';
+    const evidence = sessionRegisterEvidence(session, {
+      kind: 'Model',
+      method: 'ATP',
+      status
+    }, { materializeFacts: options.materializeFacts ?? false });
+    return { ...result, urcEvidence: evidence };
+  } catch {
+    return result;
+  }
+}
+
+export function sessionProveURC(session, dsl, options = {}) {
+  const result = sessionProve(session, dsl, options);
+  try {
+    const valid = !!result?.valid;
+    const status = valid ? 'Verified' : 'Falsified';
+    const evidence = sessionRegisterEvidence(session, {
+      kind: 'Derivation',
+      method: 'ATP',
+      status
+    }, { materializeFacts: options.materializeFacts ?? false });
+    return { ...result, urcEvidence: evidence };
+  } catch {
+    return result;
+  }
+}
+
+export function sessionSolveURC(session, dsl, options = {}) {
+  const materializeFacts = options.materializeFacts ?? false;
+  const res = sessionLearn(session, dsl);
+  const solve = res?.solveResult || null;
+  if (!solve) return { ...res, urcEvidence: null, urcArtifact: null };
+
+  const artifact = sessionRegisterArtifact(session, {
+    format: 'JSON',
+    text: JSON.stringify(solve, null, 2)
+  }, { materializeFacts });
+
+  const problemType = String(solve.problemType || '').toLowerCase();
+  const method = problemType === 'planning' ? 'MC' : 'CP';
+  const kind = solve.success ? 'Model' : 'UnsatCore';
+  const status = solve.success ? 'Sat' : 'Unsat';
+
+  const evidence = sessionRegisterEvidence(session, {
+    kind,
+    method,
+    status,
+    artifactId: artifact.id
+  }, { materializeFacts });
+
+  return { ...res, urcEvidence: evidence, urcArtifact: artifact };
+}
+
 export function sessionAbduce(session, dsl, options = {}) {
   dbg('ABDUCE', 'Starting:', dsl?.substring(0, 60));
   const ast = checkDSLImpl(session, dsl, { mode: 'abduce', allowHoles: false });
@@ -537,4 +611,150 @@ export function sessionRebuildIndices(session, options = {}) {
   session._kbBundleCache = null;
   session._kbBundleCacheVersion = -1;
   return { success: true };
+}
+
+export function sessionRecordNlTranslationProvenance(session, payload, options = {}) {
+  return recordNlTranslationProvenanceImpl(session, payload, options);
+}
+
+export function sessionRegisterArtifact(session, payload, options = {}) {
+  return registerArtifactImpl(session, payload, options);
+}
+
+export function sessionRegisterEvidence(session, payload, options = {}) {
+  return registerEvidenceImpl(session, payload, options);
+}
+
+export function sessionCompileToSMTLIB2(session, { dsl } = {}, options = {}) {
+  const compiled = compileToSMTLIB2({ dsl });
+  if (!compiled?.success) return compiled;
+
+  const artifact = sessionRegisterArtifact(session, {
+    format: 'SMTLIB2',
+    text: compiled.text,
+    hash: compiled.hash
+  }, { materializeFacts: options.materializeFacts ?? false });
+
+  return { success: true, artifact };
+}
+
+export function sessionClassifyFragment(session, { dsl } = {}) {
+  try {
+    const res = classifyDslFragment(String(dsl || ''));
+    return { success: true, ...res, operators: Array.from(res.operators || []).sort((a, b) => a.localeCompare(b)) };
+  } catch (e) {
+    return { success: false, error: e?.message || String(e) };
+  }
+}
+
+export function sessionOrchestrate(session, { goalKind, dsl } = {}, options = {}) {
+  const kind = String(goalKind || '').trim() || 'Find';
+  const fragmentRes = sessionClassifyFragment(session, { dsl });
+  if (!fragmentRes?.success) return fragmentRes;
+
+  const materializeFacts = options.materializeFacts ?? false;
+
+  // Treat the input DSL as an artifact for auditability.
+  const inputArtifact = sessionRegisterArtifact(session, {
+    format: 'SYS2DSL',
+    text: String(dsl || '')
+  }, { materializeFacts });
+
+  const plan = buildPlan({
+    goalKind: kind,
+    fragment: fragmentRes.fragment,
+    steps: []
+  });
+
+  const goalId = `Goal_${Date.now()}`;
+
+  // v0 routing policy:
+  // - SMT fragments: compile to SMT-LIB2 artifact (no solver execution)
+  // - CP / Planning fragments: execute solve blocks via learn adapter (internal backend)
+  // - otherwise: return a plan with no steps (caller can choose internal backends)
+  if (fragmentRes.fragment === 'Frag_SMT_LRA' || fragmentRes.fragment === 'Frag_SMT_LIA') {
+    const compiled = sessionCompileToSMTLIB2(session, { dsl }, { materializeFacts: options.materializeFacts ?? false });
+    if (!compiled?.success) return compiled;
+    plan.steps.push({
+      id: `Step_${Date.now()}`,
+      backend: 'Compile_SMTLIB2',
+      status: 'Done',
+      inputArtifactId: inputArtifact.id,
+      artifactId: compiled.artifact.id,
+      goalId
+    });
+    if (materializeFacts) {
+      const stepId = plan.steps[0].id;
+      const lines = [
+        `goalKind ${goalId} ${kind}`,
+        `goalTarget ${goalId} ${inputArtifact.id}`,
+        `planHasStep ${plan.id} ${stepId}`,
+        `stepGoal ${stepId} ${goalId}`,
+        `stepBackend ${stepId} Compile_SMTLIB2`,
+        `stepInput ${stepId} ${inputArtifact.id}`,
+        `stepOutput ${stepId} ${compiled.artifact.id}`,
+        `compiledTo ${stepId} ${compiled.artifact.id}`,
+        `stepStatus ${stepId} Done`,
+        `FragmentTag ${goalId} ${fragmentRes.fragment}`
+      ].join('\n');
+      try { session.learn(lines); } catch { /* ignore */ }
+    }
+    return { success: true, plan, artifact: compiled.artifact };
+  }
+
+  if (fragmentRes.fragment === 'Frag_CP' || fragmentRes.fragment === 'Frag_TS') {
+    const solved = sessionSolveURC(session, dsl, { materializeFacts });
+    const backend = fragmentRes.fragment === 'Frag_TS' ? 'Planning_Internal' : 'CP_Internal';
+    const status = solved?.success ? 'Done' : 'Failed';
+    const step = {
+      id: `Step_${Date.now()}`,
+      backend,
+      status,
+      inputArtifactId: inputArtifact.id,
+      goalId,
+      outputArtifactId: solved?.urcArtifact?.id || null,
+      evidenceId: solved?.urcEvidence?.id || null
+    };
+    plan.steps.push(step);
+
+    if (materializeFacts) {
+      const lines = [
+        `goalKind ${goalId} ${kind}`,
+        `goalTarget ${goalId} ${inputArtifact.id}`,
+        `planHasStep ${plan.id} ${step.id}`,
+        `stepGoal ${step.id} ${goalId}`,
+        `stepBackend ${step.id} ${backend}`,
+        `stepInput ${step.id} ${inputArtifact.id}`,
+        ...(step.outputArtifactId ? [`stepOutput ${step.id} ${step.outputArtifactId}`] : []),
+        `stepStatus ${step.id} ${status}`,
+        `FragmentTag ${goalId} ${fragmentRes.fragment}`
+      ].join('\n');
+      try { session.learn(lines); } catch { /* ignore */ }
+    }
+
+    return { success: true, plan, solve: solved };
+  }
+
+  plan.steps.push({
+    id: `Step_${Date.now()}`,
+    backend: 'Internal',
+    status: 'Planned',
+    inputArtifactId: inputArtifact.id,
+    goalId
+  });
+  if (materializeFacts) {
+    const stepId = plan.steps[0].id;
+    const lines = [
+      `goalKind ${goalId} ${kind}`,
+      `goalTarget ${goalId} ${inputArtifact.id}`,
+      `planHasStep ${plan.id} ${stepId}`,
+      `stepGoal ${stepId} ${goalId}`,
+      `stepBackend ${stepId} Internal`,
+      `stepInput ${stepId} ${inputArtifact.id}`,
+      `stepStatus ${stepId} Planned`,
+      `FragmentTag ${goalId} ${fragmentRes.fragment}`
+    ].join('\n');
+    try { session.learn(lines); } catch { /* ignore */ }
+  }
+  return { success: true, plan };
 }

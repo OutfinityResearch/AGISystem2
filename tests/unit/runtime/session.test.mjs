@@ -50,7 +50,8 @@ describe('Session', () => {
       // Use @var:name syntax for persistent fact (scope + KB)
       session.learn('@f:f loves John Mary');
 
-      assert.ok(session.kb !== null);
+      // KB bundle is a derived (rebuildable) index; prefer the cached bundle accessor.
+      assert.ok(session.getKBBundle() !== null);
       assert.equal(session.kbFacts.length, 1);
     });
   });

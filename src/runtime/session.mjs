@@ -49,6 +49,15 @@ import {
 	  sessionFindAll,
 	  sessionMaterializePolicyView,
 	  sessionRebuildIndices,
+	  sessionRecordNlTranslationProvenance,
+	  sessionRegisterArtifact,
+	  sessionRegisterEvidence,
+	  sessionCompileToSMTLIB2,
+	  sessionQueryURC,
+	  sessionProveURC,
+	  sessionSolveURC,
+	  sessionClassifyFragment,
+	  sessionOrchestrate,
 	  sessionClose
 	} from './session.impl.mjs';
 
@@ -216,6 +225,42 @@ export class Session {
 
   rebuildIndices(options = {}) {
     return sessionRebuildIndices(this, options);
+  }
+
+  recordNlTranslationProvenance(payload, options = {}) {
+    return sessionRecordNlTranslationProvenance(this, payload, options);
+  }
+
+  registerArtifact(payload, options = {}) {
+    return sessionRegisterArtifact(this, payload, options);
+  }
+
+  registerEvidence(payload, options = {}) {
+    return sessionRegisterEvidence(this, payload, options);
+  }
+
+  compileToSMTLIB2(payload, options = {}) {
+    return sessionCompileToSMTLIB2(this, payload, options);
+  }
+
+  queryURC(dsl, options = {}) {
+    return sessionQueryURC(this, dsl, options);
+  }
+
+  proveURC(dsl, options = {}) {
+    return sessionProveURC(this, dsl, options);
+  }
+
+  solveURC(dsl, options = {}) {
+    return sessionSolveURC(this, dsl, options);
+  }
+
+  classifyFragment(payload) {
+    return sessionClassifyFragment(this, payload);
+  }
+
+  orchestrate(payload, options = {}) {
+    return sessionOrchestrate(this, payload, options);
   }
 
   close() {

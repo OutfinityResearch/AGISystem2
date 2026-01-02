@@ -156,4 +156,69 @@ describe('EXACT strategy (DS25)', () => {
 
     session.close();
   });
+
+  test('BOTTOM_IMPOSSIBLE is absorbing for monomials (bind)', () => {
+    const session = new Session({ hdcStrategy: 'exact', geometry: 256, reasoningPriority: 'symbolicPriority' });
+
+    const bottom = session.vocabulary.getOrCreate('BOTTOM_IMPOSSIBLE');
+    const a = session.vocabulary.getOrCreate('A');
+    const r = bind(bottom, a);
+
+    assert.equal(session.hdc.equals(r, bottom), true);
+    session.close();
+  });
+
+  test('TOP_INEFFABLE is absorbing for monomials (bind)', () => {
+    const session = new Session({ hdcStrategy: 'exact', geometry: 256, reasoningPriority: 'symbolicPriority' });
+
+    const top = session.vocabulary.getOrCreate('TOP_INEFFABLE');
+    const a = session.vocabulary.getOrCreate('A');
+    const r = bind(top, a);
+
+    assert.equal(session.hdc.equals(r, top), true);
+    session.close();
+  });
+
+  test('default EXACT monom ceiling is very generous (does not trigger for small binds)', () => {
+    const session = new Session({ hdcStrategy: 'exact', geometry: 256, reasoningPriority: 'symbolicPriority' });
+
+    const top = session.vocabulary.getOrCreate('TOP_INEFFABLE');
+    let acc = session.vocabulary.getOrCreate('A');
+    for (let i = 0; i < 20; i++) {
+      acc = bind(acc, session.vocabulary.getOrCreate(`X${i}`));
+    }
+    assert.equal(session.hdc.equals(acc, top), false);
+
+    session.close();
+  });
+
+  test('monomial bit ceiling can be configured from DSL (Set)', () => {
+    const session = new Session({ hdcStrategy: 'exact', geometry: 256, reasoningPriority: 'symbolicPriority' });
+
+    session.learn('@_ Set exactIneffableMonomBitLimit 3');
+
+    const top = session.vocabulary.getOrCreate('TOP_INEFFABLE');
+    const a = session.vocabulary.getOrCreate('A');
+    const b = session.vocabulary.getOrCreate('B');
+    const c = session.vocabulary.getOrCreate('C');
+    const d = session.vocabulary.getOrCreate('D');
+    const r = bind(bind(bind(a, b), c), d); // 4 bits in the monom => exceeds limit 3
+
+    assert.equal(session.hdc.equals(r, top), true);
+    session.close();
+  });
+
+  test('polynomial term ceiling can be configured from DSL (Set)', () => {
+    const session = new Session({ hdcStrategy: 'exact', geometry: 256, reasoningPriority: 'symbolicPriority' });
+
+    session.learn('@_ Set exactIneffablePolyTermLimit 1');
+
+    const top = session.vocabulary.getOrCreate('TOP_INEFFABLE');
+    const a = session.vocabulary.getOrCreate('A');
+    const b = session.vocabulary.getOrCreate('B');
+    const r = session.hdc.bundle([a, b]); // 2 terms => exceeds limit 1
+
+    assert.equal(session.hdc.equals(r, top), true);
+    session.close();
+  });
 });

@@ -65,4 +65,17 @@ UTE needs to support:
 
 ---
 
+## 5. URC linkage (DS49/DS50/DS51/DS52)
+
+Numeric modeling becomes implementable (and auditable) only when anchored in URC contracts:
+
+- **Typed Content IR (DS49):** numeric constraints and equations should be represented in a normalized, typed Content form.
+- **Deterministic compilation artifacts (DS50):** when a fragment is compilable, emit a stable SMT-LIB2 artifact and attach it as Evidence/Artifact.
+- **Units (DS49 + DS37):** unit checks happen upstream of compilation; failures should become explicit artifacts (with provenance) rather than silent coercions.
+- **Goals (DS49):** estimation/fit is a Goal with budgets, tolerances, and required evidence outputs (residuals, witness/model, or unsat reasons).
+- **Backends (DS52):** route to SMT/ILP/CP/ODE solvers via capability registry; keep a uniform evidence interface regardless of backend.
+- **Packs (DS51):** domain-specific numeric vocab (constants, unit systems, model libraries) must live in explicit packs.
+
+---
+
 *End of DS37*

@@ -342,10 +342,45 @@ export class Executor {
       return null;
     };
 
-    const enabled = parseBool(raw);
     const keyNorm = String(key ?? '').trim().toLowerCase();
 
-    if (enabled === null || !keyNorm) {
+    if (!keyNorm) {
+      this.session.warnings.push(`Warning: Set expects a key`);
+      return { type: 'config', factsLoaded: 0, success: false, key: key ?? null, value: raw ?? null };
+    }
+
+    // DS25: EXACT ceilings are numeric config, adjustable from DSL.
+    // Syntax examples:
+    //   @_ Set exactIneffableMonomBitLimit 1000
+    //   @_ Set exactIneffablePolyTermLimit 200000
+    // These are runtime-side configuration values and do not add KB facts.
+    const isExactCeilingKey = (
+      keyNorm === 'exactineffablemonombitlimit' ||
+      keyNorm === 'exactineffablemonomnonzerolimit' ||
+      keyNorm === 'exactineffablepolytermlimit' ||
+      keyNorm === 'exactineffabletermlimit'
+    );
+
+    if (isExactCeilingKey) {
+      const n = Number(String(raw ?? '').trim());
+      if (!Number.isFinite(n) || n < 0) {
+        this.session.warnings.push(`Warning: Set ${key} expects a non-negative number, got "${raw}"`);
+        return { type: 'config', factsLoaded: 0, success: false, key: key ?? null, value: raw ?? null };
+      }
+      const v = Math.floor(n);
+      this.session.exactCeilings ||= { monomBitLimit: 1000, polyTermLimit: 200000 };
+      if (keyNorm === 'exactineffablemonombitlimit' || keyNorm === 'exactineffablemonomnonzerolimit') {
+        this.session.exactCeilings.monomBitLimit = v;
+        return { type: 'config', factsLoaded: 0, success: true, key: 'exactCeilings.monomBitLimit', value: v };
+      }
+      if (keyNorm === 'exactineffablepolytermlimit' || keyNorm === 'exactineffabletermlimit') {
+        this.session.exactCeilings.polyTermLimit = v;
+        return { type: 'config', factsLoaded: 0, success: true, key: 'exactCeilings.polyTermLimit', value: v };
+      }
+    }
+
+    const enabled = parseBool(raw);
+    if (enabled === null) {
       this.session.warnings.push(`Warning: Set expects boolean value, got "${raw}"`);
       return { type: 'config', factsLoaded: 0, success: false, key: key ?? null, value: raw ?? null };
     }
