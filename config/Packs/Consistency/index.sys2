@@ -1,4 +1,3 @@
 # Consistency Pack - Index
 
-@_ Load "./14-constraints.sys2"
-
+@_ Load "./14-constraints.sys2"  # Load baseline consistency constraints and relation inverses.

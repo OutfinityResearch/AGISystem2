@@ -204,7 +204,8 @@ function collectStrictLoadOperatorStubs({ dsl, domainIndexRel = null, declaredOp
     reasoningPriority: 'symbolicPriority'
   });
   if (session?.executor) session.executor.basePath = PROJECT_ROOT;
-  session.loadCore({ includeIndex: true });
+  session.loadCore({ includeIndex: true, corePath: path.join(PROJECT_ROOT, 'config', 'Packs', 'Kernel') });
+  session.loadPack('tests_and_evals', { includeIndex: true, validate: false, packPath: path.join(PROJECT_ROOT, 'config', 'Packs', 'tests_and_evals') });
 
   if (domainIndexRel) {
     const full = path.join(PROJECT_ROOT, domainIndexRel);

@@ -34,6 +34,26 @@ describe('Parser', () => {
       const ast = parse('@a loves John Mary\n@b parent John Alice');
       assert.equal(ast.statements.length, 2);
     });
+
+    test('should reject multiple @ tokens on one line', () => {
+      assert.throws(
+        () => parse('@emotion influences @cognition'),
+        (e) => e instanceof ParseError && String(e.message).includes("Multiple '@' tokens"),
+        'Expected ParseError for multiple @ on one line'
+      );
+    });
+
+    test('should parse and attach inline comments', () => {
+      const ast = parse('@f loves John Mary  # explain why this matters');
+      const stmt = ast.statements[0];
+      assert.equal(stmt.comment, 'explain why this matters');
+      assert.equal(stmt.toString(), '@f loves John Mary');
+    });
+
+    test('should ignore comment-only lines', () => {
+      const ast = parse('# comment only\n@f loves John Mary  # explain why this matters');
+      assert.equal(ast.statements.length, 1);
+    });
   });
 
   describe('holes', () => {
@@ -150,6 +170,7 @@ describe('Parser', () => {
       assert.equal(stmt.operator.name, 'combo');
       assert.equal(stmt.args[0].type, 'Reference');
       assert.equal(stmt.args[0].name, 'a');
+      assert.equal(stmt.args[0].toString(), '$a');
       assert.equal(stmt.args[1].type, 'Identifier');
     });
 

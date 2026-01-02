@@ -1,5 +1,6 @@
 import { bind, bundle, similarity, topKSimilar } from '../core/operations.mjs';
 import { withPosition } from '../core/position.mjs';
+import { createFromName } from '../hdc/facade.mjs';
 import { ExecutionError } from './execution-error.mjs';
 import { BOOTSTRAP_OPERATORS } from './operator-declarations.mjs';
 
@@ -28,24 +29,65 @@ function newVectorToken(session, suffix) {
 function executeNewVector(executor, stmt) {
   const { session } = executor;
   const args = stmt.args || [];
+  const inGraph = (executor._graphDepth || 0) > 0;
+  const stmtSource = stmt?.source && typeof stmt.source === 'object' ? stmt.source : null;
+  const callsite = Array.isArray(executor?._graphCallsiteStack) && executor._graphCallsiteStack.length > 0
+    ? executor._graphCallsiteStack[executor._graphCallsiteStack.length - 1]
+    : null;
+  const effectiveSource = (inGraph && callsite && (callsite.file || callsite.line) && (
+    (stmtSource?.file && callsite.file && stmtSource.file !== callsite.file) ||
+    (Number.isFinite(stmtSource?.line) && Number.isFinite(callsite?.line) && stmtSource.line !== callsite.line)
+  )) ? callsite : stmtSource;
+  const sourceInfo = effectiveSource
+    ? { file: effectiveSource.file ?? null, line: effectiveSource.line ?? null, column: effectiveSource.column ?? null, comment: null }
+    : null;
+  const macroOrigin = (stmtSource?.file && Number.isFinite(stmtSource?.line) && effectiveSource?.file !== stmtSource.file)
+    ? `${stmtSource.file}:${stmtSource.line}${stmtSource.column ? `:${stmtSource.column}` : ''}`
+    : null;
+
   if (args.length === 0) {
     // If the statement binds to a stable name, prefer deterministic naming over a session counter.
     const stableName = stmt?.persistName || null;
     if (stableName) {
       const token = `__NV_User__${String(stableName)}__`;
-      return session.vocabulary.getOrCreate(token);
+      return session.vocabulary.getOrCreate(token, {
+        source: sourceInfo,
+        comment: 'Auto-generated vector token created by ___NewVector (stable persistent name).'
+      });
     }
 
     // Strict mode forbids nondeterministic top-level NewVector usage.
     // Graph-local "fresh" NewVector is allowed (used by typed constructors and other macros).
-    const inGraph = (executor._graphDepth || 0) > 0;
     if (session?.strictMode && !inGraph && !stmt?.destination) {
       throw new ExecutionError('___NewVector without a persistent name must be scope-bound or graph-local (strict mode)', stmt);
     }
 
     // Deterministic per session: stable ordering for a given program execution.
+    // For graph-local allocations (typed constructors, macros), avoid polluting the user-visible vocabulary
+    // with internal `__NV_session_*` tokens.
     const token = newVectorToken(session, 'session');
-    return session.vocabulary.getOrCreate(token);
+    if (inGraph) {
+      const strategyId = session?.vocabulary?.strategyId || undefined;
+      return session?.vocabulary?.hdc?.createFromName
+        ? session.vocabulary.hdc.createFromName(token, session.geometry, 'default')
+        : createFromName(token, session.geometry, { strategyId });
+    }
+
+    const graphName = Array.isArray(executor?._graphStack) && executor._graphStack.length > 0
+      ? String(executor._graphStack[executor._graphStack.length - 1])
+      : null;
+    const origin = (sourceInfo?.file && sourceInfo?.line)
+      ? `${sourceInfo.file}:${sourceInfo.line}${sourceInfo.column ? `:${sourceInfo.column}` : ''}`
+      : (sourceInfo?.file ? String(sourceInfo.file) : null);
+    return session.vocabulary.getOrCreate(token, {
+      source: sourceInfo,
+      comment: [
+        graphName ? `Auto-generated vector token created by ___NewVector (top-level allocation in "${graphName}").` : null,
+        !graphName ? 'Auto-generated vector token created by ___NewVector (top-level allocation).' : null,
+        origin ? `Origin: ${origin}` : null,
+        macroOrigin ? `Macro body: ${macroOrigin}` : null
+      ].filter(Boolean).join(' ')
+    });
   }
 
   const name = executor.resolveNameFromNode(args[0]);
@@ -54,7 +96,10 @@ function executeNewVector(executor, stmt) {
     throw new ExecutionError('___NewVector requires a name string', stmt);
   }
   const token = `__NV_${String(theory)}__${String(name)}__`;
-  return session.vocabulary.getOrCreate(token);
+  return session.vocabulary.getOrCreate(token, {
+    source: sourceInfo,
+    comment: 'Auto-generated vector token created by ___NewVector (explicit name + theory namespace).'
+  });
 }
 
 function executeBind(executor, stmt) {
@@ -82,13 +127,21 @@ function executeBind(executor, stmt) {
 function executeBundle(executor, stmt) {
   const args = stmt.args || [];
   if (args.length === 0) {
-    return executor.session.vocabulary.getOrCreate('__EMPTY_BUNDLE__');
+    return executor.session.vocabulary.getOrCreate('__EMPTY_BUNDLE__', {
+      source: stmt?.source || null,
+      comment: 'Empty bundle constant returned by ___Bundle with no arguments.'
+    });
   }
   if (args.length === 1) {
     // If called with a list expression, bundle its elements; else identity.
     const items = listItems(args[0]);
     if (items) {
-      if (items.length === 0) return executor.session.vocabulary.getOrCreate('__EMPTY_BUNDLE__');
+      if (items.length === 0) {
+        return executor.session.vocabulary.getOrCreate('__EMPTY_BUNDLE__', {
+          source: stmt?.source || null,
+          comment: 'Empty bundle constant returned by ___Bundle(list) with no items.'
+        });
+      }
       return bundle(items.map(n => argVector(executor, n)));
     }
     return argVector(executor, args[0]);

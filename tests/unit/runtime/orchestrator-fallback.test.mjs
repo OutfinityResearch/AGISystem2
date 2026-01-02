@@ -7,6 +7,8 @@ describe('URC orchestrator fallback chain', () => {
     const session = new Session({ geometry: 2048 });
     const loaded = session.loadPack('URC', { includeIndex: true, validate: false });
     assert.equal(loaded.success, true, `URC pack load failed: ${JSON.stringify(loaded.errors || [])}`);
+    const extras = session.loadPack('tests_and_evals', { includeIndex: true, validate: false });
+    assert.equal(extras.success, true, `tests_and_evals pack load failed: ${JSON.stringify(extras.errors || [])}`);
 
     session.learn([
       'PreferBackend Find Frag_SMT_LRA WeirdBackend',
@@ -29,6 +31,8 @@ describe('URC orchestrator fallback chain', () => {
     const session = new Session({ geometry: 2048 });
     const loaded = session.loadPack('URC', { includeIndex: true, validate: false });
     assert.equal(loaded.success, true, `URC pack load failed: ${JSON.stringify(loaded.errors || [])}`);
+    const extras = session.loadPack('tests_and_evals', { includeIndex: true, validate: false });
+    assert.equal(extras.success, true, `tests_and_evals pack load failed: ${JSON.stringify(extras.errors || [])}`);
 
     session.learn([
       'PreferBackend Find Frag_SMT_LRA WeirdBackend',

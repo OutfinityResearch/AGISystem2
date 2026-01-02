@@ -12,6 +12,39 @@ function dbg(category, ...args) {
   debug_trace(`[QueryTrans:${category}]`, ...args);
 }
 
+function getRelationEdgeCache(session, relation) {
+  const version = session?._kbBundleVersion ?? 0;
+  session._relationEdgeCache ||= new Map();
+  const cached = session._relationEdgeCache.get(relation);
+  if (cached?.version === version) return cached;
+
+  const scanFacts = session?.factIndex?.getByOperator
+    ? session.factIndex.getByOperator(relation)
+    : (session?.kbFacts || []);
+  if (session?.reasoningStats) session.reasoningStats.kbScans += scanFacts.length;
+
+  const forward = new Map(); // src -> Set(dst)
+  const reverse = new Map(); // dst -> Set(src)
+
+  for (const fact of scanFacts) {
+    const meta = fact?.metadata;
+    if (!meta || meta.operator !== relation) continue;
+    const src = meta.args?.[0];
+    const dst = meta.args?.[1];
+    if (!src || !dst) continue;
+
+    if (!forward.has(src)) forward.set(src, new Set());
+    forward.get(src).add(dst);
+
+    if (!reverse.has(dst)) reverse.set(dst, new Set());
+    reverse.get(dst).add(src);
+  }
+
+  const out = { version, forward, reverse };
+  session._relationEdgeCache.set(relation, out);
+  return out;
+}
+
 /**
  * Search via transitive reasoning
  * Handles 1, 2, or more holes
@@ -112,15 +145,8 @@ export function findAllTransitivePairs(session, relation) {
   const pairs = [];
   const visited = new Set();
 
-  // Start from all subjects
-  const allSubjects = new Set();
-  for (const fact of session.kbFacts) {
-    session.reasoningStats.kbScans++;
-    const meta = fact.metadata;
-    if (meta?.operator === relation && meta.args) {
-      allSubjects.add(meta.args[0]);
-    }
-  }
+  const { forward } = getRelationEdgeCache(session, relation);
+  const allSubjects = new Set(forward.keys());
 
   // For each subject, find all transitive targets
   for (const subject of allSubjects) {
@@ -153,6 +179,7 @@ export function findAllTransitiveTargets(session, relation, subject) {
   const targets = [];
   const visited = new Set();
   const queue = [{ value: subject, depth: 0, steps: [] }];
+  const { forward } = getRelationEdgeCache(session, relation);
 
   while (queue.length > 0) {
     const { value: current, depth, steps } = queue.shift();
@@ -160,19 +187,13 @@ export function findAllTransitiveTargets(session, relation, subject) {
     if (visited.has(current)) continue;
     visited.add(current);
 
-    // Find direct relations
-    for (const fact of session.kbFacts) {
-      session.reasoningStats.kbScans++;
-      const meta = fact.metadata;
-      if (!meta || meta.operator !== relation) continue;
-      if (!meta.args || meta.args[0] !== current) continue;
-
-      const target = meta.args[1];
-      if (!visited.has(target)) {
-        const newSteps = [...steps, `${relation} ${current} ${target}`];
-        targets.push({ value: target, depth: depth + 1, steps: newSteps });
-        queue.push({ value: target, depth: depth + 1, steps: newSteps });
-      }
+    const nexts = forward.get(current);
+    if (!nexts) continue;
+    for (const target of nexts) {
+      if (visited.has(target)) continue;
+      const newSteps = [...steps, `${relation} ${current} ${target}`];
+      targets.push({ value: target, depth: depth + 1, steps: newSteps });
+      queue.push({ value: target, depth: depth + 1, steps: newSteps });
     }
   }
 
@@ -189,22 +210,7 @@ export function findAllTransitiveTargets(session, relation, subject) {
 export function findAllTransitiveSources(session, relation, target) {
   const sources = [];
   const visited = new Set();
-
-  // Build reverse graph first
-  const reverseEdges = new Map(); // target -> [sources]
-  for (const fact of session.kbFacts) {
-    session.reasoningStats.kbScans++;
-    const meta = fact.metadata;
-    if (!meta || meta.operator !== relation) continue;
-    if (!meta.args) continue;
-
-    const src = meta.args[0];
-    const tgt = meta.args[1];
-    if (!reverseEdges.has(tgt)) {
-      reverseEdges.set(tgt, []);
-    }
-    reverseEdges.get(tgt).push(src);
-  }
+  const { reverse } = getRelationEdgeCache(session, relation);
 
   // BFS from target backwards
   const queue = [{ value: target, depth: 0, steps: [] }];
@@ -212,7 +218,8 @@ export function findAllTransitiveSources(session, relation, target) {
   while (queue.length > 0) {
     const { value: current, depth, steps } = queue.shift();
 
-    const srcs = reverseEdges.get(current) || [];
+    const srcs = reverse.get(current);
+    if (!srcs) continue;
     for (const src of srcs) {
       if (!visited.has(src)) {
         visited.add(src);
@@ -236,19 +243,17 @@ export function findAllTransitiveSources(session, relation, target) {
  * @returns {boolean} True if reachable
  */
 export function reachesTransitively(session, relation, entity, target, visited = new Set()) {
-  if (visited.has(entity)) return false;
-  visited.add(entity);
-
-  for (const fact of session.kbFacts) {
-    session.reasoningStats.kbScans++;
-    const meta = fact.metadata;
-    if (meta?.operator !== relation) continue;
-    if (meta.args?.[0] !== entity) continue;
-
-    const nextValue = meta.args[1];
-    if (nextValue === target) return true;
-    if (reachesTransitively(session, relation, nextValue, target, visited)) {
-      return true;
+  const { forward } = getRelationEdgeCache(session, relation);
+  const queue = [entity];
+  while (queue.length > 0) {
+    const current = queue.shift();
+    if (current === target) return true;
+    if (visited.has(current)) continue;
+    visited.add(current);
+    const nexts = forward.get(current);
+    if (!nexts) continue;
+    for (const next of nexts) {
+      if (!visited.has(next)) queue.push(next);
     }
   }
   return false;

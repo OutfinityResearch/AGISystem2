@@ -25,6 +25,10 @@ function isInheritableOperator(session, operator) {
 
 function hasNegationException(session, operator, subject, value) {
   if (!operator || !subject || !value) return false;
+  if (session?.factIndex?.hasNary) {
+    // Not facts are stored as: Not <innerOperator> <arg0> <arg1>
+    if (session.factIndex.hasNary('Not', [operator, subject, value])) return true;
+  }
   for (const fact of session?.kbFacts || []) {
     const meta = fact?.metadata;
     if (!meta || meta.operator !== 'Not') continue;
@@ -38,7 +42,10 @@ function hasNegationException(session, operator, subject, value) {
 
 function buildBinaryEdgesByFrom(session, operator) {
   const byFrom = new Map(); // from -> Array<{to, factId}>
-  for (const fact of session?.kbFacts || []) {
+  const facts = session?.factIndex?.getByOperator
+    ? session.factIndex.getByOperator(operator)
+    : (session?.kbFacts || []);
+  for (const fact of facts) {
     const meta = fact?.metadata;
     if (!meta || meta.operator !== operator) continue;
     const [from, to] = meta.args || [];
@@ -104,7 +111,10 @@ function findInheritedPropertyEvidence(session, operator, entity, value, { maxDe
 
   // isA edges: child -> Array<{parent, factId}>
   const parentsByChild = new Map();
-  for (const fact of session?.kbFacts || []) {
+  const isAFacts = session?.factIndex?.getByOperator
+    ? session.factIndex.getByOperator('isA')
+    : (session?.kbFacts || []);
+  for (const fact of isAFacts) {
     const meta = fact?.metadata;
     if (!meta || meta.operator !== 'isA') continue;
     const [child, parent] = meta.args || [];

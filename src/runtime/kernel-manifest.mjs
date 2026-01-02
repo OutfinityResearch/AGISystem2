@@ -20,7 +20,7 @@ export function parseCoreIndexLoads(indexContent) {
     const trimmed = line.trim();
     if (!trimmed.startsWith('@_')) continue;
     // Syntax used in Core manifests: @_ Load "./00-types.sys2"
-    const m = trimmed.match(/^@_\s+Load\s+(['"])(.+?)\1\s*$/);
+    const m = trimmed.match(/^@_\s+Load\s+(['"])(.+?)\1\s*(?:#.*|\/\/.*)?$/);
     if (!m) continue;
     let p = m[2] || '';
     p = p.replace(/^\.\//, '').trim();

@@ -2,6 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { validateCore } from './core-validator.mjs';
 import { parseCoreIndexLoads } from './kernel-manifest.mjs';
+import { parseWithOptions } from '../parser/parser.mjs';
 
 /**
  * Load the Kernel theory pack from `config/Packs/Kernel` into this session.
@@ -32,8 +33,10 @@ export function loadCore(session, options = {}) {
 
   const errors = [];
   for (const file of files) {
-    const content = readFileSync(join(corePath, file), 'utf8');
-    const result = session.learn(content);
+    const fullPath = join(corePath, file);
+    const content = readFileSync(fullPath, 'utf8');
+    const ast = parseWithOptions(content, { sourceName: fullPath });
+    const result = session.learn(ast);
     if (!result.success) {
       errors.push({ file, errors: result.errors });
     }

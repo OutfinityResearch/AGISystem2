@@ -53,7 +53,11 @@ export function findAll(session, pattern, options = {}) {
   const results = [];
 
   // Scan KB for all matches
-  for (const fact of session.kbFacts) {
+  const scanFacts = session?.factIndex?.getByOperator && operatorName
+    ? session.factIndex.getByOperator(operatorName)
+    : session.kbFacts;
+
+  for (const fact of scanFacts) {
     session.reasoningStats.kbScans++;
     if (results.length >= maxResults) break;
 
@@ -140,7 +144,11 @@ function findTransitiveResults(session, operator, holes, knowns, maxResults) {
   // Build adjacency from KB
   const edges = new Map(); // from -> [to1, to2, ...]
 
-  for (const fact of session.kbFacts) {
+  const scanFacts = session?.factIndex?.getByOperator && operator
+    ? session.factIndex.getByOperator(operator)
+    : session.kbFacts;
+
+  for (const fact of scanFacts) {
     session.reasoningStats.kbScans++;
     const meta = fact.metadata;
     if (!meta || meta.operator !== operator) continue;

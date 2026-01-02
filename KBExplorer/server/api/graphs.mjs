@@ -1,20 +1,32 @@
 import { json } from '../lib/http.mjs';
-import { buildFactLabel, buildGraphList, findGraphDef, stringifyGraphDef, vectorValue } from '../lib/views.mjs';
+import { buildFactLabel, buildGraphList, findGraphDef, polynomialTermCount, stringifyGraphDef, vectorItemCount, vectorValue } from '../lib/views.mjs';
 
 export async function handleGraphsApi(req, res, url, ctx) {
   if (req.method === 'GET' && url.pathname === '/api/graphs') {
     const found = ctx.store.requireUniverse(req, url) ?? ctx.store.getOrCreateUniverse(req, url);
     const { session } = found.universe;
     const q = String(url.searchParams.get('q') || '').trim().toLowerCase();
+    const complexOnly = ['1', 'true', 'yes', 'on'].includes(String(url.searchParams.get('complexOnly') || '0').toLowerCase());
     const limitRaw = Number(url.searchParams.get('limit') || 300);
     const offsetRaw = Number(url.searchParams.get('offset') || 0);
     const limit = Number.isFinite(limitRaw) ? Math.min(Math.max(1, Math.floor(limitRaw)), 2000) : 300;
     const offset = Number.isFinite(offsetRaw) ? Math.max(0, Math.floor(offsetRaw)) : 0;
 
     const all = buildGraphList(session);
-    const filtered = q
+    const factPolyTerms = new Map();
+    for (const f of session.kbFacts || []) {
+      if (!f?.name) continue;
+      factPolyTerms.set(String(f.name), polynomialTermCount(f?.vector));
+    }
+
+    const filtered = (q
       ? all.filter(g => `${g.name} ${(g.params || []).join(' ')}`.toLowerCase().includes(q))
-      : all;
+      : all)
+      .filter((g) => {
+        if (!complexOnly) return true;
+        const name = String(g?.persistName || g?.name || '');
+        return (factPolyTerms.get(name) || 0) >= 2;
+      });
 
     // Complexity-first (do not expose the score in UI).
     filtered.sort((a, b) => {
@@ -54,10 +66,12 @@ export async function handleGraphsApi(req, res, url, ctx) {
     // If a KB fact exists with this name, surface it for cross-navigation.
     let kbFactId = null;
     let kbFactLabel = null;
+    let kbFactVectorItems = null;
     for (const f of session.kbFacts || []) {
       if (f?.name && String(f.name) === String(def.persistName || def.name)) {
         kbFactId = f.id;
         kbFactLabel = buildFactLabel(session, f);
+        kbFactVectorItems = polynomialTermCount(f?.vector);
         break;
       }
     }
@@ -72,12 +86,14 @@ export async function handleGraphsApi(req, res, url, ctx) {
       params: Array.isArray(def.params) ? def.params : [],
       bodyLen: Array.isArray(def.body) ? def.body.length : 0,
       hasReturn: !!def.returnExpr,
+      source: def?.source || null,
       graphDsl,
       vectors: {
         operatorVector: vectorValue(operatorVector)
       },
       kbFactId,
       kbFactLabel,
+      kbFactVectorItems,
       raw: def
     });
     return true;

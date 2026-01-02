@@ -62,6 +62,9 @@ export function rewriteCanonicalSurfaceStatement(session, stmt, operatorName) {
     stmt.column,
     stmt.persistName
   );
+  rewritten.source = stmt.source || null;
+  rewritten.comment = stmt.comment ?? null;
+  rewritten.commentColumn = stmt.commentColumn ?? null;
 
   return {
     rewritten: true,

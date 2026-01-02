@@ -47,6 +47,7 @@ export async function bootstrap() {
   must('loadBtn');
   must('theoryFile');
   must('cancelLoadBtn');
+  must('complexOnlyToggle');
 
   const state = createState();
   const { api } = createApi({ state });
@@ -101,14 +102,27 @@ export async function bootstrap() {
   }
 
   async function refreshSessionStats() {
-    const res = await api('/api/session/stats');
+    const params = new URLSearchParams();
+    const q = String(state?.kb?.q || '').trim();
+    if (q) params.set('q', q);
+    params.set('complexOnly', state?.kb?.complexOnly ? '1' : '0');
+    const res = await api(`/api/session/stats?${params.toString()}`);
     state.kb.kbFactCount = res.kbFactCount ?? state.kb.kbFactCount;
+    state.kb.kbFactCountFiltered = res.kbFactCountFiltered ?? state.kb.kbFactCountFiltered;
+    state.kb.kbBundleTerms = res.kbBundleTerms ?? state.kb.kbBundleTerms;
     state.kb.graphCount = res.graphCount ?? state.kb.graphCount;
+    state.kb.graphCountFiltered = res.graphCountFiltered ?? state.kb.graphCountFiltered;
     state.kb.vocabCount = res.vocabCount ?? state.kb.vocabCount;
+    state.kb.vocabCountFiltered = res.vocabCountFiltered ?? state.kb.vocabCountFiltered;
+    state.kb.vocabLayerCounts = res.vocabLayerCounts ?? state.kb.vocabLayerCounts;
     state.kb.scopeCount = res.scopeCount ?? state.kb.scopeCount;
+    state.kb.scopeCountFiltered = res.scopeCountFiltered ?? state.kb.scopeCountFiltered;
     state.kb.urcArtifactCount = res.urcArtifactCount ?? state.kb.urcArtifactCount;
     state.kb.urcEvidenceCount = res.urcEvidenceCount ?? state.kb.urcEvidenceCount;
     state.kb.urcProvenanceCount = res.urcProvenanceCount ?? state.kb.urcProvenanceCount;
+    state.kb.urcArtifactCountFiltered = res.urcArtifactCountFiltered ?? state.kb.urcArtifactCountFiltered;
+    state.kb.urcEvidenceCountFiltered = res.urcEvidenceCountFiltered ?? state.kb.urcEvidenceCountFiltered;
+    state.kb.urcProvenanceCountFiltered = res.urcProvenanceCountFiltered ?? state.kb.urcProvenanceCountFiltered;
     setKbFactsStat(ctx, state.kb.kbFactCount);
     $('factCount').textContent =
       `KB=${state.kb.kbFactCount} • graphs=${state.kb.graphCount} • vocab=${state.kb.vocabCount} • scope=${state.kb.scopeCount}`;
@@ -175,10 +189,11 @@ export async function bootstrap() {
   });
 
   // KB controls
-  $('namedOnlyToggle').checked = !!state.kb.namedOnly;
-  $('namedOnlyToggle').addEventListener('change', async () => {
-    state.kb.namedOnly = !!$('namedOnlyToggle').checked;
+  $('complexOnlyToggle').checked = !!state.kb.complexOnly;
+  $('complexOnlyToggle').addEventListener('change', async () => {
+    state.kb.complexOnly = !!$('complexOnlyToggle').checked;
     state.kb.kbOffset = 0;
+    state.kb.kbTotal = 0;
     state.kb.pinnedFactIds = [];
     state.kb.selectedNodeId = null;
     await refreshExplorer();
@@ -187,6 +202,7 @@ export async function bootstrap() {
   $('factFilter').addEventListener('input', debounce(async () => {
     state.kb.q = $('factFilter').value || '';
     state.kb.kbOffset = 0;
+    state.kb.kbTotal = 0;
     state.kb.graphOffset = 0;
     state.kb.scopeOffset = 0;
     for (const k of Object.keys(state.kb.vocab || {})) {

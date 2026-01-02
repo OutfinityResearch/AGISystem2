@@ -9,6 +9,39 @@
 import { createFromName, serialize, deserialize, getStrategyId } from '../hdc/facade.mjs';
 import { createHash } from 'node:crypto';
 
+function parseCallsiteLine(line) {
+  const raw = String(line || '').trim();
+  if (!raw.startsWith('at ')) return null;
+
+  // Examples:
+  // - at /path/file.mjs:12:34
+  // - at fn (/path/file.mjs:12:34)
+  // - at fn (file:///path/file.mjs:12:34)
+  const m = raw.match(/\(?((?:file:\/\/\/)?[^():]+):(\d+):(\d+)\)?$/);
+  if (!m) return null;
+  let file = m[1] || '';
+  if (file.startsWith('file:///')) file = file.slice('file:///'.length);
+  const lineNum = Number(m[2]);
+  const colNum = Number(m[3]);
+  return {
+    file: file || null,
+    line: Number.isFinite(lineNum) ? lineNum : null,
+    column: Number.isFinite(colNum) ? colNum : null
+  };
+}
+
+function captureCallsite() {
+  const holder = {};
+  // Exclude frames up to Vocabulary.getOrCreate, leaving the caller as the first stack line.
+  Error.captureStackTrace(holder, Vocabulary.prototype.getOrCreate);
+  const lines = String(holder.stack || '').split('\n').slice(1);
+  for (const line of lines) {
+    const loc = parseCallsiteLine(line);
+    if (loc?.file) return loc;
+  }
+  return null;
+}
+
 export class Vocabulary {
   /**
    * Create a new vocabulary
@@ -22,15 +55,31 @@ export class Vocabulary {
     this.hdc = hdc;
     this.atoms = new Map();      // name -> Vector
     this.reverse = new Map();    // Vector hash -> name (for decoding)
+    this.sources = new Map();   // name -> {file,line,column,comment}
   }
 
   /**
    * Get or create atom vector
    * @param {string} name - Atom name
+   * @param {object} [options]
+   * @param {{file?: string|null, line?: number|null, column?: number|null, comment?: string|null}} [options.source]
+   * @param {string|null} [options.comment]
    * @returns {Object} Atom vector (strategy-dependent type)
    */
-  getOrCreate(name) {
+  getOrCreate(name, options = {}) {
     if (this.atoms.has(name)) {
+      const existingSrc = this.sources.get(name) || null;
+      const src = options?.source && typeof options.source === 'object' ? options.source : null;
+      const comment = typeof options?.comment === 'string' && options.comment.trim() ? options.comment.trim() : null;
+      if (src || comment) {
+        const merged = {
+          file: existingSrc?.file ?? src?.file ?? null,
+          line: Number.isFinite(existingSrc?.line) ? existingSrc.line : (Number.isFinite(src?.line) ? src.line : null),
+          column: Number.isFinite(existingSrc?.column) ? existingSrc.column : (Number.isFinite(src?.column) ? src.column : null),
+          comment: existingSrc?.comment ?? comment ?? src?.comment ?? null
+        };
+        if (merged.file || merged.line || merged.comment) this.sources.set(name, merged);
+      }
       return this.atoms.get(name);
     }
 
@@ -45,6 +94,21 @@ export class Vocabulary {
     // Store reverse mapping for decoding
     const hash = this.hashVector(vec);
     this.reverse.set(hash, name);
+
+    const src = options?.source && typeof options.source === 'object' ? options.source : null;
+    const comment = typeof options?.comment === 'string' && options.comment.trim() ? options.comment.trim() : null;
+    const callsite = (!src?.file && !Number.isFinite(src?.line)) ? captureCallsite() : null;
+    const sourceRecord = {
+      file: src?.file ?? callsite?.file ?? null,
+      line: Number.isFinite(src?.line) ? src.line : (Number.isFinite(callsite?.line) ? callsite.line : null),
+      column: Number.isFinite(src?.column) ? src.column : (Number.isFinite(callsite?.column) ? callsite.column : null),
+      comment: (typeof src?.comment === 'string' && src.comment.trim())
+        ? src.comment.trim()
+        : (comment || (callsite ? 'Created dynamically by runtime code.' : null))
+    };
+    if (sourceRecord.file || sourceRecord.line || sourceRecord.comment) {
+      this.sources.set(name, sourceRecord);
+    }
 
     return vec;
   }
@@ -75,6 +139,10 @@ export class Vocabulary {
   reverseLookup(vec) {
     const hash = this.hashVector(vec);
     return this.reverse.get(hash) || null;
+  }
+
+  getSource(name) {
+    return this.sources.get(String(name)) || null;
   }
 
   /**

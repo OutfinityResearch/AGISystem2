@@ -16,7 +16,17 @@ export function executeGraphDeclaration(executor, graph) {
     params: graph.params,
     body: graph.body,
     returnExpr: graph.returnExpr,
-    line: graph.line
+    line: graph.line,
+    column: graph.column,
+    source: {
+      file: graph?.source?.file ?? null,
+      line: graph?.source?.line ?? graph.line ?? null,
+      column: graph?.source?.column ?? graph.column ?? null,
+      comment: graph.comment ?? null,
+      commentColumn: graph.commentColumn ?? null
+    },
+    returnComment: graph.returnComment ?? null,
+    returnSource: graph.returnSource || null
   };
 
   const invocationName = graph.persistName || graph.name;
@@ -34,7 +44,7 @@ export function executeGraphDeclaration(executor, graph) {
   };
 }
 
-export function expandGraph(executor, graphName, args) {
+export function expandGraph(executor, graphName, args, callSite = null) {
   let graph = executor.session.graphs?.get(graphName);
   if (!graph && executor.session.graphAliases?.has(graphName)) {
     const canonical = executor.session.graphAliases.get(graphName);
@@ -49,6 +59,17 @@ export function expandGraph(executor, graphName, args) {
   }
 
   executor._graphDepth = (executor._graphDepth || 0) + 1;
+  executor._graphStack ||= [];
+  executor._graphStack.push(String(graphName));
+  executor._graphCallsiteStack ||= [];
+  const src = callSite?.source && typeof callSite.source === 'object'
+    ? callSite.source
+    : (callSite && typeof callSite === 'object' ? callSite : null);
+  executor._graphCallsiteStack.push(src ? {
+    file: src.file ?? null,
+    line: src.line ?? src?.line ?? null,
+    column: src.column ?? src?.column ?? null
+  } : null);
   const parentScope = executor.session.scope;
   const graphScope = parentScope.child();
   executor.session.scope = graphScope;
@@ -83,6 +104,8 @@ export function expandGraph(executor, graphName, args) {
     return null;
   } finally {
     executor.session.scope = parentScope;
+    executor._graphStack.pop();
+    executor._graphCallsiteStack.pop();
     executor._graphDepth = Math.max(0, (executor._graphDepth || 1) - 1);
   }
 }

@@ -1,6 +1,6 @@
 import { clean } from '../text.mjs';
 import { normalizeEntity, normalizeVerb, sanitizePredicate } from '../../utils.mjs';
-import { CORE_GRAPH_ARITY } from '../../../../runtime/operator-catalog.mjs';
+import { DEFAULT_GRAPH_ARITY } from '../../../../runtime/operator-catalog.mjs';
 import { parseSubjectNP, parsePredicateItem, isKnownOperator } from './shared.mjs';
 
 function disambiguateBinaryOp(op) {
@@ -32,7 +32,7 @@ export function parseCopulaClause(text, defaultVar = '?x', options = {}) {
     if (!op) return null;
     const object = normalizeEntity(objRaw, defaultVar);
 
-    const expectedArity = CORE_GRAPH_ARITY.get(op);
+    const expectedArity = DEFAULT_GRAPH_ARITY.get(op);
     const declaredOperators = [];
     if (typeof expectedArity === 'number' && expectedArity !== 2) {
       op = disambiguateBinaryOp(op);
@@ -56,7 +56,7 @@ export function parseCopulaClause(text, defaultVar = '?x', options = {}) {
     if (!op) return null;
     const object = normalizeEntity(objRaw, defaultVar);
 
-    const expectedArity = CORE_GRAPH_ARITY.get(op);
+    const expectedArity = DEFAULT_GRAPH_ARITY.get(op);
     const declaredOperators = [];
     if (typeof expectedArity === 'number' && expectedArity !== 2) {
       op = disambiguateBinaryOp(op);

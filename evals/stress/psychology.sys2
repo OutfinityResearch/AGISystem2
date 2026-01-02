@@ -3389,8 +3389,8 @@ end
 @:EmotionCognitionLink graph
     @emotion isA BasicEmotion
     @cognition isA CognitiveProcess
-    @emotion influences @cognition
-    @cognition influences @emotion
+    @emotion influences $cognition
+    @cognition influences $emotion
     @bidirectional relationship $emotion $cognition
 end
 

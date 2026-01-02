@@ -32,10 +32,15 @@ export class ParseError extends Error {
 }
 
 export class Parser {
-  constructor(tokens) {
+  constructor(tokens, options = {}) {
     // Keep NEWLINE tokens - they separate statements
     this.tokens = tokens;
     this.pos = 0;
+    this.sourceName = options.sourceName || null;
+    this.commentPolicy = options.commentPolicy || null; // null => infer
+    this.warnings = [];
+    this.maxWarnings = Number.isFinite(options.maxWarnings) ? options.maxWarnings : 200;
+    this._warningsTruncated = 0;
   }
 
   /**
@@ -70,7 +75,15 @@ export class Parser {
       this.skipNewlines();
     }
 
-    return new Program(statements);
+    const program = new Program(statements);
+    program.warnings = this.warnings.slice();
+    if (this._warningsTruncated > 0) {
+      program.warningsTruncated = this._warningsTruncated;
+    }
+    if (this.sourceName) {
+      program.sourceName = this.sourceName;
+    }
+    return program;
   }
 
   /**
@@ -78,6 +91,12 @@ export class Parser {
    */
   parseTopLevel() {
     const token = this.peek();
+
+    // Comment-only lines are ignored.
+    if (token.type === TOKEN_TYPES.COMMENT) {
+      this.advance();
+      return null;
+    }
 
     // Check for primary theory syntax: @Name theory <geometry> <init> ... end
     if (token.type === TOKEN_TYPES.AT) {
@@ -134,6 +153,43 @@ export class Parser {
     }
 
     return this.parseStatement();
+  }
+
+  inferCommentPolicy() {
+    if (this.commentPolicy) return this.commentPolicy;
+    const env = String(process?.env?.SYS2DSL_COMMENT_POLICY || '').trim().toLowerCase();
+    if (env === 'off' || env === 'warn' || env === 'require') return env;
+
+    // Default: warn only for loaded theory packs (Core/Kernel/etc.), not for ad-hoc user input.
+    const src = this.sourceName ? String(this.sourceName) : '';
+    if (src.includes('/config/Packs/')) return 'warn';
+    return 'off';
+  }
+
+  addWarning(message, token) {
+    if (this.warnings.length >= this.maxWarnings) {
+      this._warningsTruncated++;
+      return;
+    }
+    this.warnings.push({
+      message: String(message || 'Warning'),
+      file: this.sourceName || null,
+      line: token?.line ?? null,
+      column: token?.column ?? null
+    });
+  }
+
+  warnMissingOrWeakComment(kind, locationToken, commentText) {
+    const policy = this.inferCommentPolicy();
+    if (policy === 'off') return;
+
+    const text = String(commentText || '').trim();
+    const wordCount = text ? text.split(/\s+/).filter(Boolean).length : 0;
+    if (wordCount >= 3) return;
+
+    const prefix = text ? 'Comment too short' : 'Missing comment';
+    const suffix = text ? ` (${wordCount} words)` : '';
+    this.addWarning(`${prefix} for ${kind}; add an inline explanation with at least 3 words.${suffix}`, locationToken);
   }
 
   /**
@@ -274,6 +330,7 @@ export class Parser {
     let persistName = null;
     let startLine = this.peek().line;
     let startColumn = this.peek().column;
+    let statementTokenForWarnings = this.peek();
 
     // Optional destination with optional persist name
     if (this.check(TOKEN_TYPES.AT)) {
@@ -281,6 +338,7 @@ export class Parser {
       const destValue = destToken.value;
       startLine = destToken.line;
       startColumn = destToken.column;
+      statementTokenForWarnings = destToken;
       // Check if it has :persistName suffix
       if (destValue.includes(':')) {
         const parts = destValue.split(':');
@@ -294,24 +352,40 @@ export class Parser {
     // Check if this is a graph definition (or macro - deprecated synonym)
     if (this.check(TOKEN_TYPES.KEYWORD) &&
         (this.peek().value === 'graph' || this.peek().value === 'macro')) {
-      return this.parseGraph(destination, persistName, startLine, startColumn);
+      return this.parseGraph(destination, persistName, startLine, startColumn, statementTokenForWarnings);
     }
 
     // Operator
     const operator = this.parseExpression();
     if (!operator) {
+      if (destination !== null || persistName !== null) {
+        throw new ParseError('Expected an operator after @destination (use $name to reference bindings)', this.peek());
+      }
       return null;
     }
 
     // Arguments
     const args = [];
-    while (!this.isEof() && !this.check(TOKEN_TYPES.AT) && !this.isStatementEnd()) {
+    while (!this.isEof() && !this.isStatementEnd()) {
+      if (this.check(TOKEN_TYPES.AT)) {
+        throw new ParseError(
+          "Multiple '@' tokens on a single line are not allowed. Only the destination may use '@'. Use '$name' to reference an existing binding.",
+          this.peek()
+        );
+      }
       const arg = this.parseExpression();
       if (!arg) break;
       args.push(arg);
     }
 
-    return new Statement(
+    let commentText = null;
+    let commentToken = null;
+    if (this.check(TOKEN_TYPES.COMMENT)) {
+      commentToken = this.advance();
+      commentText = String(commentToken.value || '').trim();
+    }
+
+    const stmt = new Statement(
       destination,
       operator,
       args,
@@ -319,6 +393,11 @@ export class Parser {
       operator.column,
       persistName  // New: pass persist name to Statement
     );
+    stmt.source = { file: this.sourceName || null, line: startLine, column: startColumn };
+    stmt.comment = commentText;
+    stmt.commentColumn = commentToken?.column ?? null;
+    this.warnMissingOrWeakComment('statement', statementTokenForWarnings, commentText);
+    return stmt;
   }
 
   /**
@@ -330,7 +409,7 @@ export class Parser {
    *
    * Note: 'macro' keyword is still accepted as a deprecated synonym
    */
-  parseGraph(destination, persistName, line, column) {
+  parseGraph(destination, persistName, line, column, headerTokenForWarnings) {
     // Consume 'graph' or 'macro' keyword (both accepted)
     const keyword = this.peek().value;
     if (keyword !== 'graph' && keyword !== 'macro') {
@@ -340,12 +419,24 @@ export class Parser {
 
     // Parse parameter names (identifiers until newline/end of line)
     const params = [];
-    while (!this.isEof() && !this.check(TOKEN_TYPES.NEWLINE)) {
+    while (!this.isEof() && !this.check(TOKEN_TYPES.NEWLINE) && !this.check(TOKEN_TYPES.COMMENT)) {
       if (this.check(TOKEN_TYPES.IDENTIFIER)) {
         params.push(this.advance().value);
+      } else if (this.check(TOKEN_TYPES.AT)) {
+        throw new ParseError(
+          "Multiple '@' tokens on a single line are not allowed. Graph parameters must be identifiers, and references must use '$name'.",
+          this.peek()
+        );
       } else {
         break;
       }
+    }
+
+    let headerCommentText = null;
+    let headerCommentToken = null;
+    if (this.check(TOKEN_TYPES.COMMENT)) {
+      headerCommentToken = this.advance();
+      headerCommentText = String(headerCommentToken.value || '').trim();
     }
 
     // Skip newline after graph header
@@ -354,6 +445,8 @@ export class Parser {
     // Parse body statements until 'end' keyword
     const body = [];
     let returnExpr = null;
+    let returnComment = null;
+    let returnTokenForWarnings = null;
 
     while (!this.isEof()) {
       // Check for 'end' keyword
@@ -364,8 +457,13 @@ export class Parser {
 
       // Check for 'return' keyword
       if (this.check(TOKEN_TYPES.KEYWORD) && this.peek().value === 'return') {
-        this.advance(); // consume 'return'
+        returnTokenForWarnings = this.advance(); // consume 'return'
         returnExpr = this.parseReturnExpression();
+        if (this.check(TOKEN_TYPES.COMMENT)) {
+          const t = this.advance();
+          returnComment = String(t.value || '').trim();
+        }
+        this.warnMissingOrWeakComment('graph return', returnTokenForWarnings, returnComment);
         this.skipNewlines();
         continue;
       }
@@ -386,7 +484,7 @@ export class Parser {
       this.skipNewlines();
     }
 
-    return new GraphDeclaration(
+    const graph = new GraphDeclaration(
       destination,
       persistName,
       params,
@@ -395,6 +493,13 @@ export class Parser {
       line,
       column
     );
+    graph.source = { file: this.sourceName || null, line, column };
+    graph.comment = headerCommentText;
+    graph.commentColumn = headerCommentToken?.column ?? null;
+    graph.returnComment = returnComment;
+    graph.returnSource = returnExpr ? { file: this.sourceName || null, line: returnExpr.line, column: returnExpr.column } : null;
+    this.warnMissingOrWeakComment('graph header', headerTokenForWarnings, headerCommentText);
+    return graph;
   }
 
   /**
@@ -415,6 +520,12 @@ export class Parser {
 
     const args = [];
     while (!this.isStatementEnd() && !this.isEof()) {
+      if (this.check(TOKEN_TYPES.AT)) {
+        throw new ParseError(
+          "Multiple '@' tokens on a single line are not allowed. Use '$name' to reference bindings in return expressions.",
+          this.peek()
+        );
+      }
       const arg = this.parseExpression();
       if (!arg) break;
       args.push(arg);
@@ -466,7 +577,9 @@ export class Parser {
    */
   parseIdentifier() {
     const token = this.expect(TOKEN_TYPES.IDENTIFIER);
-    return new Identifier(token.value, token.line, token.column);
+    const node = new Identifier(token.value, token.line, token.column);
+    node.source = { file: this.sourceName || null, line: token.line, column: token.column };
+    return node;
   }
 
   /**
@@ -474,7 +587,9 @@ export class Parser {
    */
   parseHole() {
     const token = this.expect(TOKEN_TYPES.HOLE);
-    return new Hole(token.value, token.line, token.column);
+    const node = new Hole(token.value, token.line, token.column);
+    node.source = { file: this.sourceName || null, line: token.line, column: token.column };
+    return node;
   }
 
   /**
@@ -482,7 +597,9 @@ export class Parser {
    */
   parseReference() {
     const token = this.expect(TOKEN_TYPES.REFERENCE);
-    return new Reference(token.value, token.line, token.column);
+    const node = new Reference(token.value, token.line, token.column);
+    node.source = { file: this.sourceName || null, line: token.line, column: token.column };
+    return node;
   }
 
   /**
@@ -490,7 +607,9 @@ export class Parser {
    */
   parseNumber() {
     const token = this.expect(TOKEN_TYPES.NUMBER);
-    return new Literal(token.value, 'number', token.line, token.column);
+    const node = new Literal(token.value, 'number', token.line, token.column);
+    node.source = { file: this.sourceName || null, line: token.line, column: token.column };
+    return node;
   }
 
   /**
@@ -498,7 +617,9 @@ export class Parser {
    */
   parseString() {
     const token = this.expect(TOKEN_TYPES.STRING);
-    return new Literal(token.value, 'string', token.line, token.column);
+    const node = new Literal(token.value, 'string', token.line, token.column);
+    node.source = { file: this.sourceName || null, line: token.line, column: token.column };
+    return node;
   }
 
   /**
@@ -529,7 +650,9 @@ export class Parser {
     }
 
     this.expect(TOKEN_TYPES.RBRACKET);
-    return new List(items, startToken.line, startToken.column);
+    const node = new List(items, startToken.line, startToken.column);
+    node.source = { file: this.sourceName || null, line: startToken.line, column: startToken.column };
+    return node;
   }
 
   /**
@@ -562,7 +685,9 @@ export class Parser {
     }
 
     this.expect(TOKEN_TYPES.RPAREN);
-    return new Compound(operator, args, startToken.line, startToken.column);
+    const node = new Compound(operator, args, startToken.line, startToken.column);
+    node.source = { file: this.sourceName || null, line: startToken.line, column: startToken.column };
+    return node;
   }
 
   /**
@@ -572,6 +697,7 @@ export class Parser {
     const token = this.peek();
     return token.type === TOKEN_TYPES.EOF ||
            token.type === TOKEN_TYPES.NEWLINE ||
+           token.type === TOKEN_TYPES.COMMENT ||
            token.type === TOKEN_TYPES.KEYWORD ||
            token.type === TOKEN_TYPES.RBRACKET;
   }
@@ -580,7 +706,7 @@ export class Parser {
    * Skip any newline tokens
    */
   skipNewlines() {
-    while (this.check(TOKEN_TYPES.NEWLINE)) {
+    while (this.check(TOKEN_TYPES.NEWLINE) || this.check(TOKEN_TYPES.COMMENT)) {
       this.advance();
     }
   }
@@ -739,4 +865,19 @@ export function parse(input) {
   return parser.parse();
 }
 
-export default { Parser, parse, ParseError };
+/**
+ * Parse DSL string into AST with optional source metadata.
+ * @param {string} input - DSL source code
+ * @param {object} options
+ * @param {string|null} options.sourceName
+ * @param {'off'|'warn'|'require'|null} options.commentPolicy
+ * @param {number} options.maxWarnings
+ */
+export function parseWithOptions(input, options = {}) {
+  const lexer = new Lexer(input);
+  const tokens = lexer.tokenize();
+  const parser = new Parser(tokens, options);
+  return parser.parse();
+}
+
+export default { Parser, parse, parseWithOptions, ParseError };

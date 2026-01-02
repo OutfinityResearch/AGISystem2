@@ -9,7 +9,7 @@ import {
   sanitizePredicate
 } from '../../utils.mjs';
 
-import { CORE_GRAPH_ARITY } from '../../../../runtime/operator-catalog.mjs';
+import { DEFAULT_GRAPH_ARITY } from '../../../../runtime/operator-catalog.mjs';
 import { clean, lower, splitCoord } from '../text.mjs';
 import { emitExprAsRefs } from '../emit.mjs';
 import { isKnownOperator, parsePredicateItem } from './shared.mjs';
@@ -231,7 +231,7 @@ export function parseRuleSentence(sentence, options = {}) {
     const declaredOperators = [];
     if (!isKnownOperator(op) && options.autoDeclareUnknownOperators) declaredOperators.push(op);
 
-    const expectedArity = CORE_GRAPH_ARITY.get(op);
+    const expectedArity = DEFAULT_GRAPH_ARITY.get(op);
     const hasObj = !!String(objRaw || '').trim();
 
     const consItems = [];
@@ -351,7 +351,7 @@ export function parseRuleSentence(sentence, options = {}) {
     const declaredOperators = [];
     if (!isKnownOperator(op) && options.autoDeclareUnknownOperators) declaredOperators.push(op);
 
-    const expectedArity = CORE_GRAPH_ARITY.get(op);
+    const expectedArity = DEFAULT_GRAPH_ARITY.get(op);
     const hasObj = !!String(objRaw || '').trim();
 
      // Treat "have X" as a property statement in open-domain corpora (FOL: Have(x, fur) etc).
@@ -432,7 +432,7 @@ export function parseRuleSentence(sentence, options = {}) {
               const declaredOperators = [];
               if (!isKnownOperator(op) && options.autoDeclareUnknownOperators) declaredOperators.push(op);
 
-              const expectedArity = CORE_GRAPH_ARITY.get(op);
+              const expectedArity = DEFAULT_GRAPH_ARITY.get(op);
               const hasObj = !!objRaw;
 
               const consItems = [];

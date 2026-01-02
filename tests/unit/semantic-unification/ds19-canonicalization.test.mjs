@@ -2,6 +2,16 @@ import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { Session } from '../../../src/runtime/session.mjs';
 
+function stripSource(meta) {
+  if (!meta || typeof meta !== 'object') return meta;
+  if (Array.isArray(meta)) return meta.map(stripSource);
+
+  const { source, ...rest } = meta;
+  const out = {};
+  for (const [k, v] of Object.entries(rest)) out[k] = stripSource(v);
+  return out;
+}
+
 describe('DS19: Semantic Unification — canonicalization', () => {
   test(
     'equivalent DSL encodings normalize to identical canonical metadata',
@@ -25,7 +35,8 @@ describe('DS19: Semantic Unification — canonicalization', () => {
       const m3 = session.referenceMetadata.get('f3');
       assert.ok(m1, 'expected canonical metadata for @f1');
       assert.ok(m3, 'expected canonical metadata for @f3');
-      assert.deepEqual(m1, m3);
+      // Source provenance is intentionally preserved and may differ between statements; compare semantics only.
+      assert.deepEqual(stripSource(m1), stripSource(m3));
     }
   );
 

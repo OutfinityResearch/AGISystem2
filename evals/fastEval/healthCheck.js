@@ -429,7 +429,9 @@ function resolveConfigTheoryPath(entry) {
     if (CONFIG_SCOPES.has(top)) return path.join(CONFIG_ROOT, cleaned);
     return path.join(DOMAIN_ROOT, cleaned);
   }
-  return path.join(CONFIG_ROOT, 'Core', cleaned);
+  const kernelCandidate = path.join(CONFIG_ROOT, 'Packs', 'Kernel', cleaned);
+  if (fs.existsSync(kernelCandidate)) return kernelCandidate;
+  return path.join(CONFIG_ROOT, 'Packs', cleaned);
 }
 
 function buildSession(suite, { geometry = 256, exactUnbindMode = 'B', reasoningPriority = REASONING_PRIORITY.HOLOGRAPHIC } = {}) {
@@ -442,7 +444,7 @@ function buildSession(suite, { geometry = 256, exactUnbindMode = 'B', reasoningP
   });
 
   // Load Core stack
-  const corePath = path.join(CONFIG_ROOT, 'Core');
+  const corePath = path.join(CONFIG_ROOT, 'Packs', 'Kernel');
   const prevBasePath = session?.executor?.basePath;
   if (session?.executor) session.executor.basePath = corePath;
   try {
@@ -451,6 +453,11 @@ function buildSession(suite, { geometry = 256, exactUnbindMode = 'B', reasoningP
       includeIndex: true,
       validate: true,
       throwOnValidationError: false
+    });
+    session.loadPack('tests_and_evals', {
+      packPath: path.join(CONFIG_ROOT, 'Packs', 'tests_and_evals'),
+      includeIndex: true,
+      validate: false
     });
   } finally {
     if (session?.executor) session.executor.basePath = prevBasePath;

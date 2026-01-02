@@ -51,10 +51,15 @@ async function main() {
   const session = new Session({ geometry: 256, hdcStrategy: 'exact', exactUnbindMode: 'B' });
   if (!opts.noCore) {
     session.loadCore({
-      corePath: path.join(process.cwd(), 'config', 'Core'),
+      corePath: path.join(process.cwd(), 'config', 'Packs', 'Kernel'),
       includeIndex: true,
       validate: true,
       throwOnValidationError: false
+    });
+    session.loadPack('tests_and_evals', {
+      packPath: path.join(process.cwd(), 'config', 'Packs', 'tests_and_evals'),
+      includeIndex: true,
+      validate: false
     });
   }
 

@@ -14,6 +14,32 @@ function dbg(category, ...args) {
   debug_trace(`[QueryRules:${category}]`, ...args);
 }
 
+function getIsAParentsByChild(session) {
+  const version = session?._kbBundleVersion ?? 0;
+  if (session._isAParentsByChildCache?.version === version) {
+    return session._isAParentsByChildCache.map;
+  }
+
+  const scanFacts = session?.factIndex?.getByOperator
+    ? session.factIndex.getByOperator('isA')
+    : (session?.kbFacts || []);
+  if (session?.reasoningStats) session.reasoningStats.kbScans += scanFacts.length;
+
+  const map = new Map(); // child -> Set(parent)
+  for (const fact of scanFacts) {
+    const meta = fact?.metadata;
+    if (!meta || meta.operator !== 'isA') continue;
+    const child = meta.args?.[0];
+    const parent = meta.args?.[1];
+    if (!child || !parent) continue;
+    if (!map.has(child)) map.set(child, new Set());
+    map.get(child).add(parent);
+  }
+
+  session._isAParentsByChildCache = { version, map };
+  return map;
+}
+
 /**
  * Search via rule derivations
  * @param {Session} session - Session with KB and rules
@@ -262,17 +288,15 @@ function findIsAPath(session, from, to, maxDepth = 10) {
   if (from === to) return [];
   const queue = [{ node: from, path: [] }];
   const visited = new Set([from]);
+  const parentsByChild = getIsAParentsByChild(session);
 
   while (queue.length > 0) {
     const { node, path } = queue.shift();
     if (path.length >= maxDepth) continue;
 
-    for (const fact of session.kbFacts) {
-      session.reasoningStats.kbScans++;
-      const meta = fact.metadata;
-      if (meta?.operator !== 'isA') continue;
-      if (meta.args?.[0] !== node) continue;
-      const parent = meta.args?.[1];
+    const parents = parentsByChild.get(node);
+    if (!parents) continue;
+    for (const parent of parents) {
       if (!parent || visited.has(parent)) continue;
 
       const nextPath = [...path, `isA ${node} ${parent}`];
@@ -293,7 +317,10 @@ export function findLeafConditionMatches(session, condAST, initialBindings) {
   const condArgs = extractArgs(condAST);
 
   // Search KB for facts matching condition pattern (direct matches)
-  for (const fact of session.kbFacts) {
+  const scanFacts = session?.factIndex?.getByOperator && condOp
+    ? session.factIndex.getByOperator(condOp)
+    : session.kbFacts;
+  for (const fact of scanFacts) {
     session.reasoningStats.kbScans++;
     const meta = fact.metadata;
     if (!meta || meta.operator !== condOp) continue;
@@ -361,7 +388,10 @@ export function findLeafConditionMatches(session, condAST, initialBindings) {
     if (arg0?.isVariable && !arg1?.isVariable) {
       const targetValue = arg1.name;
       const checkedEntities = new Set();
-      for (const fact of session.kbFacts) {
+      const scanFacts = session?.factIndex?.getByOperator && condOp
+        ? session.factIndex.getByOperator(condOp)
+        : session.kbFacts;
+      for (const fact of scanFacts) {
         session.reasoningStats.kbScans++;
         const meta = fact.metadata;
         if (meta?.operator === condOp && meta.args?.[0]) {

@@ -20,6 +20,8 @@ describe('translateNL2DSL + Session.learn/prove (smoke)', () => {
     const session = new Session({ geometry: 1024, reasoningProfile: 'theoryDriven', reasoningPriority: 'symbolicPriority' });
     const coreLoaded = session.loadCore({ includeIndex: true });
     assert.equal(coreLoaded.success, true, JSON.stringify(coreLoaded.errors));
+    const extrasLoaded = session.loadPack('tests_and_evals', { includeIndex: true, validate: false });
+    assert.equal(extrasLoaded.success, true, JSON.stringify(extrasLoaded.errors));
 
     const contextDsl = translateContext('All dogs are animals. Anne is a dog.', 'ruletaker');
     session.learn(contextDsl);
@@ -33,6 +35,8 @@ describe('translateNL2DSL + Session.learn/prove (smoke)', () => {
     const session = new Session({ geometry: 1024, reasoningProfile: 'theoryDriven', reasoningPriority: 'symbolicPriority' });
     const coreLoaded = session.loadCore({ includeIndex: true });
     assert.equal(coreLoaded.success, true, JSON.stringify(coreLoaded.errors));
+    const extrasLoaded = session.loadPack('tests_and_evals', { includeIndex: true, validate: false });
+    assert.equal(extrasLoaded.success, true, JSON.stringify(extrasLoaded.errors));
 
     const contextDsl = translateContext('Anne does not like Bob.', 'ruletaker');
     session.learn(contextDsl);
@@ -47,6 +51,8 @@ describe('translateNL2DSL + Session.learn/prove (smoke)', () => {
     const session = new Session({ geometry: 1024, reasoningProfile: 'theoryDriven', reasoningPriority: 'symbolicPriority' });
     const coreLoaded = session.loadCore({ includeIndex: true });
     assert.equal(coreLoaded.success, true, JSON.stringify(coreLoaded.errors));
+    const extrasLoaded = session.loadPack('tests_and_evals', { includeIndex: true, validate: false });
+    assert.equal(extrasLoaded.success, true, JSON.stringify(extrasLoaded.errors));
 
     const result = translateNL2DSL('Anne frobnicates Bob.', { source: 'generic', isQuestion: false });
     assert.equal(result.success, false);
@@ -58,6 +64,8 @@ describe('translateNL2DSL + Session.learn/prove (smoke)', () => {
     const session = new Session({ geometry: 1024, reasoningProfile: 'theoryDriven', reasoningPriority: 'symbolicPriority' });
     const coreLoaded = session.loadCore({ includeIndex: true });
     assert.equal(coreLoaded.success, true, JSON.stringify(coreLoaded.errors));
+    const extrasLoaded = session.loadPack('tests_and_evals', { includeIndex: true, validate: false });
+    assert.equal(extrasLoaded.success, true, JSON.stringify(extrasLoaded.errors));
 
     const contextResult = translateNL2DSL('Anne blicks Bob.', {
       source: 'generic',

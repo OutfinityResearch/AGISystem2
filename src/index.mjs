@@ -33,7 +33,7 @@ export { asciiStamp, asciiStampBatch } from './util/ascii-stamp.mjs';
 
 // Parser exports
 export { Lexer, Token, LexerError } from './parser/lexer.mjs';
-export { Parser, parse, ParseError } from './parser/parser.mjs';
+export { Parser, parse, parseWithOptions, ParseError } from './parser/parser.mjs';
 export * from './parser/ast.mjs';
 
 // Runtime exports

@@ -1,0 +1,10 @@
+# Story/Social Relations (tests/evals convenience)
+# This file contains relations that are useful in story-style eval suites and toy domains,
+# but are not required for the baseline reasoning core.
+
+@ancestorOf:ancestorOf __Relation  # Provide an ancestry relation used in story-style domains.
+@:ancestorOf_transitive __TransitiveRelation ancestorOf  # Make ancestry transitively closed for toy reasoning.
+
+@descendantOf:descendantOf __Relation  # Provide a descendant relation used in story-style domains.
+@:descendantOf_transitive __TransitiveRelation descendantOf  # Make descendancy transitively closed for toy reasoning.
+

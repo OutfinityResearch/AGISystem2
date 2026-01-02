@@ -92,12 +92,18 @@ export function resolveIdentifier(executor, expr) {
     return executor.session.scope.get(name);
   }
 
-  return executor.session.vocabulary.getOrCreate(name);
+  return executor.session.vocabulary.getOrCreate(name, {
+    source: expr?.source || null,
+    comment: 'Created from a DSL identifier reference.'
+  });
 }
 
 export function resolveHole(executor, expr) {
   const holeName = `__HOLE_${expr.name}__`;
-  return executor.session.vocabulary.getOrCreate(holeName);
+  return executor.session.vocabulary.getOrCreate(holeName, {
+    source: expr?.source || null,
+    comment: 'Created for a query hole (?x) during DSL parsing/execution.'
+  });
 }
 
 export function resolveReference(executor, expr) {
@@ -110,12 +116,18 @@ export function resolveReference(executor, expr) {
 
 export function resolveLiteral(executor, expr) {
   const strValue = String(expr.value);
-  return executor.session.vocabulary.getOrCreate(strValue);
+  return executor.session.vocabulary.getOrCreate(strValue, {
+    source: expr?.source || null,
+    comment: 'Created from a DSL literal token.'
+  });
 }
 
 export function resolveList(executor, expr) {
   if (expr.items.length === 0) {
-    return executor.session.vocabulary.getOrCreate('__EMPTY_LIST__');
+    return executor.session.vocabulary.getOrCreate('__EMPTY_LIST__', {
+      source: expr?.source || null,
+      comment: 'Empty list constant created from [] (List) in DSL.'
+    });
   }
   const itemVectors = expr.items.map(item => resolveExpression(executor, item));
   return bundle(itemVectors);
@@ -127,7 +139,7 @@ export function resolveCompound(executor, expr) {
                   executor.session.graphAliases?.has(operatorName);
 
   if (isGraph) {
-    const result = executor.expandGraph(operatorName, expr.args);
+    const result = executor.expandGraph(operatorName, expr.args, expr);
     if (result) return result;
   }
 

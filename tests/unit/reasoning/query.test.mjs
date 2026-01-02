@@ -17,6 +17,7 @@ describe('QueryEngine', () => {
     queryEngine = new QueryEngine(session);
     // Keep tests hermetic under strict declaration rules.
     learn('@owns:owns __Relation');
+    learn('@relation:relation __Relation');
   }
 
   function learn(dsl) {
@@ -38,9 +39,9 @@ describe('QueryEngine', () => {
     describe('single hole queries', () => {
       test('should find object of relation', () => {
         setup();
-        learn('loves John Mary');
+        learn('owns John Mary');
 
-        const query = parse('@q loves John ?who').statements[0];
+        const query = parse('@q owns John ?who').statements[0];
         const result = queryEngine.execute(query);
 
         assert.ok('bindings' in result);
@@ -59,9 +60,9 @@ describe('QueryEngine', () => {
 
       test('should report confidence', () => {
         setup();
-        learn('likes Bob Pizza');
+        learn('owns Bob Pizza');
 
-        const query = parse('@q likes Bob ?what').statements[0];
+        const query = parse('@q owns Bob ?what').statements[0];
         const result = queryEngine.execute(query);
 
         assert.ok('confidence' in result);
@@ -71,12 +72,12 @@ describe('QueryEngine', () => {
       test('should report alternatives', () => {
         setup();
         learn(`
-          likes Alice Pizza
-          likes Alice Pasta
-          likes Alice Sushi
+          owns Alice Pizza
+          owns Alice Pasta
+          owns Alice Sushi
         `);
 
-        const query = parse('@q likes Alice ?food').statements[0];
+        const query = parse('@q owns Alice ?food').statements[0];
         const result = queryEngine.execute(query);
 
         const binding = result.bindings.get('food');
@@ -87,9 +88,9 @@ describe('QueryEngine', () => {
     describe('multiple hole queries', () => {
       test('should handle two holes', () => {
         setup();
-        learn('sells Alice Book Bob');
+        learn('relation Alice Book Bob');
 
-        const query = parse('@q sells ?seller ?item Bob').statements[0];
+        const query = parse('@q relation ?seller ?item Bob').statements[0];
         const result = queryEngine.execute(query);
 
         assert.ok(result.bindings.has('seller'));
@@ -98,7 +99,7 @@ describe('QueryEngine', () => {
 
       test('should fail gracefully with too many holes', () => {
         setup();
-        learn('loves A B');
+        learn('owns A B');
 
         const query = parse('@q ?a ?b ?c ?d ?e').statements[0];
         const result = queryEngine.execute(query);
@@ -111,9 +112,9 @@ describe('QueryEngine', () => {
     describe('no hole queries (direct match)', () => {
       test('should find matching fact', () => {
         setup();
-        learn('loves John Mary');
+        learn('owns John Mary');
 
-        const query = parse('@q loves John Mary').statements[0];
+        const query = parse('@q owns John Mary').statements[0];
         const result = queryEngine.execute(query);
 
         assert.ok('matches' in result);
@@ -121,10 +122,10 @@ describe('QueryEngine', () => {
 
       test('should report no match for completely unknown fact', () => {
         setup();
-        learn('loves John Mary');
+        learn('owns John Mary');
 
         // Query with completely unrelated entities
-        const query = parse('@q destroys Planet99 Galaxy88').statements[0];
+        const query = parse('@q owns Planet99 Galaxy88').statements[0];
         const result = queryEngine.execute(query);
 
         // Either no match or very low confidence
@@ -139,7 +140,7 @@ describe('QueryEngine', () => {
       test('should fail gracefully with empty KB', () => {
         setup();
 
-        const query = parse('@q loves ?who Mary').statements[0];
+        const query = parse('@q owns ?who Mary').statements[0];
         const result = queryEngine.execute(query);
 
         // With empty KB, query should fail (no matches) or have no bindings
@@ -157,11 +158,11 @@ describe('QueryEngine', () => {
         setup();
         // Multiple similar facts might cause ambiguity
         learn(`
-          parent Alice Bob
-          parent Alice Carol
+          owns Alice Bob
+          owns Alice Carol
         `);
 
-        const query = parse('@q parent Alice ?child').statements[0];
+        const query = parse('@q owns Alice ?child').statements[0];
         const result = queryEngine.execute(query);
 
         // Result should indicate potential ambiguity
@@ -203,10 +204,10 @@ describe('QueryEngine', () => {
   describe('confidence calculation', () => {
     test('should penalize multiple holes', () => {
       setup();
-      learn('loves A B');
+      learn('owns A B');
 
-      const oneHole = parse('@q relation A ?x').statements[0];
-      const twoHoles = parse('@q relation ?x ?y').statements[0];
+      const oneHole = parse('@q owns A ?x').statements[0];
+      const twoHoles = parse('@q owns ?x ?y').statements[0];
 
       const result1 = queryEngine.execute(oneHole);
       const result2 = queryEngine.execute(twoHoles);
@@ -224,12 +225,12 @@ describe('QueryEngine', () => {
     test('should work with bundled KB', () => {
       setup();
       learn(`
-        loves Alice Bob
-        loves Carol Dave
-        likes Eve Frank
+        owns Alice Bob
+        owns Carol Dave
+        owns Eve Frank
       `);
 
-      const query = parse('@q loves ?who Bob').statements[0];
+      const query = parse('@q owns ?who Bob').statements[0];
       const result = queryEngine.execute(query);
 
       // Should find something in bundled KB
@@ -291,12 +292,12 @@ describe('QueryEngine', () => {
     test('should provide alternatives from other matching facts', () => {
       setup();
       learn(`
-        likes John Pizza
-        likes John Pasta
-        likes John Sushi
+        owns John Pizza
+        owns John Pasta
+        owns John Sushi
       `);
 
-      const query = parse('@q likes John ?food').statements[0];
+      const query = parse('@q owns John ?food').statements[0];
       const result = queryEngine.execute(query);
 
       assert.ok(result.success, 'query should succeed');
@@ -312,17 +313,17 @@ describe('QueryEngine', () => {
     test('should work through session.query()', () => {
       setup();
       session.learn(`
-        parent John Mary
-        parent John Bob
-        parent Alice Carol
+        owns John Mary
+        owns John Bob
+        owns Alice Carol
       `);
 
-      const result = session.query('@q parent John ?child');
+      const result = session.query('@q owns John ?child');
 
       assert.ok(result.success, 'query should succeed');
       assert.ok('allResults' in result, 'should have allResults via session.query');
       const answer = result.bindings.get('child').answer;
-      assert.ok(['Mary', 'Bob'].includes(answer), `John's child should be Mary or Bob, got ${answer}`);
+      assert.ok(['Mary', 'Bob'].includes(answer), `John's value should be Mary or Bob, got ${answer}`);
     });
   });
 });

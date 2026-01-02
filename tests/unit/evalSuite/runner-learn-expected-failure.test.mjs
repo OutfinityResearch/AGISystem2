@@ -8,7 +8,7 @@ describe('EvalSuite runner: expected learn failures', () => {
   test('learn contradiction can be marked as expected failure and remains atomic', async () => {
     const session = new Session({ geometry: 2048, reasoningProfile: 'theoryDriven', rejectContradictions: true });
 
-    const base = session.learn('hasState Door Open');
+    const base = session.learn('before Door Kitchen');
     assert.equal(base.success, true);
     assert.equal(session.kbFacts.length, 1);
 
@@ -17,15 +17,15 @@ describe('EvalSuite runner: expected learn failures', () => {
       input_nl: '',
       input_dsl: `
         locatedIn Door Kitchen
-        hasState Door Closed
+        after Door Kitchen
       `,
       expect_success: false,
       assert_state_unchanged: true,
       expect_error_includes: 'Contradiction rejected',
       expected_nl: 'Warning: contradiction',
       proof_nl: [
-        'mutuallyExclusive hasState Open Closed',
-        'Therefore reject hasState Door Closed'
+        'contradictsSameArgs before after',
+        'Therefore reject after Door Kitchen'
       ]
     };
 

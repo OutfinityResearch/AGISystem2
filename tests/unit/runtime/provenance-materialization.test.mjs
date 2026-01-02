@@ -7,6 +7,8 @@ describe('URC provenance materialization', () => {
     const session = new Session({ geometry: 2048 });
     const loaded = session.loadPack('URC', { includeIndex: true, validate: false });
     assert.equal(loaded.success, true);
+    const extras = session.loadPack('tests_and_evals', { includeIndex: true, validate: false });
+    assert.equal(extras.success, true, JSON.stringify(extras.errors));
 
     const res = session.executeNL(
       { mode: 'learn', text: 'Anne is a Dog.' },

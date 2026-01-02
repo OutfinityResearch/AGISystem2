@@ -80,20 +80,20 @@ describe('InductionEngine', () => {
       setup();
 
       session.learn(`
-        @f1:f1 loves John Mary
-        @f2:f2 loves Alice Bob
-        @f3:f3 loves Carol Dave
-        @f4:f4 loves Eve Frank
+        @f1:f1 locatedIn John City
+        @f2:f2 locatedIn Alice City
+        @f3:f3 locatedIn Carol City
+        @f4:f4 locatedIn Eve City
       `);
 
       const result = session.induce({ minExamples: 3 });
 
       const relationalPattern = result.patterns.find(p =>
-        p.type === 'relational' && p.operator === 'loves'
+        p.type === 'relational' && p.operator === 'locatedIn'
       );
 
       if (relationalPattern) {
-        assert.ok(relationalPattern.facts >= 3, 'should find multiple loves facts');
+        assert.ok(relationalPattern.facts >= 3, 'should find multiple locatedIn facts');
       }
     });
   });

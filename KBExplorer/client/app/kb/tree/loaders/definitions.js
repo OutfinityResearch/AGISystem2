@@ -43,6 +43,7 @@ export async function ensureDefinitionTreeLoaded(ctx, node) {
         value: String(op),
         definitionFactId: typeof opDefId === 'number' ? opDefId : null,
         definitionLabel: opDefLabel,
+        source: res?.bundle?.operator?.source || null,
         vectorValue: opVecVal,
         graphDsl: res?.bundle?.operator?.graphDsl || null
       }
@@ -77,6 +78,7 @@ export async function ensureDefinitionTreeLoaded(ctx, node) {
           position: b.position,
           definitionFactId: typeof b.argFactId === 'number' ? b.argFactId : null,
           definitionLabel: b.argFactLabel ?? null,
+          source: b.source || null,
           vectorValue: b.vectorValue ?? null
         }
       });
@@ -94,4 +96,3 @@ export async function ensureDefinitionTreeLoaded(ctx, node) {
     node.loading = false;
   }
 }
-

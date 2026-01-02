@@ -28,6 +28,7 @@ export function searchPropertyInheritance(session, operator, entityName, holeNam
   const results = [];
   const visited = new Set();
   const componentKB = session?.componentKB;
+  const factIndex = session?.factIndex;
 
   // Build isA chain for entity
   const queue = [{ entity: entityName, depth: 0, steps: [] }];
@@ -47,7 +48,8 @@ export function searchPropertyInheritance(session, operator, entityName, holeNam
         }
       }
     } else {
-      for (const fact of session.kbFacts) {
+      const scanFacts = factIndex?.getByOperator ? factIndex.getByOperator(operator) : session.kbFacts;
+      for (const fact of scanFacts) {
         session.reasoningStats.kbScans++;
         const meta = fact.metadata;
         if (meta?.operator === operator && meta.args?.[0] === current && meta.args?.[1]) {
@@ -94,7 +96,8 @@ export function searchPropertyInheritance(session, operator, entityName, holeNam
         }
       }
     } else {
-      for (const fact of session.kbFacts) {
+      const scanFacts = factIndex?.getByOperator ? factIndex.getByOperator('isA') : session.kbFacts;
+      for (const fact of scanFacts) {
         session.reasoningStats.kbScans++;
         const meta = fact.metadata;
         if (meta?.operator === 'isA' && meta.args?.[0] === current) {
@@ -123,12 +126,14 @@ export function searchPropertyInheritance(session, operator, entityName, holeNam
 export function searchPropertyInheritanceByValue(session, operator, value, holeName) {
   const results = [];
   const componentKB = session?.componentKB;
+  const factIndex = session?.factIndex;
 
   const holderFacts = componentKB
     ? componentKB.findByOperatorAndArg1(operator, value)
     : (() => {
-      session.reasoningStats.kbScans += session.kbFacts.length;
-      return session.kbFacts
+      const scanFacts = factIndex?.getByOperator ? factIndex.getByOperator(operator) : session.kbFacts;
+      session.reasoningStats.kbScans += scanFacts.length;
+      return scanFacts
         .filter(f => f.metadata?.operator === operator && f.metadata?.args?.[1] === value)
         .map(f => f.metadata);
     })();
@@ -148,7 +153,8 @@ export function searchPropertyInheritanceByValue(session, operator, value, holeN
       if (fact.args?.[0]) candidates.add(fact.args[0]);
     }
   } else {
-    for (const fact of session.kbFacts) {
+    const scanFacts = factIndex?.getByOperator ? factIndex.getByOperator('isA') : session.kbFacts;
+    for (const fact of scanFacts) {
       session.reasoningStats.kbScans++;
       const meta = fact.metadata;
       if (meta?.operator === 'isA' && meta.args?.[0]) {
@@ -203,10 +209,20 @@ export function searchPropertyInheritanceByValue(session, operator, value, holeN
 export function isPropertyNegated(session, operator, entity, value) {
   // Check if there's a negation that applies to this entity or any parent type
   const entitiesToCheck = [entity, ...getAllParentTypes(session, entity)];
+  const isExact = (session?.hdcStrategy || 'exact') === 'exact';
+  const factIndex = session?.factIndex;
 
   for (const ent of entitiesToCheck) {
+    // Fast-path: explicit/expanded Not operator facts (includes Not $ref expansions).
+    if (factIndex?.hasNary && factIndex.hasNary('Not', [operator, ent, value])) {
+      return true;
+    }
+
     // Check direct negation via Not $ref pattern using HDC similarity
-    for (const fact of session.kbFacts) {
+    if (isExact) continue;
+
+    const notFacts = factIndex?.getByOperator ? factIndex.getByOperator('Not') : session.kbFacts;
+    for (const fact of notFacts) {
       session.reasoningStats.kbScans++;
       const meta = fact.metadata;
       if (meta?.operator === 'Not') {
@@ -240,21 +256,12 @@ export function isPropertyNegated(session, operator, entity, value) {
       }
     }
 
-    // Also check for explicit "Not operator entity value" facts
-    for (const fact of session.kbFacts) {
+    // Legacy fallback: older Not encodings (if any) - scan Not operator facts only.
+    for (const fact of notFacts) {
       session.reasoningStats.kbScans++;
-      const meta = fact.metadata;
-      if (!meta) continue;
-
-      if (meta.operator === 'Not' && meta.args?.length >= 3) {
-        const negOp = meta.args[0];
-        const negEntity = meta.args[1];
-        const negValue = meta.args[2];
-
-        if (negOp === operator && negEntity === ent && negValue === value) {
-          return true;
-        }
-      }
+      const meta = fact?.metadata;
+      if (meta?.operator !== 'Not') continue;
+      if (meta.args?.[0] === operator && meta.args?.[1] === ent && meta.args?.[2] === value) return true;
     }
   }
 
@@ -271,15 +278,21 @@ export function getAllParentTypes(session, entity) {
   const parents = [];
   const visited = new Set();
   const queue = [entity];
+  const componentKB = session?.componentKB;
+  const factIndex = session?.factIndex;
 
   while (queue.length > 0) {
     const current = queue.shift();
     if (visited.has(current)) continue;
     visited.add(current);
 
-    for (const fact of session.kbFacts) {
+    const scanFacts = componentKB?.findByOperatorAndArg0
+      ? componentKB.findByOperatorAndArg0('isA', current)
+      : (factIndex?.getByOperator ? factIndex.getByOperator('isA') : session.kbFacts);
+
+    for (const fact of scanFacts) {
       session.reasoningStats.kbScans++;
-      const meta = fact.metadata;
+      const meta = fact?.metadata || fact;
       if (meta?.operator === 'isA' && meta.args?.[0] === current) {
         const parent = meta.args[1];
         if (parent && !visited.has(parent)) {
@@ -302,6 +315,8 @@ export function getAllParentTypes(session, entity) {
 export function entityIsA(session, entity, type) {
   const visited = new Set();
   const queue = [entity];
+  const componentKB = session?.componentKB;
+  const factIndex = session?.factIndex;
 
   while (queue.length > 0) {
     const current = queue.shift();
@@ -309,9 +324,13 @@ export function entityIsA(session, entity, type) {
     if (visited.has(current)) continue;
     visited.add(current);
 
-    for (const fact of session.kbFacts) {
+    const scanFacts = componentKB?.findByOperatorAndArg0
+      ? componentKB.findByOperatorAndArg0('isA', current)
+      : (factIndex?.getByOperator ? factIndex.getByOperator('isA') : session.kbFacts);
+
+    for (const fact of scanFacts) {
       session.reasoningStats.kbScans++;
-      const meta = fact.metadata;
+      const meta = fact?.metadata || fact;
       if (meta?.operator === 'isA' && meta.args?.[0] === current) {
         const parent = meta.args[1];
         if (parent && !visited.has(parent)) {
@@ -330,6 +349,7 @@ function findIsAPath(session, entity, targetType) {
   const queue = [entity];
   const prev = new Map();
   const componentKB = session?.componentKB;
+  const factIndex = session?.factIndex;
 
   while (queue.length > 0) {
     const current = queue.shift();
@@ -341,7 +361,8 @@ function findIsAPath(session, entity, targetType) {
         if (fact.args?.[1]) parents.push(fact.args[1]);
       }
     } else {
-      for (const fact of session.kbFacts) {
+      const scanFacts = factIndex?.getByOperator ? factIndex.getByOperator('isA') : session.kbFacts;
+      for (const fact of scanFacts) {
         session.reasoningStats.kbScans++;
         const meta = fact.metadata;
         if (meta?.operator === 'isA' && meta.args?.[0] === current && meta.args?.[1]) {

@@ -85,7 +85,11 @@ export function canonicalizeStatement(session, stmt) {
   if (stmt instanceof Statement) {
     const operator = canonicalizeExpression(session, stmt.operator);
     const args = (stmt.args || []).map(a => canonicalizeExpression(session, a));
-    return new Statement(stmt.destination, operator, args, stmt.line, stmt.column, stmt.persistName);
+    const out = new Statement(stmt.destination, operator, args, stmt.line, stmt.column, stmt.persistName);
+    out.source = stmt.source || null;
+    out.comment = stmt.comment ?? null;
+    out.commentColumn = stmt.commentColumn ?? null;
+    return out;
   }
 
   // Plain object fallback.

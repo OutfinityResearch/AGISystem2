@@ -6,7 +6,7 @@ import {
   sanitizePredicate
 } from '../../utils.mjs';
 
-import { CORE_GRAPH_ARITY } from '../../../../runtime/operator-catalog.mjs';
+import { DEFAULT_GRAPH_ARITY } from '../../../../runtime/operator-catalog.mjs';
 import { clean, lower, detectNegationPrefix } from '../text.mjs';
 import { collapseProperNames, isKnownOperator } from './shared.mjs';
 
@@ -177,7 +177,7 @@ function parseFunctionalCall(text, defaultVar = '?x', options = {}) {
   const [a0, a1] = args;
   const swappedArgs = a1 !== undefined ? [a1, a0] : args;
 
-  const expectedArity = CORE_GRAPH_ARITY.get(op);
+  const expectedArity = DEFAULT_GRAPH_ARITY.get(op);
   let effectiveOp = op;
   const declaredOperators = [];
   if (typeof expectedArity === 'number' && expectedArity !== 2) {
@@ -214,7 +214,7 @@ function parseOfIsRelationClause(text, defaultVar = '?x', options = {}) {
   const ofEntity = normalizeEntity(ofRaw, defaultVar);
   const valueEntity = normalizeEntity(valueRaw, defaultVar);
 
-  const expectedArity = CORE_GRAPH_ARITY.get(op);
+  const expectedArity = DEFAULT_GRAPH_ARITY.get(op);
   let effectiveOp = op;
   const declaredOperators = [];
   if (typeof expectedArity === 'number' && expectedArity !== 2) {
@@ -341,7 +341,7 @@ export function parseRelationClause(text, defaultVar = '?x', options = {}) {
       const op = sanitizePredicate(normalizeVerb(verbPhrase));
 
       if (!op) return null;
-      const expectedArity = CORE_GRAPH_ARITY.get(op);
+      const expectedArity = DEFAULT_GRAPH_ARITY.get(op);
       if (typeof expectedArity === 'number' && expectedArity !== 2) {
         const prop = sanitizePredicate(`${op}_${objPhrase.replace(/\s+/g, '_')}`);
         return { op: 'And', items: [{ negated: hasNot, atom: { op: 'hasProperty', args: [subject, prop || op] } }] };
@@ -371,7 +371,7 @@ export function parseRelationClause(text, defaultVar = '?x', options = {}) {
     if (verbLower === 'has') base = 'have';
     const op = sanitizePredicate(normalizeVerb(base));
 
-    const expectedArity = CORE_GRAPH_ARITY.get(op);
+    const expectedArity = DEFAULT_GRAPH_ARITY.get(op);
     if (typeof expectedArity === 'number' && expectedArity !== 1) {
       return { op: 'And', items: [{ negated: hasNot, atom: { op: 'hasProperty', args: [subject, op] } }] };
     }
@@ -408,7 +408,7 @@ export function parseRelationClause(text, defaultVar = '?x', options = {}) {
     const op = sanitizePredicate(normalizeVerb(base));
     if (!op) return null;
 
-    const expectedArity = CORE_GRAPH_ARITY.get(op);
+    const expectedArity = DEFAULT_GRAPH_ARITY.get(op);
     if (objText && typeof expectedArity === 'number' && expectedArity !== 2) {
       const prop = sanitizePredicate(`${op}_${objText.replace(/\s+/g, '_')}`);
       items.push({ negated: hasNot, atom: { op: 'hasProperty', args: [defaultVar, prop || op] } });
@@ -475,7 +475,7 @@ export function parseRelationClause(text, defaultVar = '?x', options = {}) {
     }
   }
 
-  const expectedArity = CORE_GRAPH_ARITY.get(op);
+  const expectedArity = DEFAULT_GRAPH_ARITY.get(op);
   let effectiveOp = op;
   const declaredOperators = [];
   if (typeof expectedArity === 'number' && expectedArity !== 2) {

@@ -17,20 +17,21 @@ describe('End-to-End Pipeline', () => {
   describe('Learn → Query → Decode', () => {
     test('should encode facts and retrieve them via query', () => {
       const session = makeSession();
+      session.learn('@rel:rel __Relation');
 
       // 1. LEARN - use @var:name for scope + KB persistence
       session.learnAndVerify(`
-        @f1:f1 loves John Mary
-        @f2:f2 loves Bob Alice
+        @f1:f1 rel John Mary
+        @f2:f2 rel Bob Alice
       `);
 
       // Verify facts were stored
       assert.ok(session.scope.has('f1'));
       assert.ok(session.scope.has('f2'));
-      assert.equal(session.kbFacts.length, 2);
+      assert.equal(session.kbFacts.length, 3); // includes the persistent operator declaration
 
       // 2. QUERY
-      const result = session.query('@q loves John ?who');
+      const result = session.query('@q rel John ?who');
       assert.ok('bindings' in result);
 
       // 3. DECODE
@@ -43,11 +44,12 @@ describe('End-to-End Pipeline', () => {
 
     test('should handle multi-argument relations', () => {
       const session = makeSession();
+      session.learn('@rel:rel __Relation');
 
       // Use anonymous fact for KB persistence
-      session.learn('sells Alice Book Bob');
+      session.learn('rel Alice Book Bob');
 
-      const result = session.query('@q sells ?seller Book ?buyer');
+      const result = session.query('@q rel ?seller Book ?buyer');
       assert.ok('bindings' in result);
 
       session.close();
@@ -55,8 +57,9 @@ describe('End-to-End Pipeline', () => {
 
     test('should produce readable natural language', () => {
       const session = makeSession();
+      session.learn('@rel:rel __Relation');
 
-      session.learn('@fact loves Romeo Juliet');
+      session.learn('@fact rel Romeo Juliet');
 
       const vec = session.scope.get('fact');
       const summary = session.summarize(vec);
@@ -129,8 +132,9 @@ describe('End-to-End Pipeline', () => {
   describe('TestSession Verification', () => {
     test('should track assertions', () => {
       const session = makeSession();
+      session.learn('@rel:rel __Relation');
 
-      session.learn('@f loves A B');
+      session.learn('@f rel A B');
 
       const report = session.getReport();
       assert.ok('total' in report);
@@ -142,10 +146,11 @@ describe('End-to-End Pipeline', () => {
 
     test('should log operations', () => {
       const session = makeSession();
+      session.learn('@rel:rel __Relation');
 
       // Use *AndVerify methods which log to testLog
-      session.learnAndVerify('@f loves A B');
-      session.queryAndVerify('@q loves ?x B', {});
+      session.learnAndVerify('@f rel A B');
+      session.queryAndVerify('@q rel ?x B', {});
 
       assert.ok(session.testLog.length >= 2, `Expected >= 2 log entries, got ${session.testLog.length}`);
 
@@ -156,8 +161,9 @@ describe('End-to-End Pipeline', () => {
   describe('Error Handling', () => {
     test('should handle empty KB gracefully', () => {
       const session = makeSession();
+      session.learn('@rel:rel __Relation');
 
-      const result = session.query('@q loves ?who Mary');
+      const result = session.query('@q rel ?who Mary');
       assert.equal(result.success, false);
       assert.equal(result.bindings.size, 0);
 

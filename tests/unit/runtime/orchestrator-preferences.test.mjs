@@ -7,6 +7,8 @@ describe('URC orchestrator preferences', () => {
     const session = new Session({ geometry: 2048 });
     const loaded = session.loadPack('URC', { includeIndex: true, validate: false });
     assert.equal(loaded.success, true, `URC pack load failed: ${JSON.stringify(loaded.errors || [])}`);
+    const extras = session.loadPack('tests_and_evals', { includeIndex: true, validate: false });
+    assert.equal(extras.success, true, `tests_and_evals pack load failed: ${JSON.stringify(extras.errors || [])}`);
 
     const res = session.orchestrate({ goalKind: 'Find', dsl: 'leq 1 2' }, { materializeFacts: false });
     assert.equal(res.success, true);
@@ -20,6 +22,8 @@ describe('URC orchestrator preferences', () => {
     const session = new Session({ geometry: 2048 });
     const loaded = session.loadPack('URC', { includeIndex: true, validate: false });
     assert.equal(loaded.success, true, `URC pack load failed: ${JSON.stringify(loaded.errors || [])}`);
+    const extras = session.loadPack('tests_and_evals', { includeIndex: true, validate: false });
+    assert.equal(extras.success, true, `tests_and_evals pack load failed: ${JSON.stringify(extras.errors || [])}`);
 
     // Override: choose Internal backend instead of compile.
     const override = session.learn('PreferBackend Find Frag_SMT_LRA Internal');
@@ -34,4 +38,3 @@ describe('URC orchestrator preferences', () => {
     assert.ok(!res.artifact, 'should not compile when backend is Internal');
   });
 });
-

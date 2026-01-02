@@ -31,7 +31,7 @@ export class LexerError extends Error {
 
 export class Lexer {
   constructor(input) {
-    this.input = input;
+    this.input = typeof input === 'string' ? input : String(input ?? '');
     this.pos = 0;
     this.line = 1;
     this.column = 1;
@@ -64,10 +64,12 @@ export class Lexer {
   nextToken() {
     const ch = this.peek();
 
-    // Skip comments
-    if (ch === '#' || (ch === '/' && this.peek(1) === '/')) {
-      this.skipLineComment();
-      return null;
+    // Line comment (kept as token so it can be attached as metadata).
+    if (ch === '#') {
+      return this.readLineComment('#');
+    }
+    if (ch === '/' && this.peek(1) === '/') {
+      return this.readLineComment('//');
     }
 
     // Multi-line comment
@@ -334,12 +336,25 @@ export class Lexer {
   }
 
   /**
-   * Skip line comment
+   * Read a line comment token (does not consume the trailing newline).
    */
-  skipLineComment() {
-    while (!this.isEof() && this.peek() !== '\n') {
-      this.advance();
+  readLineComment(prefix) {
+    const startLine = this.line;
+    const startColumn = this.column;
+
+    if (prefix === '#') {
+      this.advance(); // '#'
+    } else {
+      this.advance(); // '/'
+      this.advance(); // '/'
     }
+
+    let value = '';
+    while (!this.isEof() && this.peek() !== '\n') {
+      value += this.advance();
+    }
+
+    return new Token(TOKEN_TYPES.COMMENT, value.trim(), startLine, startColumn);
   }
 
   /**

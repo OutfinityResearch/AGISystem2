@@ -1,0 +1,21 @@
+# tests_and_evals - Theory Pack Index
+# Non-minimal, eval-driven, and convenience vocabulary that should not be part of the baseline packs.
+#
+# Policy:
+# - Baseline packs should remain domain-agnostic and small.
+# - This pack groups anything that exists mainly because tests/evals/UI need it today.
+# - We will likely split this pack later into evalSuite/domain-specific packs.
+
+@_ Load "./urc-policy-defaults.sys2"  # Provide URC policy defaults for tests and evals.
+@_ Load "../URC/14-backend-capabilities-defaults.sys2"  # Provide backend capability defaults for evaluation convenience.
+@_ Load "../URC/15-backend-preferences-defaults.sys2"  # Provide backend preference defaults for evaluation convenience.
+@_ Load "../URC/16-backend-fallbacks-defaults.sys2"  # Provide backend fallback defaults for evaluation convenience.
+
+@_ Load "../Relations/10-common-relations.sys2"  # Provide social/common relations used in story-style evals.
+@_ Load "./story-relations.sys2"  # Provide additional story-style relations used in toy domains.
+@_ Load "./everyday-states.sys2"  # Provide everyday state/property tokens used by toy domain constraints.
+
+@_ Load "../Semantics/04-semantic-primitives.sys2"  # Provide Conceptual Dependency primitives used by story/eval corpora.
+@_ Load "../Lexicon/11-bootstrap-verbs.sys2"  # Provide convenience verbs used by NL→DSL and eval corpora.
+@_ Load "../Reasoning/12-reasoning.sys2"  # Provide reasoning-operation vocabulary used by eval convenience.
+@_ Load "../Canonicalization/13c-canonical-rewrites.sys2"  # Provide domain-specific canonical rewrites (CD↔lexicon).

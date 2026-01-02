@@ -68,8 +68,19 @@ Each argument is bound with its **position vector** (Pos1, Pos2, etc.) before be
 | `$var` | Reference | Access any binding in scope |
 | `?var` | Hole | Unknown to solve |
 | `name` | Literal | Vector from loaded theory |
-| `#` | Comment | Ignored until EOL |
+| `#` / `//` | Comment | Inline explanation captured as source metadata |
 | (no prefix) | Anonymous | Add directly to KB |
+
+**Single-`@` rule (strict):**
+- A Sys2DSL line MUST contain **at most one** `@` token (the optional destination at the beginning).
+- Any additional `@` on the same line is a **parse error**.
+- To reference a previously declared binding, use `$name` (never `@name`).
+
+**Inline comments (recommended):**
+- You can append an inline comment after any statement, graph header, or `return` line:
+  - `@x isA Human  # explain why x is typed as Human`
+- In official theory packs, each DSL line SHOULD include a short explanation of **why** it exists (at least 3 words).
+- Tooling should preserve comments along with filename/line/column as source metadata for inspection (e.g., in KBExplorer).
 
 **Persistence Rules:**
 

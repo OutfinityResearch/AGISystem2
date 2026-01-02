@@ -1,6 +1,30 @@
 import { Identifier, Reference, Literal, Compound, List, Hole } from '../parser/ast.mjs';
 import { ExecutionError } from './execution-error.mjs';
 
+function attachSourceMetadata(stmt, metadata) {
+  if (!metadata || typeof metadata !== 'object' || !stmt) return metadata;
+
+  const src = stmt?.source || null;
+  const file = src?.file ?? null;
+  const line = src?.line ?? stmt?.line ?? null;
+  const column = src?.column ?? stmt?.column ?? null;
+  const comment = typeof stmt?.comment === 'string' ? stmt.comment : null;
+  const commentColumn = Number.isFinite(stmt?.commentColumn) ? stmt.commentColumn : null;
+
+  if (!file && !Number.isFinite(line) && !comment) return metadata;
+
+  return {
+    ...metadata,
+    source: {
+      file,
+      line: Number.isFinite(line) ? line : null,
+      column: Number.isFinite(column) ? column : null,
+      comment,
+      commentColumn
+    }
+  };
+}
+
 function asInt(node) {
   if (!node) return null;
   if (node instanceof Literal && node.literalType === 'number') {
@@ -124,7 +148,7 @@ export function extractName(executor, node) {
 export function extractMetadata(executor, stmt) {
   const operatorName = resolveNameFromNode(executor, stmt.operator);
   const args = stmt.args.map(arg => resolveNameFromNode(executor, arg));
-  return { operator: operatorName, args };
+  return attachSourceMetadata(stmt, { operator: operatorName, args });
 }
 
 export function extractCompoundMetadata(executor, compound) {
@@ -144,7 +168,7 @@ export function extractMetadataWithNotExpansion(executor, stmt, operatorName) {
     if (!fromOp || !toOp || !argMap) {
       throw new ExecutionError('canonicalRewrite expects: fromOp toOp [argMap...] [[i,j]...]', stmt);
     }
-    return { operator: 'canonicalRewrite', args: [fromOp, toOp], argMap, eq };
+    return attachSourceMetadata(stmt, { operator: 'canonicalRewrite', args: [fromOp, toOp], argMap, eq });
   }
 
   // DS19: structured rule metadata for proof-real reconstruction.
@@ -154,7 +178,7 @@ export function extractMetadataWithNotExpansion(executor, stmt, operatorName) {
     const condition = extractExpressionMetadata(executor, condNode, { requirePropositionMetadata: true, parentStmt: stmt });
     const conclusion = extractExpressionMetadata(executor, concNode, { requirePropositionMetadata: true, parentStmt: stmt });
     const base = extractMetadata(executor, stmt);
-    return { ...base, condition: condition || null, conclusion: conclusion || null };
+    return attachSourceMetadata(stmt, { ...base, condition: condition || null, conclusion: conclusion || null });
   }
 
   if ((operatorName === 'And' || operatorName === 'Or') && stmt.args.length >= 1) {
@@ -163,20 +187,20 @@ export function extractMetadataWithNotExpansion(executor, stmt, operatorName) {
       parts.push(extractExpressionMetadata(executor, arg, { requirePropositionMetadata: true, parentStmt: stmt }));
     }
     const base = extractMetadata(executor, stmt);
-    return { ...base, parts };
+    return attachSourceMetadata(stmt, { ...base, parts });
   }
 
   if (operatorName === 'Not' && stmt.args.length === 1 && stmt.args[0] instanceof Reference) {
     const refName = stmt.args[0].name;
     const innerMeta = executor.session.referenceMetadata.get(refName);
     if (innerMeta) {
-      return {
+      return attachSourceMetadata(stmt, {
         operator: 'Not',
         args: [innerMeta.operator, ...innerMeta.args],
         innerOperator: innerMeta.operator,
         innerArgs: innerMeta.args,
         inner: innerMeta
-      };
+      });
     }
 
     if (executor.session?.enforceCanonical) {
@@ -187,13 +211,13 @@ export function extractMetadataWithNotExpansion(executor, stmt, operatorName) {
   if (operatorName === 'Not' && stmt.args.length === 1 && stmt.args[0] instanceof Compound) {
     const inner = extractExpressionMetadata(executor, stmt.args[0], { parentStmt: stmt });
     if (inner.operator) {
-      return {
+      return attachSourceMetadata(stmt, {
         operator: 'Not',
         args: [inner.operator, ...inner.args],
         innerOperator: inner.operator,
         innerArgs: inner.args,
         inner
-      };
+      });
     }
   }
 
@@ -203,12 +227,12 @@ export function extractMetadataWithNotExpansion(executor, stmt, operatorName) {
     const innerOperator = resolveNameFromNode(executor, stmt.args[0]);
     const innerArgs = stmt.args.slice(1).map(arg => resolveNameFromNode(executor, arg));
     if (innerOperator) {
-      return {
+      return attachSourceMetadata(stmt, {
         operator: 'Not',
         args: [innerOperator, ...innerArgs],
         innerOperator,
         innerArgs
-      };
+      });
     }
   }
 
@@ -216,10 +240,10 @@ export function extractMetadataWithNotExpansion(executor, stmt, operatorName) {
     const variable = resolveNameFromNode(executor, stmt.args[0]);
     const body = extractExpressionMetadata(executor, stmt.args[1], { requirePropositionMetadata: true, parentStmt: stmt });
     const base = extractMetadata(executor, stmt);
-    return { ...base, variable, body: body || null };
+    return attachSourceMetadata(stmt, { ...base, variable, body: body || null });
   }
 
-  return extractMetadata(executor, stmt);
+  return attachSourceMetadata(stmt, extractMetadata(executor, stmt));
 }
 
 export function statementToFactString(executor, stmt) {

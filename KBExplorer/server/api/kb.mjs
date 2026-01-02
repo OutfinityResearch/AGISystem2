@@ -1,5 +1,5 @@
 import { json } from '../lib/http.mjs';
-import { buildBundleView, buildFactSummary, vectorValue } from '../lib/views.mjs';
+import { buildBundleView, buildFactSummary, polynomialTermCount, vectorValue } from '../lib/views.mjs';
 
 export async function handleKbApi(req, res, url, ctx) {
   if (req.method === 'GET' && url.pathname === '/api/kb/facts') {
@@ -7,6 +7,7 @@ export async function handleKbApi(req, res, url, ctx) {
     const { session } = found.universe;
     const q = String(url.searchParams.get('q') || '').trim().toLowerCase();
     const namedOnly = ['1', 'true', 'yes', 'on'].includes(String(url.searchParams.get('namedOnly') || '0').toLowerCase());
+    const complexOnly = ['1', 'true', 'yes', 'on'].includes(String(url.searchParams.get('complexOnly') || '0').toLowerCase());
     const namedFirst = !['0', 'false', 'no', 'off'].includes(String(url.searchParams.get('namedFirst') || '1').toLowerCase());
     const limitRaw = Number(url.searchParams.get('limit') || 200);
     const offsetRaw = Number(url.searchParams.get('offset') || 0);
@@ -15,9 +16,12 @@ export async function handleKbApi(req, res, url, ctx) {
 
     const allFacts = (session.kbFacts || []).map(f => {
       const summary = buildFactSummary(session, f);
+      const polyTerms = polynomialTermCount(f?.vector);
       const hay = `${summary.factId} ${summary.name || ''} ${summary.operator || ''} ${(summary.args || []).join(' ')} ${summary.label}`.toLowerCase();
-      return { ...summary, _hay: hay };
-    }).filter(f => (namedOnly ? !!f.name : true));
+      return { ...summary, polyTerms, _hay: hay };
+    })
+      .filter(f => (namedOnly ? !!f.name : true))
+      .filter(f => (complexOnly ? (Number(f.polyTerms || 0) >= 2) : true));
 
     const filtered = q ? allFacts.filter(f => f._hay.includes(q)) : allFacts;
     filtered.sort((a, b) => {
@@ -49,11 +53,15 @@ export async function handleKbApi(req, res, url, ctx) {
     const found = ctx.store.requireUniverse(req, url) ?? ctx.store.getOrCreateUniverse(req, url);
     const { session } = found.universe;
     const kb = session.getKBBundle?.() || session.kb || null;
+    const limitRaw = Number(url.searchParams.get('limit') || 256);
+    const offsetRaw = Number(url.searchParams.get('offset') || 0);
+    const limit = Number.isFinite(limitRaw) ? Math.min(Math.max(1, Math.floor(limitRaw)), 16384) : 256;
+    const offset = Number.isFinite(offsetRaw) ? Math.max(0, Math.floor(offsetRaw)) : 0;
     json(res, 200, {
       ok: true,
       sessionId: found.sessionId,
       kbFactCount: (session.kbFacts || []).length,
-      kbVector: vectorValue(kb)
+      kbVector: vectorValue(kb, { maxItems: limit, offset })
     });
     return true;
   }

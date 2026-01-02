@@ -47,6 +47,14 @@ describe('Lexer Tokens', () => {
       assert.equal(holes.length, 1);
       assert.equal(holes[0].value, 'what');
     });
+
+    test('should tokenize line comments as COMMENT tokens', () => {
+      const lexer = new Lexer('@f test A  # explain why this exists');
+      const tokens = lexer.tokenize();
+      const comments = tokens.filter(t => t.type === TOKEN_TYPES.COMMENT);
+      assert.equal(comments.length, 1);
+      assert.equal(comments[0].value, 'explain why this exists');
+    });
   });
 
   describe('Special tokens', () => {

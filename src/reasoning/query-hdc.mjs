@@ -133,8 +133,11 @@ export function verifyHDCCandidate(session, operatorName, knowns, candidate, hol
   }
 
   // Check if this exact fact exists in KB
-  for (const fact of session.kbFacts) {
-    session.reasoningStats.kbScans++;
+  const scanFacts = session?.factIndex?.getByOperator
+    ? session.factIndex.getByOperator(normalizedOperator)
+    : session.kbFacts;
+  session.reasoningStats.kbScans += scanFacts.length;
+  for (const fact of scanFacts) {
     const meta = fact.metadata;
     if (!meta || meta.operator !== normalizedOperator) continue;
     if (!meta.args || meta.args.length !== args.length) continue;

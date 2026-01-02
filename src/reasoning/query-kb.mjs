@@ -30,10 +30,13 @@ export function searchKBDirect(session, operatorName, knowns, holes, options = {
   const seen = new Set();
 
   const componentKB = session.componentKB;
+  const factIndex = session?.factIndex;
   let scanFacts = session.kbFacts;
   if (componentKB && operatorName) {
     // NOTE: direct KB search must be exact (no synonym expansion), to preserve semantics.
     scanFacts = componentKB.findByOperator(operatorName, false);
+  } else if (factIndex?.getByOperator && operatorName) {
+    scanFacts = factIndex.getByOperator(operatorName);
   }
 
   for (const fact of scanFacts) {
@@ -108,7 +111,10 @@ export function searchKBDirect(session, operatorName, knowns, holes, options = {
  */
 export function isTypeClass(session, name) {
   const componentKB = session.componentKB;
-  const scanFacts = componentKB?.findByArg1 ? componentKB.findByArg1(name, false) : session.kbFacts;
+  const factIndex = session?.factIndex;
+  const scanFacts = componentKB?.findByArg1
+    ? componentKB.findByArg1(name, false)
+    : (factIndex?.getByOperator ? factIndex.getByOperator('isA') : session.kbFacts);
 
   for (const fact of scanFacts) {
     session.reasoningStats.kbScans++;
@@ -129,25 +135,31 @@ export function isTypeClass(session, name) {
  */
 export function isFactNegated(session, operator, args) {
   const componentKB = session.componentKB;
-  const scanFacts = componentKB?.findByOperator ? componentKB.findByOperator('Not', false) : session.kbFacts;
+  const factIndex = session?.factIndex;
+
+  // Fast-path: Not facts are now stored with expanded metadata `Not <op> <args...>`
+  // (including `Not $ref` expansions), so we can do an exact lookup.
+  if (factIndex?.hasNary && operator && Array.isArray(args)) {
+    if (factIndex.hasNary('Not', [operator, ...args])) return true;
+  }
+
+  const scanFacts = componentKB?.findByOperator
+    ? componentKB.findByOperator('Not', false)
+    : (factIndex?.getByOperator ? factIndex.getByOperator('Not') : session.kbFacts);
 
   for (const fact of scanFacts) {
     session.reasoningStats.kbScans++;
     const meta = fact?.metadata;
     if (meta?.operator !== 'Not') continue;
 
-    // Get the reference that Not is applied to
-    const refName = meta.args?.[0]?.replace('$', '');
-    if (!refName) continue;
-
-    // Look up what that reference points to
-    const refText = session.referenceTexts?.get(refName);
-    if (!refText) continue;
-
-    // Check if it matches our fact
-    const expectedText = `${operator} ${args.join(' ')}`;
-    if (refText === expectedText) {
-      return true;
+    // Legacy fallback: if this is still encoded as `Not $ref`, resolve via referenceTexts.
+    const maybeRef = meta.args?.[0];
+    if (typeof maybeRef === 'string' && maybeRef.startsWith('$')) {
+      const refName = maybeRef.replace(/^\$/, '');
+      const refText = session.referenceTexts?.get(refName);
+      if (!refText) continue;
+      const expectedText = `${operator} ${args.join(' ')}`;
+      if (refText === expectedText) return true;
     }
   }
   return false;
@@ -233,6 +245,8 @@ export function searchBundlePattern(session, operatorName, knowns, holes) {
   const strategy = session.hdcStrategy || 'exact';
   const thresholds = getThresholds(strategy);
   const bundleScore = thresholds.BUNDLE_COMMON_SCORE;
+  const factIndex = session?.factIndex;
+  const componentKB = session?.componentKB;
 
   // Check if any known is a bundle/induce pattern
   for (const known of knowns) {
@@ -240,9 +254,16 @@ export function searchBundlePattern(session, operatorName, knowns, holes) {
     const patternName = known.name?.startsWith('$') ? known.name.slice(1) : known.name;
 
     // Look for bundle/induce pattern in KB
-    const patternFact = session.kbFacts.find(f =>
-      f.name === patternName &&
-      (f.metadata?.operator === 'bundlePattern' || f.metadata?.operator === 'inducePattern')
+    const patternCandidates = factIndex?.getByOperator
+      ? [
+        ...factIndex.getByOperator('bundlePattern'),
+        ...factIndex.getByOperator('inducePattern')
+      ]
+      : (session.kbFacts || []);
+
+    const patternFact = patternCandidates.find(f =>
+      f?.name === patternName &&
+      (f?.metadata?.operator === 'bundlePattern' || f?.metadata?.operator === 'inducePattern')
     );
 
     if (!patternFact) continue;
@@ -259,18 +280,17 @@ export function searchBundlePattern(session, operatorName, knowns, holes) {
     for (const entity of sourceEntities) {
       const props = new Set();
 
-      for (const fact of session.kbFacts) {
-        session.reasoningStats.kbScans++;
-        const meta = fact.metadata;
-        if (!meta || meta.operator !== operatorName) continue;
+      const scanFacts = componentKB?.findByOperatorAndArg0
+        ? componentKB.findByOperatorAndArg0(operatorName, entity)
+        : (factIndex?.getByOperator ? factIndex.getByOperator(operatorName) : session.kbFacts);
 
-        // Check if this fact is about our entity (arg0 matches)
-        if (meta.args?.[0] === entity) {
-          const propValue = meta.args?.[1];
-          if (propValue) {
-            props.add(propValue);
-          }
-        }
+      for (const fact of scanFacts) {
+        session.reasoningStats.kbScans++;
+        const meta = fact?.metadata;
+        if (!meta || meta.operator !== operatorName) continue;
+        if (meta.args?.[0] !== entity) continue;
+        const propValue = meta.args?.[1];
+        if (propValue) props.add(propValue);
       }
 
       entityProperties.set(entity, props);

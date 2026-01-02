@@ -69,7 +69,12 @@ export function initRuntimeReservedAtoms(session, options = {}) {
   let created = 0;
   for (const name of names) {
     if (!session.vocabulary.has(name)) created++;
-    session.vocabulary.getOrCreate(name);
+    const isPos = /^Pos\d+$/.test(String(name));
+    session.vocabulary.getOrCreate(name, {
+      comment: isPos
+        ? 'Runtime-reserved position marker (PosN) required for structured binding.'
+        : 'Runtime-reserved atom required for cross-session invariants.'
+    });
   }
   return { created, names };
 }

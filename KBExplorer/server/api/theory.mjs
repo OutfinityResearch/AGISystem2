@@ -24,7 +24,7 @@ export async function handleTheoryApi(req, res, url, ctx) {
     return true;
   }
   try {
-    const result = session.learn(textBody);
+    const result = session.learn(textBody, { sourceName: `KBExplorer:${filename}` });
     json(res, 200, {
       ok: true,
       filename,

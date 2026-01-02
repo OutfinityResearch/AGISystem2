@@ -31,6 +31,7 @@ import { computeFeatureToggles, computeReasoningProfile } from './reasoning-prof
 import { TypeRegistry } from './type-registry.mjs';
 import { CanonicalRewriteIndex } from './canonical-rewrite-index.mjs';
 import { initRuntimeReservedAtoms } from './runtime-reserved-atoms.mjs';
+import { classifyFactKind, ensureFactKind } from './fact-kind.mjs';
 import { checkContradiction as checkContradictionImpl } from './session-contradictions.mjs';
 import { loadCore as loadCoreImpl } from './session-core-load.mjs';
 import { learn as learnImpl } from './session-learn.mjs';
@@ -97,12 +98,16 @@ export function constructSession(session, options = {}) {
   session.rules = [];
   session.kb = null;
   session.kbFacts = [];
+  session.truthFacts = [];
+  session.theoryFacts = [];
   session.nextFactId = 1;
   session._kbBundleVersion = 0;
   session._kbBundleCache = null;
   session._kbBundleCacheVersion = -1;
   session.componentKB = new ComponentKB(session);  // Component-indexed KB for fuzzy matching
   session.factIndex = new FactIndex();             // Exact-match fact index for hot paths
+  session.truthFactIndex = new FactIndex();        // Exact-match index for truth facts
+  session.theoryFactIndex = new FactIndex();       // Exact-match index for theory/schema facts
   session.theories = new Map();
   session.operators = new Map();
   session.declaredOperators = new Set();
@@ -231,8 +236,15 @@ export function constructSession(session, options = {}) {
   session.vocabulary.ensurePositions?.(MAX_POSITIONS);
 }
 
-export function sessionLearn(session, dsl) {
-  const ast = session.checkDSL(dsl, { mode: 'learn', allowHoles: true, allowNewOperators: false });
+export function sessionLearn(session, dsl, options = {}) {
+  const ast = (dsl && typeof dsl === 'object' && dsl.type === 'Program' && Array.isArray(dsl.statements))
+    ? dsl
+    : session.checkDSL(dsl, {
+      mode: 'learn',
+      allowHoles: true,
+      allowNewOperators: false,
+      sourceName: options?.sourceName || null
+    });
   const snapshot = beginTransaction(session);
   try {
     const result = learnImpl(session, ast);
@@ -311,11 +323,16 @@ export function sessionAddToKB(session, vector, name = null, metadata = null) {
   }
 
   const fact = { id: session.nextFactId++, vector, name, metadata: meta };
+  fact.kind = classifyFactKind(meta);
   session.kbFacts.push(fact);
+  if (fact.kind === 'theory') session.theoryFacts.push(fact);
+  else session.truthFacts.push(fact);
   session._kbBundleVersion++;
 
   // Exact-match index for fast contradiction checks / direct lookups
   session.factIndex?.addFact?.(fact);
+  if (fact.kind === 'truth') session.truthFactIndex?.addFact?.(fact);
+  if (fact.kind === 'theory') session.theoryFactIndex?.addFact?.(fact);
 
   // Index in component KB for fuzzy matching
   session.componentKB.addFact(fact);
@@ -366,13 +383,13 @@ export function sessionCheckContradiction(session, metadata) {
 
 export function sessionQuery(session, dsl, options = {}) {
   dbg('QUERY', 'Starting:', dsl?.substring(0, 60));
-  const ast = checkDSLImpl(session, dsl, { mode: 'query', allowHoles: true });
+  const ast = checkDSLImpl(session, dsl, { mode: 'query', allowHoles: true, sourceName: options?.sourceName || null });
   return queryImpl(session, ast, options);
 }
 
 export function sessionProve(session, dsl, options = {}) {
   dbg('PROVE', 'Starting:', dsl?.substring(0, 60));
-  const ast = checkDSLImpl(session, dsl, { mode: 'prove', allowHoles: false });
+  const ast = checkDSLImpl(session, dsl, { mode: 'prove', allowHoles: false, sourceName: options?.sourceName || null });
   return proveImpl(session, ast, options);
 }
 
@@ -573,6 +590,13 @@ export function sessionFindAll(session, pattern, options = {}) {
 export function sessionClose(session) {
   session.kb = null;
   session.kbFacts = [];
+  session.truthFacts = [];
+  session.theoryFacts = [];
+  session.factIndex = new FactIndex();
+  session.truthFactIndex = new FactIndex();
+  session.theoryFactIndex = new FactIndex();
+  session._relationEdgeCache = new Map();
+  session._isAParentsByChildCache = null;
   session._kbBundleVersion++;
   session._kbBundleCache = null;
   session._kbBundleCacheVersion = -1;
@@ -630,12 +654,19 @@ export function sessionMaterializePolicyView(session, options = {}) {
 
 export function sessionRebuildIndices(session, options = {}) {
   const includeFactIndex = options.includeFactIndex ?? true;
+  const includeFactPartitions = options.includeFactPartitions ?? true;
   const includeComponentKB = options.includeComponentKB ?? true;
   const includeSemanticIndex = options.includeSemanticIndex ?? true;
   const includeCanonicalRewriteIndex = options.includeCanonicalRewriteIndex ?? true;
 
   if (includeFactIndex) {
     session.factIndex = new FactIndex();
+  }
+  if (includeFactPartitions) {
+    session.truthFacts = [];
+    session.theoryFacts = [];
+    session.truthFactIndex = new FactIndex();
+    session.theoryFactIndex = new FactIndex();
   }
   if (includeComponentKB) {
     session.componentKB = new ComponentKB(session);
@@ -653,6 +684,13 @@ export function sessionRebuildIndices(session, options = {}) {
 
   // Re-index all persisted facts.
   for (const fact of session.kbFacts || []) {
+    if (includeFactPartitions) {
+      const kind = ensureFactKind(fact);
+      if (kind === 'theory') session.theoryFacts.push(fact);
+      else session.truthFacts.push(fact);
+      if (kind === 'theory') session.theoryFactIndex?.addFact?.(fact);
+      else session.truthFactIndex?.addFact?.(fact);
+    }
     if (includeFactIndex) session.factIndex?.addFact?.(fact);
     if (includeComponentKB) session.componentKB?.addFact?.(fact);
     if (includeSemanticIndex) session.semanticIndex?.observeFact?.(fact);

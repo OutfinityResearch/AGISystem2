@@ -1,4 +1,4 @@
-import { parse } from '../parser/parser.mjs';
+import { parseWithOptions } from '../parser/parser.mjs';
 import { BOOTSTRAP_OPERATORS, DECLARATION_OPERATORS } from './operator-declarations.mjs';
 import { CORE_OPERATOR_CATALOG, CORE_OPERATOR_KIND } from './operator-catalog.mjs';
 
@@ -8,6 +8,7 @@ const BUILTIN_OPERATORS = new Set([
   'Set',
   'solve',
   'abduce',
+  'explain',
   'whatif',
   'similar',
   'analogy',
@@ -443,7 +444,8 @@ function collectLocalAtomsAndOperators(node, context) {
 
 export function checkDSL(session, dsl, options = {}) {
   const context = buildContext(session, options);
-  const ast = parse(dsl);
+  const sourceName = options?.sourceName || null;
+  const ast = parseWithOptions(dsl, { sourceName });
   // Pre-scan to allow forward references to symbols declared/persisted in this program.
   for (const stmt of ast.statements || []) {
     collectLocalAtomsAndOperators(stmt, context);

@@ -96,7 +96,7 @@ export class Hole extends Expression {
 }
 
 /**
- * Reference expression (@label)
+ * Reference expression ($label)
  */
 export class Reference extends Expression {
   constructor(name, line, column) {
@@ -105,7 +105,7 @@ export class Reference extends Expression {
   }
 
   toString() {
-    return `@${this.name}`;
+    return `$${this.name}`;
   }
 }
 

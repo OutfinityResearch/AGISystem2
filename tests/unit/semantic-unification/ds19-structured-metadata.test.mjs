@@ -3,6 +3,16 @@ import assert from 'node:assert/strict';
 import { Session } from '../../../src/runtime/session.mjs';
 import { metadataToCanonicalDsl } from '../../../src/runtime/metadata-to-dsl.mjs';
 
+function stripSource(meta) {
+  if (!meta || typeof meta !== 'object') return meta;
+  if (Array.isArray(meta)) return meta.map(stripSource);
+
+  const { source, ...rest } = meta;
+  const out = {};
+  for (const [k, v] of Object.entries(rest)) out[k] = stripSource(v);
+  return out;
+}
+
 describe('DS19: structured metadata for compound + rules', () => {
   test('stores And parts metadata for proof-real reconstruction', () => {
     const session = new Session({ geometry: 2048, strictMode: true, enforceCanonical: true });
@@ -17,8 +27,8 @@ describe('DS19: structured metadata for compound + rules', () => {
     assert.equal(meta.operator, 'And');
     assert.ok(Array.isArray(meta.parts));
     assert.equal(meta.parts.length, 2);
-    assert.deepEqual(meta.parts[0], { operator: 'isA', args: ['Socrates', 'Human'] });
-    assert.deepEqual(meta.parts[1], { operator: 'isA', args: ['Socrates', 'Mortal'] });
+    assert.deepEqual(stripSource(meta.parts[0]), { operator: 'isA', args: ['Socrates', 'Human'] });
+    assert.deepEqual(stripSource(meta.parts[1]), { operator: 'isA', args: ['Socrates', 'Mortal'] });
 
     assert.equal(metadataToCanonicalDsl(meta), 'And (isA Socrates Human) (isA Socrates Mortal)');
   });
@@ -34,10 +44,9 @@ describe('DS19: structured metadata for compound + rules', () => {
 
     const meta = session.referenceMetadata.get('r');
     assert.equal(meta.operator, 'Implies');
-    assert.deepEqual(meta.condition, { operator: 'isA', args: ['Socrates', 'Human'] });
-    assert.deepEqual(meta.conclusion, { operator: 'isA', args: ['Socrates', 'Mortal'] });
+    assert.deepEqual(stripSource(meta.condition), { operator: 'isA', args: ['Socrates', 'Human'] });
+    assert.deepEqual(stripSource(meta.conclusion), { operator: 'isA', args: ['Socrates', 'Mortal'] });
 
     assert.equal(metadataToCanonicalDsl(meta), 'Implies (isA Socrates Human) (isA Socrates Mortal)');
   });
 });
-

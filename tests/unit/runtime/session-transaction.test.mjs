@@ -19,16 +19,17 @@ describe('Session Transactions', () => {
       rejectContradictions: true
     });
 
-    const result = session.learn('hasState Box Closed\nhasState Box Open');
+    // Use a baseline contradiction declared in `config/Packs/Consistency/14-constraints.sys2`.
+    const result = session.learn('before Box Shelf\nafter Box Shelf');
     assert.equal(result.success, false);
     assert.ok(result.errors.some(err => err.includes('Contradiction rejected')));
 
     assert.equal(session.kbFacts.length, 0);
-    assert.equal(session.vocabulary.has('hasState'), false);
-    assert.equal(session.declaredOperators.has('hasState'), false);
+    assert.equal(session.vocabulary.has('before'), false);
+    assert.equal(session.declaredOperators.has('before'), false);
 
     // After rollback, the session must not retain stale contradiction state.
-    const ok = session.learn('hasState Box Closed');
+    const ok = session.learn('before Box Shelf');
     assert.equal(ok.success, true);
     assert.equal(session.kbFacts.length, 1);
   });
@@ -40,41 +41,42 @@ describe('Session Transactions', () => {
     });
 
     // Bind canonical tokens in scope (declarations typically come from theories).
-    const decl = session.learn('@Open:Open ___NewVector\n@Closed:Closed ___NewVector');
+    const decl = session.learn('@X:X ___NewVector');
     assert.equal(decl.success, true);
-    assert.equal(session.scope.has('Closed'), true);
-    assert.equal(session.vocabulary.has('Closed'), false);
+    assert.equal(session.scope.has('X'), true);
+    assert.equal(session.vocabulary.has('X'), false);
 
-    // Establish canonicalization mapping: Shut -> Closed.
-    const alias = session.learn('alias Shut Closed');
+    // Establish canonicalization mapping: Z -> X.
+    const alias = session.learn('alias Z X');
     assert.equal(alias.success, true);
 
-    // Learn a non-contradictory baseline fact.
-    const base = session.learn('hasState Door Open');
+    // Learn a non-contradictory baseline fact (uses scope-bound X).
+    const base = session.learn('before Door X');
     assert.equal(base.success, true);
 
-    // Rejected learn must not leave `Closed` created in vocabulary via canonicalization.
+    // Rejected learn must not leave `X` created in vocabulary via canonicalization.
     const beforeSize = session.vocabulary.size;
-    const beforeHasClosed = session.vocabulary.has('Closed');
+    const beforeHasX = session.vocabulary.has('X');
 
-    const rejected = session.learn('hasState Door Shut');
+    // Canonicalization maps Z -> X, yielding `after Door X`, which contradicts `before Door X`.
+    const rejected = session.learn('after Door Z');
     assert.equal(rejected.success, false);
     assert.ok(rejected.errors.some(err => err.includes('Contradiction rejected')));
 
     assert.equal(session.vocabulary.size, beforeSize);
-    assert.equal(session.vocabulary.has('Closed'), beforeHasClosed);
+    assert.equal(session.vocabulary.has('X'), beforeHasX);
   });
 
   test('rolls back learn when Load fails inside program', () => {
     const session = new Session();
-    const dsl = `loves John Mary\n@_ Load "${FIXTURE_PATH}"\nlikes Bob Pizza`;
+    const dsl = `isA John Human\n@_ Load "${FIXTURE_PATH}"\nisA Bob Human`;
 
     const result = session.learn(dsl);
     assert.equal(result.success, false);
     assert.ok(result.errors.some(err => err.includes('Load failed')));
 
     assert.equal(session.kbFacts.length, 0);
-    assert.equal(session.vocabulary.has('loves'), false);
-    assert.equal(session.vocabulary.has('likes'), false);
+    assert.equal(session.vocabulary.has('John'), false);
+    assert.equal(session.vocabulary.has('Bob'), false);
   });
 });

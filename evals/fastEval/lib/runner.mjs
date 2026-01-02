@@ -231,13 +231,12 @@ function loadBaselinePacks(session) {
     'Defaults',
     'Properties',
     'Numeric',
-    'Semantics',
-    'Lexicon',
-    'Reasoning',
     'Canonicalization',
     'Consistency',
     // URC contract packs (audit surface): Evidence/Artifacts/Orchestrator/Policy/Provenance.
-    'URC'
+    'URC',
+    // Eval-driven / convenience vocabulary that is intentionally not baseline.
+    'tests_and_evals'
   ];
 
   console.log(`[Runner] Loading baseline packs (${packs.length})...`);
@@ -1068,6 +1067,27 @@ function extractProofContent(text) {
   return text.slice(idx + 'proof:'.length).trim();
 }
 
+function expandProofPiece(piece) {
+  const raw = String(piece || '').trim();
+  if (!raw) return [];
+
+  // Some proof lines are logically commutative but may render in either order.
+  // Keep fastEval tolerant for those cases to avoid flakiness in DSL->NL proofs.
+  const m = raw.match(/^mutuallyExclusive\s+(\S+)\s+(\S+)\s+(\S+)$/i);
+  if (m) {
+    const rel = m[1];
+    const a = m[2];
+    const b = m[3];
+    if (a === b) return [raw];
+    return [
+      `mutuallyExclusive ${rel} ${a} ${b}`,
+      `mutuallyExclusive ${rel} ${b} ${a}`
+    ];
+  }
+
+  return [raw];
+}
+
 function proofIncludes(expectedProofNl, actualText) {
   if (expectedProofNl === undefined || expectedProofNl === null) return true;
   const proofText = extractProofContent(actualText) || actualText || '';
@@ -1076,9 +1096,15 @@ function proofIncludes(expectedProofNl, actualText) {
   if (Array.isArray(expectedProofNl)) {
     return expectedProofNl
       .filter(Boolean)
-      .every(piece => normProof.includes(normalizeText(String(piece))));
+      .every(piece => {
+        const alts = expandProofPiece(piece);
+        if (alts.length === 0) return true;
+        return alts.some(alt => normProof.includes(normalizeText(alt)));
+      });
   }
-  return normProof.includes(normalizeText(String(expectedProofNl)));
+  const alts = expandProofPiece(expectedProofNl);
+  if (alts.length === 0) return true;
+  return alts.some(alt => normProof.includes(normalizeText(alt)));
 }
 
 function compareOutputs(testCase, actualText) {

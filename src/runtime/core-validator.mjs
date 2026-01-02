@@ -53,8 +53,11 @@ function validateSemanticIndex(session) {
   if (typeof idx.isTransitive !== 'function' || idx.isTransitive('isA') !== true) {
     errors.push('SemanticIndex missing required transitive relation: isA');
   }
-  if (typeof idx.isSymmetric !== 'function' || idx.isSymmetric('spouse') !== true) {
-    warnings.push('SemanticIndex does not mark spouse as symmetric (Core expects it)');
+  // Social/story relations (e.g. spouse) are not part of the baseline Kernel pack and may be opt-in.
+  if (session?.scope?.has?.('spouse')) {
+    if (typeof idx.isSymmetric !== 'function' || idx.isSymmetric('spouse') !== true) {
+      warnings.push('SemanticIndex does not mark spouse as symmetric (spouse is present in scope)');
+    }
   }
 
   return { errors, warnings };

@@ -499,6 +499,54 @@ export class QueryEngine {
    * Direct match query (no holes) - existence check
    */
   directMatch(operator, knowns, statement) {
+    const canonicalizeToken = (name) => {
+      if (!this.session?.canonicalizationEnabled) return name;
+      const kb = this.session?.componentKB;
+      if (!kb || typeof kb.canonicalizeName !== 'function') return name;
+      return kb.canonicalizeName(String(name ?? ''));
+    };
+
+    const operatorNameRaw = statement?.operator?.name || statement?.operator?.value || null;
+    const operatorName = operatorNameRaw ? canonicalizeToken(operatorNameRaw) : null;
+    const args = knowns
+      .map(k => k?.name)
+      .filter(v => v !== null && v !== undefined)
+      .map(v => canonicalizeToken(String(v)));
+    const isExact = (this.session?.hdcStrategy || 'exact') === 'exact';
+
+    // Fast-path: exact fact match via metadata index.
+    // This avoids O(|KB|) similarity scans which get very expensive once large theory packs (e.g., URC) are loaded.
+    if (operatorName && args.length === knowns.length) {
+      const truthIndex = this.session?.truthFactIndex || null;
+      const theoryIndex = this.session?.theoryFactIndex || null;
+      const allIndex = this.session?.factIndex || null;
+
+      const exact =
+        truthIndex?.getNary?.(operatorName, args) ||
+        theoryIndex?.getNary?.(operatorName, args) ||
+        allIndex?.getNary?.(operatorName, args) ||
+        null;
+
+      if (exact) {
+        return {
+          success: true,
+          matches: [{ similarity: 1.0, name: exact.name || null }],
+          confidence: 1.0,
+          bindings: new Map()
+        };
+      }
+
+      // In EXACT strategy, do not fall back to expensive similarity scans for "no holes" existence checks.
+      if (isExact) {
+        return {
+          success: false,
+          matches: [],
+          confidence: 0,
+          bindings: new Map()
+        };
+      }
+    }
+
     let queryVec = operator;
     for (const known of knowns) {
       queryVec = bind(queryVec, withPosition(known.index, known.vector, this.session));

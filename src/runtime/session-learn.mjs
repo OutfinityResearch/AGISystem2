@@ -9,6 +9,20 @@ export function learn(session, dsl) {
 
   try {
     const ast = typeof dsl === 'string' ? parse(dsl) : dsl;
+
+    if (Array.isArray(ast?.warnings) && ast.warnings.length > 0) {
+      for (const w of ast.warnings) {
+        const loc = w?.file
+          ? `${w.file}${w?.line ? `:${w.line}${w?.column ? `:${w.column}` : ''}` : ''}`
+          : (w?.line ? `${w.line}${w?.column ? `:${w.column}` : ''}` : null);
+        const prefix = loc ? `DSL warning (${loc})` : 'DSL warning';
+        session.warnings.push(`${prefix}: ${w?.message || 'Warning'}`);
+      }
+      if (typeof ast.warningsTruncated === 'number' && ast.warningsTruncated > 0) {
+        session.warnings.push(`DSL warnings truncated: ${ast.warningsTruncated} more omitted.`);
+      }
+    }
+
     const result = session.executor.executeProgram(ast);
 
     // Track rules (Implies statements)

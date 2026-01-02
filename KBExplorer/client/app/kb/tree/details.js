@@ -1,5 +1,35 @@
 import { escapeHtml } from '../../dom.js';
 
+function formatSourceLine(source) {
+  if (!source || typeof source !== 'object') return '';
+  const file = source.file ? String(source.file) : '';
+  const line = Number.isFinite(source.line) ? Number(source.line) : null;
+  const column = Number.isFinite(source.column) ? Number(source.column) : null;
+  const comment = source.comment ? String(source.comment).trim() : '';
+
+  const loc = file
+    ? `${file}${line ? `:${line}${column ? `:${column}` : ''}` : ''}`
+    : (line ? `${line}${column ? `:${column}` : ''}` : '');
+
+  if (!loc && !comment) return '';
+  if (!comment) return loc;
+  if (!loc) return `# ${comment}`;
+  return `${loc}  # ${comment}`;
+}
+
+function resolveNodeSource(node) {
+  if (!node) return null;
+  if (node.kind === 'FACT') return node?.data?.source || null;
+  if (node.kind === 'GRAPH') return node?.data?.source || null;
+  if (node.kind === 'ATOM' || node.kind === 'VERB') {
+    return node?.data?.definition?.source || node?.data?.source || null;
+  }
+  if (node.kind === 'BIND') return null;
+  if (node.kind === 'SCOPE') return node?.data?.source || null;
+  if (node.kind === 'KB_BUNDLE') return null;
+  return node?.data?.source || null;
+}
+
 function formatStatementLine(op, args) {
   if (!op) return '';
   if (!Array.isArray(args)) return String(op);
@@ -232,11 +262,18 @@ function buildVectorText(_ctx, node) {
   else vv = node?.data?.vectorValue || null;
 
   if (!vv?.values) return '';
+  const loaded = Array.isArray(vv.values) ? vv.values.length : 0;
+  const total = Number.isFinite(vv.total) ? Number(vv.total) : loaded;
+  if (node.kind === 'KB_BUNDLE') {
+    const suffix = loaded && total && loaded < total ? `\n… (loaded ${loaded}/${total})` : (total ? `\n(loaded ${loaded}/${total})` : '');
+    return `${JSON.stringify(vv.values, null, 2)}${suffix}`;
+  }
   const suffix = vv.truncated ? `\n… (truncated, total=${vv.total})` : '';
   return `${JSON.stringify(vv.values, null, 2)}${suffix}`;
 }
 
-export function renderDetails({ $, state }, node) {
+export function renderDetails(ctx, node) {
+  const { $, state, api } = ctx;
   const detailsEl = $('kbDetails');
   if (!node) {
     detailsEl.innerHTML = '<span class="muted">Select a node to see details.</span>';
@@ -253,15 +290,67 @@ export function renderDetails({ $, state }, node) {
     data: node.data || {}
   };
 
-  const defn = buildDefinitionText({ state }, node) || '(none)';
-  const formal = buildFormalDefinitionText({ state }, node) || '(none)';
-  const vec = buildVectorText({ state }, node) || '(none)';
+  const defnText = String(buildDefinitionText({ state }, node) || '').trim();
+  const formalText = String(buildFormalDefinitionText({ state }, node) || '').trim();
+  const vecText = String(buildVectorText({ state }, node) || '').trim();
+  const sourceText = String(formatSourceLine(resolveNodeSource(node)) || '').trim();
 
-  const defBlock = `<div class="details__equation"><div class="details__sectionTitle">Definition</div><pre>${escapeHtml(defn)}</pre></div>`;
-  const formalBlock = `<div class="details__equation"><div class="details__sectionTitle">Encoding</div><pre>${escapeHtml(formal)}</pre></div>`;
-  const vecBlock = `<div class="details__equation"><div class="details__sectionTitle">Vector</div><pre>${escapeHtml(vec)}</pre></div>`;
+  const blocks = [];
+  if (defnText) {
+    blocks.push(`<div class="details__equation"><div class="details__sectionTitle">Definition</div><pre>${escapeHtml(defnText)}</pre></div>`);
+  }
+  if (formalText) {
+    blocks.push(`<div class="details__equation"><div class="details__sectionTitle">Encoding</div><pre>${escapeHtml(formalText)}</pre></div>`);
+  }
 
-  detailsEl.innerHTML =
-    `${defBlock}${formalBlock}${vecBlock}` +
-    `<div class="details__json"><div class="details__sectionTitle">Raw</div><pre>${escapeHtml(JSON.stringify(payload, null, 2))}</pre></div>`;
+  const isKbBundleVectorTruncated = node.kind === 'KB_BUNDLE' && !!node?.data?.vectorValue?.truncated;
+  if (vecText) {
+    const vecControls = isKbBundleVectorTruncated
+      ? `<div class="details__controls"><button class="btn btn--sm" id="kbVectorLoadMore">Load more</button></div>`
+      : '';
+    blocks.push(`<div class="details__equation"><div class="details__sectionTitle">Vector</div><pre>${escapeHtml(vecText)}</pre>${vecControls}</div>`);
+  }
+  if (sourceText) {
+    blocks.push(`<div class="details__equation"><div class="details__sectionTitle">Source</div><pre>${escapeHtml(sourceText)}</pre></div>`);
+  }
+
+  blocks.push(`<div class="details__json"><div class="details__sectionTitle">Raw</div><pre>${escapeHtml(JSON.stringify(payload, null, 2))}</pre></div>`);
+  detailsEl.innerHTML = blocks.join('');
+
+  const loadMoreBtn = detailsEl.querySelector('#kbVectorLoadMore');
+  if (loadMoreBtn && typeof api === 'function') {
+    loadMoreBtn.addEventListener('click', async () => {
+      const vv = node?.data?.vectorValue || null;
+      if (!vv?.values || !vv.truncated) return;
+      const loaded = Array.isArray(vv.values) ? vv.values.length : 0;
+      const offset = Number.isFinite(vv.offset) ? Number(vv.offset) : 0;
+      const limit = Number.isFinite(vv.limit) ? Number(vv.limit) : 256;
+      const nextOffset = offset + loaded;
+
+      loadMoreBtn.disabled = true;
+      const prevText = loadMoreBtn.textContent;
+      loadMoreBtn.textContent = 'Loading...';
+      try {
+        const res = await api(`/api/kb/bundle?offset=${encodeURIComponent(String(nextOffset))}&limit=${encodeURIComponent(String(limit))}`);
+        const page = res?.kbVector || null;
+        if (!page?.values) return;
+
+        if (!node.data.vectorValue) node.data.vectorValue = page;
+        else if (page.offset === nextOffset) {
+          node.data.vectorValue.values = [...(node.data.vectorValue.values || []), ...(page.values || [])];
+          node.data.vectorValue.total = page.total ?? node.data.vectorValue.total;
+          node.data.vectorValue.offset = offset;
+          node.data.vectorValue.limit = limit;
+          const total = Number.isFinite(node.data.vectorValue.total) ? Number(node.data.vectorValue.total) : node.data.vectorValue.values.length;
+          node.data.vectorValue.truncated = node.data.vectorValue.values.length < total;
+        } else {
+          node.data.vectorValue = page;
+        }
+      } finally {
+        loadMoreBtn.textContent = prevText;
+        loadMoreBtn.disabled = false;
+        renderDetails(ctx, node);
+      }
+    });
+  }
 }

@@ -9,11 +9,11 @@ import {
   sanitizePredicate
 } from '../../utils.mjs';
 
-import { CORE_OPERATOR_CATALOG } from '../../../../runtime/operator-catalog.mjs';
+import { DEFAULT_OPERATOR_CATALOG } from '../../../../runtime/operator-catalog.mjs';
 import { clean, lower, detectNegationPrefix } from '../text.mjs';
 
 export function isKnownOperator(op) {
-  return CORE_OPERATOR_CATALOG.has(op);
+  return DEFAULT_OPERATOR_CATALOG.has(op);
 }
 
 export function parseTypePhrase(text) {

@@ -200,7 +200,7 @@ describe('KBExplorer server (smoke)', () => {
       sessionId,
       body: { mode: 'learn', inputMode: 'nl', text: 'Anne is a Dog.' }
     });
-    assert.equal(nlRes.status, 200);
+    assert.equal(nlRes.status, 200, JSON.stringify(nlRes.json));
     assert.equal(nlRes.json.ok, true);
 
     const provList = await c.json('/api/urc/provenance', { sessionId });
@@ -214,7 +214,7 @@ describe('KBExplorer server (smoke)', () => {
       sessionId,
       body: { mode: 'query', inputMode: 'dsl', text: 'isA Anne ?t' }
     });
-    assert.equal(qRes.status, 200);
+    assert.equal(qRes.status, 200, JSON.stringify(qRes.json));
 
     const evList = await c.json('/api/urc/evidence', { sessionId });
     assert.equal(evList.status, 200);
@@ -234,13 +234,13 @@ describe('KBExplorer server (smoke)', () => {
       '  domain from Table',
       '  noConflict conflictsWith',
       'end'
-    ].join('\\n');
+    ].join('\n');
     const solveRes = await c.json('/api/command', {
       method: 'POST',
       sessionId,
       body: { mode: 'learn', inputMode: 'dsl', text: solveDsl }
     });
-    assert.equal(solveRes.status, 200);
+    assert.equal(solveRes.status, 200, JSON.stringify(solveRes.json));
 
     const artList = await c.json('/api/urc/artifacts', { sessionId });
     assert.equal(artList.status, 200);

@@ -62,10 +62,10 @@ test('regression matrix: symbolic vs holographic (theoryDriven)', async (t) => {
     {
       name: 'query hole fill (single fact)',
       run(session) {
-        session.learn('likes John Pizza');
-        const result = session.query('@q likes John ?food');
+        session.learn('isA John PizzaLover');
+        const result = session.query('@q isA John ?food');
         assert.equal(result.success, true);
-        assert.equal(result.bindings.get('food')?.answer, 'Pizza');
+        assert.equal(result.bindings.get('food')?.answer, 'PizzaLover');
       }
     },
     {

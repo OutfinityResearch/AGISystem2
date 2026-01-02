@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
-import { parse } from '../parser/parser.mjs';
+import { parseWithOptions } from '../parser/parser.mjs';
 import { Identifier, Literal } from '../parser/ast.mjs';
 import { ExecutionError } from './execution-error.mjs';
 
@@ -39,8 +39,8 @@ export function executeLoad(executor, stmt) {
     executor.basePath = dirname(absolutePath);
 
     const program = executor.session?.checkDSL
-      ? executor.session.checkDSL(content, { mode: 'learn', allowHoles: true, allowNewOperators: false })
-      : parse(content);
+      ? executor.session.checkDSL(content, { mode: 'learn', allowHoles: true, allowNewOperators: false, sourceName: absolutePath })
+      : parseWithOptions(content, { sourceName: absolutePath });
     const result = executor.executeProgram(program);
 
     executor.trackRulesFromProgram(program);

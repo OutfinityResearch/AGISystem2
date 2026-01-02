@@ -1,5 +1,6 @@
 # Relations Pack - Index
 # Relation property declarations (transitive/symmetric/reflexive/inheritable/etc).
 
-@_ Load "./00-relations.sys2"
-@_ Load "./10-common-relations.sys2"
+@_ Load "./00-relations.sys2"  # Load baseline relation declarations and operator properties.
+#
+# Non-minimal, story/social relations are loaded from `config/Packs/tests_and_evals` when needed.

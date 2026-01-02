@@ -105,9 +105,9 @@ describe('RuleTaker regressions (translator + reasoning)', () => {
 
     session.learn(`
       hasProperty Tiger cold
-      see Tiger Dog
+      locatedIn Tiger Dog
       @c1 hasProperty ?x cold
-      @c2 see ?x Dog
+      @c2 locatedIn ?x Dog
       @and And $c1 $c2
       @cons hasProperty Dog big
       Implies $and $cons

@@ -1,5 +1,6 @@
 import { ComponentKB } from '../reasoning/component-kb.mjs';
 import { FactIndex } from './fact-index.mjs';
+import { ensureFactKind } from './fact-kind.mjs';
 
 function cloneReasoningStats(stats) {
   if (!stats) return {};
@@ -30,11 +31,27 @@ function rebuildComponentKB(session, facts) {
 }
 
 function rebuildFactIndex(session, facts) {
-  const index = new FactIndex();
+  const all = new FactIndex();
+  const truth = new FactIndex();
+  const theory = new FactIndex();
+  session.truthFacts = [];
+  session.theoryFacts = [];
+
   for (const fact of facts || []) {
-    index.addFact(fact);
+    all.addFact(fact);
+    const kind = ensureFactKind(fact);
+    if (kind === 'theory') {
+      theory.addFact(fact);
+      session.theoryFacts.push(fact);
+    } else {
+      truth.addFact(fact);
+      session.truthFacts.push(fact);
+    }
   }
-  session.factIndex = index;
+
+  session.factIndex = all;
+  session.truthFactIndex = truth;
+  session.theoryFactIndex = theory;
 }
 
 export function beginTransaction(session) {

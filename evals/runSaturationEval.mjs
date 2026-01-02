@@ -612,7 +612,8 @@ async function runOne(config, bookPath) {
   const bookPrefix = path.basename(bookPath, '.sys2').toUpperCase(); // BOOK01
 
   const tLearn0 = nowMs();
-  session.loadCore({ includeIndex: true });
+  session.loadCore({ includeIndex: true, corePath: path.join(PROJECT_ROOT, 'config', 'Packs', 'Kernel') });
+  session.loadPack('tests_and_evals', { includeIndex: true, validate: false, packPath: path.join(PROJECT_ROOT, 'config', 'Packs', 'tests_and_evals') });
   const coreMs = nowMs() - tLearn0;
 
   const tLearn1 = nowMs();

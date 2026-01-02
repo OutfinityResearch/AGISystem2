@@ -114,8 +114,8 @@
               <input id="factFilter" class="kb__search" type="search" placeholder="Search session..." />
               <div class="kb__meta">
                 <label class="label">
-                  <input id="namedOnlyToggle" type="checkbox" />
-                  <span title="When enabled, shows only facts that were explicitly named (e.g. @:name ...). Anonymous facts are hidden.">Named facts only</span>
+                  <input id="complexOnlyToggle" type="checkbox" />
+                  <span title="When enabled, shows only entries whose vector has at least 2 polynomial terms (EXACT: >=2 monomials; SPHDC: >=2 exponents). For Lexicon entries, this prefers the named definition-fact vector when available.">Complex</span>
                 </label>
                 <span id="factCount" class="muted"></span>
                 <button id="refreshFactsBtn" type="button" class="btn btn--ghost">Refresh</button>
@@ -211,6 +211,17 @@ has Mallet Head
 
 # Query similar entities
 @q similar Hammer ?entity</pre>
+
+            <h3>Hello world: Complex vectors (bundle)</h3>
+            <p class="muted">
+              This creates a named fact whose vector is a true bundle (EXACT: at least 2 monomials).
+              After running it, enable <span class="mono">Complex</span> and find <span class="mono">BundleHello</span> in Facts and Lexicon.
+            </p>
+            <pre class="code"># Ensure a symbol exists in the Lexicon (no KB fact created here)
+@tmp BundleHello
+
+# Named KB fact with a bundled vector (2 terms)
+@:BundleHello ___Bundle A B</pre>
           </div>
         </div>
 

@@ -14,6 +14,8 @@ function loadSys2File(session, filePath) {
 function loadCore(session) {
   const res = session.loadPack('Kernel', { includeIndex: true, validate: false });
   assert.equal(res.success, true, `Kernel pack load failed: ${JSON.stringify(res.errors || [])}`);
+  const extras = session.loadPack('tests_and_evals', { includeIndex: true, validate: false });
+  assert.equal(extras.success, true, `tests_and_evals pack load failed: ${JSON.stringify(extras.errors || [])}`);
 }
 
 function loadDomainIndex(session, domainName) {

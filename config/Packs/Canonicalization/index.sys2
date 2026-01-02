@@ -1,5 +1,5 @@
 # Canonicalization Pack - Index
 
-@_ Load "./13-canonicalization.sys2"
-@_ Load "./13c-canonical-rewrites.sys2"
-
+@_ Load "./13-canonicalization.sys2"  # Load baseline canonicalization schema for metadata rewriting.
+#
+# Domain-specific rewrites live in `config/Packs/tests_and_evals` (opt-in for evals/domains).

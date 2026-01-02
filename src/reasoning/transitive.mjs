@@ -144,8 +144,11 @@ export class TransitiveReasoner {
     this.engine.visited.add(cycleKey);
 
     // Direct match using metadata
-    for (const fact of this.session.kbFacts) {
-      this.session.reasoningStats.kbScans++;
+    const scanFacts = this.session?.factIndex?.getByOperator
+      ? this.session.factIndex.getByOperator(operatorName)
+      : this.session.kbFacts;
+    this.session.reasoningStats.kbScans += Array.isArray(scanFacts) ? scanFacts.length : 0;
+    for (const fact of scanFacts) {
       if (fact.metadata?.operator === operatorName &&
           fact.metadata.args?.[0] === from &&
           fact.metadata.args?.[1] === to) {
@@ -201,8 +204,11 @@ export class TransitiveReasoner {
   findIntermediates(operatorName, subjectName) {
     const intermediates = [];
 
-    for (const fact of this.session.kbFacts) {
-      this.session.reasoningStats.kbScans++;
+    const scanFacts = this.session?.factIndex?.getByOperator
+      ? this.session.factIndex.getByOperator(operatorName)
+      : this.session.kbFacts;
+    this.session.reasoningStats.kbScans += Array.isArray(scanFacts) ? scanFacts.length : 0;
+    for (const fact of scanFacts) {
       const meta = fact.metadata;
       if (!meta || meta.operator !== operatorName) continue;
       if (!meta.args || meta.args.length < 2) continue;

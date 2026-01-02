@@ -7,7 +7,8 @@ describe('SemanticIndex', () => {
     assert.equal(DEFAULT_SEMANTIC_INDEX.isTransitive('isA'), true);
     assert.equal(DEFAULT_SEMANTIC_INDEX.isTransitive('locatedIn'), true);
 
-    assert.equal(DEFAULT_SEMANTIC_INDEX.isSymmetric('marriedTo'), true);
+    // Baseline packs avoid social/story relations (like marriedTo) and keep only universal invariants.
+    assert.equal(DEFAULT_SEMANTIC_INDEX.isSymmetric('equals'), true);
     assert.equal(DEFAULT_SEMANTIC_INDEX.isReflexive('equals'), true);
 
     assert.equal(DEFAULT_SEMANTIC_INDEX.isInheritableProperty('hasProperty'), true);
@@ -19,4 +20,3 @@ describe('SemanticIndex', () => {
     assert.ok(idx.transitiveRelations instanceof Set);
   });
 });
-

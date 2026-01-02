@@ -6,7 +6,7 @@ export async function ensureKbBundleLoaded(ctx, kbBundleNode) {
   if (kbBundleNode.loaded || kbBundleNode.loading) return;
   kbBundleNode.loading = true;
   try {
-    const res = await api('/api/kb/bundle');
+    const res = await api('/api/kb/bundle?offset=0&limit=256');
     kbBundleNode.data.vectorValue = res.kbVector || null;
     kbBundleNode.loaded = true;
   } finally {
@@ -90,9 +90,13 @@ export async function ensureGraphLoaded(ctx, graphNode) {
     graphNode.data.vectorValue = res.vectors?.operatorVector || null;
     graphNode.data.kbFactId = res.kbFactId ?? null;
     graphNode.data.kbFactLabel = res.kbFactLabel ?? null;
+    graphNode.data.kbFactVectorItems = res.kbFactVectorItems ?? null;
+    graphNode.data.source = res.source || null;
     graphNode.loaded = true;
 
-    if (typeof graphNode.data.kbFactId === 'number' && Number.isFinite(graphNode.data.kbFactId)) {
+    const hasKbFact = typeof graphNode.data.kbFactId === 'number' && Number.isFinite(graphNode.data.kbFactId);
+    const includeKbFact = hasKbFact && (!state?.kb?.complexOnly || Number(graphNode.data.kbFactVectorItems || 0) >= 2);
+    if (includeKbFact) {
       graphNode.hasChildren = true;
       graphNode.children = [
         kbNode({
@@ -137,7 +141,9 @@ export async function ensureVocabAtomLoaded(ctx, atomNode) {
     atomNode.data.vectorValue = res.vectors?.atomVector || null;
     atomNode.data.kbFactId = res.kbFactId ?? null;
     atomNode.data.kbFactLabel = res.kbFactLabel ?? null;
+    atomNode.data.kbFactVectorItems = res.kbFactVectorItems ?? null;
     atomNode.data.hasGraph = !!res.hasGraph;
+    atomNode.data.source = res.source || null;
     atomNode.loaded = true;
 
     const kids = [];
@@ -152,7 +158,9 @@ export async function ensureVocabAtomLoaded(ctx, atomNode) {
         data: { name: String(name) }
       }));
     }
-    if (typeof atomNode.data.kbFactId === 'number' && Number.isFinite(atomNode.data.kbFactId)) {
+    const hasKbFact = typeof atomNode.data.kbFactId === 'number' && Number.isFinite(atomNode.data.kbFactId);
+    const includeKbFact = hasKbFact && (!state?.kb?.complexOnly || Number(atomNode.data.kbFactVectorItems || 0) >= 2);
+    if (includeKbFact) {
       kids.push(kbNode({
         nodeIndex: state.kb.nodeIndex,
         id: `vocab:${String(name)}:fact:${atomNode.data.kbFactId}`,
@@ -191,6 +199,7 @@ export async function ensureFactLoaded(ctx, factNode) {
     factNode.data.metadata = res.metadata || null;
     factNode.data.factDsl = res.dsl || '';
     factNode.data.statementDsl = res.statementDsl || '';
+    factNode.data.source = res.source || res.metadata?.source || null;
     factNode.data.factVectorValue = res.vectors?.factVector || null;
     factNode.data.operatorVectorValue = res.vectors?.operatorVector || null;
     factNode.data.bundle = res.bundle || null;
@@ -216,6 +225,7 @@ export async function ensureFactLoaded(ctx, factNode) {
         value: String(op),
         definitionFactId: typeof opDefId === 'number' ? opDefId : null,
         definitionLabel: opDefLabel,
+        source: res.bundle?.operator?.source || null,
         vectorValue: opVecVal,
         graphDsl: res.bundle?.operator?.graphDsl || null
       }
@@ -250,6 +260,7 @@ export async function ensureFactLoaded(ctx, factNode) {
           position: b.position,
           definitionFactId: typeof b.argFactId === 'number' ? b.argFactId : null,
           definitionLabel: b.argFactLabel ?? null,
+          source: b.source || null,
           vectorValue: b.vectorValue ?? null
         }
       });

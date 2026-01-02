@@ -318,10 +318,15 @@ async function main() {
 
   const session = new Session({ geometry: 256, hdcStrategy: 'exact', exactUnbindMode: 'B' });
   session.loadCore({
-    corePath: path.join(PROJECT_ROOT, 'config', 'Core'),
+    corePath: path.join(PROJECT_ROOT, 'config', 'Packs', 'Kernel'),
     includeIndex: true,
     validate: true,
     throwOnValidationError: false
+  });
+  session.loadPack('tests_and_evals', {
+    packPath: path.join(PROJECT_ROOT, 'config', 'Packs', 'tests_and_evals'),
+    includeIndex: true,
+    validate: false
   });
 
   let touched = 0;

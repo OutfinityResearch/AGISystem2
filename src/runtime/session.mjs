@@ -71,8 +71,8 @@ export class Session {
     initOperatorsImpl(this);
   }
 
-  learn(dsl) {
-    return sessionLearn(this, dsl);
+  learn(dsl, options = {}) {
+    return sessionLearn(this, dsl, options);
   }
 
   loadCore(options = {}) {

@@ -49,12 +49,6 @@
 @enables:enables __Relation
 @:enables_transitive __TransitiveRelation enables
 
-@ancestorOf:ancestorOf __Relation
-@:ancestorOf_transitive __TransitiveRelation ancestorOf
-
-@descendantOf:descendantOf __Relation
-@:descendantOf_transitive __TransitiveRelation descendantOf
-
 # ===== Reflexive Relations =====
 # Relations where: R(A,A) is always true
 
@@ -68,8 +62,10 @@
 @:sameAs_symmetric __SymmetricRelation sameAs
 @:sameAs_transitive __TransitiveRelation sameAs
 
-# Common symmetric relations
-@:marriedTo_symmetric __SymmetricRelation marriedTo
+#
+# Note:
+# - Social/story relations (e.g. marriedTo, ancestorOf) are opt-in via `config/Packs/tests_and_evals`.
+# - Baseline relations remain domain-agnostic.
 
 # ===== Inheritable Properties =====
 # Properties that propagate DOWN the isA hierarchy

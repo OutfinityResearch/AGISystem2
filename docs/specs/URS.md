@@ -72,6 +72,9 @@ AGISystem2 is a neuro-symbolic reasoning system that provides deterministic, exp
 | **URS-18** | The system SHALL support "elaborate" output mode for detailed narratives | SHOULD | Some contexts need full explanations |
 | **URS-19** | The system SHALL indicate uncertainty and alternatives in results | MUST | Transparency about limitations |
 | **URS-20** | The system SHALL provide step-by-step proof derivations | MUST | Verification requires full derivation |
+| **URS-42** | The system SHALL preserve per-statement source provenance (filename, line/column, inline comment) as metadata and surface it in inspection tooling (e.g., KBExplorer) | MUST | Users need to understand not just what is asserted, but why and where it came from |
+| **URS-43** | The DSL SHALL support inline comments after any statement, graph header, or `return` line; official theory packs SHOULD include a short "why" explanation per line and the parser SHOULD warn on missing/too-short comments | SHOULD | Maintainability and auditability depend on capturing intent, not only syntax |
+| **URS-44** | The DSL parser SHALL reject statements that use more than one `@` token on a single line and SHALL provide a clear remediation message (use `$name` for references) | MUST | Prevents ambiguous parsing and eliminates accidental misuse of declaration syntax as references |
 
 ### 4.5 Performance Requirements
 

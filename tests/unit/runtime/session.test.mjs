@@ -22,7 +22,7 @@ describe('Session', () => {
   describe('learn', () => {
     test('should learn simple fact', () => {
       const session = new Session({ geometry: 1024 });
-      const result = session.learn('@f loves John Mary');
+      const result = session.learn('@f isA John Human');
 
       assert.ok(result.success);
       assert.equal(result.facts, 1);
@@ -32,8 +32,8 @@ describe('Session', () => {
     test('should learn multiple facts', () => {
       const session = new Session({ geometry: 1024 });
       const result = session.learn(`
-        @f1 loves John Mary
-        @f2 parent John Alice
+        @f1 isA John Human
+        @f2 isA Alice Human
       `);
 
       assert.ok(result.success);
@@ -48,7 +48,7 @@ describe('Session', () => {
     test('should add facts to KB', () => {
       const session = new Session({ geometry: 1024 });
       // Use @var:name syntax for persistent fact (scope + KB)
-      session.learn('@f:f loves John Mary');
+      session.learn('@f:f isA John Human');
 
       // KB bundle is a derived (rebuildable) index; prefer the cached bundle accessor.
       assert.ok(session.getKBBundle() !== null);
@@ -60,9 +60,9 @@ describe('Session', () => {
     test('should query with single hole', () => {
       const session = new Session({ geometry: 1024 });
       // Use anonymous fact for KB persistence (no scope needed for learning)
-      session.learn('loves John Mary');
+      session.learn('isA John Human');
 
-      const result = session.query('@q loves ?who Mary');
+      const result = session.query('@q isA John ?who');
       // Note: with 1024 geometry, results may not be perfect
       assert.ok('success' in result);
       assert.ok('bindings' in result);
@@ -70,16 +70,17 @@ describe('Session', () => {
 
     test('should return empty result from empty KB', () => {
       const session = new Session({ geometry: 1024 });
-      const result = session.query('@q loves ?who Mary');
+      const result = session.query('@q isA John ?who');
       assert.equal(result.success, false);
       assert.equal(result.bindings.size, 0);
     });
 
     test('should fail with too many holes', () => {
       const session = new Session({ geometry: 1024 });
-      session.learn('@f sells A B C D');
+      session.learn('@rel:rel __Relation');
+      session.learn('@f rel A B C D');
 
-      const result = session.query('@q sells ?a ?b ?c ?d');
+      const result = session.query('@q rel ?a ?b ?c ?d');
       assert.ok(!result.success);
       assert.ok(result.reason.includes('Too many holes'));
     });
@@ -88,16 +89,16 @@ describe('Session', () => {
   describe('prove', () => {
     test('should prove direct fact', () => {
       const session = new Session({ geometry: 1024 });
-      session.learn('@f loves John Mary');
+      session.learn('@f isA John Human');
 
-      const result = session.prove('@g loves John Mary');
+      const result = session.prove('@g isA John Human');
       // Direct match should be found
       assert.ok('valid' in result);
     });
 
     test('should fail to prove unknown fact', () => {
       const session = new Session({ geometry: 1024 });
-      session.learn('@f loves John Mary');
+      session.learn('@f isA John Human');
       session.learn('@hates:hates __Relation');
 
       const result = session.prove('@g hates John Mary');
@@ -108,7 +109,7 @@ describe('Session', () => {
   describe('decode', () => {
     test('should decode stored vector', () => {
       const session = new Session({ geometry: 1024 });
-      session.learn('@f loves John Mary');
+      session.learn('@f isA John Human');
 
       const vec = session.scope.get('f');
       const decoded = session.decode(vec);
@@ -124,7 +125,7 @@ describe('Session', () => {
   describe('summarize', () => {
     test('should generate text from vector', () => {
       const session = new Session({ geometry: 1024 });
-      session.learn('@f loves Romeo Juliet');
+      session.learn('@f isA Romeo Human');
 
       const vec = session.scope.get('f');
       const summary = session.summarize(vec);
@@ -156,7 +157,7 @@ describe('Session', () => {
     test('should return session state', () => {
       const session = new Session({ geometry: 1024 });
       // Use @var:name syntax for persistent fact (scope + KB)
-      session.learn('@f:f loves John Mary');
+      session.learn('@f:f isA John Human');
 
       const dump = session.dump();
       assert.equal(dump.geometry, 1024);
@@ -168,7 +169,7 @@ describe('Session', () => {
   describe('close', () => {
     test('should clean up resources', () => {
       const session = new Session({ geometry: 1024 });
-      session.learn('@f loves John Mary');
+      session.learn('@f isA John Human');
       session.close();
 
       assert.equal(session.kb, null);

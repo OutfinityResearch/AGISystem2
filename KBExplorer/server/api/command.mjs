@@ -106,14 +106,17 @@ export async function handleCommandApi(req, res, url, ctx) {
     if (!result) {
       if (mode === 'learn') {
         if (dsl.trim().match(/^@\\w+\\s+solve\\s+/)) {
-          result = session.solveURC?.(dsl, { materializeFacts: urcMaterializeFacts }) ?? session.learn(dsl);
+          result = session.solveURC?.(dsl, { materializeFacts: urcMaterializeFacts, sourceName: 'KBExplorer:command' }) ??
+            session.learn(dsl, { sourceName: 'KBExplorer:command' });
         } else {
-          result = session.learn(dsl);
+          result = session.learn(dsl, { sourceName: 'KBExplorer:command' });
         }
       } else if (mode === 'query') {
-        result = session.queryURC?.(dsl, { materializeFacts: urcMaterializeFacts }) ?? session.query(dsl);
+        result = session.queryURC?.(dsl, { materializeFacts: urcMaterializeFacts, sourceName: 'KBExplorer:command' }) ??
+          session.query(dsl, { sourceName: 'KBExplorer:command' });
       } else if (mode === 'prove') {
-        result = session.proveURC?.(dsl, { materializeFacts: urcMaterializeFacts }) ?? session.prove(dsl);
+        result = session.proveURC?.(dsl, { materializeFacts: urcMaterializeFacts, sourceName: 'KBExplorer:command' }) ??
+          session.prove(dsl, { sourceName: 'KBExplorer:command' });
       } else if (mode === 'abduce') {
         result = session.abduce(dsl);
       } else if (mode === 'findAll') {

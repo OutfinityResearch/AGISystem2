@@ -69,11 +69,11 @@ describe('Session Features', () => {
 
     test('should handle multiple results', () => {
       const session = new Session({ geometry: 2048 });
-      session.learn('likes John Pizza');
-      session.learn('likes John Pasta');
-      session.learn('likes John Sushi');
+      session.learn('isA John PizzaLover');
+      session.learn('isA John PastaLover');
+      session.learn('isA John SushiLover');
 
-      const result = session.query('@q likes John ?food');
+      const result = session.query('@q isA John ?food');
       assert.equal(result.success, true);
       assert.ok(result.allResults.length >= 1);
     });
@@ -107,10 +107,10 @@ describe('Session Features', () => {
   });
 
   describe('Contradiction Detection', () => {
-    test('should detect Open/Closed contradiction', () => {
+    test('should detect before/after contradiction (baseline constraint)', () => {
       const session = new Session({ geometry: 2048, reasoningProfile: 'theoryDriven' });
-      session.learn('hasState Box Closed');
-      const result = session.learn('hasState Box Open');
+      session.learn('before Box Shelf');
+      const result = session.learn('after Box Shelf');
 
       assert.equal(result.success, false);
       assert.ok(result.warnings.length > 0);
@@ -118,10 +118,10 @@ describe('Session Features', () => {
       assert.equal(session.kbFacts.length, 1);
     });
 
-    test('should detect Hot/Cold contradiction', () => {
+    test('should detect inverse contradiction via contradictsSameArgs (baseline constraint)', () => {
       const session = new Session({ geometry: 2048, reasoningProfile: 'theoryDriven' });
-      session.learn('hasProperty Water Hot');
-      const result = session.learn('hasProperty Water Cold');
+      session.learn('after A B');
+      const result = session.learn('before A B');
 
       assert.equal(result.success, false);
       assert.ok(result.warnings.length > 0);

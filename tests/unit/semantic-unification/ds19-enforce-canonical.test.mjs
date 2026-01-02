@@ -6,6 +6,10 @@ describe('DS19: enforceCanonical (strict-by-default)', () => {
   test('rewrites persisted L2 primitives into canonical macros', () => {
     const session = new Session({ geometry: 2048, strictMode: true, enforceCanonical: true });
 
+    // Declare operators used by the test under strict declarations.
+    session.learn('@_mtrans:_mtrans __Relation');
+    session.learn('@tell:tell __Relation');
+
     session.learn(`
       @CanonicalRewrite:canonicalRewrite __Relation
       canonicalRewrite _mtrans tell [0, 1, 3] [[0, 2]]
@@ -22,13 +26,18 @@ describe('DS19: enforceCanonical (strict-by-default)', () => {
   test('allows non-persistent internal use of primitives', () => {
     const session = new Session({ geometry: 2048, strictMode: true, enforceCanonical: true });
 
+    session.learn('@_mtrans:_mtrans __Relation');
+    const baseFacts = session.kbFacts.length;
     const res = session.learn('@tmp _mtrans Alice Info Alice Bob');
     assert.equal(res.success, true);
-    assert.equal(session.kbFacts.length, 0, 'expected non-persistent statement to not add facts');
+    assert.equal(session.kbFacts.length, baseFacts, 'expected non-persistent statement to not add facts');
   });
 
   test('rejects non-canonical primitives when rewrite is ambiguous', () => {
     const session = new Session({ geometry: 2048, strictMode: true, enforceCanonical: true });
+
+    session.learn('@_mtrans:_mtrans __Relation');
+    session.learn('@tell:tell __Relation');
 
     session.learn(`
       @CanonicalRewrite:canonicalRewrite __Relation
@@ -43,6 +52,13 @@ describe('DS19: enforceCanonical (strict-by-default)', () => {
   test('prove() includes a canonical_rewrite step for primitive goals', () => {
     const session = new Session({ geometry: 2048, strictMode: true, enforceCanonical: true });
     session.loadCore({ includeIndex: true });
+
+    session.learn('@_mtrans:_mtrans __Relation');
+    session.learn('@tell:tell __Relation');
+    session.learn(`
+      @CanonicalRewrite:canonicalRewrite __Relation
+      canonicalRewrite _mtrans tell [0, 1, 3] [[0, 2]]
+    `);
 
     session.learn('tell Alice Info Bob');
 

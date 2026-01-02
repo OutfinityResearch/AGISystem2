@@ -27,13 +27,17 @@ async function ensureKbFactsLoaded(ctx, categoryNode) {
     if (q) params.set('q', q);
     params.set('offset', String(state.kb.kbOffset));
     params.set('limit', String(state.kb.kbLimit));
-    params.set('namedOnly', state.kb.namedOnly ? '1' : '0');
+    params.set('complexOnly', state.kb.complexOnly ? '1' : '0');
     params.set('namedFirst', '1');
     const res = await api(`/api/kb/facts?${params.toString()}`);
     state.kb.kbTotal = res.total ?? 0;
     state.kb.kbOffset = res.offset ?? state.kb.kbOffset;
     state.kb.kbLimit = res.limit ?? state.kb.kbLimit;
     state.kb.facts = res.facts || [];
+
+    const isFactsFiltered = !!String(state?.kb?.q || '').trim() || state?.kb?.complexOnly === true;
+    const total = state.kb.kbFactCount ?? res.kbFactCount ?? 0;
+    categoryNode.label = `Long-Term Memory (Facts) (${isFactsFiltered ? `${state.kb.kbTotal}/${total}` : total})`;
 
     const kids = state.kb.facts.map(f => kbNode({
       nodeIndex: state.kb.nodeIndex,
@@ -76,11 +80,16 @@ async function ensureGraphsLoaded(ctx, categoryNode) {
     if (q) params.set('q', q);
     params.set('offset', String(state.kb.graphOffset));
     params.set('limit', String(state.kb.graphLimit));
+    params.set('complexOnly', state.kb.complexOnly ? '1' : '0');
     const res = await api(`/api/graphs?${params.toString()}`);
     state.kb.graphTotal = res.total ?? 0;
     state.kb.graphOffset = res.offset ?? state.kb.graphOffset;
     state.kb.graphLimit = res.limit ?? state.kb.graphLimit;
     state.kb.graphs = res.graphs || [];
+
+    const isGraphsFiltered = !!String(state?.kb?.q || '').trim() || state?.kb?.complexOnly === true;
+    const total = state.kb.graphCount ?? res.graphCount ?? 0;
+    categoryNode.label = `Procedural Memory (Graphs) (${isGraphsFiltered ? `${state.kb.graphTotal}/${total}` : total})`;
 
     const kids = state.kb.graphs.map(g => kbNode({
       nodeIndex: state.kb.nodeIndex,
@@ -123,11 +132,16 @@ async function ensureScopeLoaded(ctx, categoryNode) {
     if (q) params.set('q', q);
     params.set('offset', String(state.kb.scopeOffset));
     params.set('limit', String(state.kb.scopeLimit));
+    params.set('complexOnly', state.kb.complexOnly ? '1' : '0');
     const res = await api(`/api/scope/bindings?${params.toString()}`);
     state.kb.scopeTotal = res.total ?? 0;
     state.kb.scopeOffset = res.offset ?? state.kb.scopeOffset;
     state.kb.scopeLimit = res.limit ?? state.kb.scopeLimit;
     state.kb.scope = res.bindings || [];
+
+    const isScopeFiltered = !!String(state?.kb?.q || '').trim() || state?.kb?.complexOnly === true;
+    const total = state.kb.scopeCount ?? 0;
+    categoryNode.label = `Working Memory (Bindings) (${isScopeFiltered ? `${state.kb.scopeTotal}/${total}` : total})`;
 
     const kids = state.kb.scope.map(b => kbNode({
       nodeIndex: state.kb.nodeIndex,
@@ -136,7 +150,7 @@ async function ensureScopeLoaded(ctx, categoryNode) {
       label: b.name,
       depth: categoryNode.depth + 1,
       hasChildren: false,
-      data: { name: b.name, vectorValue: b.vectorValue || null }
+      data: { name: b.name, vectorValue: b.vectorValue || null, source: b.source || null }
     }));
 
     if ((state.kb.scopeOffset + state.kb.scopeLimit) < state.kb.scopeTotal) {
@@ -173,11 +187,21 @@ async function ensureVocabLayerLoaded(ctx, categoryNode) {
     params.set('layer', layer);
     params.set('offset', String(state.kb.vocab[layer].offset));
     params.set('limit', String(state.kb.vocab[layer].limit));
+    params.set('complexOnly', state.kb.complexOnly ? '1' : '0');
     const res = await api(`/api/vocab/atoms?${params.toString()}`);
     state.kb.vocab[layer].total = res.total ?? 0;
     state.kb.vocab[layer].offset = res.offset ?? state.kb.vocab[layer].offset;
     state.kb.vocab[layer].limit = res.limit ?? state.kb.vocab[layer].limit;
     state.kb.vocab[layer].atoms = res.atoms || [];
+
+    if (categoryNode?.data?.baseLabel) {
+      const q2 = String(state?.kb?.q || '').trim();
+      const isFiltered = !!q2 || state?.kb?.complexOnly === true;
+      const counts = state?.kb?.vocabLayerCounts?.[layer] || null;
+      const total = Number.isFinite(counts?.total) ? counts.total : state.kb.vocab[layer].total;
+      const filtered = Number.isFinite(counts?.filtered) ? counts.filtered : state.kb.vocab[layer].total;
+      categoryNode.label = `${categoryNode.data.baseLabel} (${isFiltered ? `${filtered}/${total}` : total})`;
+    }
 
     const kids = state.kb.vocab[layer].atoms.map(a => kbNode({
       nodeIndex: state.kb.nodeIndex,

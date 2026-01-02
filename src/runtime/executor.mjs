@@ -123,10 +123,11 @@ export class Executor {
    * Expand and execute a graph invocation (HDC point relationship graph)
    * @param {string} graphName - Name of the graph to invoke
    * @param {Array} args - Argument expressions
+   * @param {Object|null} [callSite] - Call-site node (Statement/Compound) for provenance
    * @returns {Vector} Result vector from graph expansion
    */
-  expandGraph(graphName, args) {
-    return expandGraphImpl(this, graphName, args);
+  expandGraph(graphName, args, callSite = null) {
+    return expandGraphImpl(this, graphName, args, callSite);
   }
 
   /**
@@ -258,7 +259,7 @@ export class Executor {
                       this.session.graphAliases?.has(operatorName);
       if (isGraph) {
         // Graph invocation: execute graph then bind with operator
-        const graphResult = this.expandGraph(operatorName, stmt.args);
+        const graphResult = this.expandGraph(operatorName, stmt.args, stmt);
         vector = bindGraphInvocationResult(this, stmt, graphResult);
       } else {
         // Normal statement: build vector directly

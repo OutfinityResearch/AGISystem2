@@ -45,45 +45,47 @@ export function buildFactSummary(session, fact) {
   return { factId: fact.id, name, operator, args, label, complexity };
 }
 
-export function vectorValue(vec, { maxItems = 64 } = {}) {
+export function vectorValue(vec, { maxItems = 64, offset = 0 } = {}) {
   if (!vec) return null;
+  const start = Number.isFinite(offset) ? Math.max(0, Math.floor(offset)) : 0;
+  const limit = Number.isFinite(maxItems) ? Math.max(1, Math.floor(maxItems)) : 64;
 
   // Dense-binary: Uint32Array
   if (vec?.data instanceof Uint32Array) {
     const u32 = vec.data;
-    const n = Math.min(maxItems, u32.length);
+    const n = Math.min(limit, Math.max(0, u32.length - start));
     const values = [];
     for (let i = 0; i < n; i++) {
-      values.push(u32[i] >>> 0);
+      values.push(u32[start + i] >>> 0);
     }
-    return { values, truncated: u32.length > n, total: u32.length };
+    return { values, truncated: u32.length > start + n, total: u32.length, offset: start, limit };
   }
 
   // Metric-affine: Uint8Array
   if (vec?.data instanceof Uint8Array) {
     const u8 = vec.data;
-    const n = Math.min(maxItems, u8.length);
+    const n = Math.min(limit, Math.max(0, u8.length - start));
     const values = [];
-    for (let i = 0; i < n; i++) values.push(u8[i]);
-    return { values, truncated: u8.length > n, total: u8.length };
+    for (let i = 0; i < n; i++) values.push(u8[start + i]);
+    return { values, truncated: u8.length > start + n, total: u8.length, offset: start, limit };
   }
 
   // Sparse polynomial: Set<bigint>
   if (vec?.exponents instanceof Set) {
     const arr = Array.from(vec.exponents);
-    const n = Math.min(maxItems, arr.length);
+    const n = Math.min(limit, Math.max(0, arr.length - start));
     const values = [];
-    for (let i = 0; i < n; i++) values.push(`0x${arr[i].toString(16)}`);
-    return { values, truncated: arr.length > n, total: arr.length };
+    for (let i = 0; i < n; i++) values.push(`0x${arr[start + i].toString(16)}`);
+    return { values, truncated: arr.length > start + n, total: arr.length, offset: start, limit };
   }
 
   // EXACT: bigint[] terms
   if (Array.isArray(vec?.terms) && vec.terms.every(t => typeof t === 'bigint')) {
     const terms = vec.terms;
-    const n = Math.min(maxItems, terms.length);
+    const n = Math.min(limit, Math.max(0, terms.length - start));
     const values = [];
-    for (let i = 0; i < n; i++) values.push(`0x${terms[i].toString(16)}`);
-    return { values, truncated: terms.length > n, total: terms.length };
+    for (let i = 0; i < n; i++) values.push(`0x${terms[start + i].toString(16)}`);
+    return { values, truncated: terms.length > start + n, total: terms.length, offset: start, limit };
   }
 
   // Fallback: serialize if possible and show its data payload.
@@ -92,14 +94,43 @@ export function vectorValue(vec, { maxItems = 64 } = {}) {
       const s = vec.serialize();
       const data = s?.data;
       const arr = Array.isArray(data) ? data : [data];
-      const n = Math.min(maxItems, arr.length);
-      return { values: arr.slice(0, n), truncated: arr.length > n, total: arr.length };
+      const n = Math.min(limit, Math.max(0, arr.length - start));
+      return { values: arr.slice(start, start + n), truncated: arr.length > start + n, total: arr.length, offset: start, limit };
     } catch {
       // ignore
     }
   }
 
   return null;
+}
+
+export function vectorItemCount(vec) {
+  if (!vec) return 0;
+
+  if (vec?.data instanceof Uint32Array) return vec.data.length;
+  if (vec?.data instanceof Uint8Array) return vec.data.length;
+  if (vec?.exponents instanceof Set) return vec.exponents.size;
+  if (Array.isArray(vec?.terms) && vec.terms.every(t => typeof t === 'bigint')) return vec.terms.length;
+
+  if (typeof vec.serialize === 'function') {
+    try {
+      const s = vec.serialize();
+      const data = s?.data;
+      if (Array.isArray(data)) return data.length;
+      return data == null ? 0 : 1;
+    } catch {
+      return 0;
+    }
+  }
+
+  return 0;
+}
+
+export function polynomialTermCount(vec) {
+  if (!vec) return 0;
+  if (vec?.exponents instanceof Set) return vec.exponents.size; // sparse-polynomial
+  if (Array.isArray(vec?.terms) && vec.terms.every(t => typeof t === 'bigint')) return vec.terms.length; // exact
+  return 0;
 }
 
 export function stringifyGraphDef(graphDef) {
@@ -112,19 +143,28 @@ export function stringifyGraphDef(graphDef) {
   else if (graphDef.persistName) head = `@:${graphDef.persistName} graph`;
 
   const lines = [];
-  lines.push(`${head}${params.length ? ` ${params.join(' ')}` : ''}`);
+  const header = `${head}${params.length ? ` ${params.join(' ')}` : ''}`;
+  const headerComment = typeof graphDef?.source?.comment === 'string' && graphDef.source.comment.trim()
+    ? graphDef.source.comment.trim()
+    : null;
+  lines.push(headerComment ? `${header}  # ${headerComment}` : header);
 
   const body = Array.isArray(graphDef.body) ? graphDef.body : [];
   for (const stmt of body) {
     const raw = typeof stmt?.toString === 'function' ? stmt.toString() : String(stmt || '');
-    if (raw.trim()) lines.push(`    ${raw}`);
+    if (!raw.trim()) continue;
+    const c = typeof stmt?.comment === 'string' && stmt.comment.trim() ? stmt.comment.trim() : null;
+    lines.push(c ? `    ${raw}  # ${c}` : `    ${raw}`);
   }
 
   if (graphDef.returnExpr) {
     const raw = typeof graphDef.returnExpr?.toString === 'function'
       ? graphDef.returnExpr.toString()
       : String(graphDef.returnExpr);
-    if (raw.trim()) lines.push(`    return ${raw}`);
+    if (raw.trim()) {
+      const c = typeof graphDef.returnComment === 'string' && graphDef.returnComment.trim() ? graphDef.returnComment.trim() : null;
+      lines.push(c ? `    return ${raw}  # ${c}` : `    return ${raw}`);
+    }
   }
 
   lines.push('end');
@@ -191,12 +231,14 @@ export function buildBundleView(session, fact) {
   const operatorFact = op ? (nameIndex.get(String(op)) || null) : null;
   const operatorVector = op ? session.vocabulary?.getOrCreate?.(String(op)) : null;
   const operatorGraph = op ? (session.graphs?.get?.(String(op)) || null) : null;
+  const operatorSource = operatorFact?.metadata?.source || session?.vocabulary?.getSource?.(String(op)) || null;
   const operatorItem = {
     kind: 'VERB',
     role: 'operator',
     label: op ? String(op) : '(unknown operator)',
     definitionFactId: operatorFact?.id ?? null,
     definitionFactLabel: operatorFact ? buildFactLabel(session, operatorFact) : null,
+    source: operatorSource,
     vectorValue: vectorValue(operatorVector),
     graphDsl: operatorGraph ? stringifyGraphDef(operatorGraph) : null,
     hasChildren: false
@@ -212,6 +254,7 @@ export function buildBundleView(session, fact) {
     const argComplexity = argFact ? metadataComplexity(argFact?.metadata || null) : 0;
     const argVector = session.vocabulary?.getOrCreate?.(arg) || null;
     const positionedVector = argVector ? withPosition(position, argVector, session) : null;
+    const argSource = argFact?.metadata?.source || session?.vocabulary?.getSource?.(arg) || null;
 
     binds.push({
       kind: 'BIND',
@@ -221,6 +264,7 @@ export function buildBundleView(session, fact) {
       argFactId,
       argFactLabel,
       argComplexity,
+      source: argSource,
       vectorValue: vectorValue(argVector),
       positionedVectorValue: vectorValue(positionedVector),
       hasChildren: !!argFactId
@@ -244,6 +288,7 @@ export function buildBundleView(session, fact) {
   return {
     fact: summary,
     metadata: meta || null,
+    source: meta?.source || null,
     dsl: (summary.operator && Array.isArray(summary.args)) ? `${summary.operator} ${summary.args.join(' ')}`.trim() : '',
     statementDsl,
     vectors: {
@@ -257,4 +302,3 @@ export function buildBundleView(session, fact) {
     }
   };
 }
-
