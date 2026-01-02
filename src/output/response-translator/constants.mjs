@@ -8,7 +8,8 @@ export const RESERVED_SYMBOLS = new Set([
   'ForAll', 'And', 'Or', 'Not', 'Implies', 'Exists',
   'isA', 'has', 'can', 'must', 'causes', 'implies',
   'true', 'false',
-  'yes', 'no'
+  'yes', 'no',
+  'BOTTOM_IMPOSSIBLE', 'TOP_INEFFABLE'
 ]);
 
 export const RELIABLE_METHODS = new Set([

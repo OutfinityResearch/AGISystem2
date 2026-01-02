@@ -69,7 +69,7 @@ The tree is a filesystem-like explorer:
 ### 6.2 Details panel (always visible)
 Selecting any node shows a fixed right panel with:
 - **Definition**: the statement/graph text as loaded; when a fact is named, it is shown with an `@:` prefix for visibility.
-- **Encoding (DS02)**: statement encoding form `Op ⊕ (Pos1 ⊕ Arg1) ⊕ (Pos2 ⊕ Arg2) ⊕ ...` (this is the *fact vector* formula, not an “entity definition”).
+- **Encoding**: statement encoding form `Op ⊕ (Pos1 ⊕ Arg1) ⊕ (Pos2 ⊕ Arg2) ⊕ ...` (this is the *fact vector* formula, not an “entity definition”).
 - **Vector**: the selected node’s vector only, as an array (truncated).
 - **Raw**: the raw payload returned/assembled by the UI for debugging.
 
@@ -109,7 +109,7 @@ All APIs are JSON. The client identifies its session via `X-Session-Id`.
 ### 8.3 Theory ingest (UI “Load...”)
 - `POST /api/theory/ingest` → learns a `.sys2` file sent as text
   - body: `{ filename, text }`
-  - by default blocks DSL `Load`/`Unload` statements (opt-in via env)
+  - DSL `Load`/`Unload` is enabled by default (disable with `KBEXPLORER_ALLOW_FILE_OPS=0`)
 
 ### 8.4 Chat command execution
 - `POST /api/command` → executes one user command

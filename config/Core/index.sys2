@@ -3,7 +3,6 @@
 
 # L1 - Type System & Foundations
 @_ Load "./00-types.sys2"
-@_ Load "./01-positions.sys2"
 
 # L1 - Constructors & Structures (must load BEFORE relations that use them)
 @_ Load "./02-constructors.sys2"

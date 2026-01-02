@@ -131,20 +131,14 @@ The cancellation derivation above relies on **XOR-class** binding where `UNBIND`
 
 ## 7a.5 Position Vectors
 
-Defined in `config/Core/01-positions.sys2`:
+Position markers are **runtime-reserved atoms** named `Pos1..Pos20`.
 
-```sys2
-@Pos1:Pos1 ___NewVector "__Pos1__" "Core"
-@Pos2:Pos2 ___NewVector "__Pos2__" "Core"
-@Pos3:Pos3 ___NewVector "__Pos3__" "Core"
-...
-@Pos20:Pos20 ___NewVector "__Pos20__" "Core"
-```
+They are configured and initialized outside the DSL:
 
-The special `__PosN__` naming ensures:
-1. Orthogonality between position vectors
-2. No collision with user-defined atoms
-3. Deterministic creation across sessions
+- Config: `config/runtime/reserved-atoms.json`
+- Loader: `src/runtime/runtime-reserved-atoms.mjs`
+
+This keeps argument-order internals out of Core `.sys2` theories while preserving deterministic initialization and strategy compatibility.
 
 ---
 
@@ -172,7 +166,7 @@ const session = new Session({ hdcStrategy: 'sparse-polynomial' });
 | `src/core/position.mjs` | Position vector management |
 | `src/core/vectors/dense-binary.mjs` | Uint32Array implementation |
 | `src/core/vectors/sparse-polynomial.mjs` | Polynomial implementation |
-| `config/Core/01-positions.sys2` | Position vector definitions |
+| `config/runtime/reserved-atoms.json` | Runtime-reserved atoms (includes `Pos1..Pos20`) |
 
 ---
 

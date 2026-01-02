@@ -6,7 +6,6 @@ This directory documents each `.sys2` file under `config/Core`.  Every spec expl
 |------|-------------|-------|
 | [00-relations](./00-relations.sys2.md) | `config/Core/00-relations.sys2` | Relation metadata (transitive/symmetric/etc.) |
 | [00-types](./00-types.sys2.md) | `config/Core/00-types.sys2` | Base type markers |
-| [01-positions](./01-positions.sys2.md) | `config/Core/01-positions.sys2` | Position vectors |
 | [02-constructors](./02-constructors.sys2.md) | `config/Core/02-constructors.sys2` | Typed constructors |
 | [03-structural](./03-structural.sys2.md) | `config/Core/03-structural.sys2` | Structural macros (__Role, __Pair, etc.) |
 | [04-semantic-primitives](./04-semantic-primitives.sys2.md) | `config/Core/04-semantic-primitives.sys2` | L2 Conceptual Dependency primitives |

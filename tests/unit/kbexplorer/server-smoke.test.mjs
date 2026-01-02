@@ -25,7 +25,9 @@ describe('KBExplorer server (smoke)', () => {
   let listenError = null;
 
   before(async () => {
-    const created = createKBExplorerServer({ allowFileOps: false, sessionOptions: { geometry: 1024 } });
+    // KBExplorer is a research tool: allow DSL Load/Unload at HTTP layer by default.
+    // Make this test hermetic even if the environment sets KBEXPLORER_ALLOW_FILE_OPS=0.
+    const created = createKBExplorerServer({ allowFileOps: true, sessionOptions: { geometry: 1024 } });
     server = created.server;
     await new Promise((resolve) => {
       server.once('error', (err) => {
@@ -112,7 +114,7 @@ describe('KBExplorer server (smoke)', () => {
     assert.ok(String(detailRes.json.graphDsl || '').includes('graph'));
   });
 
-  test('blocks Load/Unload by default', async (t) => {
+  test('allows Load/Unload by default', async (t) => {
     if (listenError) {
       t.skip(`Socket listen is not permitted in this environment (${listenError.code || 'ERR'}).`);
       return;
@@ -129,7 +131,53 @@ describe('KBExplorer server (smoke)', () => {
       sessionId,
       body: { filename: 'bad.sys2', text: '@_ Load \"./x.sys2\"' }
     });
-    assert.equal(ingestRes.status, 400);
-    assert.equal(ingestRes.json.ok, false);
+    // KBExplorer allows Load/Unload by default (research tool). This should not be blocked at HTTP layer.
+    assert.equal(ingestRes.status, 200);
+    assert.equal(ingestRes.json.ok, true);
+    assert.equal(ingestRes.json.learn.success, false);
+  });
+
+  test('blocks Load/Unload when disabled', async (t) => {
+    if (listenError) {
+      t.skip(`Socket listen is not permitted in this environment (${listenError.code || 'ERR'}).`);
+      return;
+    }
+
+    const created = createKBExplorerServer({ allowFileOps: false, sessionOptions: { geometry: 1024 } });
+    const s = created.server;
+
+    let base = null;
+    let err = null;
+    await new Promise((resolve) => {
+      s.once('error', (e) => { err = e; resolve(); });
+      s.listen(0, '127.0.0.1', resolve);
+    });
+    if (err) {
+      t.skip(`Socket listen is not permitted in this environment (${err.code || 'ERR'}).`);
+      return;
+    }
+    try {
+      const addr = s.address();
+      base = `http://127.0.0.1:${addr.port}`;
+      const c = makeClient(base);
+
+      const newRes = await c.json('/api/session/new', {
+        method: 'POST',
+        body: { sessionOptions: { hdcStrategy: 'dense-binary', reasoningPriority: 'symbolicPriority' } }
+      });
+      const sessionId = newRes.json.sessionId;
+
+      const ingestRes = await c.json('/api/theory/ingest', {
+        method: 'POST',
+        sessionId,
+        body: { filename: 'blocked.sys2', text: '@_ Load \"./x.sys2\"' }
+      });
+
+      assert.equal(ingestRes.status, 400);
+      assert.equal(ingestRes.json.ok, false);
+      assert.ok(String(ingestRes.json.error || '').toLowerCase().includes('load/unload'));
+    } finally {
+      await new Promise(resolve => s.close(resolve));
+    }
   });
 });

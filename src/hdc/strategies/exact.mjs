@@ -576,8 +576,8 @@ function createInstance({ geometry = 0, session = null } = {}) {
       if (typeof name !== 'string') return false;
       if (name.startsWith('__')) return false;
       if (name.startsWith('@') || name.startsWith('$') || name.startsWith('?')) return false;
-      // Session pre-initializes position atoms as __POS_N__ (noise for hole decoding).
-      if (/^__POS_\d+__$/.test(name)) return false;
+      // Session pre-initializes position atoms as PosN (noise for hole decoding).
+      if (/^Pos\d+$/.test(name)) return false;
       // If provided, defer to system-level entity filtering (filters operators, reserved tokens, etc.).
       if (typeof isValidEntity === 'function') {
         return isValidEntity(name, sessionRef);

@@ -513,7 +513,8 @@ function newSessionUniverse(options, sessionOptions) {
 
 export function createKBExplorerServer(options = {}) {
   const sessions = new Map();
-  const allowFileOps = options.allowFileOps ?? (process.env.KBEXPLORER_ALLOW_FILE_OPS === '1');
+  // Research-first default: allow DSL Load/Unload unless explicitly disabled.
+  const allowFileOps = options.allowFileOps ?? (process.env.KBEXPLORER_ALLOW_FILE_OPS !== '0');
 
   function getOrCreateUniverse(req, res, url) {
     const sid = getSessionIdFromRequest(req, url);
@@ -915,7 +916,7 @@ export function createKBExplorerServer(options = {}) {
       const textBody = String(payload?.text || '');
       if (!textBody.trim()) return json(res, 400, { ok: false, error: 'Empty theory text' });
       if (!allowFileOps && containsFileOps(textBody)) {
-        return json(res, 400, { ok: false, error: 'Load/Unload is disabled in KBExplorer by default' });
+        return json(res, 400, { ok: false, error: 'Load/Unload is disabled (KBEXPLORER_ALLOW_FILE_OPS=0)' });
       }
       try {
         const result = session.learn(textBody);
@@ -975,7 +976,7 @@ export function createKBExplorerServer(options = {}) {
       }
 
       if (!allowFileOps && containsFileOps(dsl)) {
-        return json(res, 400, { ok: false, error: 'Load/Unload is disabled in KBExplorer by default' });
+        return json(res, 400, { ok: false, error: 'Load/Unload is disabled (KBEXPLORER_ALLOW_FILE_OPS=0)' });
       }
 
       try {

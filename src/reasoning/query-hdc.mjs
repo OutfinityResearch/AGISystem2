@@ -36,7 +36,10 @@ export const RESERVED = new Set([
   'causes', 'enables', 'prevents', 'conflictsWith',
 
   // Internal markers
-  '__Relation', '__Role', '__TransitiveRelation', '__SymmetricRelation'
+  '__Relation', '__Role', '__TransitiveRelation', '__SymmetricRelation',
+
+  // Runtime-reserved sentinels / position markers
+  'BOTTOM_IMPOSSIBLE', 'TOP_INEFFABLE'
 ]);
 
 const RESERVED_CACHE = new WeakMap();
@@ -75,6 +78,7 @@ export function isValidEntity(name, session) {
   if (name.startsWith('_') || name.startsWith('?')) return false;
   if (name.startsWith('$') || name.startsWith('@')) return false;
   if (name.match(/^[a-z]+$/)) return false; // lowercase only = operator
+  if (/^Pos\d+$/.test(name)) return false; // argument-position marker
   if (getReserved(session).has(name)) return false;
   return true;
 }

@@ -5,23 +5,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="wip  KB explorer tool for demos and visual inspection of the system during research">
+      <change afterPath="$PROJECT_DIR$/core_config_semantic-prgamtic_init.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AGENTS.md" beforeDir="false" afterPath="$PROJECT_DIR$/AGENTS.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/KBExplorer/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/kb/actions.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/kb/tree.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/kb/tree.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/state.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/state.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/ui/chat.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/ui/chat.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/ui/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/ui/config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/ui/load.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/ui/load.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/ui/tabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/ui/tabs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KBExplorer/client/app/ui/stats.js" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/app/ui/stats.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/KBExplorer/client/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/KBExplorer/client/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/client/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KBExplorer/server/index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/server/index.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/KBExplorer/server/server.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/KBExplorer/server/server.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/04a-numeric.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/04a-numeric.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/15-stress-compat.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/15-stress-compat.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Core/01-positions.sys2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Core/index.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/index.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/runtime/reserved-atoms.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/runtime/reserved-atoms.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS01-Theoretical-Foundation.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS01-Theoretical-Foundation.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07-Core-Theory-Index.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07-Core-Theory-Index.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07a-HDC-Primitives.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07a-HDC-Primitives.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS09-Core-HDC-Implementation.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS09-Core-HDC-Implementation.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS25-Exact-Sparse-Bitset-Polynomial-HDC.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS25-Exact-Sparse-Bitset-Polynomial-HDC.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS26-Session-Universe.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS26-Session-Universe.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS48-KBExplorer.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS48-KBExplorer.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/domains/Math/01-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/domains/Math/01-relations.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/nlp/normalizer.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/normalizer.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/config/01-positions.sys2.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/config/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/config/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/config/index.sys2.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/config/index.sys2.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/src/core/position.mjs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/src/core/position.mjs.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/src/runtime/runtime-reserved-atoms.mjs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/src/runtime/runtime-reserved-atoms.mjs.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/src/runtime/session.mjs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/src/runtime/session.mjs.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/privacy-hdc.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/privacy-hdc.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/position.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/position.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hdc/strategies/exact.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/strategies/exact.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/output/response-translator/constants.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator/constants.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/output/response-translator/query-translator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator/query-translator.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.execute.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.execute.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/query-hdc.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-hdc.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/runtime-reserved-atoms.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/runtime-reserved-atoms.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/unit/kbexplorer/server-smoke.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/kbexplorer/server-smoke.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -143,6 +159,7 @@
       <workItem from="1767005469743" duration="10476000" />
       <workItem from="1767083849618" duration="20002000" />
       <workItem from="1767176590511" duration="2118000" />
+      <workItem from="1767350041350" duration="3856000" />
     </task>
     <task id="LOCAL-00055" summary="wip to create better semantic unification of theories and concepts even when defined with different defeinitions">
       <option name="closed" value="true" />

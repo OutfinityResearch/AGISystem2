@@ -285,7 +285,7 @@ Pos1, Pos2, ..., Pos20:
 ├── Quasi-orthogonal to user vectors
 └── Extend correctly when geometry changes
 
-Initialization: asciiStamp("__Pos1__", "Core", 32768)
+Initialization: createFromName("Pos1", 32768)
 ```
 
 ---

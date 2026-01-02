@@ -15,7 +15,7 @@ Provides the main API surface for AGISystem2. Sessions are isolated reasoning co
 In addition to the public API, `Session` is responsible for “universe bootstrapping”:
 
 - Creates a **session-local HDC context** (IoC), which may instantiate a per-session strategy instance (e.g., EXACT allocator).
-- Initializes **runtime-reserved atoms** (internal tokens such as `__POS_1__`, `__EMPTY_BUNDLE__`) from a non-DSL config file (`config/runtime/reserved-atoms.json`).
+- Initializes **runtime-reserved atoms** (internal tokens such as `Pos1`, `__EMPTY_BUNDLE__`) from a non-DSL config file (`config/runtime/reserved-atoms.json`).
 - Auto-loads Core theories by default (with opt-out, and default-off under `node --test`).
 
 ---

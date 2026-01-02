@@ -55,7 +55,7 @@ function getPositionVector(position, geometry = DEFAULT_GEOMETRY, strategyId = n
   // IoC path: if a Session is provided, position vectors must be session-local
   // (some strategies may require per-session allocators / dictionaries).
   if (sessionOrHdc && sessionOrHdc.vocabulary?.getOrCreate) {
-    return sessionOrHdc.vocabulary.getOrCreate(`__POS_${position}__`);
+    return sessionOrHdc.vocabulary.getOrCreate(`Pos${position}`);
   }
 
   const resolvedStrategyId = strategyId || getStrategyId();
@@ -66,7 +66,7 @@ function getPositionVector(position, geometry = DEFAULT_GEOMETRY, strategyId = n
   }
 
   // Generate deterministic position vector using active strategy
-  const posVec = createFromName(`__POS_${position}__`, geometry, { strategyId: resolvedStrategyId });
+  const posVec = createFromName(`Pos${position}`, geometry, { strategyId: resolvedStrategyId });
   positionCache.set(cacheKey, posVec);
   return posVec;
 }

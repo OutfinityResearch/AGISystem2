@@ -19,7 +19,7 @@ async function startServer() {
 
   // English output required by repo instructions.
   console.log(`KBExplorer running at http://${host}:${port}/`);
-  console.log(`Set KBEXPLORER_ALLOW_FILE_OPS=1 to allow DSL Load/Unload.`);
+  console.log(`Set KBEXPLORER_ALLOW_FILE_OPS=0 to disable DSL Load/Unload.`);
 }
 
 async function stopServer() {

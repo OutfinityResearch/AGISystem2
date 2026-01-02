@@ -30,7 +30,7 @@ When started in a TTY, the server shows a prompt:
 
 - `KBEXPLORER_PORT` or `PORT`: server port (default `3311`)
 - `HOST`: bind host (default `127.0.0.1`)
-- `KBEXPLORER_ALLOW_FILE_OPS=1`: allow DSL `Load`/`Unload` (disabled by default)
+- `KBEXPLORER_ALLOW_FILE_OPS=0`: disable DSL `Load`/`Unload` (enabled by default)
 
 ## Notes
 

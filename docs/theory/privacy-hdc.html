@@ -439,7 +439,7 @@ class PrivateHDCClient {
   encodeFact(relation, ...args) {
     let vec = this.getAtom(relation);
     for (let i = 0; i < args.length; i++) {
-      const posVec = this.getAtom(`__POS_${i+1}__`);
+      const posVec = this.getAtom(`Pos${i+1}`);
       const argVec = this.getAtom(args[i]);
       vec = bind(vec, bind(posVec, argVec));
     }

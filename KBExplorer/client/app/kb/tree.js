@@ -197,7 +197,7 @@ function buildDefinitionText(_ctx, node) {
   }
 
   if (node.kind === 'KB_BUNDLE') {
-    return 'Session KB bundle vector (superposition of KB facts).';
+    return 'KB bundle (superposition of all facts in this session).';
   }
 
   if (node.kind === 'CATEGORY') {
@@ -755,7 +755,7 @@ export function buildTree({ state }) {
     nodeIndex: state.kb.nodeIndex,
     id: 'cat:facts',
     kind: 'CATEGORY',
-    label: `KB facts (${state.kb.kbFactCount ?? 0})`,
+    label: `Long-Term Memory (Facts) (${state.kb.kbFactCount ?? 0})`,
     depth: 1,
     hasChildren: true,
     data: { category: 'facts' }
@@ -765,7 +765,7 @@ export function buildTree({ state }) {
     nodeIndex: state.kb.nodeIndex,
     id: 'cat:graphs',
     kind: 'CATEGORY',
-    label: `Graphs (${state.kb.graphCount ?? 0})`,
+    label: `Procedural Memory (Graphs) (${state.kb.graphCount ?? 0})`,
     depth: 1,
     hasChildren: true,
     data: { category: 'graphs' }
@@ -775,25 +775,25 @@ export function buildTree({ state }) {
     nodeIndex: state.kb.nodeIndex,
     id: 'cat:vocab',
     kind: 'CATEGORY',
-    label: `Vocabulary (${state.kb.vocabCount ?? 0})`,
+    label: `Lexicon (Symbols) (${state.kb.vocabCount ?? 0})`,
     depth: 1,
     hasChildren: true,
     data: { category: 'vocab' }
   });
   vocabCat.loaded = true;
   vocabCat.children = [
-    kbNode({ nodeIndex: state.kb.nodeIndex, id: 'cat:vocab:pos', kind: 'CATEGORY', label: 'Positions', depth: 2, hasChildren: true, data: { category: 'vocabLayer', layer: 'Pos' } }),
-    kbNode({ nodeIndex: state.kb.nodeIndex, id: 'cat:vocab:l0', kind: 'CATEGORY', label: 'L0 (___)', depth: 2, hasChildren: true, data: { category: 'vocabLayer', layer: 'L0' } }),
-    kbNode({ nodeIndex: state.kb.nodeIndex, id: 'cat:vocab:l1', kind: 'CATEGORY', label: 'L1 (__)', depth: 2, hasChildren: true, data: { category: 'vocabLayer', layer: 'L1' } }),
-    kbNode({ nodeIndex: state.kb.nodeIndex, id: 'cat:vocab:l2', kind: 'CATEGORY', label: 'L2 (_)', depth: 2, hasChildren: true, data: { category: 'vocabLayer', layer: 'L2' } }),
-    kbNode({ nodeIndex: state.kb.nodeIndex, id: 'cat:vocab:l3', kind: 'CATEGORY', label: 'L3+ (no prefix)', depth: 2, hasChildren: true, data: { category: 'vocabLayer', layer: 'L3' } })
+    kbNode({ nodeIndex: state.kb.nodeIndex, id: 'cat:vocab:pos', kind: 'CATEGORY', label: 'Role/slot markers (PosN)', depth: 2, hasChildren: true, data: { category: 'vocabLayer', layer: 'Pos' } }),
+    kbNode({ nodeIndex: state.kb.nodeIndex, id: 'cat:vocab:l0', kind: 'CATEGORY', label: 'Primitives (___)', depth: 2, hasChildren: true, data: { category: 'vocabLayer', layer: 'L0' } }),
+    kbNode({ nodeIndex: state.kb.nodeIndex, id: 'cat:vocab:l1', kind: 'CATEGORY', label: 'Structural symbols (__)', depth: 2, hasChildren: true, data: { category: 'vocabLayer', layer: 'L1' } }),
+    kbNode({ nodeIndex: state.kb.nodeIndex, id: 'cat:vocab:l2', kind: 'CATEGORY', label: 'Semantic primitives (_)', depth: 2, hasChildren: true, data: { category: 'vocabLayer', layer: 'L2' } }),
+    kbNode({ nodeIndex: state.kb.nodeIndex, id: 'cat:vocab:l3', kind: 'CATEGORY', label: 'Domain symbols (no prefix)', depth: 2, hasChildren: true, data: { category: 'vocabLayer', layer: 'L3' } })
   ];
 
   const scopeCat = kbNode({
     nodeIndex: state.kb.nodeIndex,
     id: 'cat:scope',
     kind: 'CATEGORY',
-    label: `Scope (${state.kb.scopeCount ?? 0})`,
+    label: `Working Memory (Bindings) (${state.kb.scopeCount ?? 0})`,
     depth: 1,
     hasChildren: true,
     data: { category: 'scope' }

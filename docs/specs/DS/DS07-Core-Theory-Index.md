@@ -34,7 +34,7 @@ This chapter has been refactored into the following documents:
 
 | Document | Content | Config Files |
 |----------|---------|--------------|
-| [DS07a-HDC-Primitives](DS07a-HDC-Primitives.md) | L0 primitives, binding formula, position vectors | `01-positions.sys2` |
+| [DS07a-HDC-Primitives](DS07a-HDC-Primitives.md) | L0 primitives, binding formula, position markers | `config/runtime/reserved-atoms.json` |
 | [DS07b-Type-System](DS07b-Type-System.md) | Type hierarchy, markers, constructors, structural ops | `00-types.sys2`, `02-constructors.sys2`, `03-structural.sys2` |
 | [DS07c-Semantic-Primitives](DS07c-Semantic-Primitives.md) | L2 CD primitives (_ptrans, _atrans, _mtrans, etc.) | `04-semantic-primitives.sys2` |
 | [DS07d-Logic](DS07d-Logic.md) | Logic atoms, graphs, negation | `05-logic.sys2` |
@@ -52,7 +52,6 @@ This chapter has been refactored into the following documents:
 |-------------|----------|---------|
 | `00-types.sys2` | DS07b | Type markers |
 | `00-relations.sys2` | DS07f | Transitive/symmetric relations |
-| `01-positions.sys2` | DS07a | Position vectors |
 | `02-constructors.sys2` | DS07b | Typed constructors |
 | `03-structural.sys2` | DS07b | __Role, __Pair, __Bundle |
 | `04-semantic-primitives.sys2` | DS07c | L2 CD primitives |
@@ -95,7 +94,7 @@ Cross-cutting concerns:
 | Category | Count | Reference |
 |----------|-------|-----------|
 | Type Markers | 19 | DS07b |
-| Position Vectors | 20 | DS07a |
+| Position Markers | 20 | DS07a |
 | Typed Constructors | 16 | DS07b |
 | Structural Operations | 5 | DS07b |
 | L2 Primitives | 11 | DS07c |

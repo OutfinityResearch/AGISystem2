@@ -409,7 +409,7 @@ function getVocabulary(engine) {
     if (typeof name !== 'string') continue;
     if (!isValidEntity(name, engine.session)) continue;
     if (name.startsWith('__') || name.startsWith('@') || name.includes('__HOLE') || name.includes('__Relation')) continue;
-    if (/^__Pos\\d+__$/.test(name)) continue;
+    if (/^Pos\\d+$/.test(name) || /^__Pos\\d+__$/.test(name) || /^__POS_\\d+__$/.test(name)) continue;
     vocab.set(name, vec);
   }
 

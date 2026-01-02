@@ -24,8 +24,8 @@ This DS clarifies:
 
 ## 2. Terminology
 
-- **Runtime-reserved atom**: an internal token required by the runtime/engines (not a semantic symbol). Examples: `__POS_1__`, `__EMPTY_BUNDLE__`.
-- **Core semantic atom / macro**: symbols and graphs defined in `config/Core/*.sys2` (e.g., `Pos1`, `__Sequence`, `__Role`, relation declarations).
+- **Runtime-reserved atom**: an internal token required by the runtime/engines (not a semantic symbol). Examples: `Pos1`, `__EMPTY_BUNDLE__`.
+- **Core semantic atom / macro**: symbols and graphs defined in `config/Core/*.sys2` (e.g., `__Sequence`, `__Role`, relation declarations).
 - **IoC (Inversion of Control)**: the runtime creates a session-local strategy instance and passes it into dependent components (Vocabulary, engines).
 
 ## 3. The Session Universe Model
@@ -71,7 +71,8 @@ then the runtime MUST construct a session-local instance and use it for all oper
 
 **A) Runtime-reserved atoms (internal):**
 
-- `__POS_1__..__POS_20__` (argument-position markers used by the runtime)
+- `BOTTOM_IMPOSSIBLE`, `TOP_INEFFABLE` (reserved semantic sentinels for downstream strategy policies)
+- `Pos1..Pos20` (argument-position markers used by the runtime)
 - `__EMPTY_BUNDLE__` (bundle of an empty list)
 - `__CANONICAL_REWRITE__` (internal marker for metadata-only canonical rewrite facts)
 
@@ -79,18 +80,13 @@ These tokens are not part of the semantic DSL; they are implementation details r
 
 **B) Core semantic atoms/macros (theory):**
 
-- `Pos1..Pos20` declared in `config/Core/01-positions.sys2`
 - graphs/macros like `__Sequence`, `__Bundle`, `__Role`, relation declarations, etc.
 
 These are part of the semantic library and live in `.sys2` files.
 
 ### 5.2 Why both exist
 
-The runtime uses `__POS_n__` to position arguments in a strategy-agnostic way (no permutation).
-
-Core theory uses `Pos1` etc. as semantic building blocks in DSL graphs and macros.
-
-They are intentionally separate namespaces.
+Argument positions are encoded using `PosN` markers to avoid permutation (which breaks extension) while keeping encoding deterministic and strategy-compatible.
 
 ## 6. Non-DSL configuration for runtime-reserved atoms
 

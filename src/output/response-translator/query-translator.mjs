@@ -31,7 +31,7 @@ export class QueryTranslator extends BaseTranslator {
     if (a.startsWith('@')) return true;
     if (a.startsWith('__')) return true;
     if (a.includes('__HOLE') || a.includes('HOLE_') || a.includes('__Relation') || a.includes('__Pair')) return true;
-    if (/^__Pos\\d+__$/.test(a)) return true;
+    if (/^Pos\\d+$/.test(a) || /^__Pos\\d+__$/.test(a) || /^__POS_\\d+__$/.test(a)) return true;
     const kbFacts = Array.isArray(this.session?.kbFacts) ? this.session.kbFacts : [];
     const isRelationSymbol = kbFacts.some(f =>
       f?.metadata?.operator === 'isA' &&

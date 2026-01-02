@@ -16,8 +16,8 @@ Schema (v0):
 
 ```json
 {
-  "positionAtoms": { "count": 20, "template": "__POS_{n}__" },
-  "atoms": ["__EMPTY_BUNDLE__", "__CANONICAL_REWRITE__"]
+  "positionAtoms": { "count": 20, "template": "Pos{n}" },
+  "atoms": ["BOTTOM_IMPOSSIBLE", "TOP_INEFFABLE", "__EMPTY_BUNDLE__", "__CANONICAL_REWRITE__"]
 }
 ```
 
@@ -35,4 +35,3 @@ Schema (v0):
 ## Related specs
 
 - `docs/specs/DS/DS26-Session-Universe.md`
-

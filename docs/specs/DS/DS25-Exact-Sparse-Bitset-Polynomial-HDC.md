@@ -77,7 +77,7 @@ This dictionary is intended to be the “rapid mapping” from the numeric ID to
 
 To remain compatible with DS07a structured-record patterns, EXACT MUST reserve indices early for:
 
-- `__POS_1__ ... __POS_20__` (these are the canonical position-vector names used by `src/core/position.mjs`)
+- `Pos1 .. Pos20` (these are the canonical position-marker names used by `src/core/position.mjs`)
 
 Recommended policy:
 
@@ -268,7 +268,7 @@ In real workloads, the raw UNBIND result may contain **structural residue** (ext
 - KB is a `bundle` (superposition) of many facts, so unbind yields multiple residuals.
 - Some facts are wrapped (e.g., graph operators use `bind(Op, graph_result)`), introducing operator-level atoms that can “leak” into residuals.
 
-Therefore EXACT benefits from a strategy-level decoding step that **projects** residual terms to plausible entity atoms and filters out non-entities (`__POS_*__`, `__*` markers, operator tokens, known args, etc.).
+Therefore EXACT benefits from a strategy-level decoding step that **projects** residual terms to plausible entity atoms and filters out non-entities (`Pos*`, `__*` markers, operator tokens, known args, etc.).
 
 This preserves the DS07a “remove known pieces to expose unknown piece” reasoning pattern, without requiring XOR-inverse binding.
 
@@ -337,7 +337,7 @@ src/hdc/strategies/
 Minimal integration points:
 
 - **Dictionary scope:** The dictionary must be session-local (not process-global). The recommended approach is to instantiate the strategy per Session (see §9.1) so each Session has a fresh allocator.
-- **Position atoms:** Pre-initialize `__POS_1__..__POS_20__` early for stable low indices in appearance-index strategies. (The runtime can do this before loading any theories.)
+- **Position atoms:** Pre-initialize `Pos1..Pos20` early for stable low indices in appearance-index strategies. (The runtime can do this before loading any theories.)
 - **Persistence:** Do not implement dictionary persistence until KB serialization is introduced (see §3.4). Until then, evaluation workflows can reload theories from text and re-vectorize each run.
 
 ### 9.1 Session-local dictionary without KB serialization (v0 guidance)

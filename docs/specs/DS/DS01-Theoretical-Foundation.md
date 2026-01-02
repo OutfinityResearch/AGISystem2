@@ -371,14 +371,14 @@ initVector("John", "Family", 32768) === initVector("John", "Family", 32768)
 
 ## 1.6 Core Position Vectors
 
-Core predefines position vectors using special names:
+The runtime predefines position markers using reserved names:
 
 ```
-Pos1  = initVector("__Pos1__",  "Core", geometry)
-Pos2  = initVector("__Pos2__",  "Core", geometry)
-Pos3  = initVector("__Pos3__",  "Core", geometry)
+Pos1  = initVector("Pos1",  geometry)
+Pos2  = initVector("Pos2",  geometry)
+Pos3  = initVector("Pos3",  geometry)
 ...
-Pos20 = initVector("__Pos20__", "Core", geometry)
+Pos20 = initVector("Pos20", geometry)
 ```
 
 **Properties:**
