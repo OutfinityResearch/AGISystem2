@@ -412,7 +412,7 @@ All strategies still load 1,314 facts from stress theories
     <strong>Success Story:</strong> <strong>All 12 benchmark configurations achieve 100% success</strong> on the comprehensive Core Theory test suite:
     <strong>364 tests across 27 suites</strong> covering foundations, hierarchies, rules, negation, compound logic, temporal reasoning, modal logic,
     composition, CSP, fuzzy matching, property inheritance, meta-operators, macros, set theory, biological pathways, predicate logic,
-    deduction, planning, and contradiction detection. This validates that <strong>core reasoning capabilities are production-ready</strong>
+    deduction, planning primitives, and contradiction detection. This validates that <strong>core reasoning capabilities are benchmark-validated</strong>
     across all HDC geometries tested.
   </div>
 
@@ -541,7 +541,7 @@ All strategies still load 1,314 facts from stress theories
     <tr>
       <td><strong>Domain-Specific</strong></td>
       <td>45</td>
-      <td>Set theory, biological pathways, predicate logic, tool planning</td>
+      <td>Set theory, biological pathways, predicate logic, planning primitives</td>
     </tr>
     <tr>
       <td><strong>Integrity & Robustness</strong></td>
@@ -943,7 +943,7 @@ All strategies still load 1,314 facts from stress theories
       <rect x="100" y="280" width="150" height="80" rx="6" fill="white" stroke="#e65100" stroke-width="2"/>
       <text x="175" y="303" text-anchor="middle" font-size="12" fill="#e65100" font-weight="bold">HDC Master Equation</text>
       <line x1="120" y1="313" x2="230" y2="313" stroke="#e0e0e0" stroke-width="1"/>
-      <text x="175" y="335" text-anchor="middle" font-size="11" fill="#555" font-family="monospace">KB ⊕ Query⁻¹</text>
+      <text x="175" y="335" text-anchor="middle" font-size="11" fill="#555" font-family="monospace">KB BIND Query⁻¹</text>
 
       <!-- Meta-Operators -->
       <rect x="275" y="280" width="150" height="80" rx="6" fill="white" stroke="#00897b" stroke-width="2"/>
@@ -1385,7 +1385,7 @@ SYS2_GEOMETRY=16 SYS2_HDC_STRATEGY=metric-affine npm run eval</code></pre>
   <div class="discovery-box">
     <strong>Key Takeaways (December 2025):</strong>
     <ol>
-      <li><strong>Core reasoning is production-ready:</strong> 100% success rate (<strong>364/364 tests</strong>) across the <strong>12 benchmark configurations</strong> validates that fundamental reasoning capabilities work reliably</li>
+      <li><strong>Core reasoning is benchmark-validated:</strong> 100% success rate (<strong>364/364 tests</strong>) across the <strong>12 benchmark configurations</strong> validates that fundamental reasoning capabilities work reliably</li>
       <li><strong>Metric-Affine HDC wins decisively on speed:</strong>
         <ul>
           <li>Core Theory: <strong>2.6x faster</strong> (318ms vs 835ms sparse-4 baseline)</li>
@@ -1415,9 +1415,9 @@ SYS2_GEOMETRY=16 SYS2_HDC_STRATEGY=metric-affine npm run eval</code></pre>
 
   <div class="finding-box">
     <strong>Honest Assessment:</strong> The dual evaluation framework provides a complete picture:
-    <p><strong>✓ What works (Core Theory - 100%):</strong> 364 tests across 27 suites: Foundations, hierarchies, deep transitive chains (6-10 steps), rule inference, negation, compound logic, temporal/causal reasoning, modal operators, composition, CSP solving, fuzzy matching, property inheritance, meta-operators (<code>similar</code>, <code>analogy</code>, <code>deduce</code>), macros, set theory, biological pathways, predicate logic, tool planning, contradiction detection.</p>
+    <p><strong>✓ What works (Core Theory - 100%):</strong> 364 tests across 27 suites: Foundations, hierarchies, deep transitive chains (6-10 steps), rule inference, negation, compound logic, temporal/causal reasoning, modal operators, composition, CSP solving, fuzzy matching, property inheritance, meta-operators (<code>similar</code>, <code>analogy</code>, <code>deduce</code>), macros, set theory, biological pathways, predicate logic, planning primitives, contradiction detection.</p>
     <p><strong>⚠ What needs work (Cross-Domain Queries):</strong> Stress theory files lack domain-specific operator definitions. The reasoning engine is capable, but the knowledge base is incomplete. This is a <strong>content issue, not an architecture limitation</strong>.</p>
-    <p><strong>🚀 Performance validated:</strong> Metric-Affine HDC (32 bytes) is the <strong>fastest configuration</strong> at 318ms—2.6x faster than the slowest (sparse-4 holographic at 835ms). Memory savings: 8-16x vs Dense-Binary. The byte-channel approach is production-ready.</p>
+    <p><strong>🚀 Performance validated:</strong> Metric-Affine HDC (32 bytes) is the <strong>fastest configuration</strong> at 318ms—2.6x faster than the slowest (sparse-4 holographic at 835ms). Memory savings: 8-16x vs Dense-Binary. The byte-channel approach is benchmark-validated in this evaluation.</p>
     <p><strong>🔬 Novel contributions:</strong> Two original HDC strategies validated. See <a href="../theory/hrr-comparison.html">HRR Comparison</a> for theoretical analysis.</p>
     <p><strong>Next phase:</strong> Complete operator ecosystem (estimated 20-40 hours) to unlock full reasoning capabilities on cross-domain queries.</p>
   </div>

@@ -1,4 +1,4 @@
-import { bindAll, bundle } from '../core/operations.mjs';
+import { bind, bindAll, bundle } from '../core/operations.mjs';
 import { withPosition } from '../core/position.mjs';
 import { Statement, Identifier, Hole, Reference, Literal, List, Compound } from '../parser/ast.mjs';
 import { ExecutionError } from './execution-error.mjs';
@@ -22,7 +22,13 @@ export function buildStatementVector(executor, stmt) {
   }
 
   if (positionedArgs.length === 0) return operatorVec;
-  return bindAll(operatorVec, ...positionedArgs);
+
+  // DS25/DS07a Correction: Aggregate arguments using BUNDLE (Union/Sum)
+  // to interpret position vectors distinctly.
+  // Formula: Op BIND ( (Pos1 BIND Arg1) BUNDLE (Pos2 BIND Arg2) ... )
+  const argsBundle = bundle(positionedArgs);
+
+  return bind(operatorVec, argsBundle);
 }
 
 export function resolveExpression(executor, expr) {
@@ -136,7 +142,7 @@ export function resolveList(executor, expr) {
 export function resolveCompound(executor, expr) {
   const operatorName = executor.extractName(expr.operator);
   const isGraph = executor.session.graphs?.has(operatorName) ||
-                  executor.session.graphAliases?.has(operatorName);
+    executor.session.graphAliases?.has(operatorName);
 
   if (isGraph) {
     const result = executor.expandGraph(operatorName, expr.args, expr);

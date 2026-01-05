@@ -41,12 +41,12 @@
   <div class="math-box">
     <p>The foundation of holographic reasoning is the <strong>HDC Master Equation</strong>:</p>
     <div class="equation">
-      <strong>Answer = KB ⊕ Query<sup>−1</sup></strong>
+      <strong>Answer = KB BIND Query<sup>−1</sup></strong>
     </div>
     <p>Where:</p>
     <ul>
       <li><strong>KB</strong> = Bundled knowledge base (superposition of all facts)</li>
-      <li><strong>⊕</strong> = Binding operation (XOR for binary, circular convolution for HRR)</li>
+      <li><strong> BIND </strong> = Binding operation (XOR for binary, circular convolution for HRR)</li>
       <li><strong>Query<sup>−1</sup></strong> = Inverse of the query vector</li>
     </ul>
     <p>This single equation supports retrieval, completion, and inference in constant time.</p>
@@ -61,8 +61,8 @@
 
       <!-- Binding -->
       <rect x="50" y="50" width="180" height="100" rx="8" fill="white" stroke="#1976d2" stroke-width="2"/>
-      <text x="140" y="75" text-anchor="middle" font-size="13" fill="#1565c0" font-weight="bold">Binding (⊕)</text>
-      <text x="140" y="100" text-anchor="middle" font-size="11" fill="#555">role ⊕ filler</text>
+      <text x="140" y="75" text-anchor="middle" font-size="13" fill="#1565c0" font-weight="bold">Binding ( BIND )</text>
+      <text x="140" y="100" text-anchor="middle" font-size="11" fill="#555">role BIND filler</text>
       <text x="140" y="120" text-anchor="middle" font-size="10" fill="#777">Creates role-filler pairs</text>
       <text x="140" y="140" text-anchor="middle" font-size="10" fill="#777">Preserves similarity</text>
 
@@ -76,7 +76,7 @@
       <!-- Unbinding -->
       <rect x="470" y="50" width="180" height="100" rx="8" fill="white" stroke="#43a047" stroke-width="2"/>
       <text x="560" y="75" text-anchor="middle" font-size="13" fill="#2e7d32" font-weight="bold">Unbinding (⊖)</text>
-      <text x="560" y="100" text-anchor="middle" font-size="11" fill="#555">pair ⊕ role⁻¹ = filler</text>
+      <text x="560" y="100" text-anchor="middle" font-size="11" fill="#555">pair BIND role⁻¹ = filler</text>
       <text x="560" y="120" text-anchor="middle" font-size="10" fill="#777">Retrieves bound filler</text>
       <text x="560" y="140" text-anchor="middle" font-size="10" fill="#777">Query answering</text>
 
@@ -108,9 +108,9 @@
   <div class="innovation-box">
     <strong>HDC-Native Analogy:</strong> Given "A is to B as C is to ?", compute the answer using vector algebra:
     <div class="equation" style="margin-top: 10px;">
-      ? = C ⊕ (B ⊕ A<sup>−1</sup>)
+      ? = C BIND (B BIND A<sup>−1</sup>)
     </div>
-    <p>The relation (B ⊕ A<sup>−1</sup>) is extracted and applied to C to find the analogous concept.</p>
+    <p>The relation (B BIND A<sup>−1</sup>) is extracted and applied to C to find the analogous concept.</p>
   </div>
 
   <div class="code-example">
@@ -119,10 +119,10 @@
 
 function solveAnalogy(A, B, C, cleanupMemory) {
   <span style="color: #78909c;">// Step 1: Extract the relation from A→B</span>
-  const relation = bind(B, inverse(A));  <span style="color: #78909c;">// B ⊕ A⁻¹</span>
+  const relation = bind(B, inverse(A));  <span style="color: #78909c;">// B BIND A⁻¹</span>
 
   <span style="color: #78909c;">// Step 2: Apply relation to C</span>
-  const rawAnswer = bind(C, relation);   <span style="color: #78909c;">// C ⊕ relation</span>
+  const rawAnswer = bind(C, relation);   <span style="color: #78909c;">// C BIND relation</span>
 
   <span style="color: #78909c;">// Step 3: Cleanup to nearest known concept</span>
   return cleanup(rawAnswer, cleanupMemory);
@@ -170,7 +170,7 @@ const answer2 = unbind(fact, query2);
   <div class="math-box">
     <p>For transitive relations like IS-A, we can chain inferences:</p>
     <div class="equation">
-      isA(X, Z) = cleanup(X ⊕ isA⁻¹ ⊕ isA⁻¹)
+      isA(X, Z) = cleanup(X BIND isA⁻¹ BIND isA⁻¹)
     </div>
     <p>Each application of isA⁻¹ moves one step up the hierarchy.</p>
   </div>
@@ -183,22 +183,22 @@ const answer2 = unbind(fact, query2);
     </tr>
     <tr>
       <td><strong>Direct lookup</strong></td>
-      <td>cleanup(X ⊕ relation⁻¹)</td>
+      <td>cleanup(X BIND relation⁻¹)</td>
       <td>isA(Cat) → Mammal</td>
     </tr>
     <tr>
       <td><strong>Transitive (2 steps)</strong></td>
-      <td>cleanup(X ⊕ rel⁻¹ ⊕ rel⁻¹)</td>
+      <td>cleanup(X BIND rel⁻¹ BIND rel⁻¹)</td>
       <td>isA(Cat) → Animal</td>
     </tr>
     <tr>
       <td><strong>Property inheritance</strong></td>
-      <td>cleanup(X ⊕ isA⁻¹ ⊕ has⁻¹)</td>
+      <td>cleanup(X BIND isA⁻¹ BIND has⁻¹)</td>
       <td>has(Cat) → warm_blooded</td>
     </tr>
     <tr>
       <td><strong>Reverse lookup</strong></td>
-      <td>cleanup(Y ⊕ relation)</td>
+      <td>cleanup(Y BIND relation)</td>
       <td>What is a Mammal? → Cat, Dog, ...</td>
     </tr>
   </table>

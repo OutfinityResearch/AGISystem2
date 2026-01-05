@@ -384,8 +384,8 @@ function similarity(a, b) {
 
   <h3>Mathematical Foundations</h3>
   <ul>
-    <li><strong>Binding:</strong> C = A ⊗ B = {a ⊕ b | a ∈ A, b ∈ B} using Integer XOR</li>
-    <li><strong>Self-Inverse:</strong> (A ⊗ B) ⊗ B ≈ A (approximate due to sparsification)</li>
+    <li><strong>Binding:</strong> C = A BIND B = {a xor b | a ∈ A, b ∈ B} using Integer XOR</li>
+    <li><strong>Self-Inverse:</strong> (A BIND B) BIND B ≈ A (approximate due to sparsification)</li>
     <li><strong>Commutative:</strong> bind(a,b) = bind(b,a) (perfectly preserved)</li>
     <li><strong>Similarity:</strong> Jaccard Index: |A ∩ B| / |A ∪ B|</li>
   </ul>

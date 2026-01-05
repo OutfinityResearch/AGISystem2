@@ -39,14 +39,15 @@
 
   <div class="alert alert-info">
     <strong>Binding Formula:</strong>
-    <pre style="background: transparent; padding: 10px 0; margin: 10px 0;"><code>destination = Operator ⊕ (Pos1 ⊕ arg1) ⊕ (Pos2 ⊕ arg2) ⊕ (Pos3 ⊕ arg3) ⊕ ...</code></pre>
-    <p>Each argument is tagged with its position vector (Pos1, Pos2, etc.) before being XORed into the result. This encodes argument order without using permutation.</p>
+    <pre style="background: transparent; padding: 10px 0; margin: 10px 0;"><code>destination = Operator BIND (Pos1 BIND arg1) BIND (Pos2 BIND arg2) BIND (Pos3 BIND arg3) BIND ...</code></pre>
+    <p>Each argument is tagged with its position vector (Pos1, Pos2, etc.) before being bound into the result (XOR in dense-binary). This encodes argument order without using permutation.</p>
+    <p><strong>Notation:</strong> We use the explicit word <code>BIND</code> for binding and avoid math symbols. When we refer to bitwise XOR explicitly, we write <code>XOR</code>.</p>
   </div>
 
   <p><strong>Example:</strong></p>
   <pre><code>@rel loves John Mary
-# Encoded as: rel = loves ⊕ (Pos1 ⊕ John) ⊕ (Pos2 ⊕ Mary)
-# Note: loves(John, Mary) ≠ loves(Mary, John) because Pos1⊕John ≠ Pos1⊕Mary</code></pre>
+# Encoded as: rel = loves BIND (Pos1 BIND John) BIND (Pos2 BIND Mary)
+# Note: loves(John, Mary) ≠ loves(Mary, John) because Pos1 BIND John ≠ Pos1 BIND Mary</code></pre>
 
   <h2>Basic Statement Syntax</h2>
 
@@ -303,7 +304,7 @@ end</code></pre>
 
   <pre><code>@tx sell Alice Bob Car 100
 # 1. Execute sell graph with args (Alice, Bob, Car, 100) → graphResult
-# 2. Bind: tx = sell ⊕ graphResult</code></pre>
+# 2. Bind: tx = sell BIND graphResult</code></pre>
 
   <h3>Graph Examples</h3>
 

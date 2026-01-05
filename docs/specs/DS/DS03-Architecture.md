@@ -208,7 +208,7 @@ interface LearnResult {
 1. Parse DSL statements
 2. Execute each statement:
    - Create vectors via ASCII stamping (deterministic)
-   - Bind with position vectors: `Op ⊕ (Pos1 ⊕ A) ⊕ (Pos2 ⊕ B) ⊕ ...`
+   - Bind with position vectors: `Op BIND ( (Pos1 BIND A) BUNDLE (Pos2 BIND B) ... )`
 3. Store results in session working memory
 4. Update knowledge base (bundle new facts)
 5. Optionally export to theories
@@ -240,12 +240,12 @@ interface Binding {
 ```
 
 **Query execution:**
-1. Build partial: `buy ⊕ (Pos2 ⊕ Book)`
-2. Unbind from KB: `candidate = KB ⊕ partial`
+1. Build partial: `buy BIND (Pos2 BIND Book)`
+2. Unbind from KB: `candidate = KB BIND partial`
 3. For each hole position, unbind position vector:
-   - `?who = candidate ⊕ Pos1`
-   - `?seller = candidate ⊕ Pos3`
-   - `?price = candidate ⊕ Pos4`
+   - `?who = candidate BIND Pos1`
+   - `?seller = candidate BIND Pos3`
+   - `?price = candidate BIND Pos4`
 4. Find nearest literals for each
 5. Return best matches with confidence scores
 
@@ -289,7 +289,7 @@ interface ProofStep {
 | 1 | lookup | Found 'buy' graph in Commerce theory |
 | 2 | resolve | Resolved Charlie → vector |
 | 3 | resolve | Resolved Book → vector |
-| 4 | bind | Built query: buy ⊕ (Pos1⊕Charlie) ⊕ (Pos2⊕Book) ⊕ ... |
+| 4 | bind | Built query: buy BIND ( (Pos1 BIND Charlie) BUNDLE (Pos2 BIND Book) ... ) |
 | 5 | similarity | Compared with KB, found match (0.97) |
 | 6 | conclude | Statement VALID with confidence 0.97 |
 
@@ -352,16 +352,16 @@ Session
 │   ├── for each statement:
 │   │   ├── resolve literals from theoryStack
 │   │   ├── create vectors via ASCII stamping
-│   │   ├── bind: Op ⊕ (Pos1⊕A1) ⊕ (Pos2⊕A2) ⊕ ...
+│   │   ├── bind: Op BIND ( (Pos1 BIND A1) BUNDLE (Pos2 BIND A2) ... )
 │   │   └── store in workingMemory
 │   └── update knowledgeBase = Bundle(KB, newFacts)
 │
 ├── query(dsl)
 │   ├── parse(dsl) → AST with holes
 │   ├── build partial (skip holes)
-│   ├── candidate = KB ⊕ partial
+│   ├── candidate = KB BIND partial
 │   ├── for each hole at position N:
-│   │   └── answer = candidate ⊕ PosN
+│   │   └── answer = candidate BIND PosN
 │   ├── find nearest in vocabulary
 │   └── return Result with bindings
 │
@@ -396,7 +396,7 @@ knowledgeBase = Bundle(fact1, fact2, fact3, ...)
 | Operation | What Happens |
 |-----------|--------------|
 | learn fact | KB = Bundle(KB, fact) |
-| query | candidate = KB ⊕ partial |
+| query | candidate = KB BIND partial |
 | forget | KB = KB - fact (approximate via negative bundle) |
 
 **Capacity monitoring (current):** use `session.dump()` fields like `factCount` and `vocabularySize`.

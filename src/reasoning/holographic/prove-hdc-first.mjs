@@ -242,9 +242,26 @@ export class HolographicProofEngine {
     let bestSim = 0;
     let bestFact = null;
     const componentKB = this.session.componentKB;
+    const meta = goalMeta || this.extractGoalMetadata(goalStr);
+    const operator = meta?.operator || null;
+
+    // Fast-path: exact metadata match (bypasses similarity scan).
+    if (operator && Array.isArray(meta?.args) && (this.session?.hdcStrategy || 'exact') === 'exact') {
+      const exact = this.session?.factIndex?.getNary?.(operator, meta.args);
+      if (exact?.metadata?.operator) {
+        return {
+          valid: true,
+          confidence: 1.0,
+          matchedFact: `${exact.metadata.operator} ${(exact.metadata.args || []).join(' ')}`.trim()
+        };
+      }
+    }
 
     // First: try exact vector match in KB
-    for (const fact of this.session.kbFacts) {
+    const scanFacts = operator && this.session?.factIndex?.getByOperator
+      ? this.session.factIndex.getByOperator(operator)
+      : this.session.kbFacts;
+    for (const fact of scanFacts) {
       this.session.reasoningStats.kbScans++;
       if (!fact.vector) continue;
 
@@ -260,7 +277,6 @@ export class HolographicProofEngine {
     // Use synonyms unless we have a very high confidence match (>= 0.95)
     const synonymThreshold = Math.max(this.thresholds.HDC_MATCH, 0.95);
     if (bestSim < synonymThreshold && componentKB) {
-      const meta = goalMeta || this.extractGoalMetadata(goalStr);
       if (meta?.operator && meta?.args?.length >= 1) {
         // Look for synonym-expanded matches
         const candidates = componentKB.findByOperatorAndArg0(meta.operator, meta.args[0]);

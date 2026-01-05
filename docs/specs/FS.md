@@ -121,7 +121,7 @@ This Functional Specification (FS) defines the detailed functional requirements 
 | **FS-34** | The executor SHALL resolve identifiers from vocabulary | URS-11 | Unit Test |
 | **FS-35** | The executor SHALL resolve references from scope hierarchy | URS-11 | Unit Test |
 | **FS-36** | The executor SHALL auto-create atoms for unknown identifiers | URS-11 | Unit Test |
-| **FS-37** | The executor SHALL compute bindings as `Op XOR (Pos1 XOR Arg1) XOR (Pos2 XOR Arg2) ...` | URS-12 | Unit Test |
+| **FS-37** | The executor SHALL compute bindings as `Op BIND (Pos1 BIND Arg1) BIND (Pos2 BIND Arg2) ...` (XOR in dense-binary) | URS-12 | Unit Test |
 | **FS-38** | The executor SHALL execute macros with parameter binding | URS-11 | Integration Test |
 | **FS-39** | The executor SHALL add facts to KB via bundling | URS-06 | Unit Test |
 | **FS-40** | The executor SHALL maintain scope hierarchy: Global -> Theory -> Session -> Macro | URS-11 | Unit Test |

@@ -179,19 +179,19 @@ Implication: Any randomly initialized vector is
 **Purpose:** Create relationships, tag concepts with roles.
 
 ```
-Concept:    A ⊕ B creates an association between A and B
+Concept:    A BIND B creates an association between A and B
 
 Properties:
-├── Commutative:   A ⊕ B = B ⊕ A
-├── Associative:   (A ⊕ B) ⊕ C = A ⊕ (B ⊕ C)
-├── Self-inverse:  A ⊕ A = 0 (zero vector)
-├── Reversible:    (A ⊕ B) ⊕ B = A
-└── Dissimilar:    sim(A ⊕ B, A) ≈ 0.5
+├── Commutative:   A BIND B = B BIND A
+├── Associative:   (A BIND B) BIND C = A BIND (B BIND C)
+├── Self-inverse:  A BIND A = 0 (zero vector)
+├── Reversible:    (A BIND B) BIND B = A
+└── Dissimilar:    sim(A BIND B, A) ≈ 0.5
 
 Usage:
-├── loves(John, Mary) = Loves ⊕ (Pos1 ⊕ John) ⊕ (Pos2 ⊕ Mary)
-├── Role binding:     (Agent ⊕ John)
-└── Type marking:     (__Person ⊕ John)
+├── loves(John, Mary) = Loves BIND ( (Pos1 BIND John) BUNDLE (Pos2 BIND Mary) )
+├── Role binding:     (Agent BIND John)
+└── Type marking:     (__Person BIND John)
 ```
 
 ### 9A.3.2 BUNDLE (Majority) — Superposition
@@ -249,8 +249,8 @@ XOR is commutative, so it cannot encode argument order:
 
 ```
 WITHOUT positions:
-  loves(John, Mary) = Loves ⊕ John ⊕ Mary
-  loves(Mary, John) = Loves ⊕ Mary ⊕ John
+  loves(John, Mary) = Loves BIND John BIND Mary
+  loves(Mary, John) = Loves BIND Mary BIND John
   ↓
   IDENTICAL! (wrong)
 ```
@@ -261,8 +261,8 @@ Pre-defined quasi-orthogonal vectors Pos1, Pos2, ..., Pos20:
 
 ```
 WITH positions:
-  loves(John, Mary) = Loves ⊕ (Pos1 ⊕ John) ⊕ (Pos2 ⊕ Mary)
-  loves(Mary, John) = Loves ⊕ (Pos1 ⊕ Mary) ⊕ (Pos2 ⊕ John)
+  loves(John, Mary) = Loves BIND ( (Pos1 BIND John) BUNDLE (Pos2 BIND Mary) )
+  loves(Mary, John) = Loves BIND ( (Pos1 BIND Mary) BUNDLE (Pos2 BIND John) )
   ↓
   DIFFERENT! (correct)
 ```
@@ -343,7 +343,7 @@ Pure random (from hash):
   Problem: No recognizability, hard to debug
 
 ASCII stamps + variation:
-  [John⊕rand₀][John⊕rand₁]...[John⊕rand₁₂₇]
+  [John BIND rand₀][John BIND rand₁]...[John BIND rand₁₂₇]
   Benefits: Recognizable pattern + good randomness
 ```
 
@@ -356,11 +356,11 @@ ASCII stamps + variation:
 ```
 DSL:    @dest Op Arg1 Arg2 Arg3
 
-Vector: dest = Op ⊕ (Pos1 ⊕ Arg1) ⊕ (Pos2 ⊕ Arg2) ⊕ (Pos3 ⊕ Arg3)
+Vector: dest = Op BIND ( (Pos1 BIND Arg1) BUNDLE (Pos2 BIND Arg2) BUNDLE (Pos3 BIND Arg3) )
 
 Example:
   @f1 loves John Mary
-  f1 = Loves ⊕ (Pos1 ⊕ John) ⊕ (Pos2 ⊕ Mary)
+  f1 = Loves BIND ( (Pos1 BIND John) BUNDLE (Pos2 BIND Mary) )
 ```
 
 ### 9A.6.2 Query Execution
@@ -370,16 +370,16 @@ Query:  @q Op ?who Mary   (find who loves Mary)
 
 ALGORITHM:
 1. Build partial vector (everything except hole):
-   partial = Op ⊕ (Pos2 ⊕ Mary)
+   partial = Op BIND (Pos2 BIND Mary)
 
 2. Unbind from knowledge base:
-   candidate = KB ⊕ partial
+   candidate = KB BIND partial
    
-   If KB contains (Op ⊕ (Pos1 ⊕ John) ⊕ (Pos2 ⊕ Mary)):
-   candidate = (Pos1 ⊕ John) ⊕ noise
+   If KB contains (Op BIND ( (Pos1 BIND John) BUNDLE (Pos2 BIND Mary) )):
+   candidate = (Pos1 BIND John) BIND noise
 
 3. Remove position marker:
-   raw = Pos1 ⊕ candidate = John ⊕ noise
+   raw = Pos1 BIND candidate = John BIND noise
 
 4. Find nearest neighbor:
    answer = mostSimilar(raw, vocabulary)
@@ -410,8 +410,8 @@ Reason: Each hole adds noise when unbinding
 KB = Bundle([fact1, fact2, fact3, ...])
 
 Each fact is a bound vector:
-  fact1 = Loves ⊕ (Pos1 ⊕ John) ⊕ (Pos2 ⊕ Mary)
-  fact2 = Hates ⊕ (Pos1 ⊕ Bob) ⊕ (Pos2 ⊕ Tax)
+  fact1 = Loves BIND ( (Pos1 BIND John) BUNDLE (Pos2 BIND Mary) )
+  fact2 = Hates BIND ( (Pos1 BIND Bob) BUNDLE (Pos2 BIND Tax) )
   ...
 
 KB = Bundle([fact1, fact2, ...])
@@ -475,7 +475,7 @@ Key property (PROVEN):
 
 ```
 Operations that preserve similarity after extension:
-├── XOR (Bind):     (v⊕u) extended = (v extended)⊕(u extended) ✓
+├── XOR (Bind):     (v BIND u) extended = (v extended) BIND (u extended) ✓
 ├── Bundle:         Bundle([v,u]) extended ≈ Bundle([v ext, u ext]) ✓
 ├── Similarity:     Preserved by cloning formula ✓
 

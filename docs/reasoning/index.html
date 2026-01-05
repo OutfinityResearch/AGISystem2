@@ -33,6 +33,10 @@
     <strong>Key Design Principle:</strong> Both engines are drop-in replacements for each other. The choice between them is a configuration option, not a code change. This allows seamless switching and A/B testing.
   </div>
 
+  <div class="alert alert-warning">
+    <strong>Status:</strong> Advanced reasoning (abduction/induction) is partial (DS06). Linked pages describe research workflows.
+  </div>
+
   <h2>Quick Links</h2>
 
   <div class="section-grid">
@@ -71,7 +75,7 @@
       <p>Classical logical reasoning with HDC for efficient storage and retrieval. Uses explicit rules, transitive chains, and backward chaining with symbolic validation at each step.</p>
       <ul style="font-size: 0.9em; margin-top: 10px;">
         <li>Deterministic proof search</li>
-        <li>Complete audit trails</li>
+        <li>Proof traces (audit logging/export is external)</li>
         <li>HDC as acceleration layer</li>
       </ul>
     </div>
@@ -149,7 +153,7 @@
 
       <rect x="450" y="300" width="300" height="40" rx="5" fill="#bbdefb" stroke="#1976d2" stroke-width="2"/>
       <text x="600" y="320" text-anchor="middle" font-size="11" fill="#0d47a1">HDC drives proof search</text>
-      <text x="600" y="335" text-anchor="middle" font-size="10" fill="#1565c0">Master Equation: Answer = KB ⊕ Query⁻¹</text>
+      <text x="600" y="335" text-anchor="middle" font-size="10" fill="#1565c0">Master Equation: Answer = KB BIND Query⁻¹</text>
 
       <!-- Legend -->
       <rect x="200" y="360" width="400" height="30" rx="5" fill="#f5f5f5" stroke="#ddd"/>
@@ -226,7 +230,7 @@ const cspSolver = createCSPSolver(session);</code></pre>
       <th>Rationale</th>
     </tr>
     <tr>
-      <td>High-stakes decisions requiring audit trails</td>
+      <td>High-stakes decisions requiring traceable proofs</td>
       <td><span class="badge badge-success">Symbolic</span></td>
       <td>Every step is explicitly logged and traceable</td>
     </tr>

@@ -284,7 +284,7 @@
   <ol>
     <li><strong>Set-Based Representation:</strong> Instead of fixed-length vectors, concepts are sets of k integers from a virtually infinite space (2⁶⁴). This is fundamentally different from all existing VSA approaches.</li>
 
-    <li><strong>Cartesian XOR Binding:</strong> The binding operation computes the Cartesian product of two sets with XOR: A ⊗ B = {a ⊕ b | a ∈ A, b ∈ B}. This creates |A| × |B| elements, then sparsifies back to k.</li>
+    <li><strong>Cartesian XOR Binding:</strong> The binding operation computes the Cartesian product of two sets with XOR: A BIND B = {a xor b | a ∈ A, b ∈ B}. This creates |A| × |B| elements, then sparsifies back to k.</li>
 
     <li><strong>Min-Hash Sparsification:</strong> We apply locality-sensitive hashing (Min-Hash) to maintain constant-size representations while preserving similarity relationships. This combines HDC with streaming algorithms.</li>
 

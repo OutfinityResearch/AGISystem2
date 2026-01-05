@@ -36,7 +36,7 @@
   <p>The symbolic engine prioritizes:</p>
   <ul>
     <li><strong>Determinism</strong>: Same input always produces same output</li>
-    <li><strong>Traceability</strong>: Complete audit trail for every conclusion</li>
+    <li><strong>Traceability</strong>: Proof traces for every conclusion (audit logging/export is external)</li>
     <li><strong>Correctness</strong>: No false positives from similarity thresholds</li>
     <li><strong>Explainability</strong>: Every step can be explained and verified</li>
   </ul>
@@ -95,7 +95,7 @@
       <!-- Query sources -->
       <rect x="20" y="410" width="100" height="50" rx="5" fill="#a5d6a7"/>
       <text x="70" y="432" text-anchor="middle" font-size="10" fill="#1b5e20" font-weight="bold">HDC Search</text>
-      <text x="70" y="448" text-anchor="middle" font-size="9" fill="#2e7d32">KB ⊕ Query⁻¹</text>
+      <text x="70" y="448" text-anchor="middle" font-size="9" fill="#2e7d32">KB BIND Query⁻¹</text>
 
       <rect x="130" y="410" width="100" height="50" rx="5" fill="#a5d6a7"/>
       <text x="180" y="432" text-anchor="middle" font-size="10" fill="#1b5e20" font-weight="bold">Direct KB</text>
@@ -279,7 +279,7 @@ console.log(result);
   <p>QueryEngine aggregates results from multiple sources:</p>
 
   <ol>
-    <li><strong>HDC Master Equation</strong>: <code>Answer = KB ⊕ Query⁻¹</code></li>
+    <li><strong>HDC Master Equation</strong>: <code>Answer = KB BIND Query⁻¹</code></li>
     <li><strong>Direct KB Search</strong>: Exact metadata matching</li>
     <li><strong>Transitive Reasoning</strong>: Chain traversal for hierarchy queries</li>
     <li><strong>Rule Derivation</strong>: Apply rules to derive new bindings</li>

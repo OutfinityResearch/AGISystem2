@@ -62,7 +62,11 @@
   </div>
 
   <div class="section-intro">
-    <p><strong>Theories as training data factories.</strong> AGISystem2's formal theories can generate unlimited, guaranteed-correct training examples for LLMs and other neural systems. This bridges the gap between System 2's precision and System 1's fluency.</p>
+    <p><strong>Theories as training data factories.</strong> AGISystem2's formal theories can be used to generate training examples for LLMs and other neural systems. Correctness is with respect to the theory and requires an external generation pipeline.</p>
+  </div>
+
+  <div class="warning-box">
+    <strong>Status:</strong> Research pattern (DS08). Synthetic data generation pipelines are not shipped in the runtime.
   </div>
 
   <h2>1. The System 1 / System 2 Integration</h2>
@@ -189,8 +193,8 @@ A: We cannot conclude Spot is a living thing without
   <h2>4. Benefits of Theory-Generated Data</h2>
 
   <div class="benefit-card">
-    <h4>Guaranteed Correctness</h4>
-    <p>Every generated example is provably correct according to the formal theory. No hallucinations, no inconsistencies.</p>
+    <h4>Theory-Relative Correctness</h4>
+    <p>Generated examples are correct with respect to the formal theory (assuming the theory is valid). External generation pipelines should preserve this constraint.</p>
   </div>
 
   <div class="benefit-card">

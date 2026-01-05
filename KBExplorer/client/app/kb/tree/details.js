@@ -191,7 +191,7 @@ function buildDefinitionText(_ctx, node) {
     const pos = node?.data?.position ?? null;
     const arg = node?.data?.arg ?? null;
     if (!Number.isFinite(Number(pos)) || !arg) return '';
-    return `Pos${Number(pos)} ⊕ ${String(arg)}`;
+    return `Pos${Number(pos)} ⊗ ${String(arg)}`;
   }
 
   if (node.kind === 'SCOPE') {
@@ -215,9 +215,26 @@ function formatFormalFromMeta(meta) {
   const op = meta?.operator ?? null;
   const args = Array.isArray(meta?.args) ? meta.args : [];
   if (!op) return '';
+
+  // Special case: ___NewVector is a generator, not a semantic binding
+  if (op === '___NewVector') {
+    return `NewVector(${args.map(a => String(a)).join(', ')})`;
+  }
+
   if (args.length === 0) return String(op);
-  const taggedArgs = args.map((a, i) => `(Pos${i + 1} ⊕ ${String(a)})`);
-  return [String(op), ...taggedArgs].join(' ⊕ ');
+
+  // Encoding path: Op BIND ( (Pos1 BIND Arg1) BUNDLE (Pos2 BIND Arg2) ... )
+  // Replace mathematical symbols (⊗, ⊕) with explicit function names for clarity.
+  const taggedArgs = args.map((a, i) => `(Pos${i + 1} BIND ${String(a)})`);
+  const bundleContent = taggedArgs.join(' BUNDLE ');
+
+  // If multiple args, they are bundled first
+  if (args.length > 1) {
+    return `${String(op)} BIND ( ${bundleContent} )`;
+  }
+
+  // Single arg case: Op BIND (Pos1 BIND Arg1)
+  return `${String(op)} BIND ${bundleContent}`;
 }
 
 function buildFormalDefinitionText(_ctx, node) {
@@ -231,7 +248,7 @@ function buildFormalDefinitionText(_ctx, node) {
     const pos = node?.data?.position ?? null;
     const arg = node?.data?.arg ?? null;
     if (!Number.isFinite(Number(pos)) || !arg) return '';
-    return `Pos${Number(pos)} ⊕ ${String(arg)}`;
+    return `Pos${Number(pos)} ⊗ ${String(arg)}`;
   }
 
   if (node.kind === 'ATOM' || node.kind === 'VERB') {
@@ -264,12 +281,18 @@ function buildVectorText(_ctx, node) {
   if (!vv?.values) return '';
   const loaded = Array.isArray(vv.values) ? vv.values.length : 0;
   const total = Number.isFinite(vv.total) ? Number(vv.total) : loaded;
+  const header = [
+    `items=${String(total)}`,
+    `offset=${String(vv.offset ?? 0)}`,
+    `limit=${String(vv.limit ?? loaded)}`,
+    (vv.truncated ? 'truncated=true' : 'truncated=false')
+  ].join(' ');
   if (node.kind === 'KB_BUNDLE') {
     const suffix = loaded && total && loaded < total ? `\n… (loaded ${loaded}/${total})` : (total ? `\n(loaded ${loaded}/${total})` : '');
-    return `${JSON.stringify(vv.values, null, 2)}${suffix}`;
+    return `${header}\n${JSON.stringify(vv.values, null, 2)}${suffix}`;
   }
   const suffix = vv.truncated ? `\n… (truncated, total=${vv.total})` : '';
-  return `${JSON.stringify(vv.values, null, 2)}${suffix}`;
+  return `${header}\n${JSON.stringify(vv.values, null, 2)}${suffix}`;
 }
 
 export function renderDetails(ctx, node) {

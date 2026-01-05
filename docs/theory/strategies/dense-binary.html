@@ -204,15 +204,15 @@
     </svg>
   </div>
 
-  <h2>3. Binding: XOR Operation</h2>
+  <h2>3. Binding: BIND (XOR Operation)</h2>
 
-  <p>Binding creates associations between concepts by combining their bit patterns using bitwise XOR.</p>
+  <p>BIND creates associations between concepts. In Dense-Binary, BIND is implemented as bitwise XOR.</p>
 
   <div class="definition">
-    <strong>Definition: XOR Binding</strong>
-    <p>Given vectors A and B, their binding A &oplus; B is computed bit-by-bit:</p>
+    <strong>Definition: BIND (XOR)</strong>
+    <p>Given vectors A and B, their binding BIND(A, B) is computed bit-by-bit:</p>
     <p style="text-align: center; font-family: monospace; font-size: 14px;">
-      (A &oplus; B)<sub>i</sub> = A<sub>i</sub> XOR B<sub>i</sub>
+      BIND(A, B)<sub>i</sub> = A<sub>i</sub> XOR B<sub>i</sub>
     </p>
     <p>XOR produces 1 when bits differ, 0 when they match.</p>
   </div>
@@ -252,11 +252,11 @@
       <!-- XOR symbol -->
       <circle cx="400" cy="80" r="30" fill="#fff3e0" stroke="#ff9800" stroke-width="3"/>
       <text x="400" y="75" text-anchor="middle" font-weight="bold" font-size="16" fill="#e65100">XOR</text>
-      <text x="400" y="92" text-anchor="middle" font-size="10" fill="#e65100">(&oplus;)</text>
+      <text x="400" y="92" text-anchor="middle" font-size="10" fill="#e65100">(xor)</text>
 
       <!-- Result -->
       <rect x="470" y="57" width="250" height="45" rx="5" fill="#fce4ec" stroke="#e91e63" stroke-width="2"/>
-      <text x="490" y="75" font-size="10" fill="#c2185b" font-weight="bold">A&oplus;B:</text>
+      <text x="490" y="75" font-size="10" fill="#c2185b" font-weight="bold">BIND(A, B):</text>
       <g font-family="monospace" font-size="14">
         <text x="530" y="87" fill="#c2185b">1</text>
         <text x="550" y="87" fill="#c2185b">1</text>
@@ -271,10 +271,10 @@
 
       <!-- Bit-by-bit explanation -->
       <g font-size="9" fill="#666">
-        <text x="100" y="145" text-anchor="middle">1&oplus;0</text>
-        <text x="120" y="145" text-anchor="middle">0&oplus;1</text>
-        <text x="140" y="145" text-anchor="middle">1&oplus;1</text>
-        <text x="160" y="145" text-anchor="middle">1&oplus;0</text>
+        <text x="100" y="145" text-anchor="middle">1 xor 0</text>
+        <text x="120" y="145" text-anchor="middle">0 xor 1</text>
+        <text x="140" y="145" text-anchor="middle">1 xor 1</text>
+        <text x="160" y="145" text-anchor="middle">1 xor 0</text>
         <text x="100" y="160" text-anchor="middle">=1</text>
         <text x="120" y="160" text-anchor="middle">=1</text>
         <text x="140" y="160" text-anchor="middle">=0</text>
@@ -285,7 +285,7 @@
       <rect x="50" y="175" width="670" height="35" rx="5" fill="#f5f5f5" stroke="#ddd"/>
       <text x="360" y="195" text-anchor="middle" font-size="10" fill="#333">
         <tspan font-weight="bold">Properties:</tspan>
-        Commutative (A&oplus;B = B&oplus;A) | Self-inverse (A&oplus;A = 0) | Reversible ((A&oplus;B)&oplus;B = A)
+        Commutative (BIND(A, B) = BIND(B, A)) | Self-inverse (BIND(A, A) = 0) | Reversible (BIND(BIND(A, B), B) = A)
       </text>
     </svg>
   </div>
@@ -294,9 +294,9 @@
 
   <div class="concept-box">
     <h4>The Self-Inverse Property</h4>
-    <p>XOR is its own inverse: A &oplus; A = 0 (all zeros). This enables <strong>reversible encoding</strong>:</p>
+    <p>XOR is its own inverse, so Dense-Binary supports reversible binding: BIND(A, A) = 0 (all zeros).</p>
     <p style="font-family: monospace; text-align: center; font-size: 14px;">
-      (A &oplus; B) &oplus; B = A &oplus; (B &oplus; B) = A &oplus; 0 = A
+      BIND(BIND(A, B), B) = A
     </p>
     <p>Binding with B, then binding again with B, perfectly recovers A. This is the mathematical foundation for querying knowledge bases.</p>
   </div>
@@ -419,7 +419,7 @@
   <div class="definition">
     <strong>Definition: Normalized Hamming Similarity</strong>
     <p style="text-align: center; font-family: monospace; font-size: 16px;">
-      sim(A, B) = 1 - (popcount(A &oplus; B) / n)
+      sim(A, B) = 1 - (popcount(A xor B) / n)
     </p>
     <p>Where popcount counts the number of 1-bits (differing positions) and n is the dimension.</p>
   </div>
@@ -466,8 +466,8 @@
 A = 10110010... (2048 bits)
 B = 01100110... (2048 bits)
 
-A &oplus; B = 11010100...  (bits that differ)
-popcount(A &oplus; B) = 980  (number of differing bits)
+A xor B = 11010100...  (bits that differ)
+popcount(A xor B) = 980  (number of differing bits)
 
 similarity = 1 - (980 / 2048) = 1 - 0.478 = 0.522
 
@@ -505,7 +505,7 @@ Interpretation: Nearly random (close to 0.5)</pre>
   <div class="definition">
     <strong>Relation Encoding Formula</strong>
     <p style="font-family: monospace; text-align: center; font-size: 13px;">
-      fact(loves, John, Mary) = Loves &oplus; (Pos1 &oplus; John) &oplus; (Pos2 &oplus; Mary)
+      fact(loves, John, Mary) = Loves BIND (Pos1 BIND John) BIND (Pos2 BIND Mary)
     </p>
     <p>Position vectors (Pos1, Pos2, ...) distinguish argument positions.</p>
   </div>
@@ -516,15 +516,15 @@ Interpretation: Nearly random (close to 0.5)</pre>
       <rect x="50" y="50" width="90" height="45" rx="5" fill="#9c27b0"/>
       <text x="95" y="78" text-anchor="middle" fill="white" font-size="10">Loves</text>
 
-      <text x="155" y="78" text-anchor="middle" font-size="16" fill="#333">&oplus;</text>
+      <text x="155" y="78" text-anchor="middle" font-size="16" fill="#333">BIND</text>
 
       <rect x="170" y="50" width="140" height="45" rx="5" fill="#1976d2"/>
-      <text x="240" y="73" text-anchor="middle" fill="white" font-size="9">(Pos1 &oplus; John)</text>
+      <text x="240" y="73" text-anchor="middle" fill="white" font-size="9">(Pos1 BIND John)</text>
 
-      <text x="325" y="78" text-anchor="middle" font-size="16" fill="#333">&oplus;</text>
+      <text x="325" y="78" text-anchor="middle" font-size="16" fill="#333">BIND</text>
 
       <rect x="340" y="50" width="140" height="45" rx="5" fill="#4caf50"/>
-      <text x="410" y="73" text-anchor="middle" fill="white" font-size="9">(Pos2 &oplus; Mary)</text>
+      <text x="410" y="73" text-anchor="middle" fill="white" font-size="9">(Pos2 BIND Mary)</text>
 
       <text x="495" y="78" text-anchor="middle" font-size="16" fill="#333">=</text>
 
@@ -542,13 +542,13 @@ Interpretation: Nearly random (close to 0.5)</pre>
 
   <h2>8. Querying: The Unbind Operation</h2>
 
-  <p>Since XOR is self-inverse, queries "subtract" known parts to find unknowns.</p>
+  <p>Since Dense-Binary implements BIND as XOR (self-inverse), queries "subtract" known parts to find unknowns.</p>
 
   <div class="definition">
     <strong>Query Principle</strong>
     <p>To find ?who in "loves(?who, Mary)", unbind the known parts:</p>
     <p style="font-family: monospace; text-align: center;">
-      candidate = KB &oplus; Loves &oplus; (Pos2 &oplus; Mary)
+      candidate = KB BIND Loves BIND (Pos2 BIND Mary)
     </p>
     <p>Then extract the answer by unbinding Pos1 and matching against vocabulary.</p>
   </div>
@@ -559,15 +559,15 @@ Interpretation: Nearly random (close to 0.5)</pre>
 # KB contains: loves(John, Mary) encoded as fact_vector
 
 # Query: Who loves Mary?  (loves(?who, Mary))
-partial = Loves &oplus; (Pos2 &oplus; Mary)
+partial = Loves BIND (Pos2 BIND Mary)
 
 # Unbind from KB (XOR is reversible!)
-candidate = KB &oplus; partial
-         = fact_vector &oplus; Loves &oplus; (Pos2 &oplus; Mary)
-         = (Pos1 &oplus; John)
+candidate = KB BIND partial
+         = fact_vector BIND Loves BIND (Pos2 BIND Mary)
+         = (Pos1 BIND John)
 
 # Extract answer
-raw_answer = candidate &oplus; Pos1 = John
+raw_answer = candidate BIND Pos1 = John
 
 # Match against vocabulary
 similarity(raw_answer, "John") &asymp; 1.0  &rarr; Answer: John</pre>
@@ -578,9 +578,9 @@ similarity(raw_answer, "John") &asymp; 1.0  &rarr; Answer: John</pre>
   <div class="concept-box">
     <h4>Key Properties of Dense-Binary HDC</h4>
     <ul>
-      <li><strong>Perfect Self-Inverse:</strong> (A &oplus; B) &oplus; B = A exactly</li>
-      <li><strong>Commutativity:</strong> A &oplus; B = B &oplus; A</li>
-      <li><strong>Associativity:</strong> (A &oplus; B) &oplus; C = A &oplus; (B &oplus; C)</li>
+      <li><strong>Perfect Self-Inverse:</strong> (A xor B) xor B = A exactly</li>
+      <li><strong>Commutativity:</strong> A xor B = B xor A</li>
+      <li><strong>Associativity:</strong> (A xor B) xor C = A xor (B xor C)</li>
       <li><strong>Determinism:</strong> Same inputs always produce same outputs</li>
       <li><strong>Fixed Memory:</strong> All vectors have exactly n bits</li>
       <li><strong>Graceful Degradation:</strong> Bundle capacity decreases smoothly</li>

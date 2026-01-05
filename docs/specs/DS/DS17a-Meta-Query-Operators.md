@@ -186,7 +186,7 @@ has Bicycle Pedals
 **Semantics:**
 Implements "A is to B as C is to D" reasoning using HDC operations:
 ```
-D = B ⊕ A⁻¹ ⊕ C
+D = B BIND A⁻¹ BIND C
 ```
 
 **Example:**

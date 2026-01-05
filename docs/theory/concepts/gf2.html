@@ -142,7 +142,7 @@
     Proof: <code>c + b = (a + b) + b = a + (b + b) = a + 0 = a</code>
   </div>
 
-  <p>This is the foundation of <strong>reversible binding</strong> in Hyperdimensional Computing. If we encode <code>C = A ⊕ B</code>, we can recover A by computing <code>C ⊕ B = A</code>.</p>
+  <p>This is the foundation of <strong>reversible binding</strong> in Hyperdimensional Computing. If we encode <code>C = A xor B</code>, we can recover A by computing <code>C xor B = A</code>.</p>
 
   <h2>Why "Galois Field"?</h2>
 
@@ -207,7 +207,7 @@
     <br>
     <code>b = 00111100<sub>2</sub></code>
     <br><br>
-    <code>a ⊕ b = 01100110<sub>2</sub></code>
+    <code>a xor b = 01100110<sub>2</sub></code>
     <br><br>
     Each bit position operates independently in GF(2).
   </div>
@@ -215,11 +215,11 @@
   <p>The self-inverse property extends to entire bit vectors:</p>
 
   <div class="formula">
-    <code>(a ⊕ b) ⊕ b = a</code>
+    <code>(a xor b) xor b = a</code>
     <br><br>
-    <code>(01011010 ⊕ 00111100) ⊕ 00111100</code>
+    <code>(01011010 xor 00111100) xor 00111100</code>
     <br>
-    <code>= 01100110 ⊕ 00111100</code>
+    <code>= 01100110 xor 00111100</code>
     <br>
     <code>= 01011010 ✓</code>
   </div>
@@ -231,9 +231,9 @@
   <p>Uses XOR (GF(2) addition) directly on fixed-length binary vectors. The self-inverse property enables reversible binding:</p>
 
   <div class="formula">
-    <code>Composite = A ⊕ B</code>
+    <code>Composite = A xor B</code>
     <br>
-    <code>A = Composite ⊕ B</code> (exact recovery)
+    <code>A = Composite xor B</code> (exact recovery)
   </div>
 
   <h3>SPHDC Strategy</h3>

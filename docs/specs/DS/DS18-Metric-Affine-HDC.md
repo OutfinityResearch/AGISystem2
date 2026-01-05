@@ -58,10 +58,10 @@ The Metric-Affine algebra operates on Z₂₅₆ᴰ (Fuzzy-Boolean Hyper-Lattice
 ### 2.3 Algebraic Properties
 
 **Bind (XOR):**
-- Associative: (A ⊕ B) ⊕ C = A ⊕ (B ⊕ C)
-- Commutative: A ⊕ B = B ⊕ A
-- Self-inverse: A ⊕ A = 0 (zero vector)
-- Reversible: (A ⊕ B) ⊕ B = A
+- Associative: (A BIND B) BIND C = A BIND (B BIND C)
+- Commutative: A BIND B = B BIND A
+- Self-inverse: A BIND A = 0 (zero vector)
+- Reversible: (A BIND B) BIND B = A
 
 **Bundle (Mean):**
 - Idempotent for single vector: bundle([A]) = A

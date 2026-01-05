@@ -42,6 +42,33 @@ export class PropertyInheritanceReasoner {
     return this.engine.options;
   }
 
+  getIsAParentsByChild() {
+    const session = this.session;
+    const version = session?._kbBundleVersion ?? 0;
+    if (session?._isAParentsByChildCache?.version === version) {
+      return session._isAParentsByChildCache.map;
+    }
+
+    const scanFacts = session?.factIndex?.getByOperator
+      ? session.factIndex.getByOperator('isA')
+      : (session?.kbFacts || []);
+
+    const map = new Map(); // child -> Set(parent)
+    for (const fact of scanFacts) {
+      session.reasoningStats.kbScans++;
+      const meta = fact?.metadata;
+      if (!meta || meta.operator !== 'isA') continue;
+      const child = meta.args?.[0];
+      const parent = meta.args?.[1];
+      if (!child || !parent) continue;
+      if (!map.has(child)) map.set(child, new Set());
+      map.get(child).add(parent);
+    }
+
+    session._isAParentsByChildCache = { version, map };
+    return map;
+  }
+
   /**
    * Try to prove a goal via property inheritance
    * If goal is `prop Entity Value`, check if any parent of Entity has that property
@@ -120,34 +147,32 @@ export class PropertyInheritanceReasoner {
    */
   findAllParents(entity, visited, depth = 0, steps = []) {
     const parents = [];
+    const maxDepth = this.options?.maxDepth || 10;
     if (visited.has(entity)) return parents;
-    if (depth > (this.options?.maxDepth || 10)) return parents;
+    if (depth > maxDepth) return parents;
 
-    visited.add(entity);
+    const parentsByChild = this.getIsAParentsByChild();
+    const queue = [{ node: entity, depth, steps }];
+    let idx = 0;
 
-    // Find direct parents via isA
-    for (const fact of this.session.kbFacts) {
-      this.session.reasoningStats.kbScans++;
-      const meta = fact.metadata;
+    while (idx < queue.length) {
+      const current = queue[idx++];
+      const node = current.node;
+      if (visited.has(node)) continue;
+      visited.add(node);
+      if (current.depth >= maxDepth) continue;
 
-      if (meta?.operator === 'isA' && meta.args?.[0] === entity) {
-        const parent = meta.args[1];
+      const directParents = parentsByChild.get(node);
+      if (!directParents) continue;
+
+      for (const parent of directParents) {
         if (!parent || RESERVED_WORDS.has(parent)) continue;
         if (visited.has(parent)) continue;
 
-        const stepFact = `isA ${entity} ${parent}`;
-        const newSteps = [...steps, { operation: 'isA_chain', fact: stepFact }];
-
-        // Add direct parent
-        parents.push({
-          value: parent,
-          depth: depth + 1,
-          steps: newSteps
-        });
-
-        // Add ancestors recursively
-        const ancestors = this.findAllParents(parent, visited, depth + 1, newSteps);
-        parents.push(...ancestors);
+        const stepFact = `isA ${node} ${parent}`;
+        const newSteps = [...(current.steps || []), { operation: 'isA_chain', fact: stepFact }];
+        parents.push({ value: parent, depth: current.depth + 1, steps: newSteps });
+        queue.push({ node: parent, depth: current.depth + 1, steps: newSteps });
       }
     }
 
@@ -158,15 +183,17 @@ export class PropertyInheritanceReasoner {
    * Check if entity has a specific property
    */
   hasProperty(operator, entity, value) {
-    for (const fact of this.session.kbFacts) {
+    if (!operator || !entity || !value) return false;
+    if (this.session?.factIndex?.hasNary) {
+      return this.session.factIndex.hasNary(operator, [entity, value]);
+    }
+    const scanFacts = this.session?.factIndex?.getByOperator
+      ? this.session.factIndex.getByOperator(operator)
+      : this.session.kbFacts;
+    for (const fact of scanFacts) {
       this.session.reasoningStats.kbScans++;
-      const meta = fact.metadata;
-
-      if (meta?.operator === operator &&
-          meta.args?.[0] === entity &&
-          meta.args?.[1] === value) {
-        return true;
-      }
+      const meta = fact?.metadata;
+      if (meta?.operator === operator && meta.args?.[0] === entity && meta.args?.[1] === value) return true;
     }
     return false;
   }
@@ -176,32 +203,9 @@ export class PropertyInheritanceReasoner {
    * Also checks at any level of the isA hierarchy
    */
   hasException(operator, entity, value) {
-    // Check direct negation
-    for (const fact of this.session.kbFacts) {
-      this.session.reasoningStats.kbScans++;
-      const meta = fact.metadata;
-
-      // Check for "Not prop Entity Value"
-      if (meta?.operator === 'Not') {
-        // The negated fact structure depends on how Not is stored
-        // It could be Not(can Entity Value) or metadata indicating negation
-        const negatedOp = meta.args?.[0];
-        const negatedEntity = meta.args?.[1];
-        const negatedValue = meta.args?.[2];
-
-        if (negatedOp === operator && negatedEntity === entity && negatedValue === value) {
-          return true;
-        }
-      }
-
-      // Also check if the fact itself has a negated operator like "Not can X Y"
-      // which might be stored as operator="Not can" or similar
-      if (meta?.operator === `Not ${operator}` ||
-          meta?.operator === `Not${operator}`) {
-        if (meta.args?.[0] === entity && meta.args?.[1] === value) {
-          return true;
-        }
-      }
+    // Fast-path: expanded Not metadata is stored as: Not <op> <entity> <value>
+    if (this.session?.factIndex?.hasNary && this.session.factIndex.hasNary('Not', [operator, entity, value])) {
+      return true;
     }
 
     // Check if entity isA something that has the exception
@@ -221,46 +225,34 @@ export class PropertyInheritanceReasoner {
    * Handles both explicit "Not op entity value" and reference patterns "Not $ref"
    */
   hasDirectException(operator, entity, value) {
-    for (const fact of this.session.kbFacts) {
-      const meta = fact.metadata;
+    if (!operator || !entity || !value) return false;
 
-      if (meta?.operator === 'Not') {
-        // Check explicit pattern: Not op entity value
-        const negatedOp = meta.args?.[0];
-        const negatedEntity = meta.args?.[1];
-        const negatedValue = meta.args?.[2];
+    // Fast-path: expanded Not metadata is stored as: Not <op> <entity> <value>
+    if (this.session?.factIndex?.hasNary && this.session.factIndex.hasNary('Not', [operator, entity, value])) {
+      return true;
+    }
 
-        if (negatedOp === operator && negatedEntity === entity && negatedValue === value) {
-          return true;
-        }
+    // Legacy fallback: scan Not-only facts (kept for backwards compatibility with older encodings).
+    const scanFacts = this.session?.factIndex?.getByOperator
+      ? [
+        ...this.session.factIndex.getByOperator('Not'),
+        ...this.session.factIndex.getByOperator(`Not ${operator}`),
+        ...this.session.factIndex.getByOperator(`Not${operator}`)
+      ]
+      : this.session.kbFacts;
 
-        // Check reference pattern: Not $refName
-        // The args[0] might be a reference name (without $ prefix after parsing)
-        if (meta.args?.length === 1) {
-          const refName = meta.args[0]?.replace(/^\$/, '');
-          const negatedVec = this.session.scope.get(refName);
-          if (negatedVec) {
-            // Build a vector for the property we're checking
-            const checkFact = {
-              operator: { type: 'Identifier', name: operator },
-              args: [
-                { type: 'Identifier', name: entity },
-                { type: 'Identifier', name: value }
-              ]
-            };
-
-            const checkVec = this.session.executor?.buildStatementVector(checkFact);
-            if (checkVec) {
-              this.session.reasoningStats.similarityChecks++;
-              const sim = this.session.similarity(checkVec, negatedVec);
-              if (sim > this.thresholds.RULE_MATCH) {
-                return true;
-              }
-            }
-          }
-        }
+    for (const fact of scanFacts) {
+      const meta = fact?.metadata;
+      if (!meta) continue;
+      if (meta.operator === 'Not' && meta.args?.[0] === operator && meta.args?.[1] === entity && meta.args?.[2] === value) {
+        return true;
+      }
+      if ((meta.operator === `Not ${operator}` || meta.operator === `Not${operator}`) &&
+          meta.args?.[0] === entity && meta.args?.[1] === value) {
+        return true;
       }
     }
+
     return false;
   }
 }

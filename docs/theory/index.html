@@ -174,8 +174,9 @@
 
   <pre><code>// Without positions: loves(John, Mary) = loves(Mary, John) (WRONG!)
 // With positions:
-fact = Loves BIND (Pos1 BIND John) BIND (Pos2 BIND Mary)  // loves(John, Mary)
-fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) - DIFFERENT!</code></pre>
+// With positions:
+fact = Loves BIND ( (Pos1 BIND John) BUNDLE (Pos2 BIND Mary) )
+fact = Loves BIND ( (Pos1 BIND Mary) BUNDLE (Pos2 BIND John) )  // DIFFERENT!</code></pre>
 
 	  <h3>The Reasoning Equation</h3>
 
@@ -280,6 +281,10 @@ fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) -
 
   <p>HDC's deterministic, explainable nature makes it ideal for building <strong>trustworthy AI systems</strong>&mdash;AI that can be verified, audited, and understood.</p>
 
+  <div class="alert alert-warning" style="background: #fffde7; border-left: 4px solid #fbc02d; padding: 12px 15px; margin: 12px 0; border-radius: 0 8px 8px 0;">
+    <strong>Status:</strong> Trustworthy AI patterns are research-level and not shipped as runnable Core/config theory sets.
+  </div>
+
   <div class="section-grid">
     <div class="section-card" style="background: linear-gradient(135deg, #4caf5022 0%, #8bc34a22 100%);">
       <h3><a href="trustworthy-ai/index.html">Trustworthy AI Overview</a></h3>
@@ -288,12 +293,12 @@ fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) -
 
     <div class="section-card">
       <h3><a href="trustworthy-ai/agent-planning.html">Agent Planning</a></h3>
-      <p>Formal tool semantics, plan verification before execution, failure diagnosis.</p>
+      <p>Research pattern: formal tool semantics and plan validation (external planner/runtime required).</p>
     </div>
 
     <div class="section-card">
       <h3><a href="trustworthy-ai/compliance.html">Compliance & Verification</a></h3>
-      <p>Real-time regulatory checking, automatic audit trails, remediation guidance.</p>
+      <p>Research pattern: compliance checks with proof traces (audit logging/export is external).</p>
     </div>
 
     <div class="section-card">

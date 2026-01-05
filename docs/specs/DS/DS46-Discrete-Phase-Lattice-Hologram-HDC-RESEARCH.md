@@ -180,9 +180,7 @@ Correctness invariant (exact):
 UNBIND(BIND(A,B), B) = A
 ```
 
-### 5.3 BUNDLE (stable superposition)
-
-BUNDLE is the hardest part: we need a lossy operator that:
+### 5.3 BUNDLE (stable superposition) BUNDLE is the hardest part: we need a lossy operator that:
 
 - stays in `Z_Q` per cell,
 - supports many superposed items without numeric explosion,

@@ -40,12 +40,12 @@ Default k = 4, giving 32 bytes per vector
 Binding two vectors produces the Cartesian XOR of their exponents:
 
 ```
-A ⊗ B = { aᵢ ⊕ bⱼ | aᵢ ∈ A, bⱼ ∈ B }
+BIND(A, B) = { aᵢ XOR bⱼ | aᵢ ∈ A, bⱼ ∈ B }
 ```
 
 **Properties:**
-- **Self-Inverse:** x ⊕ x = 0, therefore (A ⊗ B) ⊗ B = A ✓
-- **Associative:** (A ⊗ B) ⊗ C = A ⊗ (B ⊗ C) ✓
+- **Self-Inverse:** x XOR x = 0, therefore BIND(BIND(A, B), B) = A ✓
+- **Associative:** BIND(BIND(A, B), C) = BIND(A, BIND(B, C)) ✓
 - **Complexity:** O(k²) = O(16) operations for k=4
 
 **Sparsification:** When |result| > k, use Min-Hash sampling to select k exponents with smallest hash values.

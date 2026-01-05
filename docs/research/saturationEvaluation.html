@@ -196,7 +196,7 @@
     We treat <code>Mentions(book, key, idea)</code> as a 3-argument record with positional encoding (Pos1..Pos3).
     For a query where <code>book</code> and <code>key</code> are known, we compute a query key and unbind:
   </p>
-  <div class="mono">partial = Mentions ⊕ (Book ⊕ Pos1) ⊕ (Key ⊕ Pos2)
+  <div class="mono">partial = Mentions BIND (Book BIND Pos1) BIND (Key BIND Pos2)
 answer  = UNBIND(BookVector, partial)
 ideaVec = UNBIND(answer, Pos3)</div>
   <p>
@@ -207,7 +207,7 @@ ideaVec = UNBIND(answer, Pos3)</div>
   <p>
     To approximate the question “is this idea in the book?”, we invert the missing slot:
   </p>
-  <div class="mono">partial = Mentions ⊕ (Book ⊕ Pos1) ⊕ (Idea ⊕ Pos3)
+  <div class="mono">partial = Mentions BIND (Book BIND Pos1) BIND (Idea BIND Pos3)
 answer  = UNBIND(BookVector, partial)
 keyVec  = UNBIND(answer, Pos2)</div>
   <p>

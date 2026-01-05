@@ -34,15 +34,15 @@ In particular:
 ### 1.2.1 Bind (Dense-Binary XOR)
 
 ```
-C = A ⊕ B    (bitwise XOR)
+C = BIND(A, B)    (bitwise XOR in dense-binary)
 ```
 
 **Properties:**
-- **Associative**: (A ⊕ B) ⊕ C = A ⊕ (B ⊕ C)
-- **Commutative**: A ⊕ B = B ⊕ A
-- **Self-inverse**: A ⊕ A = 0
-- **Reversible**: (A ⊕ B) ⊕ B = A
-- **Preserves extension**: [v|v] ⊕ [u|u] = [v⊕u | v⊕u] ✓
+- **Associative**: BIND(BIND(A, B), C) = BIND(A, BIND(B, C))
+- **Commutative**: BIND(A, B) = BIND(B, A)
+- **Self-inverse**: BIND(A, A) = 0
+- **Reversible**: BIND(BIND(A, B), B) = A
+- **Preserves extension**: BIND([v|v], [u|u]) = [BIND(v, u) | BIND(v, u)] ✓
 
 **Use:** Associate concepts, create relationships
 
@@ -51,7 +51,7 @@ C = A ⊕ B    (bitwise XOR)
 > **Critical Understanding:** Because XOR is both commutative AND associative, the algebraic result is invariant to the order in which pairs are XORed together:
 >
 > ```
-> (Pos1 ⊕ John) ⊕ (Pos2 ⊕ Mary) = (Pos2 ⊕ Mary) ⊕ (Pos1 ⊕ John)
+> (Pos1 BIND John) BIND (Pos2 BIND Mary) = (Pos2 BIND Mary) BIND (Pos1 BIND John)
 > ```
 >
 > **What this means:**
@@ -93,7 +93,7 @@ C[i] = 1 if majority of inputs have 1 at position i
 For XOR strategies, unbinding is “free cancellation”:
 
 ```
-UNBIND(XOR):  UNBIND(C, B) = C ⊕ B
+UNBIND(XOR):  UNBIND(C, B) = BIND(C, B)
 ```
 
 But in AGISystem2 we also support strategies where:
@@ -154,7 +154,7 @@ Extended (64K): [v | v | v | v]  (clone twice)
 
 1. **XOR preserves pattern:**
    ```
-   [v | v] ⊕ [u | u] = [v⊕u | v⊕u]
+   [v | v] BIND [u | u] = [v BIND u | v BIND u]
    ```
    Result is itself a valid cloned vector.
 
@@ -199,29 +199,28 @@ Without permutation, how do we encode position?
 Core defines position markers `Pos1`, `Pos2`, ... `PosN`:
 
 ```
-fact = Verb ⊕ (Pos1 ⊕ Arg1) ⊕ (Pos2 ⊕ Arg2) ⊕ (Pos3 ⊕ Arg3)
+fact = Verb BIND ( (Pos1 BIND Arg1) BUNDLE (Pos2 BIND Arg2) BUNDLE (Pos3 BIND Arg3) )
 ```
 
-Each argument is bound with its position marker before being XORed into the fact.
+Each argument is bound with its position marker before being bound into the fact (XOR in dense-binary).
 
 **Example:**
 ```
 # "John loves Mary"
-f1 = Loves ⊕ (Pos1 ⊕ John) ⊕ (Pos2 ⊕ Mary)
+f1 = Loves BIND ( (Pos1 BIND John) BUNDLE (Pos2 BIND Mary) )
+# vs
+f2 = Loves BIND ( (Pos1 BIND Mary) BUNDLE (Pos2 BIND John) )
 
-# "Mary loves John" (different!)
-f2 = Loves ⊕ (Pos1 ⊕ Mary) ⊕ (Pos2 ⊕ John)
-
-similarity(f1, f2) ≈ 0.5  # Different facts (as expected)
+# Result: sim(f1, f2) ~ 0.5 (distinct!) Different facts (as expected)
 ```
 
 ### 1.4.3 Recovery (Unbinding)
 
 To extract `Arg1` from a fact where we know `Verb` and `Arg2` (XOR strategies):
 ```
-temp = fact ⊕ Verb ⊕ (Pos2 ⊕ Arg2)
-# temp ≈ Pos1 ⊕ Arg1
-Arg1 = temp ⊕ Pos1
+temp = fact BIND Verb BIND (Pos2 BIND Arg2)
+# temp ≈ Pos1 BIND Arg1
+Arg1 = temp BIND Pos1
 ```
 
 Known parts cancel out via XOR’s self-inverse property.  
@@ -233,12 +232,12 @@ Other strategies follow the same **structured-record idea** (role/position marke
 Small (16K):
   Pos1 = [p]
   John = [j]
-  Pos1 ⊕ John = [p⊕j]
+  Pos1 BIND John = [p BIND j]
 
 Extended (32K):
   Pos1 = [p | p]
   John = [j | j]
-  Pos1 ⊕ John = [p⊕j | p⊕j]  ✓ Same pattern, just doubled!
+  Pos1 BIND John = [p BIND j | p BIND j]  ✓ Same pattern, just doubled!
 ```
 
 Position vectors clone alongside value vectors, maintaining consistency.
@@ -319,7 +318,7 @@ Step 3 - Vector (32,768 bits = 128 stamps):
 
   ┌──────────────┬──────────────┬─────┬──────────────┐
   │ Stamp₀       │ Stamp₁       │ ... │ Stamp₁₂₇    │
-  │ base⊕rand(0) │ base⊕rand(1) │     │ base⊕rand(127)│
+  │ base BIND rand(0) │ base BIND rand(1) │     │ base BIND rand(127)│
   └──────────────┴──────────────┴─────┴──────────────┘
 
 Each stamp: ASCII pattern XOR position-specific random bits
@@ -392,7 +391,7 @@ Pos20 = initVector("Pos20", geometry)
 @dest Op Arg1 Arg2 Arg3
 
 Internally:
-dest = Op ⊕ (Pos1 ⊕ Arg1) ⊕ (Pos2 ⊕ Arg2) ⊕ (Pos3 ⊕ Arg3)
+dest = Op BIND ( (Pos1 BIND Arg1) BUNDLE (Pos2 BIND Arg2) BUNDLE (Pos3 BIND Arg3) )
 ```
 
 ---
@@ -444,14 +443,14 @@ Dense 32K (32,768 bits)
 
 Becomes:
 ```
-dest = Op ⊕ (Pos1 ⊕ Arg1) ⊕ (Pos2 ⊕ Arg2) ⊕ ... ⊕ (PosN ⊕ ArgN)
+dest = Op BIND ( (Pos1 BIND Arg1) BUNDLE (Pos2 BIND Arg2) ... BUNDLE (PosN BIND ArgN) )
 ```
 
 ### 1.8.2 With Graph
 
 When Op has an associated graph:
 ```
-dest = Op ⊕ graph_result
+dest = Op BIND graph_result
 ```
 
 The graph internally uses position vectors for its own structure.
@@ -464,14 +463,14 @@ This example uses XOR-style unbinding. The same query surface exists across stra
 
 ```
 # Build partial (without the hole)
-partial = Op ⊕ (Pos2 ⊕ Arg2)
+partial = Op BIND (Pos2 BIND Arg2)
 
 # Unbind from knowledge base
-result = KB ⊕ partial
+result = KB BIND partial
 
-# Result contains Pos1 ⊕ who (plus noise from other KB facts)
+# Result contains Pos1 BIND who (plus noise from other KB facts)
 # Find nearest match in vocabulary after unbinding Pos1:
-candidate = result ⊕ Pos1
+candidate = result BIND Pos1
 answer = findMostSimilar(candidate, vocabulary)
 ```
 
@@ -575,7 +574,7 @@ The hybrid design means:
 | **Position vectors** | Pos1, Pos2, ... encode argument order |
 | **Extension** | Clone: [v] → [v\|v] → [v\|v\|v\|v] |
 | **Deterministic init (example)** | ASCII stamping for PRNG-based strategies (others may differ) |
-| **Binding formula** | result = Op ⊕ (Pos1⊕A1) ⊕ (Pos2⊕A2) ⊕ ... |
+| **Binding formula** | result = Op BIND ( (Pos1 BIND A1) BUNDLE (Pos2 BIND A2) ... ) |
 | **Query** | `UNBIND(KB, QueryKey)` + decode/cleanup (+ optional proof/validation) |
 | **Closure (research)** | STAR/UNSTAR fixpoint reasoning over a step operator |
 

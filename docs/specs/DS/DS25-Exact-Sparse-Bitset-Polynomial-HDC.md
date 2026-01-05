@@ -150,7 +150,7 @@ enc(S) = OR_{a_i ∈ S} 2^i
 Monomial “multiplication” is set union:
 
 ```
-enc(S ⊗ T) = enc(S) OR enc(T)
+enc(S BIND T) = enc(S) OR enc(T)
 ```
 
 ### 4.3 Polynomials as sorted unique arrays
@@ -277,13 +277,20 @@ This enables ranking candidates by support (“how many facts agree?”).
 
 ### 7.1 Fact encoding (recommended)
 
-Encode a k-ary fact as a **single monomial**:
+Encode a k-ary fact as a **polynomial (bundle of monomials)**:
 
 ```
-factMonomial = Op OR (Pos1 OR Arg1) OR (Pos2 OR Arg2) OR ...
-factVector = [factMonomial]
-KB = bundle([factVector1, factVector2, ...])  // union of monomials
+# Use BIND for parts (OR) and BUNDLE for aggregation (Union/Addition)
+# fact = Op * ( (Pos1 * Arg1) + (Pos2 * Arg2) + ... )
+# Distributing Op:
+term1 = Op OR Pos1 OR Arg1
+term2 = Op OR Pos2 OR Arg2
+...
+factVector = bundle([term1, term2, ...])
 ```
+
+This ensures that `(Pos1, Arg1)` stays distinct from `(Pos2, Arg2)` in the set of monomials.
+Using a single monomial (all OR) would cause semantic collapse (`f(a,b) == f(b,a)`).
 
 ### 7.2 Query flow analog
 

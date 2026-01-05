@@ -197,6 +197,7 @@ export class QueryEngine {
     }
 
     const maxResults = Number.isFinite(options.maxResults) ? Math.max(1, options.maxResults) : null;
+    const isExactStrategy = (this.session?.hdcStrategy || 'exact') === 'exact';
 
     // Step 2: Collect results from multiple sources
     const allResults = [];
@@ -220,7 +221,9 @@ export class QueryEngine {
       return hdcMatches;
     };
 
-    if (maxResults === null) {
+    // In EXACT strategy, symbolic/operator-indexed methods are strictly cheaper and more precise.
+    // Only fall back to HDC when the symbolic pipeline cannot find any usable answer.
+    if (maxResults === null && !isExactStrategy) {
       runHdc();
       ranHdc = true;
     }
@@ -430,6 +433,14 @@ export class QueryEngine {
 
     // For capped queries: if we still don't have enough high-priority results, run HDC last.
     if (!ranHdc && maxResults !== null && filteredResults.length < maxResults) {
+      runHdc();
+      ranHdc = true;
+      filteredResults = filterTypeClasses(allResults, this.session, operatorName);
+      filteredResults = filterNegated(filteredResults, this.session, operatorName, knowns);
+    }
+
+    // For uncapped queries in EXACT: run HDC only as a last resort when symbolic sources failed.
+    if (!ranHdc && maxResults === null && filteredResults.length === 0) {
       runHdc();
       ranHdc = true;
       filteredResults = filterTypeClasses(allResults, this.session, operatorName);

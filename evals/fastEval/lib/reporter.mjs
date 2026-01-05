@@ -611,11 +611,14 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
 	      hdcValidated: 0,
 	      hdcCompared: 0,
 	      hdcEquivalent: 0,
-	      hdcFinal: 0,
-	      kbScans: 0,
-	      simChecks: 0,
-      totalSteps: 0,
-      totalMs: 0,
+		      hdcFinal: 0,
+		      kbScans: 0,
+		      simChecks: 0,
+          transitiveSteps: 0,
+          ruleAttempts: 0,
+          operations: Object.create(null),
+	      totalSteps: 0,
+	      totalMs: 0,
       // Failure breakdown by phase
       failedReasoning: 0,    // reasoning phase failed
       failedNlTranslation: 0, // reasoning passed but dslToNl failed
@@ -668,9 +671,14 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
       strategyTotals[strategyId].hdcTried += tried;
       strategyTotals[strategyId].hdcValidated += validated;
 
-      strategyTotals[strategyId].kbScans += scans;
-      strategyTotals[strategyId].simChecks += stats.similarityChecks || 0;
-      strategyTotals[strategyId].totalMs += durationMs;
+	      strategyTotals[strategyId].kbScans += scans;
+	      strategyTotals[strategyId].simChecks += stats.similarityChecks || 0;
+          strategyTotals[strategyId].transitiveSteps += stats.transitiveSteps || 0;
+          strategyTotals[strategyId].ruleAttempts += stats.ruleAttempts || 0;
+          for (const [op, count] of Object.entries(stats.operations || {})) {
+            strategyTotals[strategyId].operations[op] = (strategyTotals[strategyId].operations[op] || 0) + (count || 0);
+          }
+	      strategyTotals[strategyId].totalMs += durationMs;
 
       const results = suiteResultsMap[suiteKey]?.[strategyId] || [];
       for (const res of results) {
@@ -814,18 +822,36 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
     return t.failedReasoning > 0 || t.failedNlTranslation > 0 || t.failedNlParsing > 0;
   });
 
-	  const columns = [
-	    { key: 'strategy', title: 'Strategy', align: 'left' },
-	    { key: 'pass', title: 'Pass Rate', align: 'right' },
-	    { key: 'hdcTried', title: 'HDC Tried', align: 'right' },
-	    { key: 'hdcValid', title: 'HDC Valid', align: 'right' },
-	    { key: 'hdcMatch', title: 'HDC Match', align: 'right' },
-	    { key: 'hdcFinal', title: 'HDC Final', align: 'right' },
-	    { key: 'hdcOps', title: 'HDC Ops', align: 'right' },
-	    { key: 'kb', title: 'KB Scans', align: 'right' },
-	    { key: 'sim', title: 'Sim Checks', align: 'right' },
-    { key: 'time', title: 'Time', align: 'right' }
-  ];
+  const fmtOrDash = (n) => {
+    const num = Number(n || 0);
+    return num > 0 ? formatNum(num) : `${colors.dim}-${colors.reset}`;
+  };
+
+  const fmtTriple = (a, b, c) => {
+    const A = Number(a || 0);
+    const B = Number(b || 0);
+    const C = Number(c || 0);
+    if (!(A || B || C)) return `${colors.dim}-${colors.reset}`;
+    return `${formatNum(A)}/${formatNum(B)}/${formatNum(C)}`;
+  };
+
+		  const columns = [
+		    { key: 'strategy', title: 'Strategy', align: 'left' },
+		    { key: 'pass', title: 'Pass Rate', align: 'right' },
+		    { key: 'hdcTried', title: 'HDC Tried', align: 'right' },
+		    { key: 'hdcValid', title: 'HDC Valid', align: 'right' },
+		    { key: 'hdcMatch', title: 'HDC Match', align: 'right' },
+		    { key: 'hdcFinal', title: 'HDC Final', align: 'right' },
+		    { key: 'hdcOps', title: 'HDC Ops', align: 'right' },
+		    { key: 'kb', title: 'KB Scans', align: 'right' },
+		    { key: 'sim', title: 'Sim Checks', align: 'right' },
+        { key: 'qs', title: 'QSrch', align: 'right' },
+        { key: 'tr', title: 'Trans', align: 'right' },
+        { key: 'rl', title: 'Rules', align: 'right' },
+        { key: 'x', title: 'Exact(B/U/BU)', align: 'right' },
+        { key: 'h', title: 'Holo(D/C/V)', align: 'right' },
+	    { key: 'time', title: 'Time', align: 'right' }
+	  ];
 
   if (hasAnyFailures) {
     columns.push(
@@ -874,18 +900,31 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
       ? `${colors.cyan}${totals.totalMs}ms${colors.reset}`
       : `${totals.totalMs}ms`;
 
-	    const base = {
-	      strategy: shortStrategyName(strategyId),
-	      pass: passCell,
-	      hdcTried: triedCell,
-	      hdcValid: validCell,
-	      hdcMatch: matchCell,
-	      hdcFinal: finalCell,
-	      hdcOps: hasAsked ? `${totals.hdcTotal}` : `${colors.dim}-${colors.reset}`,
-	      kb: formatNum(totals.kbScans),
-	      sim: formatNum(totals.simChecks),
-      time: timeCell
-    };
+		    const base = {
+		      strategy: shortStrategyName(strategyId),
+		      pass: passCell,
+		      hdcTried: triedCell,
+		      hdcValid: validCell,
+		      hdcMatch: matchCell,
+		      hdcFinal: finalCell,
+		      hdcOps: hasAsked ? `${totals.hdcTotal}` : `${colors.dim}-${colors.reset}`,
+		      kb: formatNum(totals.kbScans),
+		      sim: formatNum(totals.simChecks),
+          qs: fmtOrDash(totals.operations?.query_search),
+          tr: fmtOrDash(totals.transitiveSteps),
+          rl: fmtOrDash(totals.ruleAttempts),
+          x: fmtTriple(
+            totals.operations?.exact_bind_pairs,
+            totals.operations?.exact_unbind_checks,
+            totals.operations?.exact_bundle_in_terms
+          ),
+          h: fmtTriple(
+            totals.operations?.holo_domain_decode,
+            totals.operations?.holo_hdc_compared,
+            totals.operations?.holo_validation_proof_attempt
+          ),
+	      time: timeCell
+	    };
 
     if (!hasAnyFailures) return base;
 
@@ -947,11 +986,14 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
 	  console.log(`${colors.dim}  HDC Tried:  Σ(hdcQueries + hdcUnbindAttempts + holographicProofs) — ops where an HDC attempt was made.${colors.reset}`);
 	  console.log(`${colors.dim}  HDC Valid:  Σ(hdcSuccesses + holographicQueryHdcSuccesses + hdcProofSuccesses) — HDC attempts that produced at least one accepted result.${colors.reset}`);
 	  console.log(`${colors.dim}  HDC Match:  Σ(hdcEquivalentOps)/Σ(hdcComparedOps) — % of comparisons where HDC answer set matched the symbolic set (only when symbolic runs).${colors.reset}`);
-	  console.log(`${colors.dim}  HDC Final:  Σ(hdcUsefulOps) — ops where the final chosen method was HDC-based (method starts with \"hdc\").${colors.reset}`);
-	  console.log(`${colors.dim}  KB Scans:   Σ(kbScans) — number of KB scan/iteration steps performed by the engine.${colors.reset}`);
-	  console.log(`${colors.dim}  Sim Checks: Σ(similarityChecks) — number of vector similarity computations performed.${colors.reset}`);
-	  console.log(`${colors.dim}  Note: HDC Tried/Final are reported as % of HDC Ops; HDC Valid is reported as % of HDC Tried; HDC Match is reported as % of comparisons.${colors.reset}`);
-	  console.log();
+		  console.log(`${colors.dim}  HDC Final:  Σ(hdcUsefulOps) — ops where the final chosen method was HDC-based (method starts with \"hdc\").${colors.reset}`);
+		  console.log(`${colors.dim}  KB Scans:   Σ(kbScans) — number of KB scan/iteration steps performed by the engine.${colors.reset}`);
+		  console.log(`${colors.dim}  Sim Checks: Σ(similarityChecks) — number of vector similarity computations performed.${colors.reset}`);
+      console.log(`${colors.dim}  QSrch/Trans/Rules: selected expensive counters from reasoningStats (aggregated).${colors.reset}`);
+      console.log(`${colors.dim}  Exact(B/U/BU): exact_bind_pairs / exact_unbind_checks / exact_bundle_in_terms.${colors.reset}`);
+      console.log(`${colors.dim}  Holo(D/C/V): holo_domain_decode / holo_hdc_compared / holo_validation_proof_attempt.${colors.reset}`);
+		  console.log(`${colors.dim}  Note: HDC Tried/Final are reported as % of HDC Ops; HDC Valid is reported as % of HDC Tried; HDC Match is reported as % of comparisons.${colors.reset}`);
+		  console.log();
 
   // Speed comparison
   const times = orderedStrategies.map(s => ({ id: s, ms: strategyTotals[s].totalMs }));

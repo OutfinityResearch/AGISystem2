@@ -167,17 +167,19 @@
 
   <p>All queries reduce to the fundamental equation:</p>
 
-  <pre><code>Answer = KB XOR Partial_Query
+  <pre><code>Answer = UNBIND(KB, Partial_Query)
 
 where Partial_Query = everything known in the query
-      Answer = the unknown bindings</code></pre>
+      Answer = the unknown bindings
+
+Note: in XOR-based strategies, UNBIND is implemented by BIND again.</code></pre>
 
   <h3>Query Mechanics Step by Step</h3>
 
   <ol>
     <li><strong>Parse:</strong> Identify holes (?variables) in the query</li>
     <li><strong>Build Partial:</strong> Bind operator with known arguments (skip holes)</li>
-    <li><strong>Unbind:</strong> XOR the partial from the KB</li>
+    <li><strong>Unbind:</strong> UNBIND the partial from the KB (XOR-based strategies use BIND again)</li>
     <li><strong>Extract:</strong> Remove position markers from candidates</li>
     <li><strong>Match:</strong> Find most similar atoms in vocabulary</li>
     <li><strong>Score:</strong> Calculate confidence from similarities</li>
@@ -253,7 +255,7 @@ where Partial_Query = everything known in the query
 
   <h3>Proof Trace Structure</h3>
 
-  <p>Every proof generates a complete trace that can be replayed:</p>
+  <p>Every proof generates a trace that can be inspected (replay/export requires external logging):</p>
 
   <pre><code>ProofTrace {
   goal: "isA Socrates Mortal",

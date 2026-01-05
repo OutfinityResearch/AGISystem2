@@ -20,7 +20,11 @@
   </div>
 
   <div class="section-intro">
-    <p>Organizations must comply with external regulations (GDPR, HIPAA, SOX), internal policies, and contractual obligations. Current approaches rely on periodic audits that find problems <em>after</em> they occur. AGISystem2 enables <strong>real-time compliance checking</strong> that prevents violations before they happen.</p>
+    <p>Organizations must comply with external regulations (GDPR, HIPAA, SOX), internal policies, and contractual obligations. Current approaches rely on periodic audits that find problems <em>after</em> they occur. AGISystem2 can be used to model compliance checking as a research pattern; it does not ship as a runnable compliance theory set.</p>
+  </div>
+
+  <div class="alert alert-warning" style="background: #fffde7; border-left: 4px solid #fbc02d; padding: 12px 15px; margin: 12px 0; border-radius: 0 8px 8px 0;">
+    <strong>Status:</strong> Research pattern (DS30). Examples are illustrative; audit logging/export requires external integration.
   </div>
 
   <h2>The Problem</h2>
@@ -94,9 +98,9 @@
     (notifies ?controller SupervisoryAuthority ?breach)
     (within Hours72)</code></pre>
 
-  <h2>Real-Time Compliance Checking</h2>
+  <h2>Compliance Checking Workflow (Research)</h2>
 
-  <p>Before any action is executed, it's checked against all applicable regulations:</p>
+  <p>In a production integration, actions can be checked against all applicable regulations before execution:</p>
 
   <pre><code>// Marketing wants to use customer data for new campaign
 const proposedAction = session.learn(`
@@ -168,7 +172,7 @@ AUDIT CONCLUSION: All processing compliant with regulations.</code></pre>
 
   <h2>Continuous Monitoring</h2>
 
-  <p>The system monitors data events in real-time and triggers alerts on policy violations:</p>
+  <p>A production integration can monitor data events in real-time and trigger alerts on policy violations:</p>
 
   <pre><code>function onDataEvent(event) {
     session.learn(`
@@ -190,7 +194,7 @@ AUDIT CONCLUSION: All processing compliant with regulations.</code></pre>
         });
     }
 
-    // Log for audit trail
+    // Optional: log proof trace externally (audit logging/export not in runtime)
     logComplianceCheck(event.id, compliance);
 }</code></pre>
 

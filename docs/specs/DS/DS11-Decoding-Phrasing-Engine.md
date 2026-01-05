@@ -56,7 +56,7 @@ src/decoding/
 > **Background:** Due to XOR commutativity (see DS01 §1.2.1 and DS05 §5.1), the algebraic binding operation produces vectors where argument order is NOT inherently preserved:
 >
 > ```
-> (Pos1 ⊕ A) ⊕ (Pos2 ⊕ B) = (Pos2 ⊕ B) ⊕ (Pos1 ⊕ A)
+> (Pos1 BIND A) BIND (Pos2 BIND B) = (Pos2 BIND B) BIND (Pos1 BIND A)
 > ```
 >
 > **The Problem:** Position vectors act as **unique tags** identifying WHAT occupies WHICH position, but they do NOT encode the sequence 1→2→3 algebraically.
@@ -666,7 +666,7 @@ end
 
 ```
 STEP 1: Query Execution
-├── Result vector: sells ⊕ (Pos1 ⊕ Alice) ⊕ (Pos2 ⊕ Bob) ⊕ (Pos3 ⊕ Book)
+├── Result vector: sells BIND (Pos1 BIND Alice) BIND (Pos2 BIND Bob) BIND (Pos3 BIND Book)
 └── Confidence: 0.78
 
 STEP 2: Structural Decoding
@@ -812,8 +812,7 @@ PROCESSING:
 
 When querying using a bundled or induced pattern, the system finds properties common to all source entities:
 
-```
-BUNDLE PATTERN QUERY:
+``` BUNDLE PATTERN QUERY:
 
 KB Facts:
   can Sparrow Fly

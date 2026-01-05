@@ -33,7 +33,7 @@
  */
 
 import { discoverSuites, loadSuite } from './fastEval/lib/loader.mjs';
-import { runSuite } from './fastEval/lib/runner.mjs';
+import { runSuite, loadBaselinePacks } from './fastEval/lib/runner.mjs';
 import {
   reportSuiteHeader,
   reportCaseResults,
@@ -43,8 +43,12 @@ import {
   reportGlobalSummary,
   reportMultiStrategyComparison
 } from './fastEval/lib/reporter.mjs';
-import { listStrategies } from '../src/hdc/facade.mjs';
-import { REASONING_PRIORITY } from '../src/core/constants.mjs';
+	import { listStrategies } from '../src/hdc/facade.mjs';
+	import { REASONING_PRIORITY } from '../src/core/constants.mjs';
+	import { Session } from '../src/runtime/session.mjs';
+	import { spawn } from 'node:child_process';
+	import { writeSync } from 'node:fs';
+	import { fileURLToPath } from 'node:url';
 
 // Strategy geometry configurations
 const STRATEGY_GEOMETRIES = {
@@ -93,6 +97,129 @@ function configLabel(strategy, geometry, priority, exactUnbindMode = null) {
 
 // Parse command line arguments
 const args = process.argv.slice(2);
+const scriptPath = fileURLToPath(import.meta.url);
+
+function argValue(name) {
+  const prefix = `--${name}=`;
+  const found = args.find(a => String(a).startsWith(prefix));
+  return found ? found.slice(prefix.length) : null;
+}
+
+function parseIntArg(name, fallback) {
+  const v = argValue(name);
+  if (v === null) return fallback;
+  const n = Number.parseInt(v, 10);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+}
+
+function parseConfigKey(raw) {
+  const decoded = (() => {
+    try {
+      return decodeURIComponent(String(raw || ''));
+    } catch {
+      return String(raw || '');
+    }
+  })();
+  const parts = decoded.split('/').map(p => String(p || '').trim()).filter(Boolean);
+  if (parts.length < 2) throw new Error(`Invalid --configKey: "${decoded}"`);
+
+  const strategy = parts[0];
+  if (strategy === 'exact') {
+    if (parts.length < 3) throw new Error(`Invalid EXACT --configKey (expected exact/MODE/PRIORITY): "${decoded}"`);
+    const mode = String(parts[1] || 'A').toUpperCase();
+    const priority = parts[2];
+    return { strategy: 'exact', geometry: 256, priority, exactUnbindMode: mode };
+  }
+
+  if (parts.length < 3) throw new Error(`Invalid --configKey (expected STRATEGY/GEOMETRY/PRIORITY): "${decoded}"`);
+  const geometry = Number(parts[1]);
+  if (!Number.isFinite(geometry)) throw new Error(`Invalid geometry in --configKey: "${decoded}"`);
+  const priority = parts[2];
+  return { strategy, geometry, priority };
+}
+
+async function mapLimit(items, limit, fn) {
+  const out = new Array(items.length);
+  let next = 0;
+  const workers = Array.from({ length: Math.max(1, limit) }, async () => {
+    while (true) {
+      const i = next++;
+      if (i >= items.length) return;
+      out[i] = await fn(items[i], i);
+    }
+  });
+  await Promise.all(workers);
+  return out;
+}
+
+async function runConfigInChild({ suiteArgs, configKey }) {
+  const childArgs = [
+    scriptPath,
+    ...(Array.isArray(suiteArgs) ? suiteArgs : []),
+    `--configKey=${encodeURIComponent(configKey)}`,
+    '--json',
+    '--quiet'
+  ];
+  return await new Promise((resolve, reject) => {
+    const child = spawn(process.execPath, childArgs, {
+      stdio: ['ignore', 'pipe', 'pipe'],
+      env: { ...process.env, FAST_EVAL_CHILD: '1' }
+    });
+
+    let stdout = '';
+    let stderr = '';
+    child.stdout.setEncoding('utf8');
+    child.stderr.setEncoding('utf8');
+    child.stdout.on('data', d => { stdout += d; });
+    child.stderr.on('data', d => { stderr += d; });
+    child.on('error', reject);
+    child.on('close', (code, signal) => {
+      const hasStdout = Boolean(stdout.trim());
+      if ((code !== 0 || signal) && !hasStdout) {
+        const detail = [
+          `config=${configKey}`,
+          signal ? `signal=${signal}` : null,
+          code !== null && code !== undefined ? `exit=${code}` : null,
+          stderr.trim() ? `stderr=${stderr.trim()}` : 'stderr=<empty>'
+        ].filter(Boolean).join(' ');
+        reject(new Error(`fastEval child failed: ${detail}`));
+        return;
+      }
+      try {
+        const obj = JSON.parse(stdout.trim());
+        resolve({ ...obj, _stderr: stderr });
+      } catch (e) {
+        reject(new Error(`Failed to parse child JSON for ${configKey}: ${e.message}\nSTDERR:\n${stderr.trim()}\nSTDOUT:\n${stdout.trim()}`));
+      }
+    });
+  });
+}
+
+function jsonSafeReplacer(_key, value) {
+  if (typeof value === 'bigint') {
+    const asNumber = Number(value);
+    return Number.isSafeInteger(asNumber) ? asNumber : value.toString();
+  }
+  return value;
+}
+
+function slimSuiteSummary(summary) {
+  if (!summary || typeof summary !== 'object') return summary;
+  // Avoid emitting per-case results in JSON mode (large + slow).
+  const {
+    total,
+    passed,
+    failed,
+    brokenParser,
+    reasoningStats,
+    proofLint,
+    strategyId,
+    geometry,
+    durationMs,
+    perf
+  } = summary;
+  return { total, passed, failed, brokenParser, reasoningStats, proofLint, strategyId, geometry, durationMs, perf };
+}
 
 // Help
 if (args.includes('--help') || args.includes('-h')) {
@@ -102,15 +229,16 @@ Fast Evaluation Suite Runner
 Usage:
   node evals/runFastEval.mjs [suite] [options]
 
-Options:
-  --help, -h              Show this help message
-  --details, -d           Show per-case results
-  --verbose, -v           Show failure details
-  --fast                  Quick run with single config
-  --full                  Run with 16 configurations (4 strategies × 2 priorities × 2 geometries)
-  --small                 Use 8-byte equivalents for all strategies (dense=64b, sparse=k1, metric=8B, ema=8B)
-  --big                   Use 32-byte equivalents for all strategies (dense=256b, sparse=k4, metric=32B, ema=32B)
-  --huge                  Use 128-byte equivalents for all strategies (dense=1024b, sparse=k16, metric=128B, ema=128B)
+	Options:
+	  --help, -h              Show this help message
+	  --details, -d           Show per-case results
+	  --verbose, -v           Show failure details
+	  --fast                  Quick run with single config
+	  --full                  Run with 16 configurations (4 strategies × 2 priorities × 2 geometries)
+	  --jobs=N                Run configurations in parallel (summary-only; disables --details/--verbose)
+	  --small                 Use 8-byte equivalents for all strategies (dense=64b, sparse=k1, metric=8B, ema=8B)
+	  --big                   Use 32-byte equivalents for all strategies (dense=256b, sparse=k4, metric=32B, ema=32B)
+	  --huge                  Use 128-byte equivalents for all strategies (dense=1024b, sparse=k16, metric=128B, ema=128B)
   --strategy=NAME         Run single strategy with multiple geometries
                           NAME: dense, sparse, metric, ema, exact
   --priority=NAME         Run with specific reasoning priority
@@ -140,6 +268,10 @@ const verbose = args.includes('--verbose') || args.includes('-v');
 const showDetails = details || verbose;
 const fullModes = args.includes('--full');
 const fastMode = args.includes('--fast');
+const jsonMode = args.includes('--json');
+const quiet = args.includes('--quiet') || jsonMode;
+const jobs = parseIntArg('jobs', 1);
+const configKeyOverride = argValue('configKey');
 const smallMode = args.includes('--small');
 const bigMode = args.includes('--big');
 const hugeMode = args.includes('--huge');
@@ -152,11 +284,15 @@ const knownFlags = new Set([
   '--small',
   '--big',
   '--huge',
+  '--json',
+  '--quiet',
   '--help', '-h'
 ]);
 const knownPrefixes = [
   '--strategy=',
   '--priority=',
+  '--jobs=',
+  '--configKey=',
   '--dense-dim=',
   '--sparse-k=',
   '--metric-dim='
@@ -237,10 +373,12 @@ process.on('SIGINT', () => {
 async function main() {
   const startTime = performance.now();
 
-  console.log();
-  console.log('\x1b[1m\x1b[34mAGISystem2 - Fast Evaluation Suite\x1b[0m');
-  console.log('\x1b[2mTesting NL\u2192DSL transformation with Core Theory stack\x1b[0m');
-  console.log();
+  if (!quiet) {
+    console.log();
+    console.log('\x1b[1m\x1b[34mAGISystem2 - Fast Evaluation Suite\x1b[0m');
+    console.log('\x1b[2mTesting NL\u2192DSL transformation with Core Theory stack\x1b[0m');
+    console.log();
+  }
 
   try {
     // Discover available suites
@@ -263,7 +401,7 @@ async function main() {
       }
     }
 
-    console.log(`Found ${suites.length} suite(s): ${suites.join(', ')}`);
+    if (!quiet) console.log(`Found ${suites.length} suite(s): ${suites.join(', ')}`);
 
     // Build configurations based on mode
     const configurations = [];
@@ -276,7 +414,7 @@ async function main() {
         geometry: 256,
         exactUnbindMode: 'B'
       });
-      console.log('Fast mode: single config (exact/B/holo)');
+      if (!quiet) console.log('Fast mode: single config (exact/B/holo)');
     } else if (singleStrategy) {
       // --strategy=X: single strategy with ALL geometries (sweep mode)
       const shortName = singleStrategy.toLowerCase();
@@ -297,14 +435,14 @@ async function main() {
         if (fullName === 'exact') {
           configurations.push({ strategy: fullName, priority: REASONING_PRIORITY.HOLOGRAPHIC, geometry: defaultGeometry, exactUnbindMode: 'A' });
           configurations.push({ strategy: fullName, priority: REASONING_PRIORITY.HOLOGRAPHIC, geometry: defaultGeometry, exactUnbindMode: 'B' });
-          console.log(`Fast mode: configs (${fullName}/A/holographic), (${fullName}/B/holographic)`);
+          if (!quiet) console.log(`Fast mode: configs (${fullName}/A/holographic), (${fullName}/B/holographic)`);
         } else {
           configurations.push({
             strategy: fullName,
             priority: REASONING_PRIORITY.HOLOGRAPHIC,
             geometry: defaultGeometry
           });
-          console.log(`Fast mode: single config (${fullName}/${defaultGeometry}/holographic)`);
+          if (!quiet) console.log(`Fast mode: single config (${fullName}/${defaultGeometry}/holographic)`);
         }
       } else {
         // --strategy=X: all geometries for that strategy
@@ -322,7 +460,7 @@ async function main() {
             }
           }
         }
-        console.log(`Strategy sweep mode: ${fullName} with geometries ${allGeometries.join(', ')}`);
+        if (!quiet) console.log(`Strategy sweep mode: ${fullName} with geometries ${allGeometries.join(', ')}`);
       }
     } else {
       // Default mode: all strategies with configured geometries
@@ -383,11 +521,82 @@ async function main() {
       return priorityOrder.indexOf(a.priority) - priorityOrder.indexOf(b.priority);
     });
 
+    if (configKeyOverride) {
+      const cfg = parseConfigKey(configKeyOverride);
+      configurations.length = 0;
+      configurations.push(cfg);
+    }
+
     const configNames = configurations.map(c => configLabel(c.strategy, c.geometry, c.priority, c.exactUnbindMode));
-    console.log(`Running ${configurations.length} config(s): ${configNames.join(', ')}`);
+    if (!quiet) console.log(`Running ${configurations.length} config(s): ${configNames.join(', ')}`);
 
     // Results by configuration (key = "strategy/geometry/priority")
     const resultsByConfig = {};
+
+    // Parallel mode: run each configuration in a child process and merge results.
+    if (!interrupted && !configKeyOverride && jobs > 1 && configurations.length > 1) {
+      if (showDetails || verbose) {
+        console.error('[Runner] --jobs is summary-only; ignoring and running sequentially due to --details/--verbose.');
+      } else {
+        const configKeys = configurations.map(config => (
+          config.strategy === 'exact'
+            ? `${config.strategy}/${String(config.exactUnbindMode || 'A').toUpperCase()}/${config.priority}`
+            : `${config.strategy}/${config.geometry}/${config.priority}`
+        ));
+
+        const childResults = await mapLimit(configKeys, jobs, async (configKey) => (
+          runConfigInChild({ suiteArgs: specificSuites, configKey })
+        ));
+
+	        for (const child of childResults) {
+	          const cfgKey = child.configKey;
+	          resultsByConfig[cfgKey] = child.resultsByConfig?.[cfgKey] || child.results || [];
+	          if (!quiet && resultsByConfig[cfgKey].length > 0) {
+            const cfg = parseConfigKey(cfgKey);
+            console.log();
+            console.log(`\x1b[1m\x1b[35m${configLabel(cfg.strategy, cfg.geometry, cfg.priority, cfg.exactUnbindMode)} - Summary\x1b[0m`);
+            reportGlobalSummary(resultsByConfig[cfgKey]);
+          }
+        }
+
+        if (!quiet && configurations.length > 1) {
+          reportMultiStrategyComparison(resultsByConfig);
+        }
+
+        const totalDuration = performance.now() - startTime;
+        if (!quiet) {
+          console.log();
+          console.log(`\x1b[1m\x1b[36mTotal execution time: ${(totalDuration / 1000).toFixed(2)}s\x1b[0m`);
+        }
+
+        const allPassed = Object.values(resultsByConfig).every(configResults =>
+          configResults.every(s => s.summary.failed === 0)
+        );
+
+        if (jsonMode) {
+          const resultsByConfigSlim = Object.fromEntries(
+            Object.entries(resultsByConfig).map(([k, suites]) => [
+              k,
+              (Array.isArray(suites) ? suites : []).map(s => ({
+                name: s?.name ?? null,
+                suiteName: s?.suiteName ?? null,
+                summary: slimSuiteSummary(s?.summary) ?? null,
+                strategyId: s?.strategyId ?? null,
+                reasoningPriority: s?.reasoningPriority ?? null,
+                geometry: s?.geometry ?? null
+              }))
+            ])
+          );
+          const payload = JSON.stringify(
+            { success: allPassed, configKey: null, resultsByConfig: resultsByConfigSlim, durationMs: totalDuration },
+            jsonSafeReplacer
+          );
+          writeSync(1, `${payload}\n`);
+        }
+
+        return { success: allPassed, resultsByConfig, durationMs: totalDuration };
+      }
+    }
 
     // Run all suites for each configuration
     for (const config of configurations) {
@@ -397,12 +606,26 @@ async function main() {
         ? `${config.strategy}/${String(config.exactUnbindMode || 'A').toUpperCase()}/${config.priority}`
         : `${config.strategy}/${config.geometry}/${config.priority}`;
 
-      console.log();
-      console.log(`\x1b[1m\x1b[35m${'━'.repeat(80)}\x1b[0m`);
-      console.log(`\x1b[1m\x1b[35mConfiguration: ${configLabel(config.strategy, config.geometry, config.priority, config.exactUnbindMode)}\x1b[0m`);
-      console.log(`\x1b[35m${'━'.repeat(80)}\x1b[0m`);
+      if (!quiet) {
+        console.log();
+        console.log(`\x1b[1m\x1b[35m${'━'.repeat(80)}\x1b[0m`);
+        console.log(`\x1b[1m\x1b[35mConfiguration: ${configLabel(config.strategy, config.geometry, config.priority, config.exactUnbindMode)}\x1b[0m`);
+        console.log(`\x1b[35m${'━'.repeat(80)}\x1b[0m`);
+      }
 
       resultsByConfig[configKey] = [];
+
+      // Reuse one baseline-loaded session per configuration to avoid re-loading core packs for every suite.
+      const sharedSessionOptions = {
+        geometry: config.geometry,
+        hdcStrategy: config.strategy,
+        reasoningPriority: config.priority
+      };
+      if (config.strategy === 'exact' && config.exactUnbindMode) {
+        sharedSessionOptions.exactUnbindMode = config.exactUnbindMode;
+      }
+      const sharedSession = new Session(sharedSessionOptions);
+      loadBaselinePacks(sharedSession, { quiet });
 
       for (const suiteName of suites) {
         if (interrupted) break;
@@ -412,22 +635,24 @@ async function main() {
           const suite = await loadSuite(suiteName);
 
           // Report header (shows Core theory stack)
-          reportSuiteHeader(suite);
+          if (!quiet) reportSuiteHeader(suite);
 
           // Run tests with specific configuration (strategy + priority + geometry)
           const { results, summary } = await runSuite(suite, {
             strategy: config.strategy,
             reasoningPriority: config.priority,
             geometry: config.geometry,
+            session: sharedSession,
+            quiet,
             ...(config.strategy === 'exact' && config.exactUnbindMode ? { exactUnbindMode: config.exactUnbindMode } : null)
           });
 
           // Report results
-          if (showDetails) {
+          if (showDetails && !quiet) {
             reportCaseResults(suite.cases, results);
           }
-          reportSuiteSummary(summary, suite.cases);
-          if (showDetails && summary.failed > 0) {
+          if (!quiet) reportSuiteSummary(summary, suite.cases);
+          if (showDetails && !quiet && summary.failed > 0) {
             reportFailureComparisons(suite.cases, results, {
               suiteName,
               strategyId: config.strategy,
@@ -436,7 +661,7 @@ async function main() {
           }
 
           // Show failure details if verbose
-          if (verbose) {
+          if (verbose && !quiet) {
             for (let i = 0; i < results.length; i++) {
               reportFailureDetails(i, results[i]);
             }
@@ -461,8 +686,10 @@ async function main() {
         }
       }
 
+      sharedSession.close();
+
       // Show summary for this configuration
-      if (!interrupted && resultsByConfig[configKey].length > 0) {
+      if (!quiet && !interrupted && resultsByConfig[configKey].length > 0) {
         console.log();
         console.log(`\x1b[1m\x1b[35m${configLabel(config.strategy, config.geometry, config.priority, config.exactUnbindMode)} - Summary\x1b[0m`);
         reportGlobalSummary(resultsByConfig[configKey]);
@@ -470,20 +697,45 @@ async function main() {
     }
 
     // Multi-config comparison (if running multiple configs)
-    if (!interrupted && configurations.length > 1) {
+    if (!quiet && !interrupted && configurations.length > 1) {
       reportMultiStrategyComparison(resultsByConfig);
     }
 
     // Performance summary
     const totalDuration = performance.now() - startTime;
-    console.log();
-    console.log(`\x1b[1m\x1b[36mTotal execution time: ${(totalDuration / 1000).toFixed(2)}s\x1b[0m`);
+    if (!quiet) {
+      console.log();
+      console.log(`\x1b[1m\x1b[36mTotal execution time: ${(totalDuration / 1000).toFixed(2)}s\x1b[0m`);
+    }
 
     // Exit code based on results
     const allPassed = Object.values(resultsByConfig).every(configResults =>
       configResults.every(s => s.summary.failed === 0)
     );
 
+    if (jsonMode) {
+      const outKey = configKeyOverride ? (() => {
+        try { return decodeURIComponent(configKeyOverride); } catch { return String(configKeyOverride); }
+      })() : null;
+      const resultsByConfigSlim = Object.fromEntries(
+        Object.entries(resultsByConfig).map(([k, suites]) => [
+          k,
+          (Array.isArray(suites) ? suites : []).map(s => ({
+            name: s?.name ?? null,
+            suiteName: s?.suiteName ?? null,
+            summary: slimSuiteSummary(s?.summary) ?? null,
+            strategyId: s?.strategyId ?? null,
+            reasoningPriority: s?.reasoningPriority ?? null,
+            geometry: s?.geometry ?? null
+          }))
+        ])
+      );
+      const payload = JSON.stringify(
+        { success: allPassed, configKey: outKey, resultsByConfig: resultsByConfigSlim, durationMs: totalDuration },
+        jsonSafeReplacer
+      );
+      writeSync(1, `${payload}\n`);
+    }
     return { success: allPassed, resultsByConfig, durationMs: totalDuration };
 
   } catch (err) {
@@ -500,7 +752,12 @@ export { main as runFastEval };
 
 // Run if executed directly
 if (import.meta.url === `file://${process.argv[1]}`) {
-  main().then(result => {
-    process.exit(result.success ? 0 : 1);
-  });
+  main()
+    .then(result => {
+      process.exitCode = result?.success ? 0 : 1;
+    })
+    .catch(err => {
+      console.error(`\x1b[31mFatal error: ${err?.message || String(err)}\x1b[0m`);
+      process.exitCode = 1;
+    });
 }

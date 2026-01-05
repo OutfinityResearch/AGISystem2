@@ -209,9 +209,9 @@
   <p>The GF(2) structure gives us <strong>reversible binding</strong>:</p>
 
   <div class="formula">
-    If we encode: <code>C = A ⊕ B</code> (XOR = GF(2) addition)
+    If we encode: <code>C = A xor B</code> (XOR = GF(2) addition)
     <br><br>
-    Then: <code>C ⊕ B = A ⊕ B ⊕ B = A ⊕ 0 = A</code>
+    Then: <code>C xor B = A xor B xor B = A xor 0 = A</code>
     <br><br>
     <strong>We can recover A by XORing with B again!</strong>
   </div>
@@ -227,7 +227,7 @@
     <br>
     <code>b = 0x3C = 00111100₂</code>
     <br><br>
-    <code>a ⊕ b = 01100110₂ = 0x66</code>
+    <code>a xor b = 01100110₂ = 0x66</code>
     <br><br>
     Each bit position operates independently in GF(2).
   </div>
@@ -235,9 +235,9 @@
   <p>The self-inverse property holds for the entire 64-bit word:</p>
 
   <div class="formula">
-    <code>(a ⊕ b) ⊕ b = a</code>
+    <code>(a xor b) xor b = a</code>
     <br>
-    <code>(0x5A ⊕ 0x3C) ⊕ 0x3C = 0x66 ⊕ 0x3C = 0x5A</code> ✓
+    <code>(0x5A xor 0x3C) xor 0x3C = 0x66 xor 0x3C = 0x5A</code> ✓
   </div>
 
   <h3>3.7 From Bits to Sets: The SPHDC Connection</h3>
@@ -260,23 +260,23 @@
 
   <p>The system relies on the isomorphism between sets and sparse polynomials over GF(2), adjusted to maintain constant size.</p>
 
-  <h3>4.1 Binding: Cartesian XOR (⊗)</h3>
+  <h3>4.1 Binding: Cartesian XOR ( BIND )</h3>
 
   <p>To bind two concepts <span class="math">A</span> and <span class="math">B</span>, we combine every element of <span class="math">A</span> with every element of <span class="math">B</span>. This is equivalent to polynomial multiplication without summation, followed by a representative selection.</p>
 
   <div class="formula">
-    <code>A ⊗ B = MinHashSelect({ a ⊕ b | a ∈ A, b ∈ B }, k)</code>
+    <code>A BIND B = MinHashSelect({ a xor b | a ∈ A, b ∈ B }, k)</code>
   </div>
 
   <p><strong>Mechanism:</strong></p>
   <ol>
     <li>Generate <span class="math">k × k</span> intermediate terms via XOR</li>
-    <li>Since inputs are 64-bit, the result <span class="math">a ⊕ b</span> is valid within the same space</li>
+    <li>Since inputs are 64-bit, the result <span class="math">a xor b</span> is valid within the same space</li>
     <li>Apply Min-Hash sparsification to maintain cardinality <span class="math">k</span></li>
   </ol>
 
   <div class="alert alert-info">
-    <strong>Key Property:</strong> <code>a ⊕ a = 0</code>. This enables theoretical reversibility: <code>(A ⊗ B) ⊗ B → A</code>
+    <strong>Key Property:</strong> <code>a xor a = 0</code>. This enables theoretical reversibility: <code>(A BIND B) BIND B → A</code>
   </div>
 
   <h3>4.2 Superposition: Set Union (+)</h3>

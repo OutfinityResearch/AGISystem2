@@ -71,9 +71,9 @@ Where `chunks !== null` indicates a “bundle-like” vector whose operational s
 
 ### 4.1 bind(a, b) / unbind(composite, component)
 
-- Atomic ⊕ atomic → atomic
-- Bundle ⊕ atomic → bundle (apply XOR to each chunk mean; update summary `data`)
-- Bundle ⊕ bundle → implementation-defined (must be documented; ideally avoided in core pipelines)
+- Atomic BIND atomic → atomic
+- Bundle BIND atomic → bundle (apply XOR to each chunk mean; update summary `data`)
+- Bundle BIND bundle → implementation-defined (must be documented; ideally avoided in core pipelines)
 
 ### 4.2 bundle(vectors)
 

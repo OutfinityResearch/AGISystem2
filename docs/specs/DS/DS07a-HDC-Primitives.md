@@ -24,7 +24,7 @@ This document specifies the **Level 0 (L0)** primitives of AGISystem2 - the raw 
 
 | Primitive | Signature | Operation | Notes |
 |-----------|-----------|-----------|-------|
-| `___Bind` | a b | XOR: `a ⊕ b` | Self-inverse, extension-safe |
+| `___Bind` | a b | Bind (XOR in dense-binary): `BIND(a, b)` | Self-inverse, extension-safe |
 | `___Bundle` | a b ... | Majority vote | Superposition, extension-safe |
 | `___Similarity` | a b | Hamming similarity | Returns 0.0-1.0 |
 | `___MostSimilar` | query set | Find nearest | Best match |
@@ -32,6 +32,8 @@ This document specifies the **Level 0 (L0)** primitives of AGISystem2 - the raw 
 | `___Not` | v | Bitwise NOT | Flip all bits |
 | `___GetType` | v | Extract type | Returns type vector |
 | `___Extend` | v targetGeo | Clone to size | [v] → [v|v] |
+
+**Notation:** These specs use the explicit words **BIND** and **BUNDLE** (no math symbols). When we need to show bitwise XOR explicitly, we write `XOR(...)` or name XOR in text.
 
 **Critical Design Decision: No Permutation!**
 
@@ -68,13 +70,17 @@ ___NewVector(name, theoryId, geometry):
 
 Every statement `@dest Op Arg1 Arg2 ... ArgN` is encoded as:
 
+### 7a.4.1 Statement Encoding
+
+Every statement `@dest Op Arg1 Arg2 ... ArgN` is encoded as:
+
 ```
-dest = Op ⊕ (Pos1 ⊕ Arg1) ⊕ (Pos2 ⊕ Arg2) ⊕ ... ⊕ (PosN ⊕ ArgN)
+dest = Op BIND ( (Pos1 BIND Arg1) BUNDLE (Pos2 BIND Arg2) ... BUNDLE (PosN BIND ArgN) )
 ```
 
 **Why this works:**
 - Each argument is "tagged" with its position vector
-- XOR is associative and commutative
+- **Bundle** (superposition) aggregates the tagged parts without mixing them (unlike commutative Bind)
 - Position vectors are quasi-orthogonal to each other and to arguments
 - Extension (cloning) preserves the pattern
 
@@ -84,11 +90,11 @@ dest = Op ⊕ (Pos1 ⊕ Arg1) ⊕ (Pos2 ⊕ Arg2) ⊕ ... ⊕ (PosN ⊕ ArgN)
 @fact loves John Mary
 
 # Internally:
-fact = loves ⊕ (Pos1 ⊕ John) ⊕ (Pos2 ⊕ Mary)
+fact = loves BIND ( (Pos1 BIND John) BUNDLE (Pos2 BIND Mary) )
 
 # Different from:
 @fact2 loves Mary John
-fact2 = loves ⊕ (Pos1 ⊕ Mary) ⊕ (Pos2 ⊕ John)
+fact2 = loves BIND ( (Pos1 BIND Mary) BUNDLE (Pos2 BIND John) )
 
 similarity(fact, fact2) ≈ 0.5  # Different facts!
 ```
@@ -97,7 +103,7 @@ similarity(fact, fact2) ≈ 0.5  # Different facts!
 
 When Op has an associated graph:
 ```
-dest = Op ⊕ graph_result
+dest = Op BIND graph_result
 ```
 
 The graph's return value is bound with the operator.
@@ -108,15 +114,18 @@ To find `?who` in `@q loves ?who Mary`:
 
 ```
 # Build partial (skip the hole)
-partial = loves ⊕ (Pos2 ⊕ Mary)
+partial = loves BIND (Pos2 BIND Mary)
 
 # Unbind from fact in KB
-result = fact ⊕ partial
-       = (loves ⊕ (Pos1 ⊕ John) ⊕ (Pos2 ⊕ Mary)) ⊕ (loves ⊕ (Pos2 ⊕ Mary))
-       = Pos1 ⊕ John  # known parts cancel out!
+# Note: Unbind mechanism depends on strategy. 
+# Conceptually for simple cancellation (Dense/XOR):
+result = fact BIND partial
+       # ... complex terms ...
+       = Pos1 BIND John  # + noise
+```
 
 # Extract answer
-answer = result ⊕ Pos1
+answer = result BIND Pos1
        = John
 ```
 

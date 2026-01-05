@@ -32,25 +32,25 @@ In Sys2DSL, **everything** is a semantic vector:
 
 **The binding formula:**
 ```
-destination = Operator ⊕ (Pos1 ⊕ arg1) ⊕ (Pos2 ⊕ arg2) ⊕ (Pos3 ⊕ arg3) ⊕ ...
+destination = Operator BIND ( (Pos1 BIND arg1) BUNDLE (Pos2 BIND arg2) BUNDLE (Pos3 BIND arg3) ... )
 ```
 
-Each argument is bound with its **position vector** (Pos1, Pos2, etc.) before being XORed into the result. This encodes argument order without using permutation operations.
+Each argument is bound with its **position vector** (Pos1, Pos2, etc.) and then **bundled** (superposed) into the result. This preserves the distinctness of each position-argument pair in strategies where BIND is commutative.
 
 > **Important:** We do NOT use permutation (bit rotation) because it breaks vector extension. See Chapter 1.2.3 for details. Position vectors are quasi-orthogonal markers that achieve the same goal safely.
 
 > ### ⚠️ CRITICAL LIMITATION: Commutativity of Bind
 >
-> **The resulting vector is invariant to the order in which position-tagged pairs are XORed:**
+> **The resulting vector is invariant to the order in which position-tagged pairs are bound:**
 >
 > ```
-> (Pos1 ⊕ A) ⊕ (Pos2 ⊕ B) = (Pos2 ⊕ B) ⊕ (Pos1 ⊕ A)
+> (Pos1 BIND A) BIND (Pos2 BIND B) = (Pos2 BIND B) BIND (Pos1 BIND A)
 > ```
 >
 > **This means:**
 > - Position vectors (`Pos1`, `Pos2`, etc.) act as **unique tags**, not sequence encoders
 > - The vector encodes WHAT is at WHICH position, but not the inherent order
-> - **Encoding is unambiguous:** `loves(John, Mary)` ≠ `loves(Mary, John)` because `Pos1⊕John ≠ Pos1⊕Mary`
+> - **Encoding is unambiguous:** `loves(John, Mary)` ≠ `loves(Mary, John)` because `Pos1 BIND John ≠ Pos1 BIND Mary`
 > - **Decoding requires context:** The Phrasing Engine (DS11) uses semantic role templates to determine presentation order
 >
 > **Practical effect:** The binding algebra is sound for encoding and reasoning. For human-readable output, the Phrasing Engine imposes logical order based on semantic roles defined in templates (e.g., `{Pos1:Subject}`, `{Pos2:Object}`).
@@ -181,23 +181,23 @@ Under DS51, the long-term goal is that semantic theories live under `config/Pack
 **Case 1: Operator has no graph** → Direct binding
 ```
 @fact Tall John
-# fact = Tall ⊕ (Pos1 ⊕ John)
+# fact = Tall BIND (Pos1 BIND John)
 ```
 
 **Case 2: Operator has graph** → Execute then bind
 ```
 @tx sell Alice Bob Car 100
 # 1. Execute sell graph → result
-# 2. tx = sell ⊕ result
+# 2. tx = sell BIND result
 ```
 
 **Case 3: Multiple arguments** → Each tagged with position
 ```
 @rel Loves John Mary
-# rel = Loves ⊕ (Pos1 ⊕ John) ⊕ (Pos2 ⊕ Mary)
+# rel = Loves BIND (Pos1 BIND John) BIND (Pos2 BIND Mary)
 
 # Note: Loves(John, Mary) ≠ Loves(Mary, John)
-# because Pos1 ⊕ John ≠ Pos1 ⊕ Mary
+# because Pos1 BIND John ≠ Pos1 BIND Mary
 ```
 
 ---
@@ -474,7 +474,7 @@ This section clarifies the exact binding process for implementers.
 **Execution:**
 1. Resolve `Tall` → vector from theory/vocabulary
 2. Resolve `John` → vector from theory/vocabulary
-3. Compute: `fact = Tall ⊕ (Pos1 ⊕ John)`
+3. Compute: `fact = Tall BIND (Pos1 BIND John)`
 
 ### 2.12.2 Multi-Argument Statement
 
@@ -484,7 +484,7 @@ This section clarifies the exact binding process for implementers.
 
 **Execution:**
 1. Resolve `give`, `Alice`, `Book`, `Bob` → vectors
-2. Compute: `rel = give ⊕ (Pos1 ⊕ Alice) ⊕ (Pos2 ⊕ Book) ⊕ (Pos3 ⊕ Bob)`
+2. Compute: `rel = give BIND (Pos1 BIND Alice) BIND (Pos2 BIND Book) BIND (Pos3 BIND Bob)`
 
 ### 2.12.3 Statement with Graph
 
@@ -495,7 +495,7 @@ This section clarifies the exact binding process for implementers.
 **Execution:**
 1. Resolve `sell` → has graph `SellGraph`
 2. Execute graph with args (Alice, Bob, Car, 100) → `graphResult`
-3. Compute: `tx = sell ⊕ graphResult`
+3. Compute: `tx = sell BIND graphResult`
 
 Note: The graph internally uses position vectors for its own structure.
 
@@ -508,12 +508,12 @@ Note: The graph internally uses position vectors for its own structure.
 **Execution:**
 1. Build partial (skip holes):
    ```
-   partial = sell ⊕ (Pos2 ⊕ Bob) ⊕ (Pos3 ⊕ Car)
+   partial = sell BIND (Pos2 BIND Bob) BIND (Pos3 BIND Car)
    ```
-2. Unbind from KB: `candidate = KB ⊕ partial`
+2. Unbind from KB: `candidate = KB BIND partial`
 3. For each hole:
-   - `?who` at position 1: `who_raw = candidate ⊕ Pos1`
-   - `?price` at position 4: `price_raw = candidate ⊕ Pos4`
+   - `?who` at position 1: `who_raw = candidate BIND Pos1`
+   - `?price` at position 4: `price_raw = candidate BIND Pos4`
 4. Find nearest matches in vocabulary for each raw result
 
 ---
@@ -604,7 +604,7 @@ conflictsWith Bob Alice
 |---------|-------------|
 | Everything is vector | Atoms, operators, facts, theories, Load/Export — all vectors |
 | Position vectors | Pos1, Pos2, ... encode argument order (NOT permutation) |
-| Binding formula | `Op ⊕ (Pos1 ⊕ A1) ⊕ (Pos2 ⊕ A2) ⊕ ...` |
+| Binding formula | `Op BIND (Pos1 BIND A1) BIND (Pos2 BIND A2) BIND ...` |
 | `@_` | Discard destination for side-effect operations |
 | Theory creates | Vector (identity) + Namespace (content) |
 | Load/Unload/Export/Import | Normal verbs defined in Core |

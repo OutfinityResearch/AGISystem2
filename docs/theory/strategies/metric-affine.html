@@ -225,15 +225,15 @@
     </svg>
   </div>
 
-  <h2>3. Binding: XOR on Bytes</h2>
+  <h2>3. Binding: BIND (XOR on Bytes)</h2>
 
-  <p>Binding uses the same XOR operation as dense-binary, but applied to whole bytes.</p>
+  <p>Metric-Affine implements BIND as byte-wise XOR.</p>
 
   <div class="definition">
-    <strong>Definition: Byte-wise XOR Binding</strong>
-    <p>Given vectors A and B, their binding A &oplus; B is computed byte-by-byte:</p>
+    <strong>Definition: BIND (byte-wise XOR)</strong>
+    <p>Given vectors A and B, their binding BIND(A, B) is computed byte-by-byte:</p>
     <p style="text-align: center; font-family: monospace; font-size: 14px;">
-      (A &oplus; B)<sub>i</sub> = A<sub>i</sub> XOR B<sub>i</sub>
+      BIND(A, B)<sub>i</sub> = A<sub>i</sub> XOR B<sub>i</sub>
     </p>
   </div>
 
@@ -264,11 +264,11 @@
       <!-- XOR symbol -->
       <circle cx="400" cy="80" r="30" fill="#fce4ec" stroke="#e91e63" stroke-width="3"/>
       <text x="400" y="75" text-anchor="middle" font-weight="bold" font-size="14" fill="#c2185b">XOR</text>
-      <text x="400" y="92" text-anchor="middle" font-size="10" fill="#c2185b">(&oplus;)</text>
+      <text x="400" y="92" text-anchor="middle" font-size="10" fill="#c2185b">(XOR)</text>
 
       <!-- Result -->
       <rect x="470" y="57" width="250" height="45" rx="5" fill="#fce4ec" stroke="#e91e63" stroke-width="2"/>
-      <text x="490" y="75" font-size="10" fill="#c2185b" font-weight="bold">A&oplus;B:</text>
+      <text x="490" y="75" font-size="10" fill="#c2185b" font-weight="bold">BIND(A, B):</text>
       <g font-family="monospace" font-size="11">
         <text x="535" y="87" fill="#333">232</text>
         <text x="575" y="87" fill="#333">245</text>
@@ -535,9 +535,9 @@ node your-script.js</pre>
 	  <div class="concept-box">
 	    <h4>Key Properties of Metric-Affine HDC</h4>
 	    <ul>
-      <li><strong>Perfect Self-Inverse:</strong> (A &oplus; B) &oplus; B = A exactly</li>
-      <li><strong>Commutativity:</strong> A &oplus; B = B &oplus; A</li>
-      <li><strong>Associativity:</strong> (A &oplus; B) &oplus; C = A &oplus; (B &oplus; C)</li>
+      <li><strong>Perfect Self-Inverse:</strong> BIND(BIND(A, B), B) = A exactly</li>
+      <li><strong>Commutativity:</strong> BIND(A, B) = BIND(B, A)</li>
+      <li><strong>Associativity:</strong> BIND(BIND(A, B), C) = BIND(A, BIND(B, C))</li>
       <li><strong>Continuous Bundling:</strong> Smooth interpolation between concepts</li>
 	      <li><strong>Compact Storage:</strong> D bytes regardless of complexity (default 32)</li>
 	      <li><strong>Shifted Baseline:</strong> ~0.67 for random (requires threshold adjustment)</li>

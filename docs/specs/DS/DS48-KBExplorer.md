@@ -94,7 +94,7 @@ Additional session-audit surfaces are shown under:
 ### 6.2 Details panel (always visible)
 Selecting any node shows a fixed right panel with:
 - **Definition**: the statement/graph text as loaded; when a fact is named, it is shown with an `@:` prefix for visibility.
-- **Encoding**: statement encoding form `Op ⊕ (Pos1 ⊕ Arg1) ⊕ (Pos2 ⊕ Arg2) ⊕ ...` (this is the *fact vector* formula, not an “entity definition”).
+- **Encoding**: statement encoding form `Op BIND ( (Pos1 BIND Arg1) BUNDLE (Pos2 BIND Arg2) ... )` (this is the *fact vector* formula, not an “entity definition”).
 - **Vector**: the selected node’s vector only, as an array (truncated).
 - **Raw**: the raw payload returned/assembled by the UI for debugging.
 

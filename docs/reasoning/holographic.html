@@ -67,7 +67,7 @@
       <text x="440" y="35" text-anchor="middle" font-size="14" fill="white" font-weight="bold">HDC Similarity Search</text>
       <text x="440" y="55" text-anchor="middle" font-size="11" fill="#90caf9">KB Bundle scan</text>
       <text x="440" y="72" text-anchor="middle" font-size="11" fill="#90caf9">Top-K candidates</text>
-      <text x="440" y="89" text-anchor="middle" font-size="10" fill="#64b5f6">Answer = KB ⊕ Query⁻¹</text>
+      <text x="440" y="89" text-anchor="middle" font-size="10" fill="#64b5f6">Answer = KB BIND Query⁻¹</text>
 
       <!-- Candidate pool -->
       <rect x="560" y="30" width="120" height="50" rx="8" fill="#42a5f5"/>
@@ -288,7 +288,7 @@ console.log(result);
   <ol>
     <li><strong>Parse Query</strong>: Identify holes (unknowns) and knowns</li>
     <li><strong>Build Partial Vector</strong>: Encode knowns with positions</li>
-    <li><strong>HDC Unbind</strong>: <code>Answer = KB ⊕ QueryPartial⁻¹ ⊕ Position⁻¹</code></li>
+    <li><strong>HDC Unbind</strong>: <code>Answer = KB BIND QueryPartial⁻¹ BIND Position⁻¹</code></li>
     <li><strong>Top-K Vocabulary</strong>: Find most similar entities</li>
     <li><strong>Symbolic Validation</strong>: Prove each candidate</li>
     <li><strong>Merge with Symbolic</strong>: Combine HDC + fallback results</li>
@@ -353,12 +353,12 @@ if (score < VERIFICATION_THRESHOLD) {
   <h2>The HDC Master Equation</h2>
 
   <div class="alert alert-info" style="background: linear-gradient(135deg, #e3f2fd, #bbdefb);">
-    <h4 style="margin-top: 0;">Answer = KB ⊕ Query⁻¹</h4>
+    <h4 style="margin-top: 0;">Answer = KB BIND Query⁻¹</h4>
     <p>The holographic query equation leverages HDC's algebraic properties:</p>
     <ul>
       <li><strong>KB</strong>: Bundle of all fact vectors</li>
       <li><strong>Query</strong>: Partial pattern with known components</li>
-      <li><strong>⊕</strong>: XOR binding operation</li>
+      <li><strong> BIND </strong>: BIND operation (XOR in dense-binary)</li>
       <li><strong>⁻¹</strong>: Inverse (same as original in binary HDC)</li>
     </ul>
     <p style="margin-bottom: 0;">Result vector is similar to the missing component(s).</p>

@@ -403,6 +403,21 @@ function getVocabulary(engine) {
   const atomCount = engine.session?.vocabulary?.atoms?.size || 0;
   if (engine._vocabCache && engine._vocabCacheAtomCount === atomCount) return engine._vocabCache;
 
+  const atoms = engine.session?.vocabulary?.atoms;
+  const kb = engine.session?.componentKB;
+  if (kb && typeof kb.getEntityDomain === 'function' && atoms instanceof Map) {
+    const vocab = new Map();
+    for (const name of kb.getEntityDomain()) {
+      const vec = atoms.get(name);
+      if (vec) vocab.set(name, vec);
+    }
+    if (vocab.size > 0) {
+      engine._vocabCache = vocab;
+      engine._vocabCacheAtomCount = atomCount;
+      return vocab;
+    }
+  }
+
   const vocab = new Map();
   for (const [name, vec] of engine.session.vocabulary.entries()) {
     // Exclude internal placeholders, relation markers, and positional atoms.

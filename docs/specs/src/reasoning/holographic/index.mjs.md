@@ -29,7 +29,7 @@ export class HolographicQueryEngine {
 
 **Algorithm:**
 1. Build query vector from AST (with holes as unknowns)
-2. Apply HDC Master Equation: `Answer = KB ⊕ Query⁻¹`
+2. Apply HDC Master Equation: `Answer = KB BIND Query⁻¹`
 3. Find top-K similar atoms in vocabulary
 4. Validate candidates symbolically
 5. Return ranked bindings

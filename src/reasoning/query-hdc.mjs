@@ -17,6 +17,34 @@ function dbg(category, ...args) {
   debug_trace(`[QueryHDC:${category}]`, ...args);
 }
 
+function getCandidateVocabulary(session) {
+  const kbVersion = session?._kbBundleVersion ?? 0;
+  const atomCount = session?.vocabulary?.atoms?.size || 0;
+  const cached = session?._candidateVocabularyCache;
+  if (cached?.kbVersion === kbVersion && cached?.atomCount === atomCount && cached?.vocabulary) {
+    return cached.vocabulary;
+  }
+
+  const kb = session?.componentKB;
+  const atoms = session?.vocabulary?.atoms;
+  if (!kb || typeof kb.getEntityDomain !== 'function' || !(atoms instanceof Map)) {
+    const v = atoms || new Map();
+    if (session) session._candidateVocabularyCache = { kbVersion, atomCount, vocabulary: v };
+    return v;
+  }
+
+  const vocab = new Map();
+  for (const name of kb.getEntityDomain()) {
+    const vec = atoms.get(name);
+    if (vec) vocab.set(name, vec);
+  }
+
+  // Fallback: if domain is empty (e.g., no facts yet), use full vocabulary.
+  const out = vocab.size > 0 ? vocab : atoms;
+  session._candidateVocabularyCache = { kbVersion, atomCount, vocabulary: out };
+  return out;
+}
+
 /**
  * Core reserved words to filter from HDC results.
  *
@@ -217,6 +245,7 @@ export function searchHDC(session, operatorName, knowns, holes, operatorVec, opt
 
   // Master Equation: Answer = KB ⊕ Query⁻¹ (for XOR: unbind = bind)
   const answer = unbind(kbBundle, partial);
+  const vocabulary = getCandidateVocabulary(session);
 
   // For single hole - extract directly
   if (holes.length === 1) {
@@ -225,7 +254,7 @@ export function searchHDC(session, operatorName, knowns, holes, operatorVec, opt
     const candidate = unbind(answer, posVec);
 
     // Find top K matches in vocabulary
-      const matches = topKSimilar(candidate, session.vocabulary.atoms, 15, session);
+    const matches = topKSimilar(candidate, vocabulary, 15, session);
 
     const validator = new ProofEngine(session);
     const validationCache = new Map();
@@ -279,7 +308,7 @@ export function searchHDC(session, operatorName, knowns, holes, operatorVec, opt
     for (const hole of holes) {
       const posVec = getPositionVector(hole.index, session.geometry, session.hdcStrategy, session);
       const candidate = unbind(answer, posVec);
-      const matches = topKSimilar(candidate, session.vocabulary.atoms, 5, session);
+      const matches = topKSimilar(candidate, vocabulary, 5, session);
       holeCandidates.push({
         hole,
         matches: matches.filter(m => m.similarity > thresholds.VERIFICATION)
@@ -366,6 +395,7 @@ export function searchHDCByLevel(session, operatorName, knowns, holes, operatorV
 
   const maxLevel = componentKB.getMaxLevel();
   const results = [];
+  const vocabulary = getCandidateVocabulary(session);
 
   // High confidence threshold for early termination
   const HIGH_CONFIDENCE = thresholds.HDC_MATCH_HIGH ?? (thresholds.HDC_MATCH * 1.2);
@@ -384,7 +414,7 @@ export function searchHDCByLevel(session, operatorName, knowns, holes, operatorV
 
       const answer = unbind(levelBundle, partial);
       const candidate = unbind(answer, posVec);
-      const matches = topKSimilar(candidate, session.vocabulary.atoms, 10, session);
+      const matches = topKSimilar(candidate, vocabulary, 10, session);
 
       for (const match of matches) {
         if (match.similarity <= thresholds.HDC_MATCH) continue;
@@ -454,7 +484,7 @@ export function searchHDCByLevel(session, operatorName, knowns, holes, operatorV
       for (const hole of holes) {
         const posVec = getPositionVector(hole.index, session.geometry, session.hdcStrategy, session);
         const candidate = unbind(answer, posVec);
-        const matches = topKSimilar(candidate, session.vocabulary.atoms, 5, session);
+        const matches = topKSimilar(candidate, vocabulary, 5, session);
         holeCandidates.push({
           hole,
           matches: matches.filter(m => m.similarity > thresholds.VERIFICATION)

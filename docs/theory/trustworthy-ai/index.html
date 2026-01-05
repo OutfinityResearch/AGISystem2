@@ -22,16 +22,20 @@
     <p><strong>Trustworthy AI isn't about making AI less capable. It's about making AI verifiably capable</strong>&mdash;capable in ways we can check, explain, and trust. AGISystem2 provides the formal foundations for building AI systems that meet this standard.</p>
   </div>
 
+  <div class="alert alert-warning" style="background: #fffde7; border-left: 4px solid #fbc02d; padding: 12px 15px; margin: 12px 0; border-radius: 0 8px 8px 0;">
+    <strong>Status:</strong> Trustworthy AI patterns are research-level (DS08). They are not shipped as runnable Core/config theory sets.
+  </div>
+
   <h2>Quick Links</h2>
 
   <div class="section-grid">
     <div class="section-card">
       <h3><a href="agent-planning.html">Agent Planning</a></h3>
-      <p>Formal tool semantics, plan verification, and execution-time safety checks.</p>
+      <p>Research pattern: formal tool semantics and plan validation (external planner/runtime required).</p>
     </div>
     <div class="section-card">
       <h3><a href="compliance.html">Compliance</a></h3>
-      <p>Encode policies/regulations as constraints with audit-ready traces.</p>
+      <p>Research pattern: encode policies/regulations as constraints with proof traces (audit logging/export is external).</p>
     </div>
     <div class="section-card">
       <h3><a href="explainability.html">Explainability</a></h3>
@@ -79,7 +83,7 @@
     <tr>
       <td><strong>Verification</strong></td>
       <td>Post-hoc human review</td>
-      <td>Pre-execution formal checking</td>
+      <td>Pre-execution formal checking (research pattern)</td>
     </tr>
     <tr>
       <td><strong>Uncertainty</strong></td>
@@ -116,19 +120,19 @@
 
   <h2>Trustworthy AI Patterns</h2>
 
-  <p>AGISystem2 provides concrete implementation patterns for common trustworthy AI requirements:</p>
+  <p>AGISystem2 documents research-level patterns for common trustworthy AI requirements:</p>
 
   <div class="section-grid">
     <div class="section-card">
       <h3><a href="agent-planning.html">AI Agent Planning</a></h3>
-      <p>Tool orchestration with formal preconditions and effects. Generate valid multi-step plans. Verify before execution. Explain failures and suggest alternatives.</p>
-      <p><strong>Key benefit:</strong> Plans verified before execution</p>
+      <p>Research pattern: tool semantics with preconditions/effects and plan validation. Requires external planner/runtime integration.</p>
+      <p><strong>Key benefit:</strong> Plans can be checked before execution</p>
     </div>
 
     <div class="section-card">
       <h3><a href="compliance.html">Compliance & Verification</a></h3>
-      <p>Encode regulations (GDPR, HIPAA, internal policies) formally. Real-time compliance checking. Automatic audit trail generation.</p>
-      <p><strong>Key benefit:</strong> Violations prevented, not just detected</p>
+      <p>Research pattern: encode regulations (GDPR, HIPAA, internal policies) formally. Compliance checks + proof traces.</p>
+      <p><strong>Key benefit:</strong> Violations can be prevented when integrated</p>
     </div>
 
     <div class="section-card" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);">
@@ -172,7 +176,7 @@
   |    prove() / query() / elaborate()                |
   +--------------------------------------------------+
   |               HDC Foundation                      |
-  |    BIND / BUNDLE / SIMILARITY                     |
+  | BIND / BUNDLE / SIMILARITY                     |
   +--------------------------------------------------+
   </code></pre>
 
@@ -188,7 +192,7 @@
     <li><strong>Encode domain knowledge as theories</strong>&mdash;explicit facts, rules, and constraints</li>
     <li><strong>Express rules as formal constraints</strong>&mdash;obligations, prohibitions, permissions</li>
     <li><strong>Use prove() for validation with explanation</strong>&mdash;get reasoning traces, not just yes/no</li>
-    <li><strong>Generate detailed audit trails</strong>&mdash;every decision traceable</li>
+    <li><strong>Generate proof traces</strong>&mdash;every decision traceable (audit logging/export is external)</li>
     <li><strong>Provide actionable remediation suggestions</strong>&mdash;not just "error" but "here's how to fix it"</li>
   </ol>
 
@@ -215,7 +219,7 @@
     <li>Identify the trust requirements for your domain (explainability, auditability, compliance, etc.)</li>
     <li>Model your domain as a theory with facts, rules, and constraints</li>
     <li>Use the reasoning engine to validate actions before execution</li>
-    <li>Generate explanations and audit trails for all decisions</li>
+    <li>Generate explanations and proof traces for decisions (audit logging/export is external)</li>
     <li>Handle uncertainty explicitly&mdash;distinguish "unknown" from "false"</li>
   </ol>
 

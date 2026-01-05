@@ -28,7 +28,7 @@
     <p>Traditional HDC using fixed-dimensional vectors and bitwise operations.</p>
     <ul>
       <li><strong>Representation:</strong> Uint32Array with fixed geometry (e.g., 32,768 bits)</li>
-      <li><strong>Binding:</strong> Bitwise XOR (⊕)</li>
+      <li><strong>Binding:</strong> Bitwise XOR</li>
       <li><strong>Bundle:</strong> Majority vote per bit</li>
       <li><strong>Similarity:</strong> 1 - (Hamming distance / geometry)</li>
     </ul>
@@ -56,7 +56,7 @@
     <p>Sparse HDC using k BigInt exponents with Cartesian XOR binding.</p>
     <ul>
       <li><strong>Representation:</strong> Set of k 64-bit integers (default k=4, 32 bytes)</li>
-      <li><strong>Binding:</strong> Cartesian XOR (⊕) with Min-Hash sparsification</li>
+      <li><strong>Binding:</strong> Cartesian XOR with Min-Hash sparsification</li>
       <li><strong>Bundle:</strong> Set union with Min-Hash sampling</li>
       <li><strong>Similarity:</strong> Jaccard Index (|A ∩ B| / |A ∪ B|)</li>
     </ul>

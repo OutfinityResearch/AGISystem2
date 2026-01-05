@@ -99,13 +99,13 @@ EMA reuses AGISystem2’s established deterministic generation pipeline:
 Same as DS18, generalized to variable `D`:
 
 ```
-(A ⊕ B)i = Ai XOR Bi
+BIND(A, B)_i = A_i XOR B_i
 ```
 
 Correctness invariant (exact):
 
 ```
-(A ⊕ B) ⊕ B = A
+(A BIND B) BIND B = A
 ```
 
 ### 5.2 Bundle (EMA Chunked Mean; bounded depth)
@@ -165,7 +165,7 @@ This matches the operational intent: “best matching chunk wins.”
 EMA inherits AGISystem2’s order-sensitivity pattern using position vectors (DS07a):
 
 ```
-fact = Rel ⊕ (Pos1 ⊕ Arg1) ⊕ (Pos2 ⊕ Arg2) ...
+fact = Rel BIND ( (Pos1 BIND Arg1) BUNDLE (Pos2 BIND Arg2) ... )
 ```
 
 No permutation is introduced; EMA remains compatible with extension/prefix-stability requirements.
@@ -177,7 +177,7 @@ No permutation is introduced; EMA remains compatible with extension/prefix-stabi
 AGISystem2 uses the HDC “master equation” operational pattern:
 
 ```
-Answer ≈ KB ⊕ QueryKey^-1
+Answer ≈ KB BIND QueryKey^-1
 ```
 
 Under EMA, `KB` may be a bundle with multiple chunk means. The strategy remains compatible with existing engines by defining:

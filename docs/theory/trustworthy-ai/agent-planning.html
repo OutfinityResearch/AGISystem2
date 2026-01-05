@@ -16,11 +16,15 @@
       <a href="index.html">Trustworthy AI</a> &middot;
       <a href="agent-planning.html">Agent Planning</a>
     </small>
-    <small>Verified plans before execution</small>
+    <small>Research pattern for verified plans</small>
   </div>
 
   <div class="section-intro">
-    <p>AI agents need to orchestrate tools reliably. Current LLM-based planning generates plausible-looking but often invalid plans. AGISystem2 provides <strong>formal tool semantics</strong> that enable plan verification before execution.</p>
+    <p>AI agents need to orchestrate tools reliably. Current LLM-based planning generates plausible-looking but often invalid plans. AGISystem2 can model <strong>formal tool semantics</strong>; plan verification is a research pattern that requires external planner/runtime integration.</p>
+  </div>
+
+  <div class="alert alert-warning" style="background: #fffde7; border-left: 4px solid #fbc02d; padding: 12px 15px; margin: 12px 0; border-radius: 0 8px 8px 0;">
+    <strong>Status:</strong> Research pattern (DS28). Examples are illustrative; plan generation/monitoring is not shipped in the runtime.
   </div>
 
   <h2>The Problem</h2>
@@ -68,7 +72,7 @@
 
   <h2>Plan Generation via Backward Chaining</h2>
 
-  <p>Given a goal and current state, the system generates plans by working backward from the goal:</p>
+  <p>A planner can generate plans by working backward from the goal:</p>
 
   <pre><code>Goal: has(Agent, Completed, sent(Q3Report, TeamMailingList))
 
@@ -101,7 +105,7 @@ Plan Status: VALID &check;</code></pre>
 
   <h2>Plan Validation</h2>
 
-  <p>Before execution, plans are validated against tool semantics:</p>
+  <p>In a production integration, plans can be validated against tool semantics:</p>
 
   <pre><code>// Proposed plan (invalid - missing Login steps)
 const invalidPlan = [QueryDatabase, SendEmail];
@@ -120,7 +124,7 @@ Missing steps: Login(SalesDB), Login(EmailServer)</code></pre>
 
   <h2>Runtime Monitoring</h2>
 
-  <p>During execution, the system monitors preconditions and triggers replanning when needed:</p>
+  <p>During execution, a host system can monitor preconditions and trigger replanning when needed:</p>
 
   <pre><code>for (const step of plan.steps) {
     // Check preconditions still valid
@@ -142,27 +146,27 @@ Missing steps: Login(SalesDB), Login(EmailServer)</code></pre>
     session.learn(`@_ updateState CurrentState ${step.postconditions}`);
 }</code></pre>
 
-  <h2>Why This Matters</h2>
+  <h2>Potential Benefits (When Implemented)</h2>
 
   <div class="section-grid">
     <div class="section-card">
       <h3>Safety</h3>
-      <p>Invalid plans caught before execution. No "oops I deleted the wrong file" moments from agents.</p>
+      <p>Invalid plans can be caught before execution when integrated.</p>
     </div>
 
     <div class="section-card">
       <h3>Efficiency</h3>
-      <p>Optimal plans generated via cost analysis. No wasted API calls or redundant operations.</p>
+      <p>Cost-aware plans can reduce wasted API calls or redundant operations.</p>
     </div>
 
     <div class="section-card">
       <h3>Explainability</h3>
-      <p>Every plan comes with a justification. Users can understand why each step is included.</p>
+      <p>Plans can carry justifications so users can understand each step.</p>
     </div>
 
     <div class="section-card">
       <h3>Debuggability</h3>
-      <p>When plans fail, detailed diagnostics show exactly which precondition wasn't met and what would fix it.</p>
+      <p>When plans fail, diagnostics can show which precondition wasn't met and what would fix it.</p>
     </div>
   </div>
 

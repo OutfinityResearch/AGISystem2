@@ -185,12 +185,12 @@ where LUT values are fixed-point integers.
 
 ## 7. Algebra (Strategy Operations)
 
-### 7.1 BIND (⊗): phase coding
+### 7.1 BIND ( BIND ): phase coding
 
 Element-wise complex multiplication:
 
 ```
-(U ⊗ V)(x,y) = U(x,y) · V(x,y)
+(U BIND V)(x,y) = U(x,y) · V(x,y)
 ```
 
 For fixed-point:
@@ -204,7 +204,7 @@ For unit-modulus phasor fields:
 
 ```
 V^{-1}(x,y) = conjugate(V(x,y))
-UNBIND(U, V) = U ⊗ conjugate(V)
+UNBIND(U, V) = U BIND conjugate(V)
 ```
 
 Correctness (exact, in ideal arithmetic):
@@ -215,13 +215,13 @@ UNBIND(BIND(U,V), V) = U
 
 In fixed-point arithmetic, this is “approximately exact” and must be validated by correlation margins and evaluation suites.
 
-### 7.3 BUNDLE (⊕): superposition
+### 7.3 BUNDLE ( BUNDLE ): superposition
 
 Superposition is linear addition:
 
 ```
-(U ⊕ V)(x,y) = U(x,y) + V(x,y)
-H = ⊕_{t=1..L} α_t · T_t
+(U BUNDLE V)(x,y) = U(x,y) + V(x,y)
+H = BUNDLE _{t=1..L} α_t · T_t
 ```
 
 This is the most literal “interference” model: signals add, noise adds.
@@ -277,8 +277,8 @@ OF-HDC supports DS07a-style slot encoding using explicit role/position fields.
 One canonical record representation is:
 
 ```
-F = ⊗_{i=1..k} (P_i ⊗ A_i)
-H ← H ⊕ F
+F = BIND _{i=1..k} (P_i BIND A_i)
+H ← H BUNDLE F
 ```
 
 Query pattern:
@@ -286,11 +286,11 @@ Query pattern:
 - build `Q` from known parts (same encoding)
 - compute residual:
   ```
-  R = H ⊗ conjugate(Q)
+  R = H BIND conjugate(Q)
   ```
 - to extract a target filler at role `P_k`:
   ```
-  A_hat = R ⊗ conjugate(P_k)
+  A_hat = R BIND conjugate(P_k)
   ```
 - cleanup by similarity search over a candidate domain `D`:
   ```

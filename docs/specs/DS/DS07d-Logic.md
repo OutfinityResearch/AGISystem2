@@ -207,7 +207,7 @@ Used for:
 
 ```sys2
 @negated not Flying
-# Creates concept "not flying" as role binding: Not ⊕ Flying
+# Creates concept "not flying" as role binding: Not BIND Flying
 ```
 
 Used for:

@@ -25,6 +25,7 @@
     .status-demonstrated { background: #c8e6c9; color: #2e7d32; }
     .status-implemented { background: #fff3e0; color: #e65100; }
     .status-theoretical { background: #e3f2fd; color: #1565c0; }
+    .status-research { background: #e3f2fd; color: #1565c0; }
   </style>
 </head>
 <body>
@@ -122,10 +123,14 @@
 
   <hr>
 
-  <h2>Use Case 1: Compliance Verification <span class="status-badge status-implemented">Implemented</span></h2>
+  <h2>Use Case 1: Compliance Verification <span class="status-badge status-research">Research</span></h2>
 
   <div class="alert alert-info" style="background: #e3f2fd; border-left: 4px solid #1976d2; padding: 15px; margin: 15px 0;">
-    <strong>Value proposition:</strong> Encode regulations as formal rules. Check actions before execution. Generate audit-ready trails.
+    <strong>Value proposition:</strong> Encode regulations as formal rules. Check actions before execution. Generate proof traces (audit logging/export is external).
+  </div>
+
+  <div class="alert alert-warning" style="background: #fffde7; border-left: 4px solid #fbc02d; padding: 12px 15px; margin: 12px 0; border-radius: 0 8px 8px 0;">
+    <strong>Status:</strong> Research pattern (not shipped as runnable Core/config). Examples are illustrative; audit logging/export requires external integration.
   </div>
 
   <h3>The Scenario</h3>
@@ -135,7 +140,7 @@
   <ul>
     <li><strong>Formal rule encoding:</strong> Regulations expressed as checkable constraints</li>
     <li><strong>Pre-action validation:</strong> Operations checked before execution</li>
-    <li><strong>Automatic audit trails:</strong> Every decision traceable to specific rules</li>
+    <li><strong>Proof traces:</strong> Every decision traceable to specific rules (audit logging/export is external)</li>
     <li><strong>Remediation guidance:</strong> Not just "violation" but "here's how to fix it"</li>
   </ul>
 
@@ -160,10 +165,14 @@ Required remediation:
 
   <hr>
 
-  <h2>Use Case 2: Agent Plan Verification <span class="status-badge status-implemented">Implemented</span></h2>
+  <h2>Use Case 2: Agent Plan Verification <span class="status-badge status-research">Research</span></h2>
 
   <div class="alert alert-info" style="background: #e3f2fd; border-left: 4px solid #1976d2; padding: 15px; margin: 15px 0;">
     <strong>Value proposition:</strong> Verify AI agent plans before execution. Catch invalid plans before they cause damage.
+  </div>
+
+  <div class="alert alert-warning" style="background: #fffde7; border-left: 4px solid #fbc02d; padding: 12px 15px; margin: 12px 0; border-radius: 0 8px 8px 0;">
+    <strong>Status:</strong> Research pattern (not shipped as runnable Core/config). Plan generation/monitoring requires external integration; AGISystem2 can model and validate semantics.
   </div>
 
   <h3>The Scenario</h3>
@@ -255,7 +264,7 @@ Proof:
   <ul>
     <li><strong>Logical derivation:</strong> Answers are <em>proved</em>, not retrieved</li>
     <li><strong>Multi-step reasoning:</strong> Chains facts and rules to reach conclusions</li>
-    <li><strong>Complete provenance:</strong> Every answer has a formal proof trace</li>
+    <li><strong>Formal proof trace:</strong> Every answer has a derivation trace</li>
     <li><strong>Consistency guarantees:</strong> Contradictions are detected, not hidden</li>
   </ul>
 

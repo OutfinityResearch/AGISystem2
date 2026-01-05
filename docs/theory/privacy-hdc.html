@@ -90,7 +90,7 @@
   <ol>
     <li><strong>Distributed Representation:</strong> Information is spread across all dimensions</li>
     <li><strong>Deterministic Operations:</strong> Binding and bundling are mathematical, not learned</li>
-    <li><strong>Reversibility:</strong> (A ⊗ B) ⊗ B = A works without knowing what A or B represent</li>
+    <li><strong>Reversibility:</strong> (A BIND B) BIND B = A works without knowing what A or B represent</li>
     <li><strong>Composition:</strong> Complex structures built from atomic vectors</li>
   </ol>
 
@@ -113,7 +113,7 @@
     <br>
     4. Encode facts using secret atom vectors
     <br>
-    5. fact_vec = Relation ⊗ (Pos1 ⊗ Arg1) ⊗ (Pos2 ⊗ Arg2)
+    5. fact_vec = Relation BIND (Pos1 BIND Arg1) BIND (Pos2 BIND Arg2)
     <br>
     6. Bundle all facts: KB = bundle([fact1, fact2, ...])
     <br><br>
@@ -320,7 +320,7 @@
   <h3>5.2 Multiplicative Homomorphism (Binding)</h3>
 
   <div class="formula">
-    E(A) ⊗ E(B) = E(A ⊗ B)
+    E(A) BIND E(B) = E(A BIND B)
     <br><br>
     The cloud can bind vectors without knowing what they represent.
     <br>
@@ -332,7 +332,7 @@
   <div class="formula">
     Given: KB = encode(facts), Q = encode(query)
     <br>
-    Result = KB ⊗ Q<sup>-1</sup> (unbind query from KB)
+    Result = KB BIND Q<sup>-1</sup> (unbind query from KB)
     <br><br>
     The cloud computes Result without knowing:
     <br>
@@ -382,7 +382,7 @@
     <br>
     1. User encodes query with private atom vectors: Q = encode(query)
     <br>
-    2. Cloud computes: candidates = KB ⊗ Q
+    2. Cloud computes: candidates = KB BIND Q
     <br>
     3. Cloud returns top-k similar vectors from candidates
     <br>

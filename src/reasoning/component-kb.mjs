@@ -379,13 +379,34 @@ export class ComponentKB {
    * Find facts matching operator AND arg0 (with synonyms)
    * @param {string} operator - Operator name
    * @param {string} arg0 - First argument
+   * @param {boolean} expandSyn - Expand synonyms (default true)
    * @returns {Array} Matching fact entries
    */
-  findByOperatorAndArg0(operator, arg0) {
-    const opFacts = new Set(this.findByOperator(operator).map(f => f.id));
-    const argFacts = this.findByArg0(arg0);
+  findByOperatorAndArg0(operator, arg0, expandSyn = true) {
+    const operators = expandSyn ? this.expandSynonyms(operator) : new Set([operator]);
+    const args0 = expandSyn ? this.expandSynonyms(arg0) : new Set([arg0]);
 
-    return argFacts.filter(f => opFacts.has(f.id));
+    const opIds = [];
+    for (const op of operators) opIds.push(...(this.operatorIndex.get(op) || []));
+    if (opIds.length === 0) return [];
+
+    const argIds = [];
+    for (const a0 of args0) argIds.push(...(this.arg0Index.get(a0) || []));
+    if (argIds.length === 0) return [];
+
+    const idsA = opIds.length <= argIds.length ? opIds : argIds;
+    const idsB = opIds.length <= argIds.length ? argIds : opIds;
+    const set = new Set(idsA);
+
+    const results = [];
+    const seen = new Set();
+    for (const id of idsB) {
+      if (!set.has(id)) continue;
+      if (seen.has(id)) continue;
+      seen.add(id);
+      results.push(this.facts[id]);
+    }
+    return results;
   }
 
   /**
@@ -424,13 +445,34 @@ export class ComponentKB {
    * Find facts matching operator AND arg1 (with synonyms)
    * @param {string} operator - Operator name
    * @param {string} arg1 - Second argument
+   * @param {boolean} expandSyn - Expand synonyms (default true)
    * @returns {Array} Matching fact entries
    */
-  findByOperatorAndArg1(operator, arg1) {
-    const opFacts = new Set(this.findByOperator(operator).map(f => f.id));
-    const argFacts = this.findByArg1(arg1);
+  findByOperatorAndArg1(operator, arg1, expandSyn = true) {
+    const operators = expandSyn ? this.expandSynonyms(operator) : new Set([operator]);
+    const args1 = expandSyn ? this.expandSynonyms(arg1) : new Set([arg1]);
 
-    return argFacts.filter(f => opFacts.has(f.id));
+    const opIds = [];
+    for (const op of operators) opIds.push(...(this.operatorIndex.get(op) || []));
+    if (opIds.length === 0) return [];
+
+    const argIds = [];
+    for (const a1 of args1) argIds.push(...(this.arg1Index.get(a1) || []));
+    if (argIds.length === 0) return [];
+
+    const idsA = opIds.length <= argIds.length ? opIds : argIds;
+    const idsB = opIds.length <= argIds.length ? argIds : opIds;
+    const set = new Set(idsA);
+
+    const results = [];
+    const seen = new Set();
+    for (const id of idsB) {
+      if (!set.has(id)) continue;
+      if (seen.has(id)) continue;
+      seen.add(id);
+      results.push(this.facts[id]);
+    }
+    return results;
   }
 
   /**

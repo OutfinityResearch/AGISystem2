@@ -64,7 +64,7 @@ a ≈ c ⊛ b⁻¹  where b⁻¹[i] = b[-i mod n]</code></pre>
 
   <ul>
     <li>Random vectors are quasi-orthogonal with high probability</li>
-    <li>XOR binding is self-inverse: (A ⊕ B) ⊕ B = A</li>
+    <li>XOR binding is self-inverse: (A xor B) xor B = A</li>
     <li>Majority-vote bundling preserves similarity to inputs</li>
     <li>Operations are extremely efficient on binary hardware</li>
   </ul>
@@ -106,13 +106,13 @@ similarity(KB, fact₂) > threshold</code></pre>
   <p>Information can be retrieved by "unbinding" with a key - no explicit addresses or indices are needed:</p>
 
   <pre><code>// Given: loves(John, Mary) encoded as
-fact = Loves ⊗ (Pos₁ ⊗ John) ⊗ (Pos₂ ⊗ Mary)
+fact = Loves BIND (Pos₁ BIND John) BIND (Pos₂ BIND Mary)
 
 // Query: "Who does John love?"
-query = Loves ⊗ (Pos₁ ⊗ John) ⊗ Pos₂
+query = Loves BIND (Pos₁ BIND John) BIND Pos₂
 
 // Answer emerges from unbinding
-answer = KB ⊗ query⁻¹
+answer = KB BIND query⁻¹
 // answer is similar to Mary</code></pre>
 
   <p>The "reference beam" (query pattern) reconstructs the "image" (answer) from the holographic record.</p>
@@ -124,19 +124,19 @@ answer = KB ⊗ query⁻¹
   <p>The fundamental equation of holographic computation:</p>
 
   <div class="alert alert-info">
-    <strong>Answer = Knowledge ⊗ Query⁻¹</strong>
+    <strong>Answer = Knowledge BIND Query⁻¹</strong>
     <p>Given knowledge K encoding relation R(A, B), and a query Q encoding R(A, ?), the answer A retrieves B through the self-inverse property of binding.</p>
   </div>
 
   <p>Why this works mathematically:</p>
 
-  <pre><code>// Encoding: K = R ⊗ (P₁ ⊗ A) ⊗ (P₂ ⊗ B)
-// Query:    Q = R ⊗ (P₁ ⊗ A) ⊗ P₂
+  <pre><code>// Encoding: K = R BIND (P₁ BIND A) BIND (P₂ BIND B)
+// Query:    Q = R BIND (P₁ BIND A) BIND P₂
 
-// Since ⊗ is self-inverse: X ⊗ X = I (identity-like)
-K ⊗ Q = R ⊗ (P₁ ⊗ A) ⊗ (P₂ ⊗ B) ⊗ R ⊗ (P₁ ⊗ A) ⊗ P₂
-      = (R ⊗ R) ⊗ (P₁ ⊗ A ⊗ P₁ ⊗ A) ⊗ (P₂ ⊗ B ⊗ P₂)
-      ≈ I ⊗ I ⊗ B
+// Since BIND is self-inverse: X BIND X = I (identity-like)
+K BIND Q = R BIND (P₁ BIND A) BIND (P₂ BIND B) BIND R BIND (P₁ BIND A) BIND P₂
+      = (R BIND R) BIND (P₁ BIND A BIND P₁ BIND A) BIND (P₂ BIND B BIND P₂)
+      ≈ I BIND I BIND B
       ≈ B</code></pre>
 
   <h3>Capacity and Interference</h3>
@@ -204,7 +204,7 @@ Implies (isA ?x Human) (isA ?x Mortal)
 prove isA Socrates Mortal
 
 // Holographic execution:
-// 1. Encode fact: F₁ = IsA ⊗ (P₁ ⊗ Socrates) ⊗ (P₂ ⊗ Human)
+// 1. Encode fact: F₁ = IsA BIND (P₁ BIND Socrates) BIND (P₂ BIND Human)
 // 2. Encode rule as conditional binding
 // 3. Prove = recursive unbinding:
 //    - Match goal against KB
@@ -261,7 +261,7 @@ stateᵦ = bind(state₀, optionB)
   <p>Multiple candidates naturally emerge with confidence scores, enabling best-first search:</p>
 
   <pre><code>// Holographic query returns multiple candidates
-candidates = topKSimilar(KB ⊗ query⁻¹, vocabulary, k=10)
+candidates = topKSimilar(KB BIND query⁻¹, vocabulary, k=10)
 
 // Explore in confidence order
 for (candidate of candidates.sortBy(similarity)) {
@@ -283,7 +283,7 @@ for (candidate of candidates.sortBy(similarity)) {
   </div>
 
   <pre><code>// Composite fact
-fact = Loves ⊗ (P₁ ⊗ John) ⊗ (P₂ ⊗ Mary)
+fact = Loves BIND (P₁ BIND John) BIND (P₂ BIND Mary)
 
 // We can:
 // - Check if "fact" is in KB (similarity check)

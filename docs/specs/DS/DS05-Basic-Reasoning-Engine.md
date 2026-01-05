@@ -13,7 +13,7 @@
 All reasoning in AGISystem2 reduces to one equation:
 
 ```
-Answer = Knowledge ⊕ Query⁻¹
+Answer = Knowledge BIND Query⁻¹
 ```
 
 Where:
@@ -23,25 +23,25 @@ Where:
 
 **Why this works:**
 
-If we stored `fact = Verb ⊕ (Pos1 ⊕ A) ⊕ (Pos2 ⊕ B)` and query for `?x` in `Verb ⊕ ?x ⊕ B`:
+If we stored `fact = Verb BIND ( (Pos1 BIND A) BUNDLE (Pos2 BIND B) )` and query for `?x` in `Verb BIND ?x BIND B`:
 
 ```
-partial = Verb ⊕ (Pos2 ⊕ B)
-answer = fact ⊕ partial
-       = (Verb ⊕ (Pos1 ⊕ A) ⊕ (Pos2 ⊕ B)) ⊕ (Verb ⊕ (Pos2 ⊕ B))
-       = (Pos1 ⊕ A) ⊕ (Verb ⊕ Verb) ⊕ ((Pos2 ⊕ B) ⊕ (Pos2 ⊕ B))
-       = (Pos1 ⊕ A) ⊕ 0 ⊕ 0
-       = Pos1 ⊕ A
+partial = Verb BIND (Pos2 BIND B)
+answer = fact BIND partial
+       = (Verb BIND ( (Pos1 BIND A) BUNDLE (Pos2 BIND B) )) BIND (Verb BIND (Pos2 BIND B))
+       = (Pos1 BIND A) BIND (Verb BIND Verb) BIND ((Pos2 BIND B) BIND (Pos2 BIND B))
+       = (Pos1 BIND A) BIND 0 BIND 0
+       = Pos1 BIND A
 
 # Then extract A:
-A = answer ⊕ Pos1
+A = answer BIND Pos1
 ```
 
 The known parts cancel out, leaving the unknown (tagged with its position).
 
 > ### ⚠️ CRITICAL LIMITATION: Argument Order Ambiguity
 >
-> **Important clarification:** While the Master Equation correctly isolates the component `(PosN ⊕ ArgN)`, it does NOT guarantee argument order.
+> **Important clarification:** While the Master Equation correctly isolates the component `(PosN BIND ArgN)`, it does NOT guarantee argument order.
 >
 > **What the equation does:**
 > - Correctly cancels out known parts using XOR self-inverse property
@@ -53,7 +53,7 @@ The known parts cancel out, leaving the unknown (tagged with its position).
 > - Guarantee order when decoding multiple arguments simultaneously
 >
 > **Why reasoning still works:**
-> - The algebra correctly distinguishes `loves(John, Mary)` from `loves(Mary, John)` because `Pos1⊕John` ≠ `Pos1⊕Mary`
+> - The algebra correctly distinguishes `loves(John, Mary)` from `loves(Mary, John)` because `Pos1 BIND John` ≠ `Pos1 BIND Mary`
 > - Query results are matched via similarity search, which finds the correct atoms
 > - However, converting results to human-readable form requires semantic context
 >
@@ -85,13 +85,13 @@ When `session.query("@answer Verb ?x B")` is called:
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
 │ Step 3: BUILD PARTIAL VECTOR                                │
-│   partial = Verb ⊕ (Pos2 ⊕ B)                               │
+│   partial = Verb BIND (Pos2 BIND B)                               │
 │   (skip hole positions in binding)                          │
 └─────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
 │ Step 4: UNBIND FROM KNOWLEDGE BASE                          │
-│   candidate = KB ⊕ partial                                  │
+│   candidate = KB BIND partial                                  │
 │   This "subtracts" known parts, leaving unknown             │
 └─────────────────────────────────────────────────────────────┘
                               ↓
@@ -162,12 +162,12 @@ When query has multiple holes, we solve them iteratively:
 **Strategy: Sequential Resolution**
 
 ```
-1. Build partial: sell ⊕ (Pos3 ⊕ Car)
-2. Unbind from KB → noisy candidate containing Pos1⊕seller, Pos2⊕buyer, Pos4⊕price
+1. Build partial: sell BIND (Pos3 BIND Car)
+2. Unbind from KB → noisy candidate containing Pos1 BIND seller, Pos2 BIND buyer, Pos4 BIND price
 3. For each hole, unbind its position vector:
-   - seller = candidate ⊕ Pos1
-   - buyer = candidate ⊕ Pos2
-   - price = candidate ⊕ Pos4
+   - seller = candidate BIND Pos1
+   - buyer = candidate BIND Pos2
+   - price = candidate BIND Pos4
 4. Similarity search for each to clean up noise
 5. Return best matches
 ```
@@ -354,20 +354,20 @@ Rules are vectors like everything else:
 
 ```
 @r1 Implies Human Mortal
-# r1 = Implies ⊕ (Pos1 ⊕ Human) ⊕ (Pos2 ⊕ Mortal)
+# r1 = Implies BIND ( (Pos1 BIND Human) BUNDLE (Pos2 BIND Mortal) )
 ```
 
 **Extracting rule components:**
 ```
 # Get antecedent (position 1)
 @temp1 ___Bind $r1 Implies              # Remove Implies operator
-@temp2 ___Bind $temp1 (Pos2 ⊕ Mortal)   # Remove consequent
+@temp2 ___Bind $temp1 (Pos2 BIND Mortal)   # Remove consequent
 @ante ___Bind $temp2 Pos1               # Remove position marker
 # ante ≈ Human
 
 # Get consequent (position 2)
 @temp1 ___Bind $r1 Implies
-@temp2 ___Bind $temp1 (Pos1 ⊕ Human)
+@temp2 ___Bind $temp1 (Pos1 BIND Human)
 @cons ___Bind $temp2 Pos2
 # cons ≈ Mortal
 ```
@@ -432,7 +432,7 @@ ProofStep {
 
 ```
 # King is to Queen as Man is to ?
-@rel ___Bind King Queen           # rel = King ⊕ Queen (the relationship)
+@rel ___Bind King Queen           # rel = King BIND Queen (the relationship)
 @answer ___Bind Man $rel          # apply relationship to Man
 @result ___MostSimilar $answer $vocabulary
 # Result: Woman
@@ -440,7 +440,7 @@ ProofStep {
 
 **Why this works:**
 
-The binding `King ⊕ Queen` encodes the relationship between these concepts (gender transformation within royalty). Applying this same transformation to `Man` produces a vector similar to `Woman`.
+The binding `King BIND Queen` encodes the relationship between these concepts (gender transformation within royalty). Applying this same transformation to `Man` produces a vector similar to `Woman`.
 
 **Common analogy patterns:**
 - Gender: King:Queen :: Man:Woman
@@ -459,7 +459,7 @@ KB_new = ___Bundle(KB_old, new_fact)
 
 **Querying:**
 ```
-candidates = KB ⊕ partial_query
+candidates = KB BIND partial_query
 ```
 
 **Multiple matches:**
@@ -560,8 +560,8 @@ When using `dense-binary` strategy, the reasoning engine uses the **Master Equat
 Query Resolution:
 ┌─────────────────────────────────────────────────────────────┐
 │ 1. Build partial vector (exclude holes)                     │
-│ 2. candidate = KB ⊕ partial                                 │
-│ 3. Unbind position vector: answer = candidate ⊕ PosN        │
+│ 2. candidate = KB BIND partial                                 │
+│ 3. Unbind position vector: answer = candidate BIND PosN        │
 │ 4. Similarity search in vocabulary                          │
 │ 5. Return best match with confidence                        │
 └─────────────────────────────────────────────────────────────┘
@@ -657,7 +657,7 @@ if (strategy !== 'dense-binary') {
 
 | Concept | Description |
 |---------|-------------|
-| Master equation | `Answer = KB ⊕ Query⁻¹` (HDC-Priority only) |
+| Master equation | `Answer = KB BIND Query⁻¹` (HDC-Priority only) |
 | Rules | Ordinary facts: `@r Implies Antecedent Consequent` |
 | Compound conditions | Build with And, Or, Not as intermediate variables |
 | Forward chaining | Facts + rules → derive new facts (deduction) |

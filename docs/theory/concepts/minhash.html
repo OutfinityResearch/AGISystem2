@@ -142,7 +142,7 @@
   <p>When binding produces more than k elements, Min-Hash selects which elements to keep:</p>
 
   <div class="formula">
-    <code>A ⊗ B = MinHashSelect({ a ⊕ b | a ∈ A, b ∈ B }, k)</code>
+    <code>A BIND B = MinHashSelect({ a xor b | a ∈ A, b ∈ B }, k)</code>
     <br><br>
     From k² candidates, keep only the k with smallest hash values.
   </div>

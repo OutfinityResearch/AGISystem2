@@ -5,6 +5,7 @@
 
 import { NLTransformer } from '../../../src/nlp/transformer.mjs';
 import { Session } from '../../../src/runtime/session.mjs';
+import { beginTransaction, rollbackTransaction } from '../../../src/runtime/session-transaction.mjs';
 import { getThresholds } from '../../../src/core/constants.mjs';
 import fs from 'fs';
 import path from 'path';
@@ -28,6 +29,32 @@ const DEFAULT_TIMEOUTS = {
   reasoning: 100,  // ms (aggressive default as requested)
   dslToNl: 100     // ms
 };
+
+function createPerfCollector() {
+  return {
+    ops: Object.create(null),
+    slowEvents: [],
+    _maxEvents: 30
+  };
+}
+
+function recordPerfOp(perf, name, durationMs, meta = null) {
+  if (!perf || !name || !Number.isFinite(durationMs)) return;
+  const key = String(name);
+  const entry = perf.ops[key] || (perf.ops[key] = { count: 0, totalMs: 0, maxMs: 0 });
+  entry.count += 1;
+  entry.totalMs += durationMs;
+  if (durationMs > entry.maxMs) entry.maxMs = durationMs;
+
+  if (perf._maxEvents > 0 && meta && typeof meta === 'object') {
+    const evt = { op: key, ms: durationMs, ...meta };
+    perf.slowEvents.push(evt);
+    if (perf.slowEvents.length > perf._maxEvents) {
+      perf.slowEvents.sort((a, b) => (b.ms || 0) - (a.ms || 0));
+      perf.slowEvents.length = perf._maxEvents;
+    }
+  }
+}
 
 // Reasoning Step Budget (for infinite loop prevention in sync code inside Session)
 const DEFAULT_STEP_BUDGET = 1000;
@@ -221,7 +248,18 @@ function validateExecuteNlExpectations(testCase, result, session) {
  * - Packs loaded here must be general-purpose (Bootstrap/Logic/etc), not suite-specific.
  * - Suite-specific vocabulary belongs in suite-local `.sys2` files or under `evals/domains/*`.
  */
-function loadBaselinePacks(session) {
+export function loadBaselinePacks(session, options = {}) {
+  if (session?._fastEvalBaselineLoaded) {
+    const perf = options?.perf ?? null;
+    if (perf && !session._fastEvalBaselinePerfReported && Number.isFinite(session?._fastEvalBaselineLoadMs)) {
+      recordPerfOp(perf, 'load.baseline_packs.total', session._fastEvalBaselineLoadMs);
+      session._fastEvalBaselinePerfReported = true;
+    }
+    return session._fastEvalBaselinePacks instanceof Set ? session._fastEvalBaselinePacks : new Set();
+  }
+
+  const quiet = options?.quiet ?? false;
+  const perf = options?.perf ?? null;
   const packs = [
     'Bootstrap',
     'Relations',
@@ -239,11 +277,12 @@ function loadBaselinePacks(session) {
     'tests_and_evals'
   ];
 
-  console.log(`[Runner] Loading baseline packs (${packs.length})...`);
+  if (!quiet) console.log(`[Runner] Loading baseline packs (${packs.length})...`);
   const loaded = new Set();
   const start = Date.now();
 
   for (const packName of packs) {
+    const packStart = Date.now();
     const packPath = path.join(PROJECT_ROOT, 'config', 'Packs', packName);
     if (!fs.existsSync(packPath)) {
       console.error(`[Runner] Missing baseline pack directory: ${packName}`);
@@ -261,9 +300,15 @@ function loadBaselinePacks(session) {
       continue;
     }
     loaded.add(packName);
+    recordPerfOp(perf, 'load.baseline_pack', Date.now() - packStart, { pack: packName });
   }
 
-  dbg('CORE', `Loaded baseline packs in ${Date.now() - start}ms`);
+  const totalMs = Date.now() - start;
+  dbg('CORE', `Loaded baseline packs in ${totalMs}ms`);
+  session._fastEvalBaselineLoadMs = totalMs;
+  session._fastEvalBaselineLoaded = true;
+  session._fastEvalBaselinePacks = new Set(loaded);
+  recordPerfOp(perf, 'load.baseline_packs.total', totalMs);
   return loaded;
 }
 
@@ -280,9 +325,11 @@ function resolveConfigTheoryPath(entry) {
   return null;
 }
 
-function loadDeclaredTheories(session, theories = [], loaded = new Set()) {
+function loadDeclaredTheories(session, theories = [], loaded = new Set(), options = {}) {
   if (!Array.isArray(theories) || theories.length === 0) return;
-  console.log(`[Runner] Loading ${theories.length} declared theories...`);
+  const quiet = options?.quiet ?? false;
+  const perf = options?.perf ?? null;
+  if (!quiet) console.log(`[Runner] Loading ${theories.length} declared theories...`);
   for (const entry of theories) {
     const fullPath = resolveConfigTheoryPath(entry);
     if (!fullPath) {
@@ -295,8 +342,12 @@ function loadDeclaredTheories(session, theories = [], loaded = new Set()) {
     }
     if (loaded.has(fullPath)) continue;
     try {
+      const readStart = Date.now();
       const content = fs.readFileSync(fullPath, 'utf8');
+      recordPerfOp(perf, 'load.declared_theory.read', Date.now() - readStart, { file: entry });
+      const learnStart = Date.now();
       const res = session.learn(content);
+      recordPerfOp(perf, 'load.declared_theory.learn', Date.now() - learnStart, { file: entry });
       if (!res.success) {
         console.error(`[Runner] Failed to load declared theory ${entry}:`, res.errors);
       }
@@ -337,27 +388,42 @@ function runSyncWithTimeout(fn, timeoutMs, description) {
 /**
  * Helper: Measure async execution time (Hard Timeout)
  */
-async function runAsyncWithTimeout(promise, timeoutMs) {
+async function runAsyncWithTimeout(task, timeoutMs) {
   const start = Date.now();
-  
+
+  let timer = null;
   const timeoutPromise = new Promise((_, reject) => {
-    setTimeout(() => {
+    timer = setTimeout(() => {
       reject(new Error(`Timeout: Operation exceeded ${timeoutMs}ms`));
     }, timeoutMs);
   });
 
+  let promise;
+  try {
+    promise = typeof task === 'function' ? Promise.resolve(task()) : task;
+  } catch (err) {
+    if (timer) clearTimeout(timer);
+    return {
+      success: false,
+      error: err.message,
+      duration: Date.now() - start
+    };
+  }
+
   try {
     const result = await Promise.race([promise, timeoutPromise]);
-    return { 
-      success: true, 
-      result, 
-      duration: Date.now() - start 
+    if (timer) clearTimeout(timer);
+    return {
+      success: true,
+      result,
+      duration: Date.now() - start
     };
   } catch (err) {
-    return { 
-      success: false, 
-      error: err.message, 
-      duration: Date.now() - start 
+    if (timer) clearTimeout(timer);
+    return {
+      success: false,
+      error: err.message,
+      duration: Date.now() - start
     };
   }
 }
@@ -417,7 +483,7 @@ function runNlToDsl(testCase, transformer, timeoutMs) {
 
 // --- PHASE 2: REASONING ---
 
-async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
+async function runReasoning(testCase, generatedDsl, session, timeoutMs, perf = null, meta = null) {
   dbg('REASON', 'Starting action:', testCase.action, 'timeout:', timeoutMs);
 
   // Determine source DSL:
@@ -455,38 +521,50 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
   dbg('REASON', 'DSL to execute:', dslToExecute?.substring(0, 80));
 
   // Execute Async with Timeout
-  const execution = await runAsyncWithTimeout((async () => {
+  const execution = await runAsyncWithTimeout(() => {
 
     // Setup first
     if (testCase.setup_dsl) {
+      const setupStart = Date.now();
       session.learn(testCase.setup_dsl);
+      recordPerfOp(perf, 'case.setup.learn', Date.now() - setupStart, meta);
     }
 
+    const snapshotStart = testCase.assert_state_unchanged ? Date.now() : null;
     const beforeState = testCase.assert_state_unchanged ? snapshotSessionState(session) : null;
+    if (snapshotStart !== null) recordPerfOp(perf, 'case.state_snapshot', Date.now() - snapshotStart, meta);
     const materializeFacts = caseWantsMaterializedFacts(testCase);
 
     if (testCase.action === 'learn') {
       const maybeSolve = /\bsolve\b/.test(dslToExecute);
+      const opStart = Date.now();
       const result = maybeSolve
         ? (session.solveURC?.(dslToExecute, { materializeFacts }) ?? session.learn(dslToExecute))
         : session.learn(dslToExecute);
+      recordPerfOp(perf, maybeSolve ? 'case.action.solve' : 'case.action.learn', Date.now() - opStart, meta);
+      const snapshotAfterStart = testCase.assert_state_unchanged ? Date.now() : null;
       const afterState = testCase.assert_state_unchanged ? snapshotSessionState(session) : null;
+      if (snapshotAfterStart !== null) recordPerfOp(perf, 'case.state_snapshot', Date.now() - snapshotAfterStart, meta);
       return { result, beforeState, afterState };
     }
     else if (testCase.action === 'executeNL') {
       const mode = String(testCase.mode || 'learn');
+      const opStart = Date.now();
       const result = session.executeNL?.(
         { mode, text: String(testCase.input_nl || '') },
         { materializeFacts }
       ) ?? { success: false };
+      recordPerfOp(perf, 'case.action.executeNL', Date.now() - opStart, meta);
       return { result, beforeState: null, afterState: null };
     }
     else if (testCase.action === 'orchestrate') {
       const goalKind = String(testCase.goalKind || testCase.goal_kind || 'Find');
+      const opStart = Date.now();
       const result = session.orchestrate(
         { goalKind, dsl: dslToExecute },
         { materializeFacts }
       );
+      recordPerfOp(perf, 'case.action.orchestrate', Date.now() - opStart, meta);
       return { result, beforeState: null, afterState: null };
     }
     else if (testCase.action === 'policyView') {
@@ -495,7 +573,9 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
       const wantsMaterialize = Object.prototype.hasOwnProperty.call(testCase, 'materializeFacts')
         ? !!testCase.materializeFacts
         : undefined;
+      const opStart = Date.now();
       const result = session.materializePolicyView?.({ materializeFacts: wantsMaterialize }) ?? { success: false };
+      recordPerfOp(perf, 'case.action.policyView', Date.now() - opStart, meta);
       return { result, beforeState: null, afterState: null };
     }
     else if (testCase.action === 'listSolutions') {
@@ -552,20 +632,26 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
       }
 
       if (testCase.action === 'prove' || testCase.action === 'elaborate') {
+        const opStart = Date.now();
         const result = session.proveURC?.(queryDsl, sessionOptions) ?? session.prove(queryDsl, sessionOptions);
+        recordPerfOp(perf, 'case.action.prove', Date.now() - opStart, meta);
         return { result, beforeState: null, afterState: null };
       } else {
         // Solve blocks are executed via learn(), not query()
         // Detect solve block: starts with @dest solve ProblemType
         if (queryDsl.includes(' solve ')) {
+          const opStart = Date.now();
           const result = session.solveURC?.(queryDsl, sessionOptions) ?? session.learn(queryDsl);
+          recordPerfOp(perf, 'case.action.solve', Date.now() - opStart, meta);
           return { result, beforeState: null, afterState: null };
         }
+        const opStart = Date.now();
         const result = session.queryURC?.(queryDsl, sessionOptions) ?? session.query(queryDsl, sessionOptions);
+        recordPerfOp(perf, 'case.action.query', Date.now() - opStart, meta);
         return { result, beforeState: null, afterState: null };
       }
     }
-  })(), timeoutMs);
+  }, timeoutMs);
 
   if (!execution.success) {
     return {
@@ -796,7 +882,7 @@ function lintProofText(testCase, actualText) {
   return issues;
 }
 
-function runDecoding(testCase, reasoningPhase, session, timeoutMs) {
+function runDecoding(testCase, reasoningPhase, session, timeoutMs, perf = null, meta = null) {
   const proofValidation = validateProofExpectation(testCase);
   if (proofValidation) {
     return proofValidation;
@@ -1178,7 +1264,13 @@ export async function runCase(testCase, session = null, config = {}) {
     hdcStrategy: process.env.SYS2_HDC_STRATEGY || 'exact',
     geometry: 256
   });
-  if (!session) loadBaselinePacks(sess);
+  const perf = config?.perf ?? null;
+  const suiteName = config?.suiteName ?? null;
+  const caseIndex = Number.isFinite(config?.caseIndex) ? config.caseIndex : null;
+  const meta = { suite: suiteName, caseIndex, action: testCase?.action || null };
+  const caseStart = Date.now();
+
+  if (!session) loadBaselinePacks(sess, { quiet: true, perf });
 
   // Apply timeouts (Cascade: Case Config > Suite Config (passed in func) > Defaults)
   const timeouts = {
@@ -1192,17 +1284,28 @@ export async function runCase(testCase, session = null, config = {}) {
 
   // 1. NL -> DSL
   phases.nlToDsl = runNlToDsl(testCase, transformer, timeouts.nlToDsl);
+  if (phases.nlToDsl?.durationMs !== undefined) {
+    recordPerfOp(perf, 'case.phase.nl_to_dsl', phases.nlToDsl.durationMs, meta);
+  }
 
   // 2. Reasoning (Uses Generated DSL if valid, else Fallback Input DSL)
-  phases.reasoning = await runReasoning(testCase, phases.nlToDsl.actual, sess, timeouts.reasoning);
+  phases.reasoning = await runReasoning(testCase, phases.nlToDsl.actual, sess, timeouts.reasoning, perf, meta);
+  if (phases.reasoning?.durationMs !== undefined) {
+    recordPerfOp(perf, 'case.phase.reasoning', phases.reasoning.durationMs, meta);
+  }
 
   // 3. DSL -> NL
-  phases.dslToNl = runDecoding(testCase, phases.reasoning, sess, timeouts.dslToNl);
+  phases.dslToNl = runDecoding(testCase, phases.reasoning, sess, timeouts.dslToNl, perf, meta);
+  if (phases.dslToNl?.durationMs !== undefined) {
+    recordPerfOp(perf, 'case.phase.dsl_to_nl', phases.dslToNl.durationMs, meta);
+  }
 
   // Overall Status
   // A case passes ONLY if all applicable phases passed
   // But we return full detail for partial analysis
   const passed = phases.nlToDsl.passed && phases.reasoning.passed && phases.dslToNl.passed;
+
+  recordPerfOp(perf, 'case.total', Date.now() - caseStart, meta);
 
   return {
     passed,
@@ -1241,31 +1344,64 @@ export async function runSuite(suite, options = {}) {
   const sessionOptions = {
     geometry,
     hdcStrategy: strategyId,
-    reasoningPriority,
-    ...(suite.sessionOptions || {})
+    reasoningPriority
   };
   if (strategyId === 'exact' && exactUnbindMode) {
     sessionOptions.exactUnbindMode = exactUnbindMode;
   }
 
-  const session = new Session({
-    ...sessionOptions
-  });
+  const wantsSessionReuse = options.session && typeof options.session === 'object';
+  const session = wantsSessionReuse
+    ? options.session
+    : new Session({ ...sessionOptions, ...(suite.sessionOptions || {}) });
 
   dbg('CONFIG', `Strategy: ${strategyId}, Geometry: ${geometry}, Priority: ${reasoningPriority}`);
 
-  // 1. Load baseline packs
-  const loadedTheories = loadBaselinePacks(session) || new Set();
+  if (wantsSessionReuse) {
+    const mismatch =
+      session?.hdcStrategy !== strategyId ||
+      session?.reasoningPriority !== reasoningPriority ||
+      session?.geometry !== geometry;
+    if (mismatch) {
+      throw new Error('runSuite received a shared session with a different configuration (strategy/priority/geometry)');
+    }
+  }
+
+  const quiet = options?.quiet ?? false;
+  const collectPerf = options?.collectPerf ?? false;
+  const perf = collectPerf ? createPerfCollector() : null;
+  // 1. Load baseline packs (idempotent; for shared sessions the caller should preload per config).
+  loadBaselinePacks(session, { quiet, perf });
+  const loadedTheories = new Set(session?._fastEvalBaselinePacks instanceof Set ? session._fastEvalBaselinePacks : []);
+
+  // Suite-level session option overrides (restore after suite if reusing session).
+  const suiteSessionOptions = suite.sessionOptions && typeof suite.sessionOptions === 'object' ? suite.sessionOptions : null;
+  const savedOptionValues = wantsSessionReuse && suiteSessionOptions
+    ? Object.fromEntries(Object.keys(suiteSessionOptions).map(k => [k, session[k]]))
+    : null;
+  if (wantsSessionReuse && suiteSessionOptions) {
+    for (const [k, v] of Object.entries(suiteSessionOptions)) {
+      session[k] = v;
+    }
+  }
+
+  const suiteSnapshot = wantsSessionReuse ? beginTransaction(session) : null;
+  session.getReasoningStats?.(true);
 
   // 2. Load suite-declared config theories (relative to config/)
-  loadDeclaredTheories(session, suite.declaredTheories, loadedTheories);
+  const declaredStart = Date.now();
+  loadDeclaredTheories(session, suite.declaredTheories, loadedTheories, { quiet, perf });
+  recordPerfOp(perf, 'load.declared_theories.total', Date.now() - declaredStart, { suite: suite?.suiteName || null });
 
   // 3. Load Suite-Specific Theories
   if (suite.suiteTheories && suite.suiteTheories.length > 0) {
-    console.log(`[Runner] Loading ${suite.suiteTheories.length} suite-specific theories...`);
+    const suiteTheoryStart = Date.now();
+    if (!quiet) console.log(`[Runner] Loading ${suite.suiteTheories.length} suite-specific theories...`);
     for (const theoryContent of suite.suiteTheories) {
       try {
+        const learnStart = Date.now();
         const res = session.learn(theoryContent);
+        recordPerfOp(perf, 'load.suite_theory.learn', Date.now() - learnStart, { suite: suite?.suiteName || null });
         if (!res.success) {
           console.error('[Runner] Failed to load suite theory:', res.errors);
         }
@@ -1273,6 +1409,7 @@ export async function runSuite(suite, options = {}) {
         console.error('[Runner] Exception loading suite theory:', e.message);
       }
     }
+    recordPerfOp(perf, 'load.suite_theories.total', Date.now() - suiteTheoryStart, { suite: suite?.suiteName || null });
   }
 
   // Suite-level timeout config
@@ -1282,17 +1419,28 @@ export async function runSuite(suite, options = {}) {
     dslToNl: suite.timeouts?.dslToNl || DEFAULT_TIMEOUTS.dslToNl
   };
 
-  console.log(`Running suite with timeouts: ${JSON.stringify(suiteConfig)}`);
+  if (!quiet) console.log(`Running suite with timeouts: ${JSON.stringify(suiteConfig)}`);
 
   const suiteStartTime = Date.now();
-  for (const step of suite.cases) {
-    const result = await runCase(step, session, suiteConfig);
+  for (let i = 0; i < suite.cases.length; i++) {
+    const step = suite.cases[i];
+    const result = await runCase(step, session, { ...suiteConfig, perf, suiteName: suite?.suiteName || null, caseIndex: i });
     results.push(result);
   }
   const suiteDurationMs = Date.now() - suiteStartTime;
+  recordPerfOp(perf, 'suite.run_cases', suiteDurationMs, { suite: suite?.suiteName || null });
 
   const reasoningStats = session.getReasoningStats();
-  session.close();
+  if (wantsSessionReuse) {
+    rollbackTransaction(session, suiteSnapshot);
+    if (savedOptionValues) {
+      for (const [k, v] of Object.entries(savedOptionValues)) {
+        session[k] = v;
+      }
+    }
+  } else {
+    session.close();
+  }
 
   // Stats
   const total = results.length;
@@ -1326,7 +1474,8 @@ export async function runSuite(suite, options = {}) {
       results, // Include results for detailed reporting
       strategyId, // Include which strategy was used
       geometry, // Include geometry used
-      durationMs: suiteDurationMs // Time to run suite
+      durationMs: suiteDurationMs, // Time to run suite
+      perf // Optional perf breakdown (when enabled)
     },
     cases: suite.cases, // Include cases for detailed reporting
     name: suite.name,

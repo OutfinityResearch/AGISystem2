@@ -163,9 +163,9 @@ P(x) = x^3 + x^7 + x^12  (coefficients in GF(2), so + is XOR)
 
   <div class="definition">
     <strong>Definition: Cartesian XOR Binding</strong>
-    <p>Given sets A and B, their binding A &otimes; B is:</p>
+    <p>Given sets A and B, their binding A BIND B is:</p>
     <p style="text-align: center; font-family: monospace; font-size: 14px;">
-      A &otimes; B = { a &oplus; b | a &isin; A, b &isin; B }
+      A BIND B = { a xor b | a &isin; A, b &isin; B }
     </p>
     <p>Every element of A is XORed with every element of B, producing |A| &times; |B| results.</p>
   </div>
@@ -193,7 +193,7 @@ P(x) = x^3 + x^7 + x^12  (coefficients in GF(2), so + is XOR)
 
       <!-- Operation symbol -->
       <circle cx="320" cy="180" r="40" fill="#fff3e0" stroke="#ff9800" stroke-width="3"/>
-      <text x="320" y="175" text-anchor="middle" font-weight="bold" font-size="16" fill="#e65100">&otimes;</text>
+      <text x="320" y="175" text-anchor="middle" font-weight="bold" font-size="16" fill="#e65100"> BIND </text>
       <text x="320" y="195" text-anchor="middle" font-size="10" fill="#e65100">Cartesian</text>
       <text x="320" y="208" text-anchor="middle" font-size="10" fill="#e65100">XOR</text>
 
@@ -203,21 +203,21 @@ P(x) = x^3 + x^7 + x^12  (coefficients in GF(2), so + is XOR)
 
       <!-- Result -->
       <rect x="420" y="80" width="330" height="200" rx="10" fill="#fce4ec" stroke="#e91e63" stroke-width="2"/>
-      <text x="585" y="105" text-anchor="middle" font-weight="bold" font-size="12" fill="#c2185b">Result: A &otimes; B (k=4)</text>
+      <text x="585" y="105" text-anchor="middle" font-weight="bold" font-size="12" fill="#c2185b">Result: A BIND B (k=4)</text>
 
       <!-- Result elements -->
       <g font-size="10">
         <circle cx="480" cy="150" r="30" fill="#e91e63"/>
-        <text x="480" y="145" text-anchor="middle" fill="white">a<tspan baseline-shift="sub" font-size="7">0</tspan> &oplus; b<tspan baseline-shift="sub" font-size="7">0</tspan></text>
+        <text x="480" y="145" text-anchor="middle" fill="white">a<tspan baseline-shift="sub" font-size="7">0</tspan> xor b<tspan baseline-shift="sub" font-size="7">0</tspan></text>
 
         <circle cx="585" cy="150" r="30" fill="#e91e63"/>
-        <text x="585" y="145" text-anchor="middle" fill="white">a<tspan baseline-shift="sub" font-size="7">0</tspan> &oplus; b<tspan baseline-shift="sub" font-size="7">1</tspan></text>
+        <text x="585" y="145" text-anchor="middle" fill="white">a<tspan baseline-shift="sub" font-size="7">0</tspan> xor b<tspan baseline-shift="sub" font-size="7">1</tspan></text>
 
         <circle cx="690" cy="150" r="30" fill="#e91e63"/>
-        <text x="690" y="145" text-anchor="middle" fill="white">a<tspan baseline-shift="sub" font-size="7">1</tspan> &oplus; b<tspan baseline-shift="sub" font-size="7">0</tspan></text>
+        <text x="690" y="145" text-anchor="middle" fill="white">a<tspan baseline-shift="sub" font-size="7">1</tspan> xor b<tspan baseline-shift="sub" font-size="7">0</tspan></text>
 
         <circle cx="480" cy="230" r="30" fill="#e91e63"/>
-        <text x="480" y="225" text-anchor="middle" fill="white">a<tspan baseline-shift="sub" font-size="7">1</tspan> &oplus; b<tspan baseline-shift="sub" font-size="7">1</tspan></text>
+        <text x="480" y="225" text-anchor="middle" fill="white">a<tspan baseline-shift="sub" font-size="7">1</tspan> xor b<tspan baseline-shift="sub" font-size="7">1</tspan></text>
       </g>
 
       <!-- Explanation -->
@@ -235,9 +235,9 @@ P(x) = x^3 + x^7 + x^12  (coefficients in GF(2), so + is XOR)
 
   <div class="concept-box">
     <h4>The Self-Inverse Property</h4>
-    <p>XOR is its own inverse: x &oplus; x = 0. This gives Cartesian XOR binding a crucial property:</p>
+    <p>XOR is its own inverse: x xor x = 0. This gives Cartesian XOR binding a crucial property:</p>
     <p style="font-family: monospace; text-align: center; font-size: 14px;">
-      (A &otimes; B) &otimes; B &approx; A
+      (A BIND B) BIND B &approx; A
     </p>
     <p>Binding with B, then binding again with B, approximately recovers A. This enables <strong>reversible encoding</strong> of structured information.</p>
   </div>
@@ -248,11 +248,11 @@ P(x) = x^3 + x^7 + x^12  (coefficients in GF(2), so + is XOR)
 A = {5, 9}
 B = {3, 7}
 
-A &otimes; B = {5&oplus;3, 5&oplus;7, 9&oplus;3, 9&oplus;7}
+A BIND B = {5 xor 3, 5 xor 7, 9 xor 3, 9 xor 7}
        = {6, 2, 10, 14}
 
-(A &otimes; B) &otimes; B = {6, 2, 10, 14} &otimes; {3, 7}
-              = {6&oplus;3, 6&oplus;7, 2&oplus;3, 2&oplus;7, ...}
+(A BIND B) BIND B = {6, 2, 10, 14} BIND {3, 7}
+              = {6 xor 3, 6 xor 7, 2 xor 3, 2 xor 7, ...}
               = {5, 1, 1, 5, 9, 13, 13, 9, ...}
 
 After removing duplicates and sparsifying: {5, 9, ...}
@@ -432,7 +432,7 @@ Jaccard:      sim(A, B) = 2/6 = 0.333</pre>
   <div class="definition">
     <strong>Relation Encoding Formula</strong>
     <p style="font-family: monospace; text-align: center; font-size: 13px;">
-      fact(loves, John, Mary) = Loves &otimes; (Pos1 &otimes; John) &otimes; (Pos2 &otimes; Mary)
+      fact(loves, John, Mary) = Loves BIND (Pos1 BIND John) BIND (Pos2 BIND Mary)
     </p>
     <p>Position vectors (Pos1, Pos2, ...) are pre-defined constants that distinguish argument positions.</p>
   </div>
@@ -443,15 +443,15 @@ Jaccard:      sim(A, B) = 2/6 = 0.333</pre>
       <rect x="50" y="50" width="100" height="50" rx="6" fill="#9c27b0"/>
       <text x="100" y="80" text-anchor="middle" fill="white" font-size="11">Loves</text>
 
-      <text x="165" y="80" text-anchor="middle" font-size="18" fill="#333">&otimes;</text>
+      <text x="165" y="80" text-anchor="middle" font-size="18" fill="#333"> BIND </text>
 
       <rect x="180" y="50" width="150" height="50" rx="6" fill="#1976d2"/>
-      <text x="255" y="75" text-anchor="middle" fill="white" font-size="10">(Pos1 &otimes; John)</text>
+      <text x="255" y="75" text-anchor="middle" fill="white" font-size="10">(Pos1 BIND John)</text>
 
-      <text x="345" y="80" text-anchor="middle" font-size="18" fill="#333">&otimes;</text>
+      <text x="345" y="80" text-anchor="middle" font-size="18" fill="#333"> BIND </text>
 
       <rect x="360" y="50" width="150" height="50" rx="6" fill="#4caf50"/>
-      <text x="435" y="75" text-anchor="middle" fill="white" font-size="10">(Pos2 &otimes; Mary)</text>
+      <text x="435" y="75" text-anchor="middle" fill="white" font-size="10">(Pos2 BIND Mary)</text>
 
       <text x="525" y="80" text-anchor="middle" font-size="18" fill="#333">=</text>
 
@@ -476,7 +476,7 @@ Jaccard:      sim(A, B) = 2/6 = 0.333</pre>
     <strong>Query Principle</strong>
     <p>Since binding is self-inverse, to find ?who in "loves(?who, Mary)":</p>
     <p style="font-family: monospace; text-align: center;">
-      candidate = KB &otimes; Loves &otimes; (Pos2 &otimes; Mary)
+      candidate = KB BIND Loves BIND (Pos2 BIND Mary)
     </p>
     <p>Then match candidate against vocabulary to find the answer.</p>
   </div>
@@ -487,15 +487,15 @@ Jaccard:      sim(A, B) = 2/6 = 0.333</pre>
 # KB contains: loves(John, Mary) encoded as fact_vector
 
 # Query: Who loves Mary?  (loves(?who, Mary))
-partial_query = Loves &otimes; (Pos2 &otimes; Mary)
+partial_query = Loves BIND (Pos2 BIND Mary)
 
 # Unbind from KB
-candidate = KB &otimes; partial_query
-         = fact_vector &otimes; Loves &otimes; (Pos2 &otimes; Mary)
-         = (Pos1 &otimes; John) + noise
+candidate = KB BIND partial_query
+         = fact_vector BIND Loves BIND (Pos2 BIND Mary)
+         = (Pos1 BIND John) + noise
 
 # Extract Pos1
-raw_answer = candidate &otimes; Pos1 &approx; John + noise
+raw_answer = candidate BIND Pos1 &approx; John + noise
 
 # Match against vocabulary
 best_match = argmax(sim(raw_answer, vocab[name]))
@@ -507,8 +507,8 @@ best_match = argmax(sim(raw_answer, vocab[name]))
   <div class="concept-box">
     <h4>Key Properties of SPHDC</h4>
     <ul>
-      <li><strong>Approximate Self-Inverse:</strong> (A &otimes; B) &otimes; B &approx; A (with sparsification noise)</li>
-      <li><strong>Approximate Commutativity:</strong> A &otimes; B &approx; B &otimes; A</li>
+      <li><strong>Approximate Self-Inverse:</strong> (A BIND B) BIND B &approx; A (with sparsification noise)</li>
+      <li><strong>Approximate Commutativity:</strong> A BIND B &approx; B BIND A</li>
       <li><strong>Determinism:</strong> Same inputs always produce same outputs</li>
       <li><strong>Bounded Memory:</strong> All vectors have exactly k elements</li>
       <li><strong>Similarity Preservation:</strong> Min-Hash maintains approximate Jaccard distances</li>
