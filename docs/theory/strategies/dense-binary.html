@@ -285,7 +285,7 @@
       <rect x="50" y="175" width="670" height="35" rx="5" fill="#f5f5f5" stroke="#ddd"/>
       <text x="360" y="195" text-anchor="middle" font-size="10" fill="#333">
         <tspan font-weight="bold">Properties:</tspan>
-        Commutative (BIND(A, B) = BIND(B, A)) | Self-inverse (BIND(A, A) = 0) | Reversible (BIND(BIND(A, B), B) = A)
+        Commutative (BIND(A, B) = BIND(B, A)) | XOR cancellation (BIND(A, A) = 0) | Reversible (BIND(BIND(A, B), B) = A)
       </text>
     </svg>
   </div>
@@ -293,7 +293,7 @@
   <h3>Why XOR?</h3>
 
   <div class="concept-box">
-    <h4>The Self-Inverse Property</h4>
+    <h4>The XOR Cancellation Property</h4>
     <p>XOR is its own inverse, so Dense-Binary supports reversible binding: BIND(A, A) = 0 (all zeros).</p>
     <p style="font-family: monospace; text-align: center; font-size: 14px;">
       BIND(BIND(A, B), B) = A
@@ -542,7 +542,7 @@ Interpretation: Nearly random (close to 0.5)</pre>
 
   <h2>8. Querying: The Unbind Operation</h2>
 
-  <p>Since Dense-Binary implements BIND as XOR (self-inverse), queries "subtract" known parts to find unknowns.</p>
+  <p>Since Dense-Binary implements BIND as XOR, queries can cancel known parts to find unknowns.</p>
 
   <div class="definition">
     <strong>Query Principle</strong>
@@ -578,7 +578,7 @@ similarity(raw_answer, "John") &asymp; 1.0  &rarr; Answer: John</pre>
   <div class="concept-box">
     <h4>Key Properties of Dense-Binary HDC</h4>
     <ul>
-      <li><strong>Perfect Self-Inverse:</strong> (A xor B) xor B = A exactly</li>
+      <li><strong>Perfect XOR cancellation:</strong> (A xor B) xor B = A exactly</li>
       <li><strong>Commutativity:</strong> A xor B = B xor A</li>
       <li><strong>Associativity:</strong> (A xor B) xor C = A xor (B xor C)</li>
       <li><strong>Determinism:</strong> Same inputs always produce same outputs</li>

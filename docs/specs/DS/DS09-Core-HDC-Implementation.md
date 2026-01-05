@@ -184,7 +184,7 @@ Concept:    A BIND B creates an association between A and B
 Properties:
 ├── Commutative:   A BIND B = B BIND A
 ├── Associative:   (A BIND B) BIND C = A BIND (B BIND C)
-├── Self-inverse:  A BIND A = 0 (zero vector)
+├── XOR cancellation:  A BIND A = 0 (zero vector)
 ├── Reversible:    (A BIND B) BIND B = A
 └── Dissimilar:    sim(A BIND B, A) ≈ 0.5
 
@@ -500,7 +500,7 @@ All HDC strategies must satisfy these **interface-level invariants**:
 | `bundle([...])` | deterministic | Tie-breakers must be deterministic under EvalSuite. |
 | `createFromName(name, ...)` | deterministic | Same input must yield same vector *within the same session context*. |
 
-**Important:** properties like “self-inverse bind” (`bind(bind(a,b),b) ≈ a`) are **strategy-dependent**. XOR-based strategies satisfy it, but quotient-like strategies (e.g., EXACT) do not require `unbind == bind` and may return residual structure that must be decoded/cleaned.
+**Important:** properties like XOR-style cancellation (`bind(bind(a,b),b) ≈ a`) are **strategy-dependent**. XOR-based strategies satisfy it, but quotient-like strategies (e.g., EXACT) do not require `unbind == bind` and may return residual structure that must be decoded/cleaned.
 
 ### Required Strategy Functions
 
@@ -512,7 +512,7 @@ createFromName(name, geometry) // → deterministic vector (CRITICAL: same input
 deserialize(obj)               // → vector from storage format
 
 // Core operations
-bind(a, b)                     // → associative, commutative (self-inverse is strategy-dependent)
+bind(a, b)                     // → associative, commutative (cancellation is strategy-dependent)
 bindAll(...vectors)            // → sequential bind
 bundle(vectors, tieBreaker?)   // → superposition (majority vote for binary)
 similarity(a, b)               // → [0, 1] range

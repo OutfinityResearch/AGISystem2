@@ -28,7 +28,7 @@ AGISystem2 is built around a very small **strategy interface**: `BIND`, `UNBIND`
 This chapter introduces the **baseline intuition** using the classic dense-binary (XOR) instantiation, but **the exact algebra is strategy-dependent** (see DS07a + strategy DS-es).
 
 In particular:
-- for XOR-based strategies, `UNBIND` is the same operation as `BIND` (self-inverse cancellation);
+- for XOR-based strategies, `UNBIND` can reuse `BIND` (XOR cancellation);
 - for non-XOR strategies, `UNBIND` is **not** necessarily the same as `BIND` (and may be a quotient/residual-style operator).
 
 ### 1.2.1 Bind (Dense-Binary XOR)
@@ -40,8 +40,8 @@ C = BIND(A, B)    (bitwise XOR in dense-binary)
 **Properties:**
 - **Associative**: BIND(BIND(A, B), C) = BIND(A, BIND(B, C))
 - **Commutative**: BIND(A, B) = BIND(B, A)
-- **Self-inverse**: BIND(A, A) = 0
-- **Reversible**: BIND(BIND(A, B), B) = A
+- **XOR cancellation**: BIND(A, A) = 0
+- **XOR cancellation (bind with same key)**: BIND(BIND(A, B), B) = A
 - **Preserves extension**: BIND([v|v], [u|u]) = [BIND(v, u) | BIND(v, u)] ✓
 
 **Use:** Associate concepts, create relationships
@@ -88,7 +88,7 @@ C[i] = 1 if majority of inputs have 1 at position i
 
 **Use:** Superposition, memory, sets
 
-### 1.2.3 UNBIND is Strategy-Dependent (Not Always Self-Inverse)
+### 1.2.3 UNBIND is Strategy-Dependent (Not Always XOR-Cancellable)
 
 For XOR strategies, unbinding is “free cancellation”:
 
@@ -101,7 +101,7 @@ But in AGISystem2 we also support strategies where:
 - the representation is not a fixed-length dense bitvector,
 - `UNBIND` may be an **approximate inverse**, a **residual extraction**, or an operator family.
 
-Example: the `exact` strategy (DS25) treats facts as sets (bitsets) and uses a quotient-like `UNBIND` that extracts residues via subset tests (not self-inverse XOR).
+Example: the `exact` strategy (DS25) treats facts as sets (bitsets) and uses a quotient-like `UNBIND` that extracts residues via subset tests (unbind differs from bind).
 
 ### 1.2.3 Why NOT Permutation?
 
@@ -223,7 +223,7 @@ temp = fact BIND Verb BIND (Pos2 BIND Arg2)
 Arg1 = temp BIND Pos1
 ```
 
-Known parts cancel out via XOR’s self-inverse property.  
+Known parts cancel out via XOR-style cancellation.  
 Other strategies follow the same **structured-record idea** (role/position markers), but use their own `UNBIND` + decoding/cleanup pipeline (DS07a, DS15, DS18, DS23, DS25).
 
 ### 1.4.4 Why Position Vectors Work with Extension

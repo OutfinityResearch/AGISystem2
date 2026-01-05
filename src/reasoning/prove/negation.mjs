@@ -19,7 +19,7 @@ export function checkGoalNegation(self, goal) {
     const meta = fact.metadata;
     if (!meta) continue;
 
-    if (meta.operator !== 'Not') continue;
+    if (meta.operator !== 'Not' && meta.operator !== '___Not') continue;
 
     if (meta.innerOperator && meta.innerArgs) {
       const innerFactText = `${meta.innerOperator} ${meta.innerArgs.join(' ')}`;
@@ -51,7 +51,10 @@ export function checkGoalNegation(self, goal) {
     const goalVec = self.session.executor.buildStatementVector(goal);
     if (!goalVec) continue;
     const refName = negatedRef.replace('$', '');
-    const negatedVec = self.session.scope.get(refName);
+    let negatedVec = self.session.scope.get(refName);
+    if (!negatedVec && self.session.vocabulary.has(refName)) {
+      negatedVec = self.session.vocabulary.get(refName);
+    }
 
     if (negatedVec) {
       self.session.reasoningStats.similarityChecks++;

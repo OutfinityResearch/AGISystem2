@@ -4,7 +4,7 @@
  *
  * Extension of metric-affine:
  * - Space: Z256^D (D = bytes, typically 32/64/96/...)
- * - Bind/Unbind: byte-wise XOR (self-inverse)
+ * - Bind/Unbind: byte-wise XOR
  * - Similarity: normalized L1 (Manhattan) similarity
  * - Bundle: chunked arithmetic-mean (bounded depth; no bundle-of-bundles)
  *
@@ -122,6 +122,27 @@ class ElasticMetricAffineVector {
     data.set(this.data);
     const chunks = this.chunks ? this.chunks.map(c => c.clone()) : null;
     return new ElasticMetricAffineVector(this.geometry, data, chunks, this.chunkCapacity);
+  }
+
+  notInPlace() {
+    for (let i = 0; i < this.geometry; i++) {
+      this.data[i] = MAX_BYTE - this.data[i];
+    }
+    if (this.chunks) {
+      for (const chunk of this.chunks) {
+        for (let i = 0; i < this.geometry; i++) {
+          chunk.mean[i] = MAX_BYTE - chunk.mean[i];
+        }
+        for (let i = 0; i < this.geometry; i++) {
+          chunk.sum[i] = chunk.mean[i] * chunk.k;
+        }
+      }
+    }
+    return this;
+  }
+
+  not() {
+    return this.clone().notInPlace();
   }
 
   equals(other) {
@@ -295,7 +316,42 @@ function bind(a, b) {
   if (!aIsBundle && !bIsBundle) return bindAtomicAtomic(a, b);
   if (aIsBundle && !bIsBundle) return bindBundleAtomic(a, b);
   if (!aIsBundle && bIsBundle) return bindBundleAtomic(b, a);
-  throw new Error('bind(bundle, bundle) is not supported by metric-affine-elastic');
+  if (!aIsBundle && bIsBundle) return bindBundleAtomic(b, a);
+  return bindBundleBundle(a, b);
+}
+
+function bindBundleBundle(a, b) {
+  const resultChunks = [];
+  // Cross-product of chunks: size = a.chunks.length * b.chunks.length
+  // This can explode if bundles are large, but necessary for correctness of superposition binding.
+  for (const chunkA of a.chunks) {
+    for (const chunkB of b.chunks) {
+      // Create a new chunk representing the binding of the two source chunks
+      // We start with k=1 to treat the bound result as a distinct new point
+      const newChunk = new MeanChunk(a.geometry);
+
+      // Perform XOR of the means
+      for (let i = 0; i < a.geometry; i++) {
+        newChunk.mean[i] = chunkA.mean[i] ^ chunkB.mean[i];
+      }
+
+      // Initialize sum and k
+      newChunk.k = 1;
+      for (let i = 0; i < a.geometry; i++) {
+        newChunk.sum[i] = newChunk.mean[i];
+      }
+
+      resultChunks.push(newChunk);
+    }
+  }
+
+  // Summarize the chunks to update the main data vector
+  const data = summarizeChunks(resultChunks, a.geometry);
+
+  // Return new vector with the combined chunks
+  // We use the larger capacity of the two to be safe
+  const capacity = Math.max(a.chunkCapacity, b.chunkCapacity);
+  return new ElasticMetricAffineVector(a.geometry, data, resultChunks, capacity);
 }
 
 function unbind(composite, component) {

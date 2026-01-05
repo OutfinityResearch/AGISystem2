@@ -280,7 +280,7 @@
 
   <h3>4.4 EXACT: Appearance-Index Dictionary (Lossless)</h3>
 
-  <p>EXACT assigns each newly seen atom an <strong>appearance index</strong> inside the current Session and encodes that index as a one-hot bit. Composite vectors become sparse polynomials over bitset mono-terms, and UNBIND is a quotient-like operation (not self-inverse XOR).</p>
+  <p>EXACT assigns each newly seen atom an <strong>appearance index</strong> inside the current Session and encodes that index as a one-hot bit. Composite vectors become sparse polynomials over bitset mono-terms, and UNBIND is a quotient-like operation (unbind differs from bind).</p>
 
   <div class="formula-box">
     <strong>EXACT determinism:</strong><br>
@@ -302,7 +302,7 @@
       <td>Hash + PRNG (ASCII stamp + variation)</td>
       <td>Yes (theoryId:name)</td>
       <td>Fixed bits</td>
-      <td>Good baseline; self-inverse XOR binding</td>
+      <td>Good baseline; XOR binding with cancellation</td>
     </tr>
     <tr>
       <td>SPHDC</td>
@@ -316,7 +316,7 @@
       <td>Hash + PRNG (byte channels)</td>
       <td>Yes (theoryId:name)</td>
       <td>Fixed bytes</td>
-      <td>XOR on bytes (self-inverse) + continuous bundling</td>
+      <td>XOR on bytes (cancellable binding) + continuous bundling</td>
     </tr>
     <tr>
       <td>EMA</td>

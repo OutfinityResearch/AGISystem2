@@ -7,6 +7,9 @@
  *
  * New code should import directly from hdc/facade:
  *   import { bind, bundle, similarity } from '../hdc/facade.mjs';
+ *
+ * NOTE: The runtime execution of L0 builtins (___Bind, etc.) is handled in
+ * src/runtime/executor-builtins.mjs, which uses these operations internally.
  */
 
 import {

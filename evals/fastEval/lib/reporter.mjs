@@ -695,6 +695,13 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
     }
   }
 
+  for (const strategyId of strategies) {
+    const configDurationMs = resultsByStrategy[strategyId]?.configDurationMs;
+    if (Number.isFinite(configDurationMs)) {
+      strategyTotals[strategyId].totalMs = Math.round(configDurationMs);
+    }
+  }
+
   const orderedStrategies = [...strategies].sort((a, b) => strategyTotals[a].totalMs - strategyTotals[b].totalMs);
 
   // Comparison table header

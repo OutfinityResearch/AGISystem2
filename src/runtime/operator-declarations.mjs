@@ -12,6 +12,7 @@ export const BOOTSTRAP_OPERATORS = new Set([
   '___Bind',
   '___Bundle',
   '___BundlePositioned',
+  '___Not',
   '___GetType',
   '__GetType',
   '___Similarity',

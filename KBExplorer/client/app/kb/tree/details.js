@@ -248,7 +248,7 @@ function buildFormalDefinitionText(_ctx, node) {
     const pos = node?.data?.position ?? null;
     const arg = node?.data?.arg ?? null;
     if (!Number.isFinite(Number(pos)) || !arg) return '';
-    return `Pos${Number(pos)} ⊗ ${String(arg)}`;
+    return `Pos${Number(pos)} BIND ${String(arg)}`;
   }
 
   if (node.kind === 'ATOM' || node.kind === 'VERB') {

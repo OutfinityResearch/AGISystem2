@@ -44,7 +44,7 @@ The known parts cancel out, leaving the unknown (tagged with its position).
 > **Important clarification:** While the Master Equation correctly isolates the component `(PosN BIND ArgN)`, it does NOT guarantee argument order.
 >
 > **What the equation does:**
-> - Correctly cancels out known parts using XOR self-inverse property
+> - Correctly cancels out known parts using XOR-style cancellation
 > - Isolates the unknown argument tagged with its position vector
 > - Returns a vector similar to the target argument
 >

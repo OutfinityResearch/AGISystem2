@@ -112,6 +112,73 @@ function parseIntArg(name, fallback) {
   return Number.isFinite(n) && n > 0 ? n : fallback;
 }
 
+const perfEnabled = args.includes('--perf') || args.includes('--profile');
+const perfTopOps = parseIntArg('perf-top', 12);
+const perfTopEvents = parseIntArg('perf-events', 10);
+
+function mergePerfStats(target, source) {
+  if (!source || typeof source !== 'object') return target;
+  const out = target || { ops: Object.create(null), slowEvents: [] };
+  const ops = source.ops || {};
+  for (const [op, entry] of Object.entries(ops)) {
+    const dst = out.ops[op] || (out.ops[op] = { count: 0, totalMs: 0, maxMs: 0 });
+    dst.count += Number(entry?.count || 0);
+    dst.totalMs += Number(entry?.totalMs || 0);
+    dst.maxMs = Math.max(dst.maxMs, Number(entry?.maxMs || 0));
+  }
+  if (Array.isArray(source.slowEvents)) {
+    out.slowEvents.push(...source.slowEvents);
+  }
+  return out;
+}
+
+function summarizePerfForSuites(suiteResults) {
+  const aggregate = { ops: Object.create(null), slowEvents: [] };
+  for (const suiteResult of suiteResults || []) {
+    const perf = suiteResult?.summary?.perf;
+    mergePerfStats(aggregate, perf);
+  }
+  aggregate.slowEvents.sort((a, b) => (b?.ms || 0) - (a?.ms || 0));
+  if (perfTopEvents > 0) aggregate.slowEvents = aggregate.slowEvents.slice(0, perfTopEvents);
+  return aggregate;
+}
+
+function reportPerfSummary(perf, label) {
+  if (!perf || !perf.ops) return;
+  const entries = Object.entries(perf.ops)
+    .map(([op, entry]) => ({
+      op,
+      count: Number(entry?.count || 0),
+      totalMs: Number(entry?.totalMs || 0),
+      maxMs: Number(entry?.maxMs || 0)
+    }))
+    .sort((a, b) => b.totalMs - a.totalMs);
+  const top = entries.slice(0, perfTopOps);
+  console.log();
+  console.log(`\x1b[1m\x1b[36mPerf Summary: ${label}\x1b[0m`);
+  if (top.length === 0) {
+    console.log('\x1b[2m(no perf data)\x1b[0m');
+    return;
+  }
+  for (const row of top) {
+    const avg = row.count > 0 ? (row.totalMs / row.count) : 0;
+    console.log(
+      `  ${row.op}: ${Math.round(row.totalMs)}ms ` +
+      `(${row.count}x, avg ${avg.toFixed(2)}ms, max ${row.maxMs.toFixed(2)}ms)`
+    );
+  }
+  if (perf.slowEvents?.length) {
+    console.log('\x1b[2mSlow events:\x1b[0m');
+    for (const evt of perf.slowEvents) {
+      const suite = evt?.suite ? ` suite=${evt.suite}` : '';
+      const idx = Number.isFinite(evt?.caseIndex) ? ` case=${evt.caseIndex + 1}` : '';
+      const action = evt?.action ? ` action=${evt.action}` : '';
+      const pack = evt?.pack ? ` pack=${evt.pack}` : '';
+      console.log(`  ${evt.op} ${Math.round(evt.ms)}ms${suite}${idx}${action}${pack}`);
+    }
+  }
+}
+
 function parseConfigKey(raw) {
   const decoded = (() => {
     try {
@@ -158,7 +225,8 @@ async function runConfigInChild({ suiteArgs, configKey }) {
     ...(Array.isArray(suiteArgs) ? suiteArgs : []),
     `--configKey=${encodeURIComponent(configKey)}`,
     '--json',
-    '--quiet'
+    '--quiet',
+    ...(perfEnabled ? ['--perf'] : [])
   ];
   return await new Promise((resolve, reject) => {
     const child = spawn(process.execPath, childArgs, {
@@ -239,6 +307,9 @@ Usage:
 	  --small                 Use 8-byte equivalents for all strategies (dense=64b, sparse=k1, metric=8B, ema=8B)
 	  --big                   Use 32-byte equivalents for all strategies (dense=256b, sparse=k4, metric=32B, ema=32B)
 	  --huge                  Use 128-byte equivalents for all strategies (dense=1024b, sparse=k16, metric=128B, ema=128B)
+	  --perf                  Collect perf breakdown per configuration
+	  --perf-top=N            Limit perf ops shown per config (default: 12)
+	  --perf-events=N         Limit slow events shown per config (default: 10)
   --strategy=NAME         Run single strategy with multiple geometries
                           NAME: dense, sparse, metric, ema, exact
   --priority=NAME         Run with specific reasoning priority
@@ -259,6 +330,9 @@ Examples:
   node evals/runFastEval.mjs --huge              # 128-byte equivalents across strategies
   node evals/runFastEval.mjs --details           # Show per-case results
   node evals/runFastEval.mjs --verbose           # Show failure details
+  node evals/runFastEval.mjs --perf              # Show perf summary per config
+  node evals/runFastEval.mjs --perf-top=8        # Show top 8 perf ops
+  node evals/runFastEval.mjs --perf-events=5     # Show top 5 slow events
 `);
   process.exit(0);
 }
@@ -286,6 +360,8 @@ const knownFlags = new Set([
   '--huge',
   '--json',
   '--quiet',
+  '--perf',
+  '--profile',
   '--help', '-h'
 ]);
 const knownPrefixes = [
@@ -295,7 +371,9 @@ const knownPrefixes = [
   '--configKey=',
   '--dense-dim=',
   '--sparse-k=',
-  '--metric-dim='
+  '--metric-dim=',
+  '--perf-top=',
+  '--perf-events='
 ];
 
 for (const arg of args) {
@@ -606,6 +684,7 @@ async function main() {
         ? `${config.strategy}/${String(config.exactUnbindMode || 'A').toUpperCase()}/${config.priority}`
         : `${config.strategy}/${config.geometry}/${config.priority}`;
 
+      const configStartTime = performance.now();
       if (!quiet) {
         console.log();
         console.log(`\x1b[1m\x1b[35m${'━'.repeat(80)}\x1b[0m`);
@@ -644,6 +723,7 @@ async function main() {
             geometry: config.geometry,
             session: sharedSession,
             quiet,
+            collectPerf: perfEnabled,
             ...(config.strategy === 'exact' && config.exactUnbindMode ? { exactUnbindMode: config.exactUnbindMode } : null)
           });
 
@@ -688,11 +768,21 @@ async function main() {
 
       sharedSession.close();
 
+      const configDurationMs = performance.now() - configStartTime;
+      resultsByConfig[configKey].configDurationMs = configDurationMs;
+      const perfSummary = perfEnabled ? summarizePerfForSuites(resultsByConfig[configKey]) : null;
+      if (perfSummary) {
+        resultsByConfig[configKey].perfSummary = perfSummary;
+      }
+
       // Show summary for this configuration
       if (!quiet && !interrupted && resultsByConfig[configKey].length > 0) {
         console.log();
         console.log(`\x1b[1m\x1b[35m${configLabel(config.strategy, config.geometry, config.priority, config.exactUnbindMode)} - Summary\x1b[0m`);
         reportGlobalSummary(resultsByConfig[configKey]);
+      }
+      if (perfEnabled && !jsonMode && perfSummary) {
+        reportPerfSummary(perfSummary, configLabel(config.strategy, config.geometry, config.priority, config.exactUnbindMode));
       }
     }
 

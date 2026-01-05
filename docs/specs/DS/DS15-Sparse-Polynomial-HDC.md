@@ -44,7 +44,7 @@ BIND(A, B) = { aᵢ XOR bⱼ | aᵢ ∈ A, bⱼ ∈ B }
 ```
 
 **Properties:**
-- **Self-Inverse:** x XOR x = 0, therefore BIND(BIND(A, B), B) = A ✓
+- **XOR cancellation (pre-sparsify):** x XOR x = 0, therefore BIND(BIND(A, B), B) = A before sparsification
 - **Associative:** BIND(BIND(A, B), C) = BIND(A, BIND(B, C)) ✓
 - **Complexity:** O(k²) = O(16) operations for k=4
 
@@ -122,7 +122,7 @@ export const sparsePolynomialStrategy = {
   bind,           // Cartesian XOR
   bundle,         // Set union + sparsify
   similarity,     // Jaccard index
-  unbind,         // Same as bind (self-inverse)
+  unbind,         // Unbind via XOR (strategy-specific)
 
   // Utilities
   clone, equals, serialize, topKSimilar, distance, isOrthogonal,
@@ -254,7 +254,7 @@ tests/unit/hdc/sparse-polynomial.test.mjs
 
 **Coverage:**
 - ✅ Vector creation and initialization
-- ✅ Binding properties (self-inverse, associative)
+- ✅ Binding properties (associative, commutative)
 - ✅ Similarity calculations (Jaccard)
 - ✅ Bundle operations
 - ✅ Serialization/deserialization

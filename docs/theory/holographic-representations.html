@@ -64,7 +64,7 @@ a ≈ c ⊛ b⁻¹  where b⁻¹[i] = b[-i mod n]</code></pre>
 
   <ul>
     <li>Random vectors are quasi-orthogonal with high probability</li>
-    <li>XOR binding is self-inverse: (A xor B) xor B = A</li>
+    <li>XOR binding supports cancellation: (A xor B) xor B = A</li>
     <li>Majority-vote bundling preserves similarity to inputs</li>
     <li>Operations are extremely efficient on binary hardware</li>
   </ul>
@@ -125,7 +125,7 @@ answer = KB BIND query⁻¹
 
   <div class="alert alert-info">
     <strong>Answer = Knowledge BIND Query⁻¹</strong>
-    <p>Given knowledge K encoding relation R(A, B), and a query Q encoding R(A, ?), the answer A retrieves B through the self-inverse property of binding.</p>
+    <p>Given knowledge K encoding relation R(A, B), and a query Q encoding R(A, ?), the answer A retrieves B through the XOR cancellation property of binding.</p>
   </div>
 
   <p>Why this works mathematically:</p>
@@ -133,7 +133,7 @@ answer = KB BIND query⁻¹
   <pre><code>// Encoding: K = R BIND (P₁ BIND A) BIND (P₂ BIND B)
 // Query:    Q = R BIND (P₁ BIND A) BIND P₂
 
-// Since BIND is self-inverse: X BIND X = I (identity-like)
+// Since XOR binding cancels: X BIND X = I (identity-like)
 K BIND Q = R BIND (P₁ BIND A) BIND (P₂ BIND B) BIND R BIND (P₁ BIND A) BIND P₂
       = (R BIND R) BIND (P₁ BIND A BIND P₁ BIND A) BIND (P₂ BIND B BIND P₂)
       ≈ I BIND I BIND B
@@ -254,7 +254,7 @@ stateₐ = bind(state₀, optionA)
 stateᵦ = bind(state₀, optionB)
 // ... continue ...</code></pre>
 
-  <p>The self-inverse property means we don't need to explicitly save/restore state - we can algebraically "undo" operations.</p>
+  <p>XOR cancellation means we don't need to explicitly save/restore state - we can algebraically "undo" operations.</p>
 
   <h3>Confidence-Ordered Exploration</h3>
 

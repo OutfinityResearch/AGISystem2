@@ -1,3 +1,5 @@
+import { debug_trace } from '../utils/debug.js';
+
 /**
  * AGISystem2 - Proof Search Trace Generation
  * @module reasoning/prove-search-trace
@@ -222,7 +224,8 @@ function findNegationOnChain(engine, op, target, chainTypes) {
     const meta = fact.metadata;
     if (!meta) continue;
 
-    if (meta.operator === 'Not') {
+    if (meta.operator === 'Not' || meta.operator === '___Not') {
+      debug_trace('[NegationTrace]', `Visiting Negation Fact: Op=${meta.operator} Args=${JSON.stringify(meta.args)}`);
       if (meta.args?.length === 3) {
         const [negOp, negEntity, negValue] = meta.args;
         if (negOp === op && negValue === target && chainTypes.includes(negEntity)) {
@@ -232,8 +235,13 @@ function findNegationOnChain(engine, op, target, chainTypes) {
 
       if (meta.args?.length === 1) {
         const refName = meta.args[0]?.replace(/^\$/, '');
+        debug_trace('[NegationTrace]', `Checking ref: ${refName}`);
         if (!refName) continue;
-        const negatedVec = engine.session.scope.get(refName);
+        let negatedVec = engine.session.scope.get(refName);
+        if (!negatedVec && engine.session.vocabulary.has(refName)) {
+          negatedVec = engine.session.vocabulary.get(refName);
+        }
+        debug_trace('[NegationTrace]', `Resolved vector: ${negatedVec ? 'YES' : 'NO'}`);
         if (!negatedVec) continue;
 
         for (const chainType of chainTypes) {

@@ -9,7 +9,7 @@
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>API Reference</h1>
+    <h1>API Reference <span class="badge badge-primary">Reference</span></h1>
     <small>
       <a href="../index.html">Home</a> &middot;
       <a href="../architecture/index.html">Architecture</a> &middot;
@@ -293,7 +293,7 @@ const sphdcSession = new Session({ hdcStrategy: 'sparse-polynomial', geometry: 4
 // Bind two vectors
 const composite = bind(vectorA, vectorB);
 
-// Unbind (same as bind - XOR is self-inverse)
+// Unbind (strategy-specific; XOR-based strategies can reuse bind)
 const recovered = unbind(composite, vectorB); // ≈ vectorA
 
 // Bundle multiple vectors
@@ -332,7 +332,7 @@ initHDC('dense-binary');     // Classic: 2048-bit binary vectors
 initHDC('sparse-polynomial'); // SPHDC: k=4 exponent sets
 initHDC('metric-affine');     // Byte-channel vectors (fast baseline)
 initHDC('metric-affine-elastic'); // EMA: elastic geometry + chunked bundling
-initHDC('exact');             // EXACT: lossless session-local bitset-polynomials (UNBIND not self-inverse)
+initHDC('exact');             // EXACT: lossless session-local bitset-polynomials (UNBIND differs from bind)
 
 // Check current strategy
 console.log(getStrategyId()); // e.g. "dense-binary", "metric-affine", "exact", ...</code></pre>

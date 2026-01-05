@@ -56,7 +56,7 @@ export const EMA_CONTRACT = {
 `validateEMAStrategy()` should include:
 
 - Factory presence checks (`createZero`, `createRandom`, `createFromName`, `deserialize`)
-- XOR self-inverse test: `bind(bind(a,b),b) == a` exactly
+- XOR cancellation test: `bind(bind(a,b),b) == a` exactly
 - Similarity reflexive / symmetric / range checks
 - Random baseline sampling: average similarity near ~0.665
 - Bundle retrievability sanity check (small `n`, similarity above baseline)
@@ -67,4 +67,3 @@ The validator should not assume dense-binary baseline (~0.5).
 ---
 
 *End of Module Specification*
-

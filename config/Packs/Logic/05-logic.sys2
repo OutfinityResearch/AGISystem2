@@ -38,7 +38,9 @@ end
 
 # Negation: NOT proposition
 @NotMacro:not graph proposition
-    @result __Role Not $proposition
+    @sym __Role Not $proposition
+    @raw ___Not $proposition
+    @result __Bundle $sym $raw
     return $result
 end
 

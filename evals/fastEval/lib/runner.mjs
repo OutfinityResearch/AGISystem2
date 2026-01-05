@@ -56,6 +56,19 @@ function recordPerfOp(perf, name, durationMs, meta = null) {
   }
 }
 
+function mergeReasoningTimers(perf, statsSource) {
+  const stats = statsSource?.reasoningStats ? statsSource.reasoningStats : statsSource;
+  if (!perf || !stats?.timers) return;
+  const timers = stats.timers;
+  for (const [key, entry] of Object.entries(timers)) {
+    const opKey = `reasoning.${key}`;
+    const dst = perf.ops[opKey] || (perf.ops[opKey] = { count: 0, totalMs: 0, maxMs: 0 });
+    dst.count += Number(entry?.count || 0);
+    dst.totalMs += Number(entry?.totalMs || 0);
+    dst.maxMs = Math.max(dst.maxMs, Number(entry?.maxMs || 0));
+  }
+}
+
 // Reasoning Step Budget (for infinite loop prevention in sync code inside Session)
 const DEFAULT_STEP_BUDGET = 1000;
 
@@ -1387,6 +1400,12 @@ export async function runSuite(suite, options = {}) {
 
   const suiteSnapshot = wantsSessionReuse ? beginTransaction(session) : null;
   session.getReasoningStats?.(true);
+  if (session?.reasoningStats) {
+    session.reasoningStats.timersEnabled = collectPerf;
+    if (collectPerf) {
+      session.reasoningStats.timers = Object.create(null);
+    }
+  }
 
   // 2. Load suite-declared config theories (relative to config/)
   const declaredStart = Date.now();
@@ -1461,6 +1480,10 @@ export async function runSuite(suite, options = {}) {
     }
     return { casesWithIssues, byIssue };
   })();
+
+  if (collectPerf) {
+    mergeReasoningTimers(perf, reasoningStats);
+  }
 
   return {
     results,

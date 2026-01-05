@@ -15,7 +15,7 @@
  */
 export const METRIC_AFFINE_CONTRACT = {
   /**
-   * Bind is exactly self-inverse (XOR property preserved)
+   * Bind has exact XOR-style cancellation (strategy-specific)
    * bind(bind(a,b),b) = a exactly
    */
   BIND_SELF_INVERSE: true,
@@ -94,7 +94,7 @@ export function validateMetricAffineStrategy(strategy, geometry = 32) {
     return { valid: false, errors, warnings };
   }
 
-  // Test exact self-inverse (XOR preserves this property)
+  // Test exact XOR-style cancellation (XOR preserves this property)
   const v1 = strategy.createRandom(geometry, 42);
   const v2 = strategy.createRandom(geometry, 43);
   const bound = strategy.bind(v1, v2);
@@ -102,7 +102,7 @@ export function validateMetricAffineStrategy(strategy, geometry = 32) {
   const simAfterUnbind = strategy.similarity(v1, unbound);
 
   if (simAfterUnbind < 0.999) {
-    errors.push(`Bind not self-inverse: similarity after unbind = ${simAfterUnbind} (expected 1.0)`);
+    errors.push(`Bind not cancellative with bind-as-unbind: similarity after unbind = ${simAfterUnbind} (expected 1.0)`);
   }
 
   // Test similarity reflexive

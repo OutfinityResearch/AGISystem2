@@ -138,6 +138,26 @@ export const steps = [
     input_dsl: '@goal isA Carbon Ecosystem',
     expected_nl: 'True: Carbon is an ecosystem.',
     proof_nl: 'Carbon isA Atom. Atom isA Molecule. Molecule isA Cell. Cell isA Tissue. Tissue isA Organ. Organ isA Organism. Organism isA Species. Species isA Ecosystem.'
+  },
+
+  // === NEGATION TEST (INJECTED): Explicit Negation Check ===
+  {
+    action: 'learn',
+    input_nl: 'Rex is not a Bird.',
+    input_dsl: `
+      isA Rex Dog
+      isA Dog Bird
+      @conc isA Rex Bird
+      Not $conc
+    `,
+    expected_nl: 'Learned 3 facts'
+  },
+  {
+    action: 'prove',
+    input_nl: 'Rex is a Bird.',
+    input_dsl: '@goal isA Rex Bird',
+    expected_nl: 'Cannot prove: Rex is a bird.',
+    proof_nl: 'Found explicit negation.'
   }
 ];
 

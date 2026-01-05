@@ -23,7 +23,7 @@ describe('metric-affine-elastic strategy', () => {
     }
   });
 
-  test('bind is exactly self-inverse for atomic vectors', () => {
+  test('bind cancels under XOR for atomic vectors', () => {
     const a = strategy.createRandom(32, 1);
     const b = strategy.createRandom(32, 2);
     const c = strategy.bind(a, b);
@@ -76,4 +76,3 @@ describe('metric-affine-elastic strategy', () => {
     assert.ok(sim >= 0 && sim <= 1);
   });
 });
-

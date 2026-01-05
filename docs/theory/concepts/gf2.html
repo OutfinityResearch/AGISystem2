@@ -118,7 +118,7 @@
 
   <p>This is identical to the AND truth table.</p>
 
-  <h2>The Self-Inverse Property</h2>
+  <h2>The XOR Cancellation Property</h2>
 
   <p>The most important property of GF(2) for HDC is that <strong>every element is its own additive inverse</strong>:</p>
 
@@ -212,7 +212,7 @@
     Each bit position operates independently in GF(2).
   </div>
 
-  <p>The self-inverse property extends to entire bit vectors:</p>
+  <p>The XOR cancellation property extends to entire bit vectors:</p>
 
   <div class="formula">
     <code>(a xor b) xor b = a</code>
@@ -228,7 +228,7 @@
 
   <h3>Dense-Binary Strategy</h3>
 
-  <p>Uses XOR (GF(2) addition) directly on fixed-length binary vectors. The self-inverse property enables reversible binding:</p>
+  <p>Uses XOR (GF(2) addition) directly on fixed-length binary vectors. XOR cancellation enables reversible binding:</p>
 
   <div class="formula">
     <code>Composite = A xor B</code>

@@ -41,7 +41,7 @@ Consistency and bias checks are modeled as theory-driven constraints and analysi
 
 ### Compliance and auditability
 
-Regulations and internal policies can be encoded as constraints; compliance becomes a pre-action check and a post-event audit trail.
+Regulations and internal policies can be encoded as constraints; compliance becomes a pre-action check and a post-event proof trace (audit logging/export handled externally).
 
 - DS30: `docs/specs/DS/DS30-Compliance-and-Regulatory-Verification-RESEARCH.md`
 

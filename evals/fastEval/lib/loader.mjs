@@ -8,6 +8,7 @@
 import { readFile, readdir } from 'node:fs/promises';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { debug_trace } from '../../../src/utils/debug.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -60,7 +61,9 @@ export async function loadSuiteCases(suiteDir) {
 
   try {
     const module = await import(casesPath);
+    debug_trace('[FastEval:Loader]', 'module keys:', Object.keys(module));
     const rawCases = module.steps || module.cases || [];
+    debug_trace('[FastEval:Loader]', 'rawCases length:', rawCases.length);
     return {
       name: module.name || 'Unknown Suite',
       description: module.description || '',

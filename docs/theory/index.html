@@ -9,7 +9,7 @@
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>Theoretical Foundation</h1>
+    <h1>Theoretical Foundation <span class="badge badge-warning">Research</span></h1>
     <small>
       <a href="../index.html">Home</a> &middot;
       <a href="../architecture/index.html">Architecture</a> &middot;
@@ -149,12 +149,12 @@
     <tr>
       <td><strong>BIND</strong></td>
       <td>Create associations between concepts</td>
-      <td>Supports cancellation for self-inverse bindings (e.g. XOR). Other strategies use a distinct UNBIND and may require decoding/cleanup.</td>
+      <td>Supports XOR-style cancellation where available. Other strategies use a distinct UNBIND and may require decoding/cleanup.</td>
     </tr>
     <tr>
       <td><strong>UNBIND</strong></td>
       <td>Remove a known component from a composite</td>
-      <td>Inverse of BIND; some strategies implement UNBIND ≡ BIND, but this is not required by the contract</td>
+      <td>Inverse-like of BIND; some strategies implement UNBIND ≡ BIND (XOR-based), but this is not required by the contract</td>
     </tr>
     <tr>
       <td><strong>BUNDLE</strong></td>
@@ -269,7 +269,7 @@ fact = Loves BIND ( (Pos1 BIND Mary) BUNDLE (Pos2 BIND John) )  // DIFFERENT!</c
 
     <div class="section-card" style="background: linear-gradient(135deg, #e8eaf622 0%, #c5cae922 100%);">
       <h3><a href="strategies/exact.html">EXACT (Exact-Sparse)</a></h3>
-      <p><strong>EXPLORATION:</strong> Lossless bitset-polynomial strategy (no PRNG/hashing for atom IDs inside a session). Uses a quotient-like UNBIND instead of self-inverse XOR.</p>
+      <p><strong>EXPLORATION:</strong> Lossless bitset-polynomial strategy (no PRNG/hashing for atom IDs inside a session). Uses a quotient-like UNBIND instead of bind reuse.</p>
     </div>
   </div>
 
@@ -314,7 +314,7 @@ fact = Loves BIND ( (Pos1 BIND Mary) BUNDLE (Pos2 BIND John) )  // DIFFERENT!</c
   <ul>
     <li><strong>Closure:</strong> All operations produce valid hypervectors</li>
     <li><strong>Determinism:</strong> Same inputs always produce same outputs</li>
-    <li><strong>Cancellation (strategy-dependent):</strong> Some strategies have self-inverse binding (XOR); others use a distinct UNBIND and decoding/cleanup</li>
+    <li><strong>Cancellation (strategy-dependent):</strong> Some strategies support XOR-style cancellation; others use a distinct UNBIND and decoding/cleanup</li>
     <li><strong>Compositionality:</strong> Complex structures are built from simple parts</li>
     <li><strong>Graceful Degradation:</strong> Accuracy decreases smoothly as capacity is reached</li>
   </ul>
@@ -343,7 +343,7 @@ fact = Loves BIND ( (Pos1 BIND Mary) BUNDLE (Pos2 BIND John) )  // DIFFERENT!</c
   <p>When we bind two concepts A and B, the result contains "holographic traces" of both:</p>
 
   <pre><code>// A BIND B is "holographically" related to both A and B
-// For XOR/self-inverse bindings, unbinding can be done by binding again:
+// For XOR-based bindings, unbinding can be done by binding again:
 (A BIND B) BIND B = A    // B is the "key" to recover A
 (A BIND B) BIND A = B    // A is the "key" to recover B</code></pre>
 
@@ -391,7 +391,7 @@ fact = Loves BIND ( (Pos1 BIND Mary) BUNDLE (Pos2 BIND John) )  // DIFFERENT!</c
     <li><strong>Parallel Retrieval:</strong> All facts matching a query pattern are activated simultaneously</li>
     <li><strong>Confidence-Ordered Results:</strong> Multiple candidates emerge ranked by similarity</li>
     <li><strong>State Preservation:</strong> The vector state before binding can be preserved for backtracking</li>
-    <li><strong>Compositional Rollback:</strong> For self-inverse bindings (e.g. XOR), computations can be “undone” algebraically; other strategies require explicit UNBIND/decoding</li>
+    <li><strong>Compositional Rollback:</strong> For XOR-based cancellation, computations can be “undone” algebraically; other strategies require explicit UNBIND/decoding</li>
   </ul>
 
   <h3>Connections to Homomorphic Encryption</h3>

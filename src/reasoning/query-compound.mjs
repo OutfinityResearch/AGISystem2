@@ -209,7 +209,7 @@ export function decodeCompoundSolution(session, compoundVec, operatorName) {
   const opVec = session.vocabulary.getOrCreate(operatorName);
 
   // Unbind operator to get remainder
-  const remainder = bind(compoundVec, opVec); // bind is self-inverse
+  const remainder = bind(compoundVec, opVec); // XOR-based cancellation removes the operator component.
 
   // Try to match each entity in vocabulary at position 1
   for (const [entityName, entityVec] of session.vocabulary.entries()) {

@@ -201,7 +201,7 @@
       <td>⚠️ Analog</td>
     </tr>
     <tr>
-      <td>Self-inverse binding</td>
+      <td>XOR cancellation in binding</td>
       <td>Approximate</td>
       <td>Exact (XOR)</td>
       <td>✅ Better</td>
@@ -347,7 +347,7 @@
       <td>✅ Yes</td>
     </tr>
     <tr>
-      <td>Self-inverse binding</td>
+      <td>XOR cancellation in binding</td>
       <td>Approximate</td>
       <td>Exact (XOR)</td>
       <td>✅ Better</td>
@@ -365,7 +365,7 @@
   <ol>
     <li><strong>Fuzzy-Boolean Hybrid:</strong> It bridges the gap between discrete (binary) and continuous (HRR) representations by using byte values that allow 256 gradations per channel.</li>
 
-    <li><strong>XOR on Continuous Values:</strong> Unlike HRR's circular convolution, Metric-Affine uses XOR—but on multi-bit bytes, giving exact self-inverse while retaining continuous bundling.</li>
+    <li><strong>XOR on Continuous Values:</strong> Unlike HRR's circular convolution, Metric-Affine uses XOR—but on multi-bit bytes, giving exact XOR cancellation while retaining continuous bundling.</li>
 
     <li><strong>Affine Bundling:</strong> The arithmetic mean creates smooth interpolations between concepts (the "affine" in the name). This is conceptually similar to HRR's vector addition but normalized.</li>
 
@@ -375,7 +375,7 @@
   </ol>
 
   <blockquote>
-    "Metric-Affine asks: can we have the algebraic simplicity of XOR binding (exact self-inverse) while retaining the smooth bundling and interpolation of continuous representations? The answer is yes, by operating on bytes rather than bits."
+    "Metric-Affine asks: can we have the algebraic simplicity of XOR binding (exact cancellation) while retaining the smooth bundling and interpolation of continuous representations? The answer is yes, by operating on bytes rather than bits."
   </blockquote>
 
   <div class="verdict verdict-hybrid">

@@ -87,7 +87,7 @@ Properties:
 - Associative: bind(bind(a,b),c) = bind(a,bind(b,c))
 - Commutative: bind(a,b) = bind(b,a)
 - Has identity (constant 1)
-- Self-inverse for certain constructions
+- XOR cancellation for certain constructions
 
 ### 4.2 Bundle (Coefficient Addition)
 

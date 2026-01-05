@@ -24,7 +24,7 @@ This document specifies the **Level 0 (L0)** primitives of AGISystem2 - the raw 
 
 | Primitive | Signature | Operation | Notes |
 |-----------|-----------|-----------|-------|
-| `___Bind` | a b | Bind (XOR in dense-binary): `BIND(a, b)` | Self-inverse, extension-safe |
+| `___Bind` | a b | Bind (XOR in dense-binary): `BIND(a, b)` | XOR cancellation for XOR-based strategies; extension-safe |
 | `___Bundle` | a b ... | Majority vote | Superposition, extension-safe |
 | `___Similarity` | a b | Hamming similarity | Returns 0.0-1.0 |
 | `___MostSimilar` | query set | Find nearest | Best match |
@@ -130,7 +130,7 @@ answer = result BIND Pos1
 ```
 
 **Important scope note (non-dense-binary strategies):**
-The cancellation derivation above is written in the **dense-binary mental model** (bitwise XOR with clean cancellation plus majority-bundle storage). In AGISystem2, other strategies can still be self-inverse at the `bind/unbind` level, but `unbind(KB, partial)` may yield a **residual / superposition** due to their storage and bundling semantics. For those strategies:
+The cancellation derivation above is written in the **dense-binary mental model** (bitwise XOR with clean cancellation plus majority-bundle storage). In AGISystem2, other strategies may still support XOR-style cancellation at the `bind/unbind` level, but `unbind(KB, partial)` may yield a **residual / superposition** due to their storage and bundling semantics. For those strategies:
 
 - `unbind(KB, partial)` may produce a **residual / superposition** that contains *more than just* the missing argument.
 - Extracting the hole value requires a **decoding / projection** step, which can be strategy-specific.

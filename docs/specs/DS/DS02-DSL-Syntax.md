@@ -44,7 +44,7 @@ Each argument is bound with its **position vector** (Pos1, Pos2, etc.) and then 
 > **The resulting vector is invariant to the order in which position-tagged pairs are bound:**
 >
 > ```
-> (Pos1 BIND A) BIND (Pos2 BIND B) = (Pos2 BIND B) BIND (Pos1 BIND A)
+> (Pos1 BIND A) BUNDLE (Pos2 BIND B) = (Pos2 BIND B) BUNDLE (Pos1 BIND A)
 > ```
 >
 > **This means:**
@@ -194,8 +194,8 @@ Under DS51, the long-term goal is that semantic theories live under `config/Pack
 **Case 3: Multiple arguments** → Each tagged with position
 ```
 @rel Loves John Mary
-# rel = Loves BIND (Pos1 BIND John) BIND (Pos2 BIND Mary)
-
+# rel = Loves BIND ( (Pos1 BIND John) BUNDLE (Pos2 BIND Mary) )
+#
 # Note: Loves(John, Mary) ≠ Loves(Mary, John)
 # because Pos1 BIND John ≠ Pos1 BIND Mary
 ```
@@ -604,7 +604,7 @@ conflictsWith Bob Alice
 |---------|-------------|
 | Everything is vector | Atoms, operators, facts, theories, Load/Export — all vectors |
 | Position vectors | Pos1, Pos2, ... encode argument order (NOT permutation) |
-| Binding formula | `Op BIND (Pos1 BIND A1) BIND (Pos2 BIND A2) BIND ...` |
+| Binding formula | `Op BIND ( (Pos1 BIND A1) BUNDLE (Pos2 BIND A2) ... )` |
 | `@_` | Discard destination for side-effect operations |
 | Theory creates | Vector (identity) + Namespace (content) |
 | Load/Unload/Export/Import | Normal verbs defined in Core |

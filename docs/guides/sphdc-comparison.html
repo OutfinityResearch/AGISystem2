@@ -35,7 +35,7 @@
 
     <h4>Properties</h4>
     <ul>
-      <li>✅ Perfect self-inverse: bind(bind(a,b), b) = a</li>
+      <li>✅ XOR cancellation: bind(bind(a,b), b) = a</li>
       <li>✅ Perfect associative: bind(bind(a,b), c) = bind(a, bind(b,c))</li>
       <li>✅ Perfect commutative: bind(a,b) = bind(b,a)</li>
       <li>✅ Fast operations: O(n/32) complexity</li>
@@ -64,7 +64,7 @@
     <h4>Properties</h4>
     <ul>
       <li>✅ 8x smaller memory footprint</li>
-      <li>✅ Self-inverse: bind(bind(a,b), b) = a (XOR property)</li>
+      <li>✅ XOR cancellation: bind(bind(a,b), b) = a (XOR property)</li>
       <li>✅ Perfect commutative: bind(a,b) = bind(b,a)</li>
       <li>✅ 1.5x faster than Dense Binary</li>
       <li>✅ Memory efficient: 32 bytes per vector (k=4)</li>
@@ -89,10 +89,10 @@
       <td><strong>Impact</strong></td>
     </tr>
     <tr>
-      <td>Self-Inverse</td>
+      <td>Cancellation (XOR-based)</td>
       <td>Perfect (sim = 1.0)</td>
       <td>Perfect (XOR property)</td>
-      <td>Both strategies preserve self-inverse</td>
+      <td>Both strategies support XOR cancellation</td>
     </tr>
     <tr>
       <td>Associative</td>

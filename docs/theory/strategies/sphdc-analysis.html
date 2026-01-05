@@ -43,7 +43,7 @@
   <div class="alert alert-info" style="margin: 20px 0;">
     <strong>Related Theory Pages:</strong>
     <ul style="margin: 10px 0 0 0;">
-      <li><a href="../concepts/gf2.html">GF(2) - Galois Field</a> &mdash; the algebraic foundation for XOR operations and self-inverse binding</li>
+      <li><a href="../concepts/gf2.html">GF(2) - Galois Field</a> &mdash; the algebraic foundation for XOR operations and cancellation</li>
       <li><a href="../concepts/jaccard.html">Jaccard Similarity</a> &mdash; the set-based similarity measure used for SPVector comparison</li>
       <li><a href="../concepts/minhash.html">Min-Hash</a> &mdash; locality-sensitive hashing for sparsification while preserving similarity</li>
       <li><a href="../concepts/index.html">All Theoretical Concepts</a> &mdash; complete index of mathematical foundations</li>
@@ -146,7 +146,7 @@
     <strong>Key Observation:</strong> Addition in GF(2) is exactly the XOR operation! And crucially: <code>1 + 1 = 0</code> (not 2, because 2 doesn't exist in GF(2)).
   </div>
 
-  <h3>3.2 Why GF(2) Addition is Self-Inverse</h3>
+  <h3>3.2 Why GF(2) Addition Has XOR Cancellation</h3>
 
   <p>The most important property for SPHDC is that every element is its own additive inverse:</p>
 
@@ -232,7 +232,7 @@
     Each bit position operates independently in GF(2).
   </div>
 
-  <p>The self-inverse property holds for the entire 64-bit word:</p>
+  <p>XOR cancellation holds for the entire 64-bit word:</p>
 
   <div class="formula">
     <code>(a xor b) xor b = a</code>
@@ -428,7 +428,7 @@
     </tr>
     <tr>
       <td>Binding</td>
-      <td>Self-Inverse via Cartesian XOR</td>
+      <td>XOR cancellation via Cartesian XOR</td>
     </tr>
     <tr>
       <td>Constraint</td>
@@ -475,8 +475,8 @@
     </tr>
     <tr>
       <td>Binding</td>
-      <td>XOR (exact self-inverse)</td>
-      <td>Cartesian XOR (statistical self-inverse)</td>
+      <td>XOR (exact cancellation)</td>
+      <td>Cartesian XOR (statistical cancellation)</td>
     </tr>
     <tr>
       <td>Bundling</td>

@@ -9,7 +9,7 @@
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>Holographic Reasoning Engine</h1>
+    <h1>Holographic Reasoning Engine <span class="badge badge-success">Core</span></h1>
     <small>
       <a href="../index.html">Home</a> &middot;
       <a href="index.html">Reasoning</a> &middot;
@@ -424,7 +424,7 @@ const holographicThresholds = {
   </p>
   <ul>
     <li><strong>Metric-Affine / EMA:</strong> similarity baselines are different from dense-binary, so thresholds must be tuned to that geometry (<a href="../theory/strategies/metric-affine.html">Metric-Affine</a>).</li>
-    <li><strong>EXACT:</strong> lossless vectors make “similarity thresholds” less central; decoding is witness/residual-driven and UNBIND is not self-inverse (<a href="../theory/strategies/exact.html">EXACT</a>).</li>
+    <li><strong>EXACT:</strong> lossless vectors make “similarity thresholds” less central; decoding is witness/residual-driven and UNBIND differs from bind (<a href="../theory/strategies/exact.html">EXACT</a>).</li>
   </ul>
 
   <h2>Statistics Tracking</h2>

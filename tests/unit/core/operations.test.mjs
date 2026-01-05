@@ -30,14 +30,14 @@ describe('HDC Operations', () => {
       assert.equal(result.getBit(1), 1); // 0 XOR 1 = 1
     });
 
-    test('should be self-inverse', () => {
+    test('should cancel under XOR', () => {
       const v1 = Vector.random(1024);
       const v2 = Vector.random(1024);
 
       const bound = bind(v1, v2);
       const unbound = bind(bound, v2);
 
-      assert.ok(v1.equals(unbound), 'bind should be self-inverse');
+      assert.ok(v1.equals(unbound), 'bind should cancel under XOR');
     });
 
     test('should be commutative', () => {
@@ -197,7 +197,7 @@ describe('HDC Operations', () => {
   });
 
   describe('unbind', () => {
-    test('should be same as bind (self-inverse)', () => {
+    test('should match bind under XOR cancellation', () => {
       const v1 = Vector.random(1024);
       const v2 = Vector.random(1024);
 

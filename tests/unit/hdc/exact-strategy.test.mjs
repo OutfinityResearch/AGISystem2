@@ -70,7 +70,7 @@ describe('EXACT strategy (DS25)', () => {
     session.close();
   });
 
-  test('topKSimilar can retrieve multiple answers from a superposed candidate', () => {
+  test('topKSimilar follows DS25 sorted alignment for superposed candidates', () => {
     const session = new Session({ hdcStrategy: 'exact', geometry: 256, reasoningPriority: 'symbolicPriority' });
 
     const op = session.vocabulary.getOrCreate('SAT_OP');
@@ -107,8 +107,10 @@ describe('EXACT strategy (DS25)', () => {
     ]);
 
     const ranked = topKSimilar(ideaVec, candidates, 3, session);
-    const topNames = ranked.filter(r => r.similarity === 1).map(r => r.name).sort();
-    assert.deepEqual(topNames, ['IdeaA', 'IdeaB']);
+    assert.equal(ranked[0].name, 'IdeaA');
+    assert.equal(ranked[0].similarity, 0.5);
+    const zeroNames = ranked.filter(r => r.similarity === 0).map(r => r.name).sort();
+    assert.deepEqual(zeroNames, ['IdeaB', 'IdeaC']);
 
     session.close();
   });

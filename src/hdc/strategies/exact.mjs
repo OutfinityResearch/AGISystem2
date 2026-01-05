@@ -74,6 +74,20 @@ function sortUniqueTerms(terms) {
   return out;
 }
 
+function ensureSortedUniqueTerms(terms) {
+  const arr = Array.isArray(terms) ? terms : [];
+  if (arr.length <= 1) return arr;
+  let prev = arr[0];
+  for (let i = 1; i < arr.length; i++) {
+    const cur = arr[i];
+    if (cur <= prev) {
+      return sortUniqueTerms(arr);
+    }
+    prev = cur;
+  }
+  return arr;
+}
+
 function unionTerms(aTerms, bTerms) {
   const a = aTerms || [];
   const b = bTerms || [];
@@ -196,21 +210,20 @@ function bitJaccard(a, b) {
 
 function similarity(a, b) {
   if (!a || !b) return 0;
-  const aTerms = a.terms || [];
-  const bTerms = b.terms || [];
-  if (aTerms.length === 0 && bTerms.length === 0) return 1;
-  if (aTerms.length === 0 || bTerms.length === 0) return 0;
+  // Align sorted monomials; pad missing slots with zero-bit monomials.
+  const aTerms = ensureSortedUniqueTerms(a.terms);
+  const bTerms = ensureSortedUniqueTerms(b.terms);
+  const len = Math.max(aTerms.length, bTerms.length);
+  if (len === 0) return 1;
 
-  // Max monomial similarity (works well for exact matches in a superposed candidate set).
-  let best = 0;
-  for (const ta of aTerms) {
-    for (const tb of bTerms) {
-      const sim = bitJaccard(ta, tb);
-      if (sim > best) best = sim;
-      if (best >= 1) return 1;
-    }
+  // Compare aligned monomials (sorted ascending). Missing terms are treated as 0 bits.
+  let total = 0;
+  for (let i = 0; i < len; i++) {
+    const ta = aTerms[i] ?? 0n;
+    const tb = bTerms[i] ?? 0n;
+    total += bitJaccard(ta, tb);
   }
-  return best;
+  return total / len;
 }
 
 function distance(a, b) {

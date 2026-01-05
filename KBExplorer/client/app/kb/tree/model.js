@@ -19,10 +19,10 @@ export function kbIcon(kind) {
   if (kind === 'CATEGORY') return { cls: 'ico ico--file', text: '▦' };
   if (kind === 'ACTION') return { cls: 'ico ico--file', text: '→' };
   if (kind === 'GRAPH') return { cls: 'ico ico--verb', text: 'G' };
-  if (kind === 'KB_BUNDLE') return { cls: 'ico ico--bundle', text: '⊕' };
+  if (kind === 'KB_BUNDLE') return { cls: 'ico ico--bundle', text: 'BNDL' };
   if (kind === 'SCOPE') return { cls: 'ico ico--file', text: '@' };
-  if (kind === 'FACT') return { cls: 'ico ico--fact', text: '⊕' };
-  if (kind === 'BIND') return { cls: 'ico ico--bind', text: '⊗' };
+  if (kind === 'FACT') return { cls: 'ico ico--fact', text: 'FACT' };
+  if (kind === 'BIND') return { cls: 'ico ico--bind', text: 'BIND' };
   if (kind === 'VERB') return { cls: 'ico ico--verb', text: 'V' };
   if (kind === 'ATOM') return { cls: 'ico ico--atom', text: '•' };
   if (kind === 'URC_ARTIFACT') return { cls: 'ico ico--file', text: 'A' };

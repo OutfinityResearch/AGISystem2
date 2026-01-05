@@ -1,4 +1,5 @@
 import { isVector } from '../hdc/facade.mjs';
+import { debug_trace } from '../utils/debug.js';
 
 function fingerprintVector(vec) {
   if (!vec) return null;
@@ -45,7 +46,7 @@ function asTypeMarkerName(session, token) {
   const idx = session?.semanticIndex;
   if (idx?.isTypeMarker?.(token)) return token;
   // Safe fallback (for legacy configs): keep it conservative.
-  if (/^[A-Za-z_][A-Za-z0-9_]*Type$/.test(token)) return token;
+  if (/^[A-Za-z_][A-Za-z0-9_]*Type_*$/.test(token)) return token;
   return null;
 }
 
@@ -96,6 +97,46 @@ export class TypeRegistry {
     const primary = this.getPrimaryTypeName(inputVec);
     if (primary || all.length > 0) {
       this._setEntry(outputVec, { primary: primary || (all[all.length - 1] || null), all });
+    }
+    if (primary || all.length > 0) {
+      this._setEntry(outputVec, { primary: primary || (all[all.length - 1] || null), all });
+    }
+  }
+
+  /**
+   * Propagate typing through a bundle:
+   * - output inherits all unique types from inputs
+   * - if any input is a TypeMarker, it is treated as a type assignment
+   */
+  recordBundle({ inputVecs, outputVec }) {
+    if (!isVector(outputVec)) return;
+    if (!Array.isArray(inputVecs)) return;
+
+    let collectedTypes = new Set();
+    debug_trace('[TypeRegistry:recordBundle]', 'inputs:', inputVecs.length);
+
+    for (const v of inputVecs) {
+      // 1. Is the vector itself a type marker?
+      const name = this.session?.vocabulary?.reverseLookup?.(v);
+      const asType = this.resolveTypeMarkerName(name);
+      debug_trace('[TypeRegistry:recordBundle]', `check: name=${name}, asType=${asType}, fp=${fingerprintVector(v)}`);
+      if (asType) {
+        collectedTypes.add(asType);
+        continue;
+      }
+
+      // 2. Does the vector have known types?
+      const types = this.getAllTypeNames(v);
+      for (const t of types) collectedTypes.add(t);
+    }
+
+    const all = Array.from(collectedTypes);
+    debug_trace('[TypeRegistry:recordBundle]', 'found types:', all);
+    if (all.length > 0) {
+      // For bundle, the "primary" type is ambiguous if multiple are present.
+      // We pick the last one lexicographically or by insertion order (from Set iteration) as a heuristic,
+      // or just the last distinct one found.
+      this._setEntry(outputVec, { primary: all[all.length - 1], all });
     }
   }
 

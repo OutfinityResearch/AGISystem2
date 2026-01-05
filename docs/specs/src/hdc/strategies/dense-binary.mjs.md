@@ -85,7 +85,7 @@ Bitwise XOR of two vectors.
 Properties:
 - Commutative: bind(a, b) = bind(b, a)
 - Associative: bind(bind(a,b), c) = bind(a, bind(b,c))
-- Self-inverse: bind(a, a) = zero vector
+- XOR cancellation: bind(a, a) = zero vector
 - Dissimilar: similarity(bind(a,b), a) ≈ 0.5
 
 Algorithm:

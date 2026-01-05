@@ -235,6 +235,24 @@ export const steps = [
     input_dsl: '@goal Exists ?x (And (isA ?x Pet) (isA ?x Rabbit))',
     expected_nl: 'True:',
     proof_nl: 'Witness Alice satisfies the existential'
+  },
+
+  // === NEGATION TEST (INJECTED): Negated Implication ===
+  {
+    action: 'learn',
+    input_nl: 'It is not true that Fire implies Cold.',
+    input_dsl: `
+      @imp implies Fire Cold
+      Not $imp
+    `,
+    expected_nl: 'Learned'
+  },
+  {
+    action: 'prove',
+    input_nl: 'Fire implies Cold.',
+    input_dsl: '@goal implies Fire Cold',
+    expected_nl: 'Cannot prove: Fire implies Cold.',
+    proof_nl: 'Found explicit negation.'
   }
 ];
 

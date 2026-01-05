@@ -6,7 +6,7 @@
  *
  * Mathematical Structure:
  * - Space: Z₂₅₆³² (32 dimensions × 8 bits = 256 bytes per vector)
- * - Bind: XOR component-wise (abelian group, self-inverse)
+ * - Bind: XOR component-wise (abelian group)
  * - Bundle: Weighted arithmetic mean with clamp to [0,255]
  * - Metric: Manhattan L₁ distance, normalized to [0,1]
  * - Cardinality: 256³² ≈ 10⁷⁷ possible states
@@ -89,6 +89,25 @@ class MetricAffineVector {
       this.data[i] ^= other.data[i];
     }
     return this;
+  }
+
+  /**
+   * NOT in place (bitwise complement)
+   * @returns {MetricAffineVector}
+   */
+  notInPlace() {
+    for (let i = 0; i < this.geometry; i++) {
+      this.data[i] = MAX_BYTE - this.data[i];
+    }
+    return this;
+  }
+
+  /**
+   * NOT (returns new vector)
+   * @returns {MetricAffineVector}
+   */
+  not() {
+    return this.clone().notInPlace();
   }
 
   /**
@@ -359,7 +378,7 @@ function deserialize(serialized) {
  * Properties:
  * - Associative: bind(bind(a,b), c) = bind(a, bind(b,c))
  * - Commutative: bind(a,b) = bind(b,a)
- * - Self-inverse: bind(bind(a,b), b) = a
+ * - XOR cancellation: bind(bind(a,b), b) = a
  *
  * @param {MetricAffineVector} a
  * @param {MetricAffineVector} b

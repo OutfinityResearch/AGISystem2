@@ -9,7 +9,7 @@
 # This document is an extracted, focused spec from DS08 (Trustworthy AI Patterns).
 # It is not currently shipped as a runnable Core/config theory set.
 #
-# Scope: encoding regulations and internal policies as theories, running compliance checks pre-action and post-event, and generating audit trails.
+# Scope: encoding regulations and internal policies as theories, running compliance checks pre-action and post-event, and generating proof traces (audit logging/export handled externally).
 
 ---
 
@@ -21,7 +21,7 @@ This pattern treats compliance as a theory-driven, checkable property:
 
 - actions and events are represented as structured facts,
 - policies and regulations are represented as constraints with explicit conditions and remediation,
-- compliance can be proven (or disproven) with explanations and an audit trail.
+- compliance can be proven (or disproven) with explanations and a proof trace.
 
 ---
 
@@ -143,9 +143,9 @@ const check = session.prove(`
 
 ---
 
-## 5. Continuous monitoring and audit trail generation (sketch)
+## 5. Continuous monitoring and proof trace generation (sketch)
 
-This pattern assumes events arrive continuously (access logs, exports, consent changes). Each event is asserted into the KB, then checked for compliance. Failures trigger alerts and are recorded for auditing.
+This pattern assumes events arrive continuously (access logs, exports, consent changes). Each event is asserted into the KB, then checked for compliance. Failures trigger alerts and can be recorded in external audit logs.
 
 ```javascript
 session.learn(`
@@ -186,5 +186,5 @@ Auditor-style queries are expressed as `prove`/`query` patterns (e.g., “all pr
 This DS is research-level. If promoted to runtime:
 
 - regulations must be represented in a deterministic, testable DSL subset,
-- “audit reports” should be treated as structured traces (with provenance) and validated for determinism,
+- external “audit reports” should be treated as structured traces (with provenance) and validated for determinism,
 - unit tests must cover: compliant vs non-compliant scenarios, exceptions, and policy conflicts.

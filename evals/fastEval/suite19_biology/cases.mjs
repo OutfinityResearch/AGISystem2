@@ -177,6 +177,25 @@ export const steps = [
       'Found explicit negation: NOT (DrugD causes ElectronTransport)',
       'Negation blocks inference'
     ]
+  },
+
+  // === NEGATION TEST (INJECTED): Antibiotics vs Virus ===
+  {
+    action: 'learn',
+    input_nl: 'Antibiotics does not kill VirusX.',
+    input_dsl: `
+      @kills:kills __Relation
+      @fact kills Antibiotics VirusX
+      Not $fact
+    `,
+    expected_nl: 'Learned 1 fact'
+  },
+  {
+    action: 'prove',
+    input_nl: 'Antibiotics kills VirusX.',
+    input_dsl: '@goal kills Antibiotics VirusX',
+    expected_nl: 'Cannot prove: Antibiotics kills VirusX.',
+    proof_nl: 'Found explicit negation.'
   }
 ];
 

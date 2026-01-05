@@ -723,7 +723,7 @@ export class HolographicProofEngine {
     for (const fact of this.session.kbFacts) {
       this.session.reasoningStats.kbScans++;
       const meta = fact.metadata;
-      if (!meta || meta.operator !== 'Not') continue;
+      if (!meta || (meta.operator !== 'Not' && meta.operator !== '___Not')) continue;
 
       const innerOp = meta.innerOperator || meta.args?.[0];
       const innerArgs = meta.innerArgs || (meta.args ? meta.args.slice(1) : []);

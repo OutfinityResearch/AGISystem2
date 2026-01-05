@@ -11,7 +11,7 @@
 Implements **Elastic Metric-Affine (EMA)** as an HDC strategy:
 
 - Storage: `Uint8Array(D)` with `D` byte channels (default 32)
-- Bind/unbind: byte-wise XOR (self-inverse)
+- Bind/unbind: byte-wise XOR
 - Similarity: normalized L₁ similarity (baseline ≈ 0.665)
 - Bundle: chunked arithmetic-mean superposition (bounded depth)
 
@@ -100,4 +100,3 @@ Baseline note: random similarity ≈ 0.665.
 ---
 
 *End of Module Specification*
-

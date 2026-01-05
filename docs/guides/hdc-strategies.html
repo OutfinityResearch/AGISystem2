@@ -28,7 +28,7 @@
   <table class="matrix-table">
     <tr>
       <td><strong>bind(a, a)</strong></td>
-      <td>Produces "zero" effect (self-inverse)</td>
+      <td>Produces "zero" effect for XOR-based strategies (strategy-dependent)</td>
     </tr>
     <tr>
       <td><strong>bind(bind(a, b), b)</strong></td>
@@ -140,7 +140,7 @@ function deserialize(serialized) {
 // ============================================================================
 
 function bind(a, b) {
-  // Must be: associative, commutative, self-inverse
+  // Must be: associative, commutative (cancellation is strategy-dependent)
   // For binary: XOR
   // For polynomial: multiply mod irreducible
   if (a.geometry !== b.geometry) {
@@ -185,7 +185,7 @@ function similarity(a, b) {
 }
 
 function unbind(composite, component) {
-  // For self-inverse bind: unbind === bind
+  // For XOR-based strategies, unbind can reuse bind
   return bind(composite, component);
 }
 
@@ -385,7 +385,7 @@ function similarity(a, b) {
   <h3>Mathematical Foundations</h3>
   <ul>
     <li><strong>Binding:</strong> C = A BIND B = {a xor b | a ∈ A, b ∈ B} using Integer XOR</li>
-    <li><strong>Self-Inverse:</strong> (A BIND B) BIND B ≈ A (approximate due to sparsification)</li>
+    <li><strong>XOR cancellation:</strong> (A BIND B) BIND B ≈ A (approximate due to sparsification)</li>
     <li><strong>Commutative:</strong> bind(a,b) = bind(b,a) (perfectly preserved)</li>
     <li><strong>Similarity:</strong> Jaccard Index: |A ∩ B| / |A ∪ B|</li>
   </ul>
@@ -465,7 +465,7 @@ function similarity(a, b) {
       <td>Varies; used as an upper bound in saturation evaluation</td>
     </tr>
     <tr>
-      <td>Self-Inverse</td>
+      <td>XOR cancellation</td>
       <td>Perfect</td>
       <td>Approximate</td>
       <td>Approximate</td>
@@ -496,7 +496,7 @@ function similarity(a, b) {
   <ul>
     <li><strong>Non-deterministic createFromName:</strong> Must produce identical vector for same input!</li>
     <li><strong>Geometry mismatch:</strong> Always check geometries match before operations</li>
-    <li><strong>Bind/Unbind assumptions:</strong> Some strategies have self-inverse binding (XOR), but others use a distinct <code>unbind()</code> and may require decoding/cleanup.</li>
+    <li><strong>Bind/Unbind assumptions:</strong> Some strategies reuse bind for XOR-style cancellation, but others use a distinct <code>unbind()</code> and may require decoding/cleanup.</li>
     <li><strong>Similarity out of range:</strong> Must return value in [0, 1]</li>
   </ul>
 

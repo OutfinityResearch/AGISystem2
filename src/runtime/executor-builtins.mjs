@@ -1,6 +1,7 @@
 import { bind, bundle, similarity, topKSimilar } from '../core/operations.mjs';
 import { withPosition } from '../core/position.mjs';
 import { createFromName } from '../hdc/facade.mjs';
+import { debug_trace } from '../utils/debug.js';
 import { ExecutionError } from './execution-error.mjs';
 import { BOOTSTRAP_OPERATORS } from './operator-declarations.mjs';
 
@@ -142,12 +143,21 @@ function executeBundle(executor, stmt) {
           comment: 'Empty bundle constant returned by ___Bundle(list) with no items.'
         });
       }
-      return bundle(items.map(n => argVector(executor, n)));
+      const inputVecs = items.map(n => argVector(executor, n));
+      const res = bundle(inputVecs);
+      executor.session?.typeRegistry?.recordBundle?.({ inputVecs, outputVec: res });
+      return res;
     }
-    return argVector(executor, args[0]);
+    const res = argVector(executor, args[0]);
+    // Identity: type is already on the vector, no need to record new bundle relation,
+    // but effectively it propagates self.
+    return res;
   }
 
-  return bundle(args.map(n => argVector(executor, n)));
+  const inputVecs = args.map(n => argVector(executor, n));
+  const res = bundle(inputVecs);
+  executor.session?.typeRegistry?.recordBundle?.({ inputVecs, outputVec: res });
+  return res;
 }
 
 function executeBundlePositioned(executor, stmt) {
@@ -246,15 +256,18 @@ function executeGetType(executor, stmt) {
 
   const { session } = executor;
   const instance = argVector(executor, args[0]);
+  debug_trace('[L0:GetType]', 'input:', instance ? 'vector' : 'null');
 
   // If the instance is itself a type marker, treat it as its own type.
   const instanceName = session?.vocabulary?.reverseLookup?.(instance);
   const directType = session?.typeRegistry?.resolveTypeMarkerName?.(instanceName) || null;
+  debug_trace('[L0:GetType]', 'directType:', directType);
   if (directType) {
     return session.vocabulary.getOrCreate(directType);
   }
 
   const typeName = session?.typeRegistry?.getPrimaryTypeName?.(instance);
+  debug_trace('[L0:GetType]', 'lookup typeName:', typeName, 'for fp:', session?.typeRegistry?._getEntry?.(instance));
   if (!typeName) {
     if (session?.strictMode) {
       throw new ExecutionError('___GetType: instance has no known type (strict mode)', stmt);
@@ -264,6 +277,7 @@ function executeGetType(executor, stmt) {
 
   // In strict mode, ensure we only return declared type markers.
   const marker = session?.typeRegistry?.resolveTypeMarkerName?.(typeName);
+  debug_trace('[L0:GetType]', 'resolved marker:', marker);
   if (!marker) {
     if (session?.strictMode) {
       throw new ExecutionError(`___GetType: unknown type marker "${typeName}" (strict mode)`, stmt);
@@ -278,7 +292,28 @@ function executeGetType(executor, stmt) {
   return session.vocabulary.getOrCreate(marker);
 }
 
+export function executeNot(executor, stmt) {
+  const args = stmt.args || [];
+  if (args.length < 1) {
+    throw new ExecutionError('___Not requires 1 argument', stmt);
+  }
+  const vec = argVector(executor, args[0]);
+
+  // Check if strategy supports native NOT
+  if (typeof vec?.not === 'function') {
+    const res = vec.not();
+    debug_trace('[L0:Not]', 'vec.not() result exists:', !!res);
+    return res;
+  }
+
+  // Strategy does not support logical NOT at L0
+  throw new ExecutionError(`___Not not supported by strategy ${vec?.strategyId || executor.session.hdcStrategy}`, stmt);
+}
+
 export function tryExecuteBuiltin(executor, stmt, operatorName) {
+  if (operatorName && (operatorName.includes('Type') || operatorName.includes('Bundle'))) {
+    debug_trace('[L0:TryExecuteBuiltin]', `${operatorName} enabled=${executor?.session?.l0BuiltinsEnabled}`);
+  }
   if (!executor?.session?.l0BuiltinsEnabled) return { handled: false };
   if (typeof operatorName !== 'string') return { handled: false };
   const isBuiltin = operatorName.startsWith('___') || operatorName === '__GetType';
@@ -287,6 +322,8 @@ export function tryExecuteBuiltin(executor, stmt, operatorName) {
   switch (operatorName) {
     case '___NewVector':
       return { handled: true, vector: executeNewVector(executor, stmt) };
+    case '___Not':
+      return { handled: true, vector: executeNot(executor, stmt) };
     case '___Bind':
       return { handled: true, vector: executeBind(executor, stmt) };
     case '___Bundle':

@@ -3,6 +3,9 @@
  * @module hdc/facade
  *
  * SINGLE ENTRY POINT for all HDC operations.
+ * NOTE: Level 0 (L0) Primitives mandates by DS07a (e.g. ___Bind, ___Bundle, ___Not)
+ * are NOT implemented here. They are runtime built-ins found in:
+ * src/runtime/executor-builtins.mjs
  *
  * The rest of the system imports ONLY from this module.
  * Direct imports from strategies/ are prohibited in upper layers.
@@ -290,7 +293,7 @@ export function deserialize(serialized) {
  * Properties:
  * - Associative: bind(bind(a,b), c) ≡ bind(a, bind(b,c))
  * - Commutative: bind(a,b) ≡ bind(b,a)
- * - Self-inverse: bind(bind(a,b), b) ≈ a
+ * - XOR cancellation (XOR-based strategies): bind(bind(a,b), b) ≈ a
  *
  * @param {Object} a - First vector
  * @param {Object} b - Second vector

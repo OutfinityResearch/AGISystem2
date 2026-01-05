@@ -194,7 +194,9 @@ export function constructSession(session, options = {}) {
     cspNodesExplored: 0,
     cspBacktracks: 0,
     cspPruned: 0,
-    cspHdcPruned: 0
+    cspHdcPruned: 0,
+    timersEnabled: false,
+    timers: Object.create(null)
   };
 
   session.initOperators();

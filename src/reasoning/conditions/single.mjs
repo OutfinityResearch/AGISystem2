@@ -6,101 +6,157 @@
 
 import { Statement, Identifier } from '../../parser/ast.mjs';
 import { debug_trace } from '../../utils/debug.js';
+import { timeBlock } from '../perf.mjs';
 
 function dbg(category, ...args) {
   debug_trace(`[Cond:${category}]`, ...args);
 }
 
-export function proveSingleCondition(self, condStr, bindings, depth) {
-  dbg('SINGLE', 'Condition:', condStr, 'Bindings:', [...bindings.entries()]);
-
-  if (!condStr.includes('?')) {
-    const parts = condStr.trim().split(/\s+/);
-    if (parts[0] === 'holds' && parts.length >= 2) {
-      const args = parts.slice(1).map(arg => new Identifier(arg));
-      const goal = new Statement(null, new Identifier('holds'), args);
-      const result = self.engine.proveGoal(goal, depth + 1);
-      if (result.valid) {
-        return { valid: true, confidence: result.confidence, steps: result.steps };
-      }
-    }
-
-    // Block proving a positive condition if it is explicitly negated in KB.
-    // This must be metadata-based (graph operators have vector mismatch).
-    if (parts.length >= 2) {
-      const goal = new Statement(null, new Identifier(parts[0]), parts.slice(1).map(arg => new Identifier(arg)));
-      const negInfo = self.engine.checkGoalNegation(goal);
-      if (negInfo?.negated) {
-        return {
-          valid: false,
-          reason: 'Condition is negated',
-          steps: [{ operation: 'condition_negated', fact: `${parts[0]} ${parts.slice(1).join(' ')}`.trim() }]
-        };
-      }
-    }
-
-    const match = self.engine.kbMatcher.findMatchingFact(condStr);
-    if (match.found) {
-      return { valid: true, confidence: match.confidence, steps: [{ operation: 'fact_matched', fact: condStr }] };
-    }
-
-    const transResult = self.engine.transitive.tryTransitiveForCondition(condStr);
-    if (transResult.valid) {
-      return {
-        valid: true,
-        confidence: transResult.confidence * self.thresholds.CONFIDENCE_DECAY,
-        steps: [{ operation: 'transitive_proof', fact: condStr }, ...(transResult.steps || [])]
-      };
-    }
-
-    // Value type inheritance: has X Y can be proven if has X Z and isA Z Y
-    // Example: has Alice PaymentMethod if has Alice CreditCard and isA CreditCard PaymentMethod
-    const valueInheritResult = tryValueTypeInheritance(self, condStr, depth);
-    if (valueInheritResult.valid) {
-      return valueInheritResult;
-    }
-
-    if (depth < self.options.maxDepth) {
-      const ruleResult = self.engine.kbMatcher.tryRuleChainForCondition(condStr, depth + 1);
-      if (ruleResult.valid) return ruleResult;
-    }
-
-    // As a fallback for ground conditions, allow backward chaining via rules (including ground rules),
-    // but only when the conclusion matches exactly (no similarity-based acceptance here).
-    if (depth < self.options.maxDepth) {
-      const goalStmt = new Statement(null, new Identifier(parts[0]), parts.slice(1).map(arg => new Identifier(arg)));
-
-      const goalOp = parts[0];
-      const goalArgs = parts.slice(1);
-      const canon = (name) => {
-        if (!self.session?.canonicalizationEnabled) return name;
-        return self.session.componentKB?.canonicalizeName?.(name) || name;
-      };
-
-      const candidates = self.engine.getRulesByConclusionOp ? self.engine.getRulesByConclusionOp(goalOp) : self.session.rules;
-      for (const rule of candidates) {
-        if (!rule.conclusionAST) continue;
-
-        if (!rule.hasVariables) {
-          const concOp = self.engine.unification.extractOperatorFromAST(rule.conclusionAST);
-          const concArgs = self.engine.unification.extractArgsFromAST(rule.conclusionAST);
-          const exact =
-            concOp &&
-            canon(concOp) === canon(goalOp) &&
-            concArgs.length === goalArgs.length &&
-            concArgs.every((a, i) => !a.isVariable && canon(a.name) === canon(goalArgs[i]));
-          if (!exact) continue;
-        }
-
-        const res = self.engine.kbMatcher.tryRuleMatch(goalStmt, rule, depth);
-        if (res.valid) return res;
-      }
-    }
-
-    return { valid: false };
+function getSingleConditionCache(session) {
+  if (!session) return null;
+  const kbVersion = session._kbBundleVersion ?? 0;
+  const rulesLen = session.rules?.length ?? 0;
+  const cache = session._condSingleCache;
+  if (!cache || cache.kbVersion !== kbVersion || cache.rulesLen !== rulesLen) {
+    session._condSingleCache = { kbVersion, rulesLen, map: new Map() };
   }
+  const map = session._condSingleCache.map;
+  if (map.size > 5000) map.clear();
+  return map;
+}
 
-  return proveWithUnboundVars(self, condStr, bindings, depth);
+function singleCacheKey(self, condStr, depth) {
+  const cwa = self.session?.closedWorldAssumption ? 1 : 0;
+  const maxDepth = Number.isFinite(self?.options?.maxDepth) ? self.options.maxDepth : 0;
+  return `${condStr}::d${depth}::cwa${cwa}::md${maxDepth}`;
+}
+
+function cloneSingleResult(result) {
+  if (!result || typeof result !== 'object') return result;
+  const cloned = { ...result };
+  if (Array.isArray(result.steps)) cloned.steps = result.steps.map(step => ({ ...step }));
+  return cloned;
+}
+
+export function proveSingleCondition(self, condStr, bindings, depth) {
+  return timeBlock(self.session, 'cond.single', () => {
+    dbg('SINGLE', 'Condition:', condStr, 'Bindings:', [...bindings.entries()]);
+
+    if (!condStr.includes('?')) {
+      const cache = getSingleConditionCache(self.session);
+      const cacheKey = cache ? singleCacheKey(self, condStr, depth) : null;
+      if (cacheKey && cache.has(cacheKey)) {
+        return cloneSingleResult(cache.get(cacheKey));
+      }
+
+      const finalize = (result) => {
+        if (cacheKey) cache.set(cacheKey, cloneSingleResult(result));
+        return result;
+      };
+
+      const parts = condStr.trim().split(/\s+/);
+      if (parts[0] === 'holds' && parts.length >= 2) {
+        const args = parts.slice(1).map(arg => new Identifier(arg));
+        const goal = new Statement(null, new Identifier('holds'), args);
+        const result = timeBlock(self.session, 'cond.single.holds', () =>
+          self.engine.proveGoal(goal, depth + 1)
+        );
+        if (result.valid) {
+          return finalize({ valid: true, confidence: result.confidence, steps: result.steps });
+        }
+      }
+
+      // Block proving a positive condition if it is explicitly negated in KB.
+      // This must be metadata-based (graph operators have vector mismatch).
+      if (parts.length >= 2) {
+        const goal = new Statement(null, new Identifier(parts[0]), parts.slice(1).map(arg => new Identifier(arg)));
+        const negInfo = timeBlock(self.session, 'cond.single.negation', () =>
+          self.engine.checkGoalNegation(goal)
+        );
+        if (negInfo?.negated) {
+          return finalize({
+            valid: false,
+            reason: 'Condition is negated',
+            steps: [{ operation: 'condition_negated', fact: `${parts[0]} ${parts.slice(1).join(' ')}`.trim() }]
+          });
+        }
+      }
+
+      const match = timeBlock(self.session, 'cond.single.fact_match', () =>
+        self.engine.kbMatcher.findMatchingFact(condStr)
+      );
+      if (match.found) {
+        return finalize({ valid: true, confidence: match.confidence, steps: [{ operation: 'fact_matched', fact: condStr }] });
+      }
+
+      const transResult = timeBlock(self.session, 'cond.single.transitive', () =>
+        self.engine.transitive.tryTransitiveForCondition(condStr)
+      );
+      if (transResult.valid) {
+        return finalize({
+          valid: true,
+          confidence: transResult.confidence * self.thresholds.CONFIDENCE_DECAY,
+          steps: [{ operation: 'transitive_proof', fact: condStr }, ...(transResult.steps || [])]
+        });
+      }
+
+      // Value type inheritance: has X Y can be proven if has X Z and isA Z Y
+      // Example: has Alice PaymentMethod if has Alice CreditCard and isA CreditCard PaymentMethod
+      const valueInheritResult = timeBlock(self.session, 'cond.single.value_inherit', () =>
+        tryValueTypeInheritance(self, condStr, depth)
+      );
+      if (valueInheritResult.valid) {
+        return finalize(valueInheritResult);
+      }
+
+      if (depth < self.options.maxDepth) {
+        const ruleResult = timeBlock(self.session, 'cond.single.rule_chain', () =>
+          self.engine.kbMatcher.tryRuleChainForCondition(condStr, depth + 1)
+        );
+        if (ruleResult.valid) return finalize(ruleResult);
+      }
+
+      // As a fallback for ground conditions, allow backward chaining via rules (including ground rules),
+      // but only when the conclusion matches exactly (no similarity-based acceptance here).
+      if (depth < self.options.maxDepth) {
+        const goalStmt = new Statement(null, new Identifier(parts[0]), parts.slice(1).map(arg => new Identifier(arg)));
+
+        const goalOp = parts[0];
+        const goalArgs = parts.slice(1);
+        const canon = (name) => {
+          if (!self.session?.canonicalizationEnabled) return name;
+          return self.session.componentKB?.canonicalizeName?.(name) || name;
+        };
+
+        const candidates = self.engine.getRulesByConclusionOp ? self.engine.getRulesByConclusionOp(goalOp) : self.session.rules;
+        for (const rule of candidates) {
+          if (!rule.conclusionAST) continue;
+
+          if (!rule.hasVariables) {
+            const concOp = self.engine.unification.extractOperatorFromAST(rule.conclusionAST);
+            const concArgs = self.engine.unification.extractArgsFromAST(rule.conclusionAST);
+            const exact =
+              concOp &&
+              canon(concOp) === canon(goalOp) &&
+              concArgs.length === goalArgs.length &&
+              concArgs.every((a, i) => !a.isVariable && canon(a.name) === canon(goalArgs[i]));
+            if (!exact) continue;
+          }
+
+          const res = timeBlock(self.session, 'cond.single.rule_match', () =>
+            self.engine.kbMatcher.tryRuleMatch(goalStmt, rule, depth)
+          );
+          if (res.valid) return finalize(res);
+        }
+      }
+
+      return finalize({ valid: false });
+    }
+
+    return timeBlock(self.session, 'cond.single.unbound', () =>
+      proveWithUnboundVars(self, condStr, bindings, depth)
+    );
+  });
 }
 
 export function tryValueTypeInheritance(self, condStr, depth) {

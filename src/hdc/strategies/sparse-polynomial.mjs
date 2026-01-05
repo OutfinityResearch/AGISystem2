@@ -277,7 +277,7 @@ function isSPVector(v) {
  * C = A ⊗ B = { a ⊕ b | a ∈ A, b ∈ B }
  *
  * For k=4: produces up to 16 results, sparsified back to k
- * Self-inverse property: (A ⊗ B) ⊗ B = A
+ * XOR cancellation before sparsification: (A ⊗ B) ⊗ B = A
  *
  * @param {SPVector} a
  * @param {SPVector} b
@@ -298,7 +298,7 @@ function bind(a, b) {
   outer:
   for (const expA of a.exponents) {
     for (const expB of b.exponents) {
-      rawResults.add(expA ^ expB); // Integer XOR (self-inverse)
+      rawResults.add(expA ^ expB); // Integer XOR
       opCount++;
       if (opCount >= maxOps) {
         break outer; // Early termination
@@ -719,7 +719,7 @@ function deserializeKB(serialized) {
  *
  * Key properties:
  * - Bind: Cartesian XOR (a ⊗ b = {ai ⊕ bj | ai ∈ a, bj ∈ b})
- * - Self-inverse: (a ⊗ b) ⊗ b = a (because x ⊕ x = 0)
+ * - XOR cancellation (pre-sparsify): (a ⊗ b) ⊗ b = a
  * - Similarity: Jaccard index (set overlap)
  * - Sparsification: Min-Hash sampling when |result| > k
  *
@@ -764,7 +764,7 @@ export const sparsePolynomialStrategy = {
   bundle,
   similarity,
   containment,  // Containment similarity - better for unbind matching
-  unbind: (composite, component) => bind(composite, component), // XOR is self-inverse
+  unbind: (composite, component) => bind(composite, component), // XOR-based unbind (strategy-specific)
   unbindFull: (composite, component) => bindFull(composite, component), // Unbind without sparsification
   sparsifyTo,  // Explicit sparsification when needed
 

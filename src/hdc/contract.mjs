@@ -151,7 +151,7 @@ export function validateStrategy(strategy, geometry = 2048, options = {}) {
     errors.push('createFromName not deterministic');
   }
 
-  // Optional: self-inverse / XOR-like cancellation
+  // Optional: XOR-style cancellation (strategy-specific)
   if (options?.expectSelfInverse) {
     const bound = strategy.bind(a, b);
     const unbound = strategy.unbind(bound, b);

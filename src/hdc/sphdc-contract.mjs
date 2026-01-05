@@ -12,7 +12,7 @@
  */
 export const SPHDC_CONTRACT = {
   /**
-   * Bind is approximately self-inverse with statistical variation
+   * Bind has approximate XOR-style cancellation (strategy-specific)
    * bind(bind(a,b),b) should be similar to a (but not identical due to sparsification)
    */
   BIND_APPROX_SELF_INVERSE: true,
@@ -90,7 +90,7 @@ export function validateSPHDCStrategy(strategy, geometry = 500) {
     return { valid: false, errors };
   }
 
-  // Test approximate self-inverse (with lower threshold due to sparsification)
+  // Test approximate XOR-style cancellation (with lower threshold due to sparsification)
   const v1 = strategy.createRandom(geometry, 42);
   const v2 = strategy.createRandom(geometry, 43);
   const bound = strategy.bind(v1, v2);
@@ -98,7 +98,7 @@ export function validateSPHDCStrategy(strategy, geometry = 500) {
   const simAfterUnbind = strategy.similarity(v1, unbound);
 
   if (simAfterUnbind < 0.002) { // Very low threshold for SPHDC due to fundamental sparsification trade-offs
-    errors.push(`Bind not approximately self-inverse: similarity after unbind = ${simAfterUnbind}`);
+    errors.push(`Bind not approximately cancellative with bind-as-unbind: similarity after unbind = ${simAfterUnbind}`);
   }
 
   // Test similarity reflexive

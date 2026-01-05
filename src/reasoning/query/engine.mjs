@@ -28,6 +28,7 @@ import { debug_trace } from '../../utils/debug.js';
 import { searchTypeInductionHasProperty } from '../query-induction.mjs';
 import { verifyPlan as verifyStoredPlan } from '../planning/solver.mjs';
 import { extractNumericArg, searchAbduce, searchExplain, searchWhatif } from './advanced-ops.mjs';
+import { timeBlock } from '../perf.mjs';
 
 // Import meta-operators (DS17)
 import {
@@ -125,14 +126,18 @@ export class QueryEngine {
 
     // Special case: 'similar' operator - find similar concepts via property matching
     if (operatorName === 'similar' && knowns.length === 1 && holes.length === 1) {
-      return searchSimilarOp(this.session, knowns[0], holes[0]);
+      return timeBlock(this.session, 'query.meta.similar', () =>
+        searchSimilarOp(this.session, knowns[0], holes[0])
+      );
     }
 
     // Meta-operator: 'verifyPlan' - validate a stored plan by simulating it over the action model.
     // Signature: verifyPlan <planName> ?ok
     if (operatorName === 'verifyPlan' && knowns.length === 1 && holes.length === 1) {
       const planName = knowns[0]?.name;
-      const res = verifyStoredPlan(this.session, planName);
+      const res = timeBlock(this.session, 'query.meta.verify_plan', () =>
+        verifyStoredPlan(this.session, planName)
+      );
       // Avoid reserved boolean literals in NL output filtering; use semantic labels.
       const ok = res?.success && res?.valid ? 'valid' : 'invalid';
       const steps = Array.isArray(res?.steps) ? res.steps : [];
@@ -152,39 +157,53 @@ export class QueryEngine {
 
     // Meta-operator: 'induce' - find common properties (intersection)
     if (operatorName === 'induce' && knowns.length >= 2 && holes.length === 1) {
-      return searchInduce(this.session, knowns, holes[0]);
+      return timeBlock(this.session, 'query.meta.induce', () =>
+        searchInduce(this.session, knowns, holes[0])
+      );
     }
 
     // Meta-operator: 'bundle' - combine all properties (union)
     if (operatorName === 'bundle' && knowns.length >= 2 && holes.length === 1) {
-      return searchBundle(this.session, knowns, holes[0]);
+      return timeBlock(this.session, 'query.meta.bundle', () =>
+        searchBundle(this.session, knowns, holes[0])
+      );
     }
 
     // Meta-operator: 'difference' - find unique properties
     if (operatorName === 'difference' && knowns.length === 2 && holes.length === 1) {
-      return searchDifference(this.session, knowns[0], knowns[1], holes[0]);
+      return timeBlock(this.session, 'query.meta.difference', () =>
+        searchDifference(this.session, knowns[0], knowns[1], holes[0])
+      );
     }
 
     // Meta-operator: 'analogy' - A:B :: C:?
     if (operatorName === 'analogy' && knowns.length === 3 && holes.length === 1) {
-      return searchAnalogy(this.session, knowns[0], knowns[1], knowns[2], holes[0]);
+      return timeBlock(this.session, 'query.meta.analogy', () =>
+        searchAnalogy(this.session, knowns[0], knowns[1], knowns[2], holes[0])
+      );
     }
 
     // Meta-operator: 'abduce' - find best explanation for an observation
     if (operatorName === 'abduce' && knowns.length >= 1 && holes.length === 1) {
-      return searchAbduce(this.session, knowns, holes[0]);
+      return timeBlock(this.session, 'query.meta.abduce', () =>
+        searchAbduce(this.session, knowns, holes[0])
+      );
     }
 
     // Meta-operator: 'explain' - produce a human-readable explanation for a goal
     // Signature: explain <goal> ?explanation
     // Goal may be provided as a Compound `(op ...)` or as a Reference to a proposition.
     if (operatorName === 'explain' && knowns.length >= 1 && holes.length === 1) {
-      return searchExplain(this.session, knowns, holes[0]);
+      return timeBlock(this.session, 'query.meta.explain', () =>
+        searchExplain(this.session, knowns, holes[0])
+      );
     }
 
     // Meta-operator: 'whatif' - counterfactual reasoning
     if (operatorName === 'whatif' && knowns.length >= 2 && holes.length === 1) {
-      return searchWhatif(this.session, knowns, holes[0]);
+      return timeBlock(this.session, 'query.meta.whatif', () =>
+        searchWhatif(this.session, knowns, holes[0])
+      );
     }
 
     // Meta-operator: 'deduce' - forward-chaining deduction with filter
@@ -193,7 +212,9 @@ export class QueryEngine {
       // Extract depth and limit from additional args (if present as numeric values)
       const depth = extractNumericArg(statement.args, 3) || 1;
       const limit = extractNumericArg(statement.args, 4) || 10;
-      return searchDeduce(this.session, knowns[0], knowns[1], holes[0], depth, limit);
+      return timeBlock(this.session, 'query.meta.deduce', () =>
+        searchDeduce(this.session, knowns[0], knowns[1], holes[0], depth, limit)
+      );
     }
 
     const maxResults = Number.isFinite(options.maxResults) ? Math.max(1, options.maxResults) : null;
@@ -206,9 +227,11 @@ export class QueryEngine {
     // For capped queries, defer HDC until needed (it's lowest priority).
     let ranHdc = false;
     const runHdc = () => {
-      const hdcMatches = searchHDC(this.session, operatorName, knowns, holes, operator, {
-        useLevelOptimization: options.useLevelOptimization ?? true
-      });
+      const hdcMatches = timeBlock(this.session, 'query.hdc', () =>
+        searchHDC(this.session, operatorName, knowns, holes, operator, {
+          useLevelOptimization: options.useLevelOptimization ?? true
+        })
+      );
       allResults.push(...hdcMatches);
       dbg('HDC', `Found ${hdcMatches.length} HDC matches`);
 
@@ -229,7 +252,9 @@ export class QueryEngine {
     }
 
     // SOURCE 2: Direct KB matches (symbolic, exact) - HIGHEST PRIORITY
-    const directMatches = searchKBDirect(this.session, operatorName, knowns, holes, { maxResults });
+    const directMatches = timeBlock(this.session, 'query.direct', () =>
+      searchKBDirect(this.session, operatorName, knowns, holes, { maxResults })
+    );
     // Replace HDC duplicates with direct (direct is more reliable)
     for (const dm of directMatches) {
       const existingIdx = allResults.findIndex(r =>
@@ -251,7 +276,9 @@ export class QueryEngine {
     // SOURCE 3: Transitive reasoning (for isA, locatedIn, partOf, etc.)
     // Now supports 1 or 2 holes
     if (isTransitiveRelation(operatorName, this.session) && holes.length <= 2) {
-      const transitiveMatches = searchTransitive(this.session, operatorName, knowns, holes);
+      const transitiveMatches = timeBlock(this.session, 'query.transitive', () =>
+        searchTransitive(this.session, operatorName, knowns, holes)
+      );
       // Replace HDC duplicates with transitive (transitive is more reliable)
       for (const tm of transitiveMatches) {
         const existingIdx = allResults.findIndex(r =>
@@ -273,7 +300,9 @@ export class QueryEngine {
 
     // Source 4: Rule-derived results
     // Replace HDC duplicates with rule_derived (rule_derived is more reliable)
-    const ruleMatches = searchViaRules(this.session, operatorName, knowns, holes);
+    const ruleMatches = timeBlock(this.session, 'query.rules', () =>
+      searchViaRules(this.session, operatorName, knowns, holes)
+    );
     for (const rm of ruleMatches) {
       const existingIdx = allResults.findIndex(r =>
         sameBindings(r.bindings, rm.bindings, holes)
@@ -299,7 +328,9 @@ export class QueryEngine {
     if (isInheritable && knowns.length === 1 && holes.length === 1) {
       if (knowns[0].index === 1) {
         const entityName = knowns[0].name;
-        const inheritMatches = searchPropertyInheritanceOp(this.session, operatorName, entityName, holes[0].name);
+        const inheritMatches = timeBlock(this.session, 'query.property_inheritance', () =>
+          searchPropertyInheritanceOp(this.session, operatorName, entityName, holes[0].name)
+        );
         for (const im of inheritMatches) {
           const exists = allResults.some(r =>
             sameBindings(r.bindings, im.bindings, holes)
@@ -311,7 +342,9 @@ export class QueryEngine {
         dbg('INHERIT', `Found ${inheritMatches.length} property inheritance matches`);
       } else if (knowns[0].index === 2) {
         const valueName = knowns[0].name;
-        const inheritMatches = searchPropertyInheritanceByValueOp(this.session, operatorName, valueName, holes[0].name);
+        const inheritMatches = timeBlock(this.session, 'query.property_inheritance_by_value', () =>
+          searchPropertyInheritanceByValueOp(this.session, operatorName, valueName, holes[0].name)
+        );
         for (const im of inheritMatches) {
           const exists = allResults.some(r =>
             sameBindings(r.bindings, im.bindings, holes)
@@ -402,7 +435,9 @@ export class QueryEngine {
     }
 
     // SOURCE 5: Compound CSP solutions (HDC-bundled multi-assignment solutions)
-    const compoundMatches = searchCompoundSolutions(this.session, operatorName, knowns, holes);
+    const compoundMatches = timeBlock(this.session, 'query.compound', () =>
+      searchCompoundSolutions(this.session, operatorName, knowns, holes)
+    );
     for (const cm of compoundMatches) {
       const exists = allResults.some(r =>
         sameBindings(r.bindings, cm.bindings, holes)
@@ -414,7 +449,9 @@ export class QueryEngine {
     dbg('COMPOUND', `Found ${compoundMatches.length} compound solution matches`);
 
     // SOURCE 6: Bundle/Induce pattern queries (find common properties)
-    const bundleMatches = searchBundlePattern(this.session, operatorName, knowns, holes);
+    const bundleMatches = timeBlock(this.session, 'query.bundle_pattern', () =>
+      searchBundlePattern(this.session, operatorName, knowns, holes)
+    );
     for (const bm of bundleMatches) {
       const exists = allResults.some(r =>
         sameBindings(r.bindings, bm.bindings, holes)
@@ -454,7 +491,9 @@ export class QueryEngine {
         const entityName = knowns[0].name;
         // AutoDiscovery/bAbI16 often expects induction even with a single peer example.
         // Keep it as a low-confidence fallback only when no other source answered.
-        const induced = searchTypeInductionHasProperty(this.session, entityName, holes[0], { minSupport: 1 });
+        const induced = timeBlock(this.session, 'query.induction', () =>
+          searchTypeInductionHasProperty(this.session, entityName, holes[0], { minSupport: 1 })
+        );
         for (const r of induced) filteredResults.push(r);
       }
     }
@@ -510,76 +549,78 @@ export class QueryEngine {
    * Direct match query (no holes) - existence check
    */
   directMatch(operator, knowns, statement) {
-    const canonicalizeToken = (name) => {
-      if (!this.session?.canonicalizationEnabled) return name;
-      const kb = this.session?.componentKB;
-      if (!kb || typeof kb.canonicalizeName !== 'function') return name;
-      return kb.canonicalizeName(String(name ?? ''));
-    };
+    return timeBlock(this.session, 'query.direct_match', () => {
+      const canonicalizeToken = (name) => {
+        if (!this.session?.canonicalizationEnabled) return name;
+        const kb = this.session?.componentKB;
+        if (!kb || typeof kb.canonicalizeName !== 'function') return name;
+        return kb.canonicalizeName(String(name ?? ''));
+      };
 
-    const operatorNameRaw = statement?.operator?.name || statement?.operator?.value || null;
-    const operatorName = operatorNameRaw ? canonicalizeToken(operatorNameRaw) : null;
-    const args = knowns
-      .map(k => k?.name)
-      .filter(v => v !== null && v !== undefined)
-      .map(v => canonicalizeToken(String(v)));
-    const isExact = (this.session?.hdcStrategy || 'exact') === 'exact';
+      const operatorNameRaw = statement?.operator?.name || statement?.operator?.value || null;
+      const operatorName = operatorNameRaw ? canonicalizeToken(operatorNameRaw) : null;
+      const args = knowns
+        .map(k => k?.name)
+        .filter(v => v !== null && v !== undefined)
+        .map(v => canonicalizeToken(String(v)));
+      const isExact = (this.session?.hdcStrategy || 'exact') === 'exact';
 
-    // Fast-path: exact fact match via metadata index.
-    // This avoids O(|KB|) similarity scans which get very expensive once large theory packs (e.g., URC) are loaded.
-    if (operatorName && args.length === knowns.length) {
-      const truthIndex = this.session?.truthFactIndex || null;
-      const theoryIndex = this.session?.theoryFactIndex || null;
-      const allIndex = this.session?.factIndex || null;
+      // Fast-path: exact fact match via metadata index.
+      // This avoids O(|KB|) similarity scans which get very expensive once large theory packs (e.g., URC) are loaded.
+      if (operatorName && args.length === knowns.length) {
+        const truthIndex = this.session?.truthFactIndex || null;
+        const theoryIndex = this.session?.theoryFactIndex || null;
+        const allIndex = this.session?.factIndex || null;
 
-      const exact =
-        truthIndex?.getNary?.(operatorName, args) ||
-        theoryIndex?.getNary?.(operatorName, args) ||
-        allIndex?.getNary?.(operatorName, args) ||
-        null;
+        const exact =
+          truthIndex?.getNary?.(operatorName, args) ||
+          theoryIndex?.getNary?.(operatorName, args) ||
+          allIndex?.getNary?.(operatorName, args) ||
+          null;
 
-      if (exact) {
-        return {
-          success: true,
-          matches: [{ similarity: 1.0, name: exact.name || null }],
-          confidence: 1.0,
-          bindings: new Map()
-        };
+        if (exact) {
+          return {
+            success: true,
+            matches: [{ similarity: 1.0, name: exact.name || null }],
+            confidence: 1.0,
+            bindings: new Map()
+          };
+        }
+
+        // In EXACT strategy, do not fall back to expensive similarity scans for "no holes" existence checks.
+        if (isExact) {
+          return {
+            success: false,
+            matches: [],
+            confidence: 0,
+            bindings: new Map()
+          };
+        }
       }
 
-      // In EXACT strategy, do not fall back to expensive similarity scans for "no holes" existence checks.
-      if (isExact) {
-        return {
-          success: false,
-          matches: [],
-          confidence: 0,
-          bindings: new Map()
-        };
+      let queryVec = operator;
+      for (const known of knowns) {
+        queryVec = bind(queryVec, withPosition(known.index, known.vector, this.session));
       }
-    }
 
-    let queryVec = operator;
-    for (const known of knowns) {
-      queryVec = bind(queryVec, withPosition(known.index, known.vector, this.session));
-    }
-
-    const matches = [];
-    for (const fact of this.session.kbFacts) {
-      this.session.reasoningStats.similarityChecks++;
-      const sim = similarity(queryVec, fact.vector);
-      if (sim > SIMILARITY_THRESHOLD) {
-        matches.push({ similarity: sim, name: fact.name });
+      const matches = [];
+      for (const fact of this.session.kbFacts) {
+        this.session.reasoningStats.similarityChecks++;
+        const sim = similarity(queryVec, fact.vector);
+        if (sim > SIMILARITY_THRESHOLD) {
+          matches.push({ similarity: sim, name: fact.name });
+        }
       }
-    }
 
-    matches.sort((a, b) => b.similarity - a.similarity);
+      matches.sort((a, b) => b.similarity - a.similarity);
 
-    return {
-      success: matches.length > 0,
-      matches,
-      confidence: matches.length > 0 ? matches[0].similarity : 0,
-      bindings: new Map()
-    };
+      return {
+        success: matches.length > 0,
+        matches,
+        confidence: matches.length > 0 ? matches[0].similarity : 0,
+        bindings: new Map()
+      };
+    });
   }
 
   // ============================================================================

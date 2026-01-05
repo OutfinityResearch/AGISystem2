@@ -278,7 +278,7 @@ export class ProveTranslator extends BaseTranslator {
     const expectedText = `${op} ${args.join(' ')}`.trim();
     for (const fact of kb) {
       const meta = fact?.metadata;
-      if (meta?.operator !== 'Not') continue;
+      if (meta?.operator !== 'Not' && meta?.operator !== '___Not') continue;
       const refName = meta.args?.[0]?.replace('$', '');
       if (!refName) continue;
       const refText = this.session.referenceTexts?.get(refName);

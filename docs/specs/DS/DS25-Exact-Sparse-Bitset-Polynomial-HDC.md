@@ -46,7 +46,7 @@ This strategy is compatible with structured records built with **position marker
 
 - Order-independent, global determinism across arbitrary load orders. EXACT is deterministic **given a deterministic load order** (core then user, stable file order).
 - Matching dense-binary “random quasi-orthogonality” behavior; EXACT is not a random geometry.
-- “UNBIND ≡ BIND” (self-inverse) behavior; that equivalence is strategy-dependent and not required by the contract.
+- “UNBIND ≡ BIND” cancellation behavior; that equivalence is strategy-dependent and not required by the contract.
 
 ---
 
@@ -194,17 +194,31 @@ This is exact but can be expensive if |A| and |B| are large; see §10.
 
 ### 5.4 `similarity(a, b)`
 
-Default similarity is Jaccard over monomial sets:
+EXACT compares polynomials as **sorted monomial lists** (ascending BigInt). To make
+the comparison stable when lengths differ, the shorter list is **padded with empty
+monomials** (all bits zero) up to the longer length.
+
+Let `A = [a₀, a₁, ...]` and `B = [b₀, b₁, ...]` be the sorted monomial lists and
+`L = max(|A|, |B|)`. For each index `i < L`, define missing monomials as `0`.
+
+Monomial similarity uses bit-Jaccard:
 
 ```
-sim(A, B) = |A ∩ B| / |A ∪ B|
+sim_m(a, b) = |a ∩ b| / |a ∪ b|          (with sim_m(0, 0) = 1)
 ```
 
-This is deterministic and well-defined for set-valued representations.
+Overall similarity is the mean over aligned monomials:
+
+```
+sim(A, B) = (1/L) * Σ_{i=0..L-1} sim_m(aᵢ, bᵢ)
+```
+
+This keeps exact matches at 1.0 while penalizing extra/missing monomials
+consistently.
 
 ### 5.5 `unbind(composite, component)` (default UNBIND_A)
 
-`unbind` MUST be provided by the strategy contract. For EXACT it is not self-inverse and is defined as the **existential quotient** in §6.1.
+`unbind` MUST be provided by the strategy contract. For EXACT, `unbind` differs from `bind` and is defined as the **existential quotient** in §6.1.
 
 ### 5.6 UNBIND mode selection (runtime)
 

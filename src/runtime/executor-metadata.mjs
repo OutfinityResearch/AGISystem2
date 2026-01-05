@@ -236,6 +236,33 @@ export function extractMetadataWithNotExpansion(executor, stmt, operatorName) {
     }
   }
 
+  if (operatorName === '___Not' && stmt.args.length === 1 && stmt.args[0] instanceof Reference) {
+    const refName = stmt.args[0].name;
+    const innerMeta = executor.session.referenceMetadata.get(refName);
+    if (innerMeta) {
+      return attachSourceMetadata(stmt, {
+        operator: '___Not',
+        args: [innerMeta.operator, ...innerMeta.args],
+        innerOperator: innerMeta.operator,
+        innerArgs: innerMeta.args,
+        inner: innerMeta
+      });
+    }
+  }
+
+  if (operatorName === '___Not' && stmt.args.length === 1 && stmt.args[0] instanceof Compound) {
+    const inner = extractExpressionMetadata(executor, stmt.args[0], { parentStmt: stmt });
+    if (inner.operator) {
+      return attachSourceMetadata(stmt, {
+        operator: '___Not',
+        args: [inner.operator, ...inner.args],
+        innerOperator: inner.operator,
+        innerArgs: inner.args,
+        inner
+      });
+    }
+  }
+
   if ((operatorName === 'Exists' || operatorName === 'ForAll') && stmt.args.length >= 2) {
     const variable = resolveNameFromNode(executor, stmt.args[0]);
     const body = extractExpressionMetadata(executor, stmt.args[1], { requirePropositionMetadata: true, parentStmt: stmt });

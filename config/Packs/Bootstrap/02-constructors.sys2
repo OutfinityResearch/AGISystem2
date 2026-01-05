@@ -69,8 +69,8 @@ end
 
 @__Relation:__Relation macro
     @v ___NewVector
-    @t1 ___Bind $v AbstractType
-    @typed ___Bind $t1 RelationType
+    @t1 ___Bundle $v AbstractType
+    @typed ___Bundle $t1 RelationType
     return $typed
 end
 

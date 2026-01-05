@@ -234,7 +234,7 @@ P(x) = x^3 + x^7 + x^12  (coefficients in GF(2), so + is XOR)
   <h3>Why Cartesian XOR?</h3>
 
   <div class="concept-box">
-    <h4>The Self-Inverse Property</h4>
+    <h4>The XOR Cancellation Property</h4>
     <p>XOR is its own inverse: x xor x = 0. This gives Cartesian XOR binding a crucial property:</p>
     <p style="font-family: monospace; text-align: center; font-size: 14px;">
       (A BIND B) BIND B &approx; A
@@ -243,7 +243,7 @@ P(x) = x^3 + x^7 + x^12  (coefficients in GF(2), so + is XOR)
   </div>
 
   <div class="example-box">
-    <strong>Example: Self-Inverse in Action</strong>
+    <strong>Example: XOR Cancellation in Action</strong>
     <pre style="margin: 10px 0;">
 A = {5, 9}
 B = {3, 7}
@@ -474,7 +474,7 @@ Jaccard:      sim(A, B) = 2/6 = 0.333</pre>
 
   <div class="definition">
     <strong>Query Principle</strong>
-    <p>Since binding is self-inverse, to find ?who in "loves(?who, Mary)":</p>
+    <p>Since XOR-based binding cancels known parts, to find ?who in "loves(?who, Mary)":</p>
     <p style="font-family: monospace; text-align: center;">
       candidate = KB BIND Loves BIND (Pos2 BIND Mary)
     </p>
@@ -507,7 +507,7 @@ best_match = argmax(sim(raw_answer, vocab[name]))
   <div class="concept-box">
     <h4>Key Properties of SPHDC</h4>
     <ul>
-      <li><strong>Approximate Self-Inverse:</strong> (A BIND B) BIND B &approx; A (with sparsification noise)</li>
+      <li><strong>Approximate XOR cancellation:</strong> (A BIND B) BIND B &approx; A (with sparsification noise)</li>
       <li><strong>Approximate Commutativity:</strong> A BIND B &approx; B BIND A</li>
       <li><strong>Determinism:</strong> Same inputs always produce same outputs</li>
       <li><strong>Bounded Memory:</strong> All vectors have exactly k elements</li>

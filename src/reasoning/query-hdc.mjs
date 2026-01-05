@@ -12,6 +12,7 @@ import { getThresholds } from '../core/constants.mjs';
 import { debug_trace } from '../utils/debug.js';
 import { ProofEngine } from './prove.mjs';
 import { Statement, Identifier } from '../parser/ast.mjs';
+import { timeBlock } from './perf.mjs';
 
 function dbg(category, ...args) {
   debug_trace(`[QueryHDC:${category}]`, ...args);
@@ -127,6 +128,73 @@ function canonicalizeToken(session, name) {
   return kb.canonicalizeName(name);
 }
 
+function getHdcValidationCache(session) {
+  if (!session) return null;
+  const kbVersion = session._kbBundleVersion ?? 0;
+  const cached = session._hdcValidationCache;
+  if (!cached || cached.kbVersion !== kbVersion) {
+    session._hdcValidationCache = { kbVersion, map: new Map() };
+  }
+  const map = session._hdcValidationCache.map;
+  if (map.size > 2000) map.clear();
+  return map;
+}
+
+const DEFAULT_HDC_PROOF_BUDGET = 12;
+
+function getHdcProofBudget(session, options = {}) {
+  const optBudget = Number.isFinite(options.maxProofs) ? options.maxProofs : null;
+  const sessionBudget = Number.isFinite(session?.maxHdcProofs) ? session.maxHdcProofs : null;
+  const raw = optBudget ?? sessionBudget ?? DEFAULT_HDC_PROOF_BUDGET;
+  if (!Number.isFinite(raw)) return null;
+  return { remaining: Math.max(0, Math.floor(raw)) };
+}
+
+function buildArgs(knowns, candidate, holeIndex) {
+  const args = [];
+  const totalArgs = Math.max(holeIndex, ...knowns.map(k => k.index));
+  for (let i = 1; i <= totalArgs; i++) {
+    if (i === holeIndex) {
+      args.push(candidate);
+    } else {
+      const known = knowns.find(k => k.index === i);
+      args.push(known?.name || null);
+    }
+  }
+  return args;
+}
+
+function fastFactMatch(session, operatorName, knowns, candidate, holeIndex) {
+  const normalizedOperator = canonicalizeToken(session, operatorName);
+  const normalizedCandidate = canonicalizeToken(session, candidate);
+  const normalizedKnowns = knowns.map(known => ({
+    ...known,
+    name: canonicalizeToken(session, known.name)
+  }));
+
+  const args = buildArgs(normalizedKnowns, normalizedCandidate, holeIndex);
+  if (args.some(arg => arg === null)) return false;
+
+  const scanFacts = session?.factIndex?.getByOperator
+    ? session.factIndex.getByOperator(normalizedOperator)
+    : session.kbFacts;
+  session.reasoningStats.kbScans += scanFacts.length;
+  for (const fact of scanFacts) {
+    const meta = fact.metadata;
+    if (!meta || meta.operator !== normalizedOperator) continue;
+    if (!meta.args || meta.args.length !== args.length) continue;
+    let match = true;
+    for (let i = 0; i < args.length; i++) {
+      if (args[i] !== null && meta.args[i] !== args[i]) {
+        match = false;
+        break;
+      }
+    }
+    if (match) return true;
+  }
+  return false;
+}
+
 function buildGoalStatement(operatorName, args) {
   const operator = new Identifier(operatorName, 1, 1);
   const exprs = args.map(arg => new Identifier(arg, 1, 1));
@@ -148,17 +216,7 @@ export function verifyHDCCandidate(session, operatorName, knowns, candidate, hol
   }));
 
   // Build args array with candidate in hole position
-  const args = [];
-  const totalArgs = Math.max(holeIndex, ...normalizedKnowns.map(k => k.index));
-
-  for (let i = 1; i <= totalArgs; i++) {
-    if (i === holeIndex) {
-      args.push(normalizedCandidate);
-    } else {
-      const known = normalizedKnowns.find(k => k.index === i);
-      args.push(known?.name || null);
-    }
-  }
+  const args = buildArgs(normalizedKnowns, normalizedCandidate, holeIndex);
 
   // Check if this exact fact exists in KB
   const scanFacts = session?.factIndex?.getByOperator
@@ -210,14 +268,22 @@ export function verifyHDCCandidate(session, operatorName, knowns, candidate, hol
 export function searchHDC(session, operatorName, knowns, holes, operatorVec, options = {}) {
   const results = [];
   const thresholds = getThresholds(session.hdcStrategy || 'exact');
+  const validationCache = options.validationCache || getHdcValidationCache(session) || new Map();
+  const proofBudget = options.proofBudget || getHdcProofBudget(session, options);
 
   if (session.kbFacts.length === 0) return results;
 
   // Build partial vector (everything except holes)
   let partial = operatorVec;
-  for (const known of knowns) {
-    const posVec = getPositionVector(known.index, session.geometry, session.hdcStrategy, session);
-    partial = bind(partial, bind(known.vector, posVec));
+  if (knowns.length > 0) {
+    partial = timeBlock(session, 'query.hdc.build_partial', () => {
+      let acc = operatorVec;
+      for (const known of knowns) {
+        const posVec = getPositionVector(known.index, session.geometry, session.hdcStrategy, session);
+        acc = bind(acc, bind(known.vector, posVec));
+      }
+      return acc;
+    });
   }
 
   // Check if level-progressive search is enabled
@@ -229,76 +295,131 @@ export function searchHDC(session, operatorName, knowns, holes, operatorVec, opt
 
   if (useLevelSearch && componentKB) {
     // Level-progressive search: try lower levels first for early termination
-    const levelResults = searchHDCByLevel(session, operatorName, knowns, holes, operatorVec, partial, thresholds);
+    const levelResults = timeBlock(session, 'query.hdc.level_search', () =>
+      searchHDCByLevel(session, operatorName, knowns, holes, operatorVec, partial, thresholds, {
+        validationCache,
+        proofBudget
+      })
+    );
     if (levelResults.length > 0) {
       return levelResults;
     }
     // Fallback to full bundle if level search didn't find results
-    kbBundle = componentKB.getCumulativeBundle(componentKB.getMaxLevel());
+    kbBundle = timeBlock(session, 'query.hdc.level_fallback_bundle', () =>
+      componentKB.getCumulativeBundle(componentKB.getMaxLevel())
+    );
   }
 
   if (!kbBundle) {
     // Derived index: use the cached KB bundle (rebuildable from persisted facts).
-    kbBundle = session.getKBBundle?.();
+    kbBundle = timeBlock(session, 'query.hdc.kb_bundle', () =>
+      session.getKBBundle?.()
+    );
     if (!kbBundle) return results;
   }
 
   // Master Equation: Answer = KB ⊕ Query⁻¹ (for XOR: unbind = bind)
-  const answer = unbind(kbBundle, partial);
+  const answer = timeBlock(session, 'query.hdc.unbind.answer', () =>
+    unbind(kbBundle, partial)
+  );
   const vocabulary = getCandidateVocabulary(session);
 
   // For single hole - extract directly
   if (holes.length === 1) {
     const hole = holes[0];
     const posVec = getPositionVector(hole.index, session.geometry, session.hdcStrategy, session);
-    const candidate = unbind(answer, posVec);
+    const candidate = timeBlock(session, 'query.hdc.unbind.hole', () =>
+      unbind(answer, posVec)
+    );
 
     // Find top K matches in vocabulary
-    const matches = topKSimilar(candidate, vocabulary, 15, session);
+    const matches = timeBlock(session, 'query.hdc.topk', () =>
+      topKSimilar(candidate, vocabulary, 15, session)
+    );
 
     const validator = new ProofEngine(session);
-    const validationCache = new Map();
 
-    for (const match of matches) {
-      // Use strategy-dependent threshold, filter invalid entities, and verify candidate
-      if (match.similarity > thresholds.HDC_MATCH && isValidEntity(match.name, session)) {
-        // Verify the candidate actually makes sense
-        if (!verifyHDCCandidate(session, operatorName, knowns, match.name, hole.index, {
-          validator,
-          cache: validationCache
-        })) {
-          dbg('HDC', `Rejecting unverifiable candidate: ${match.name}`);
-          continue;
-        }
+    timeBlock(session, 'query.hdc.verify', () => {
+      for (const match of matches) {
+        // Use strategy-dependent threshold, filter invalid entities, and verify candidate
+        if (match.similarity > thresholds.HDC_MATCH && isValidEntity(match.name, session)) {
+          const fastOk = fastFactMatch(session, operatorName, knowns, match.name, hole.index);
+          if (fastOk) {
+            const totalArgs = Math.max(hole.index, ...knowns.map(k => k.index));
+            const factArgs = [];
+            for (let i = 1; i <= totalArgs; i++) {
+              if (i === hole.index) {
+                factArgs.push(match.name);
+              } else {
+                const known = knowns.find(k => k.index === i);
+                factArgs.push(known?.name ?? '');
+              }
+            }
+            const steps = [`${operatorName} ${factArgs.join(' ')}`];
 
-        const totalArgs = Math.max(hole.index, ...knowns.map(k => k.index));
-        const factArgs = [];
-        for (let i = 1; i <= totalArgs; i++) {
-          if (i === hole.index) {
-            factArgs.push(match.name);
-          } else {
-            const known = knowns.find(k => k.index === i);
-            factArgs.push(known?.name ?? '');
+            const factBindings = new Map();
+            factBindings.set(hole.name, {
+              answer: match.name,
+              similarity: match.similarity,
+              method: 'hdc',
+              steps
+            });
+
+            results.push({
+              bindings: factBindings,
+              score: match.similarity,
+              method: 'hdc',
+              steps
+            });
+            continue;
           }
+
+          if (proofBudget && proofBudget.remaining <= 0) {
+            continue;
+          }
+
+          // Verify the candidate actually makes sense
+          const ok = timeBlock(session, 'query.hdc.verify_candidate', () =>
+            verifyHDCCandidate(session, operatorName, knowns, match.name, hole.index, {
+              validator,
+              cache: validationCache
+            })
+          );
+          if (proofBudget) proofBudget.remaining -= 1;
+          if (!ok) {
+            dbg('HDC', `Rejecting unverifiable candidate: ${match.name}`);
+            continue;
+          }
+
+          const totalArgs = Math.max(hole.index, ...knowns.map(k => k.index));
+          const factArgs = [];
+          for (let i = 1; i <= totalArgs; i++) {
+            if (i === hole.index) {
+              factArgs.push(match.name);
+            } else {
+              const known = knowns.find(k => k.index === i);
+              factArgs.push(known?.name ?? '');
+            }
+          }
+          const steps = [`${operatorName} ${factArgs.join(' ')}`];
+
+          const factBindings = new Map();
+          factBindings.set(hole.name, {
+            answer: match.name,
+            similarity: match.similarity,
+            method: 'hdc',
+            steps
+          });
+
+          results.push({
+            bindings: factBindings,
+            score: match.similarity,
+            method: 'hdc',
+            steps
+          });
         }
-        const steps = [`${operatorName} ${factArgs.join(' ')}`];
-
-        const factBindings = new Map();
-        factBindings.set(hole.name, {
-          answer: match.name,
-          similarity: match.similarity,
-          method: 'hdc',
-          steps
-        });
-
-        results.push({
-          bindings: factBindings,
-          score: match.similarity,
-          method: 'hdc',
-          steps
-        });
       }
-    }
+    });
   }
 
   // For multiple holes - extract each
@@ -307,8 +428,12 @@ export function searchHDC(session, operatorName, knowns, holes, operatorVec, opt
     const holeCandidates = [];
     for (const hole of holes) {
       const posVec = getPositionVector(hole.index, session.geometry, session.hdcStrategy, session);
-      const candidate = unbind(answer, posVec);
-      const matches = topKSimilar(candidate, vocabulary, 5, session);
+      const candidate = timeBlock(session, 'query.hdc.unbind.hole', () =>
+        unbind(answer, posVec)
+      );
+      const matches = timeBlock(session, 'query.hdc.topk', () =>
+        topKSimilar(candidate, vocabulary, 5, session)
+      );
       holeCandidates.push({
         hole,
         matches: matches.filter(m => m.similarity > thresholds.VERIFICATION)
@@ -389,9 +514,11 @@ export function generateCombinations(holeCandidates, limit) {
  * @param {Object} thresholds - HDC thresholds
  * @returns {Array} Matching results
  */
-export function searchHDCByLevel(session, operatorName, knowns, holes, operatorVec, partial, thresholds) {
+export function searchHDCByLevel(session, operatorName, knowns, holes, operatorVec, partial, thresholds, options = {}) {
   const componentKB = session.componentKB;
   if (!componentKB) return [];
+  const validationCache = options.validationCache || getHdcValidationCache(session) || new Map();
+  const proofBudget = options.proofBudget || null;
 
   const maxLevel = componentKB.getMaxLevel();
   const results = [];
@@ -405,64 +532,118 @@ export function searchHDCByLevel(session, operatorName, knowns, holes, operatorV
     const hole = holes[0];
     const posVec = getPositionVector(hole.index, session.geometry, session.hdcStrategy, session);
     const validator = new ProofEngine(session);
-    const validationCache = new Map();
 
     // Search level by level
     for (let level = 0; level <= maxLevel; level++) {
-      const levelBundle = componentKB.getCumulativeBundle(level);
+      const levelBundle = timeBlock(session, 'query.hdc.level.bundle', () =>
+        componentKB.getCumulativeBundle(level)
+      );
       if (!levelBundle) continue;
 
-      const answer = unbind(levelBundle, partial);
-      const candidate = unbind(answer, posVec);
-      const matches = topKSimilar(candidate, vocabulary, 10, session);
+      const answer = timeBlock(session, 'query.hdc.level.unbind.answer', () =>
+        unbind(levelBundle, partial)
+      );
+      const candidate = timeBlock(session, 'query.hdc.level.unbind.hole', () =>
+        unbind(answer, posVec)
+      );
+      const matches = timeBlock(session, 'query.hdc.level.topk', () =>
+        topKSimilar(candidate, vocabulary, 10, session)
+      );
 
-      for (const match of matches) {
-        if (match.similarity <= thresholds.HDC_MATCH) continue;
-        if (!isValidEntity(match.name, session)) continue;
+      timeBlock(session, 'query.hdc.level.verify', () => {
+        for (const match of matches) {
+          if (match.similarity <= thresholds.HDC_MATCH) continue;
+          if (!isValidEntity(match.name, session)) continue;
 
-        // Verify candidate
-        if (!verifyHDCCandidate(session, operatorName, knowns, match.name, hole.index, {
-          validator,
-          cache: validationCache
-        })) {
-          continue;
-        }
+          // Verify candidate
+          const fastOk = fastFactMatch(session, operatorName, knowns, match.name, hole.index);
+          if (fastOk) {
+            const totalArgs = Math.max(hole.index, ...knowns.map(k => k.index));
+            const factArgs = [];
+            for (let i = 1; i <= totalArgs; i++) {
+              if (i === hole.index) {
+                factArgs.push(match.name);
+              } else {
+                const known = knowns.find(k => k.index === i);
+                factArgs.push(known?.name ?? '');
+              }
+            }
+            const steps = [`${operatorName} ${factArgs.join(' ')}`];
 
-        const totalArgs = Math.max(hole.index, ...knowns.map(k => k.index));
-        const factArgs = [];
-        for (let i = 1; i <= totalArgs; i++) {
-          if (i === hole.index) {
-            factArgs.push(match.name);
-          } else {
-            const known = knowns.find(k => k.index === i);
-            factArgs.push(known?.name ?? '');
+            const factBindings = new Map();
+            factBindings.set(hole.name, {
+              answer: match.name,
+              similarity: match.similarity,
+              method: 'hdc_level',
+              level,
+              steps
+            });
+
+            results.push({
+              bindings: factBindings,
+              score: match.similarity,
+              method: 'hdc_level',
+              level,
+              steps
+            });
+
+            // Early termination on high confidence
+            if (match.similarity >= HIGH_CONFIDENCE) {
+              dbg('HDC_LEVEL', `Early termination at level ${level} with confidence ${match.similarity}`);
+              return results;
+            }
+            continue;
+          }
+
+          if (proofBudget && proofBudget.remaining <= 0) {
+            continue;
+          }
+
+          const ok = timeBlock(session, 'query.hdc.level.verify_candidate', () =>
+            verifyHDCCandidate(session, operatorName, knowns, match.name, hole.index, {
+              validator,
+              cache: validationCache
+            })
+          );
+          if (proofBudget) proofBudget.remaining -= 1;
+          if (!ok) continue;
+
+          const totalArgs = Math.max(hole.index, ...knowns.map(k => k.index));
+          const factArgs = [];
+          for (let i = 1; i <= totalArgs; i++) {
+            if (i === hole.index) {
+              factArgs.push(match.name);
+            } else {
+              const known = knowns.find(k => k.index === i);
+              factArgs.push(known?.name ?? '');
+            }
+          }
+          const steps = [`${operatorName} ${factArgs.join(' ')}`];
+
+          const factBindings = new Map();
+          factBindings.set(hole.name, {
+            answer: match.name,
+            similarity: match.similarity,
+            method: 'hdc_level',
+            level,
+            steps
+          });
+
+          results.push({
+            bindings: factBindings,
+            score: match.similarity,
+            method: 'hdc_level',
+            level,
+            steps
+          });
+
+          // Early termination on high confidence
+          if (match.similarity >= HIGH_CONFIDENCE) {
+            dbg('HDC_LEVEL', `Early termination at level ${level} with confidence ${match.similarity}`);
+            return results;
           }
         }
-        const steps = [`${operatorName} ${factArgs.join(' ')}`];
-
-        const factBindings = new Map();
-        factBindings.set(hole.name, {
-          answer: match.name,
-          similarity: match.similarity,
-          method: 'hdc_level',
-          level,
-          steps
-        });
-
-        results.push({
-          bindings: factBindings,
-          score: match.similarity,
-          method: 'hdc_level',
-          level,
-          steps
-        });
-
-        // Early termination on high confidence
-        if (match.similarity >= HIGH_CONFIDENCE) {
-          dbg('HDC_LEVEL', `Early termination at level ${level} with confidence ${match.similarity}`);
-          return results;
-        }
-      }
+      });
 
       // If we found good results at this level, return them
       if (results.length > 0 && results[0].score >= thresholds.HDC_MATCH * 1.1) {
@@ -475,16 +656,24 @@ export function searchHDCByLevel(session, operatorName, knowns, holes, operatorV
   // Multi-hole: use cumulative bundle approach
   if (holes.length >= 2 && results.length === 0) {
     for (let level = 0; level <= maxLevel; level++) {
-      const levelBundle = componentKB.getCumulativeBundle(level);
+      const levelBundle = timeBlock(session, 'query.hdc.level.bundle', () =>
+        componentKB.getCumulativeBundle(level)
+      );
       if (!levelBundle) continue;
 
-      const answer = unbind(levelBundle, partial);
+      const answer = timeBlock(session, 'query.hdc.level.unbind.answer', () =>
+        unbind(levelBundle, partial)
+      );
       const holeCandidates = [];
 
       for (const hole of holes) {
         const posVec = getPositionVector(hole.index, session.geometry, session.hdcStrategy, session);
-        const candidate = unbind(answer, posVec);
-        const matches = topKSimilar(candidate, vocabulary, 5, session);
+        const candidate = timeBlock(session, 'query.hdc.level.unbind.hole', () =>
+          unbind(answer, posVec)
+        );
+        const matches = timeBlock(session, 'query.hdc.level.topk', () =>
+          topKSimilar(candidate, vocabulary, 5, session)
+        );
         holeCandidates.push({
           hole,
           matches: matches.filter(m => m.similarity > thresholds.VERIFICATION)

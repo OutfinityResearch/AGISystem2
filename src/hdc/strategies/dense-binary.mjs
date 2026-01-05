@@ -7,7 +7,7 @@
  *
  * Properties:
  * - Storage: Uint32Array with geometry/32 words
- * - Bind: Bitwise XOR (self-inverse, associative, commutative)
+ * - Bind: Bitwise XOR (associative, commutative)
  * - Bundle: Majority vote per bit
  * - Similarity: 1 - (Hamming distance / geometry)
  */
@@ -156,6 +156,14 @@ class DenseBinaryVector {
       this.data[i] = ~this.data[i] >>> 0;
     }
     return this;
+  }
+
+  /**
+   * NOT (returns new vector)
+   * @returns {DenseBinaryVector}
+   */
+  not() {
+    return this.clone().notInPlace();
   }
 
   /**
@@ -532,7 +540,7 @@ function serialize(v) {
  * @param {number} k
  * @returns {Array<{name: string, similarity: number}>}
  */
- function topKSimilar(query, vocabulary, k = 5, session = null) {
+function topKSimilar(query, vocabulary, k = 5, session = null) {
   const results = [];
 
   const entries = vocabulary instanceof Map

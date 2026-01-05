@@ -12,6 +12,7 @@ import { TRANSITIVE_RELATIONS } from './transitive.mjs';
 import { getThresholds } from '../core/constants.mjs';
 import { canonicalizeTokenName } from '../runtime/canonicalize.mjs';
 import { LevelAwareRuleIndex } from './prove/rule-index.mjs';
+import { timeBlock } from './perf.mjs';
 
 /**
  * KB matching engine with level-aware optimization
@@ -192,7 +193,14 @@ export class KBMatcher {
     let scanFacts = this.session.kbFacts;
     if (componentKB && op) {
       const arg0 = args[0] && !String(args[0]).startsWith('?') ? args[0] : null;
-      scanFacts = arg0 ? componentKB.findByOperatorAndArg0(op, arg0) : componentKB.findByOperator(op);
+      const arg1 = args[1] && !String(args[1]).startsWith('?') ? args[1] : null;
+      if (arg0) {
+        scanFacts = componentKB.findByOperatorAndArg0(op, arg0);
+      } else if (arg1 && componentKB.findByOperatorAndArg1) {
+        scanFacts = componentKB.findByOperatorAndArg1(op, arg1);
+      } else {
+        scanFacts = componentKB.findByOperator(op);
+      }
     }
 
     // Direct KB matches
@@ -434,8 +442,12 @@ export class KBMatcher {
         }
       }
 
-      const candidates = flattenConclusionLeaves();
-      const goalVec = this.session.executor.buildStatementVector(goal);
+      const candidates = timeBlock(this.session, 'kb.rule_match.flatten', () =>
+        flattenConclusionLeaves()
+      );
+      const goalVec = timeBlock(this.session, 'kb.rule_match.goal_vector', () =>
+        this.session.executor.buildStatementVector(goal)
+      );
 
       for (const candidate of candidates) {
         const concOp = this.engine.unification.extractOperatorFromAST(candidate.ast);
@@ -450,16 +462,22 @@ export class KBMatcher {
 
         let conclusionSim = 0;
         if (!goalMatchesConclusion) {
-          const vec = candidate.vector || (candidate.ast ? this.session.executor.buildStatementVector(candidate.ast) : null);
+          const vec = candidate.vector || (candidate.ast ? timeBlock(this.session, 'kb.rule_match.conclusion_vector', () =>
+            this.session.executor.buildStatementVector(candidate.ast)
+          ) : null);
           if (vec) {
             this.session.reasoningStats.similarityChecks++;
-            conclusionSim = similarity(goalVec, vec);
+            conclusionSim = timeBlock(this.session, 'kb.rule_match.similarity', () =>
+              similarity(goalVec, vec)
+            );
           }
         }
 
         if (!(goalMatchesConclusion || conclusionSim > this.thresholds.CONCLUSION_MATCH)) continue;
 
-        const conditionResult = this.engine.conditions.proveCondition(rule, depth + 1);
+        const conditionResult = timeBlock(this.session, 'kb.rule_match.condition', () =>
+          this.engine.conditions.proveCondition(rule, depth + 1)
+        );
         if (!conditionResult.valid) continue;
 
         this.engine.logStep('rule_match', rule.name || rule.source);
@@ -484,10 +502,12 @@ export class KBMatcher {
     }
 
     if (rule.hasVariables && rule.conclusionAST) {
-      const unifyResult = this.engine.unification.tryUnification(goal, rule, depth, {
-        useLevelOptimization: useLevelOpt,
-        goalLevel
-      });
+      const unifyResult = timeBlock(this.session, 'kb.rule_match.unification', () =>
+        this.engine.unification.tryUnification(goal, rule, depth, {
+          useLevelOptimization: useLevelOpt,
+          goalLevel
+        })
+      );
       if (unifyResult.valid) {
         return unifyResult;
       }

@@ -9,6 +9,7 @@
 import { getThresholds } from '../core/constants.mjs';
 import { debug_trace } from '../utils/debug.js';
 import { computeGoalLevel } from './constructivist-level.mjs';
+import { timeBlock } from './perf.mjs';
 
 function dbg(category, ...args) {
   debug_trace(`[Unify:${category}]`, ...args);
@@ -55,22 +56,23 @@ export class UnificationEngine {
     const goalLevel = options.goalLevel ?? (useLevelOpt && componentKB ? componentKB.computeGoalLevel(goal.toString?.() || '') : null);
     const strictLevelPruning = options.strictLevelPruning === true;
 
-    const leafConclusions = [];
-    const collectLeafAsts = (part) => {
-      if (!part) return;
-      if (part.type === 'leaf' && part.ast) {
-        leafConclusions.push(part.ast);
-        return;
-      }
-      // Do not treat Not(P) as P when matching conclusions.
-      if (part.type === 'Not') return;
-      if ((part.type === 'And' || part.type === 'Or') && Array.isArray(part.parts)) {
-        for (const p of part.parts) collectLeafAsts(p);
-      }
-    };
-    if (rule.conclusionParts) collectLeafAsts(rule.conclusionParts);
-
-    const candidateConclusions = leafConclusions.length > 0 ? leafConclusions : [rule.conclusionAST];
+    const candidateConclusions = timeBlock(this.session, 'unify.collect_conclusions', () => {
+      const leafConclusions = [];
+      const collectLeafAsts = (part) => {
+        if (!part) return;
+        if (part.type === 'leaf' && part.ast) {
+          leafConclusions.push(part.ast);
+          return;
+        }
+        // Do not treat Not(P) as P when matching conclusions.
+        if (part.type === 'Not') return;
+        if ((part.type === 'And' || part.type === 'Or') && Array.isArray(part.parts)) {
+          for (const p of part.parts) collectLeafAsts(p);
+        }
+      };
+      if (rule.conclusionParts) collectLeafAsts(rule.conclusionParts);
+      return leafConclusions.length > 0 ? leafConclusions : [rule.conclusionAST];
+    });
 
     for (const concAST of candidateConclusions) {
       const concOp = this.extractOperatorFromAST(concAST);
@@ -112,14 +114,18 @@ export class UnificationEngine {
       dbg('UNIFY', 'Bindings:', [...bindings.entries()]);
 
       if (strictLevelPruning && useLevelOpt && goalLevel !== null) {
-        const premLevel = this.computeMaxPremiseLevel(rule, bindings);
+        const premLevel = timeBlock(this.session, 'unify.level_prune', () =>
+          this.computeMaxPremiseLevel(rule, bindings)
+        );
         if (Number.isFinite(premLevel) && premLevel > goalLevel) {
           continue;
         }
       }
 
       // Prove the instantiated condition
-      const condResult = this.engine.conditions.proveInstantiatedCondition(rule, bindings, depth + 1);
+      const condResult = timeBlock(this.session, 'unify.prove_condition', () =>
+        this.engine.conditions.proveInstantiatedCondition(rule, bindings, depth + 1)
+      );
 
       if (condResult.valid) {
         this.engine.logStep('unification_match', rule.name || rule.source);
