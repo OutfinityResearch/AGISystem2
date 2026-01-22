@@ -1,5 +1,0 @@
-# Errors for evals/stress/psychology.sys2
-
-## Missing Dependencies
-
-- [exact(A)+holo] Unknown operator 'trusts' at 3021:12

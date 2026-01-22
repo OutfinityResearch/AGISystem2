@@ -1,6 +1,0 @@
-# URC - BackendPreferenceRegistry v1
-# Declarative backend selection and fallbacks (inspectable facts).
-
-@PreferBackend:PreferBackend __Relation
-@FallbackTo:FallbackTo __Relation
-@PreferEvidence:PreferEvidence __Relation

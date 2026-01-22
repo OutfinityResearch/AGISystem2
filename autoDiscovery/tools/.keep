@@ -1,1 +1,0 @@
-This folder contains optional CLI tools. Use `node autoDiscovery/runAutodiscoveryAgent.mjs` as the main entry point.

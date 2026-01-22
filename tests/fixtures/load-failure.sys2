@@ -1,3 +1,0 @@
-# Fixture that triggers a runtime error during Load.
-# bundle requires a list argument, so this should fail execution.
-bundle

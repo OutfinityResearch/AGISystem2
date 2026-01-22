@@ -1,6 +1,0 @@
-# CSP Domain - Lexicon
-# Value vocabulary for constraint-style domains used by evaluation suites.
-
-@Safe:Safe __State
-@Unsafe:Unsafe __State
-

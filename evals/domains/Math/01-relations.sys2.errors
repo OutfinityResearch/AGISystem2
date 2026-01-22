@@ -1,6 +1,0 @@
-# Errors for evals/domains/Math/01-relations.sys2
-
-## Non-Graph Declarations
-
-- [exact(A)+holo] Atomic declaration 'Division:Division ___NewVector' at 95:1
-- [exact(A)+holo] Atomic declaration 'Multiplication:Multiplication ___NewVector' at 94:1

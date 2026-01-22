@@ -1,7 +1,0 @@
-# Anthropology Domain Theory - Index
-# Fundamental anthropological concepts and relations
-
-@_ Load "./00-lexicon-properties.sys2"
-@_ Load "./00-lexicon-categories.sys2"
-@_ Load "./00-concepts.sys2"
-@_ Load "./01-relations.sys2"
