@@ -3,17 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#0b1220" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f7fbff" />
     <meta
       name="description"
-      content="Toward a Practical System 2 for AI‑Assisted Research: principles, failure modes, evaluation signals, and the TRL gap to a reviewer‑grade scientific validator."
+      content="Toward a Practical System 2 for AI‑Assisted Research: principles, failure modes, and evaluation signals for rigorous, auditable AI‑assisted workflows."
     />
 
     <meta property="og:title" content="Toward a Practical System 2 for AI‑Assisted Research" />
     <meta
       property="og:description"
-      content="Principles, failure modes, evaluation signals, and the TRL gap to a reviewer‑grade scientific validator."
+      content="Principles, failure modes, and evaluation signals for rigorous, auditable AI‑assisted research."
     />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://agisystem2.com/ai-assisted-research.html" />
@@ -22,21 +22,21 @@
 
     <style>
       :root {
-        --bg0: #070a12;
-        --bg1: #0b1220;
-        --card: rgba(16, 24, 40, 0.72);
-        --card2: rgba(8, 12, 22, 0.55);
-        --stroke: rgba(148, 163, 184, 0.22);
-        --stroke2: rgba(148, 163, 184, 0.14);
-        --text: rgba(248, 250, 252, 0.92);
-        --muted: rgba(226, 232, 240, 0.72);
-        --faint: rgba(226, 232, 240, 0.55);
-        --accent: #6ee7ff;
-        --accent2: #a78bfa;
-        --good: #5eead4;
-        --warn: #fbbf24;
-        --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
-        --shadow2: 0 12px 30px rgba(0, 0, 0, 0.4);
+        --bg0: #f7fbff;
+        --bg1: #fff7fb;
+        --card: rgba(255, 255, 255, 0.78);
+        --card2: rgba(255, 255, 255, 0.62);
+        --stroke: rgba(2, 6, 23, 0.16);
+        --stroke2: rgba(2, 6, 23, 0.1);
+        --text: rgba(2, 6, 23, 0.92);
+        --muted: rgba(2, 6, 23, 0.72);
+        --faint: rgba(2, 6, 23, 0.56);
+        --accent: #0a7dff;
+        --accent2: #ff2bd6;
+        --good: #00c389;
+        --warn: #ff8a00;
+        --shadow: 0 20px 60px rgba(2, 6, 23, 0.12);
+        --shadow2: 0 14px 34px rgba(2, 6, 23, 0.1);
         --radius: 18px;
         --radius2: 14px;
         --maxw: 1120px;
@@ -57,9 +57,10 @@
         font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
           "Apple Color Emoji", "Segoe UI Emoji";
         color: var(--text);
-        background: radial-gradient(1200px 600px at 20% -10%, rgba(110, 231, 255, 0.12), transparent 60%),
-          radial-gradient(900px 500px at 90% 10%, rgba(167, 139, 250, 0.14), transparent 60%),
-          radial-gradient(900px 500px at 30% 100%, rgba(94, 234, 212, 0.08), transparent 60%),
+        background: radial-gradient(900px 480px at 12% -10%, rgba(79, 243, 255, 0.28), transparent 62%),
+          radial-gradient(900px 520px at 92% 0%, rgba(255, 79, 216, 0.22), transparent 60%),
+          radial-gradient(900px 520px at 12% 110%, rgba(167, 255, 79, 0.22), transparent 62%),
+          radial-gradient(900px 520px at 92% 110%, rgba(255, 176, 32, 0.18), transparent 60%),
           linear-gradient(180deg, var(--bg0), var(--bg1));
       }
 
@@ -73,7 +74,7 @@
       }
 
       a:focus-visible {
-        outline: 2px solid rgba(110, 231, 255, 0.7);
+        outline: 2px solid rgba(10, 125, 255, 0.55);
         outline-offset: 2px;
       }
 
@@ -82,7 +83,7 @@
         left: -999px;
         top: 0;
         padding: 10px 12px;
-        background: rgba(10, 16, 28, 0.95);
+        background: rgba(255, 255, 255, 0.95);
         border: 1px solid var(--stroke);
         border-radius: 12px;
         z-index: 50;
@@ -106,7 +107,7 @@
         gap: 12px;
         padding: 14px 14px;
         border: 1px solid var(--stroke);
-        background: linear-gradient(180deg, rgba(16, 24, 40, 0.66), rgba(8, 12, 22, 0.5));
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.62));
         backdrop-filter: blur(10px);
         border-radius: var(--radius);
         box-shadow: var(--shadow2);
@@ -127,10 +128,11 @@
         height: 34px;
         flex: 0 0 auto;
         border-radius: 12px;
-        border: 1px solid rgba(110, 231, 255, 0.35);
-        background: radial-gradient(18px 18px at 30% 25%, rgba(110, 231, 255, 0.25), transparent 60%),
-          radial-gradient(22px 18px at 75% 70%, rgba(167, 139, 250, 0.22), transparent 60%),
-          rgba(8, 12, 22, 0.35);
+        border: 1px solid rgba(10, 125, 255, 0.32);
+        background: radial-gradient(18px 18px at 30% 25%, rgba(79, 243, 255, 0.3), transparent 60%),
+          radial-gradient(22px 18px at 75% 70%, rgba(255, 79, 216, 0.24), transparent 60%),
+          radial-gradient(22px 18px at 45% 85%, rgba(167, 255, 79, 0.16), transparent 60%),
+          rgba(255, 255, 255, 0.78);
         display: grid;
         place-items: center;
       }
@@ -180,7 +182,7 @@
         padding: 9px 11px;
         border: 1px solid var(--stroke);
         border-radius: 999px;
-        background: rgba(8, 12, 22, 0.35);
+        background: rgba(255, 255, 255, 0.7);
         color: var(--text);
         font-size: 13px;
         line-height: 1;
@@ -193,9 +195,10 @@
       }
 
       .pill.primary {
-        border-color: rgba(110, 231, 255, 0.35);
-        background: radial-gradient(60px 40px at 20% 30%, rgba(110, 231, 255, 0.16), transparent 60%),
-          rgba(8, 12, 22, 0.35);
+        border-color: rgba(10, 125, 255, 0.28);
+        background: radial-gradient(70px 46px at 18% 30%, rgba(79, 243, 255, 0.18), transparent 60%),
+          radial-gradient(90px 60px at 86% 18%, rgba(255, 79, 216, 0.14), transparent 62%),
+          rgba(255, 255, 255, 0.7);
       }
 
       .hero {
@@ -203,7 +206,7 @@
         padding: 22px;
         border: 1px solid var(--stroke);
         border-radius: var(--radius);
-        background: linear-gradient(180deg, rgba(16, 24, 40, 0.55), rgba(8, 12, 22, 0.38));
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.62));
         backdrop-filter: blur(10px);
         box-shadow: var(--shadow);
         overflow: hidden;
@@ -214,8 +217,9 @@
         content: "";
         position: absolute;
         inset: -1px;
-        background: radial-gradient(600px 240px at 20% 0%, rgba(110, 231, 255, 0.12), transparent 60%),
-          radial-gradient(520px 240px at 90% 30%, rgba(167, 139, 250, 0.14), transparent 60%);
+        background: radial-gradient(680px 280px at 18% 0%, rgba(79, 243, 255, 0.22), transparent 60%),
+          radial-gradient(620px 280px at 90% 22%, rgba(255, 79, 216, 0.2), transparent 60%),
+          radial-gradient(560px 280px at 60% 120%, rgba(167, 255, 79, 0.16), transparent 62%);
         pointer-events: none;
       }
 
@@ -231,13 +235,13 @@
         padding: 8px 10px;
         border: 1px solid var(--stroke2);
         border-radius: 999px;
-        background: rgba(8, 12, 22, 0.3);
+        background: rgba(255, 255, 255, 0.72);
         color: var(--muted);
         font-size: 13px;
       }
 
       .kicker b {
-        color: rgba(110, 231, 255, 0.95);
+        color: var(--accent);
         font-weight: 700;
       }
 
@@ -250,7 +254,7 @@
 
       .subtitle {
         margin: 0;
-        color: rgba(226, 232, 240, 0.78);
+        color: rgba(2, 6, 23, 0.68);
         font-size: 16px;
         line-height: 1.5;
         max-width: 75ch;
@@ -277,7 +281,7 @@
         top: 92px;
         border: 1px solid var(--stroke);
         border-radius: var(--radius);
-        background: rgba(8, 12, 22, 0.35);
+        background: rgba(255, 255, 255, 0.74);
         backdrop-filter: blur(10px);
         box-shadow: var(--shadow2);
         overflow: hidden;
@@ -296,12 +300,12 @@
         font-size: 13px;
         letter-spacing: 0.11em;
         text-transform: uppercase;
-        color: rgba(226, 232, 240, 0.78);
+        color: rgba(2, 6, 23, 0.62);
       }
 
       .elevator header span {
         font-size: 12.5px;
-        color: rgba(226, 232, 240, 0.62);
+        color: rgba(2, 6, 23, 0.5);
       }
 
       .navlist {
@@ -320,22 +324,23 @@
         padding: 10px 10px;
         border-radius: 12px;
         border: 1px solid transparent;
-        color: rgba(226, 232, 240, 0.84);
+        color: rgba(2, 6, 23, 0.78);
         font-size: 13.5px;
         line-height: 1.25;
       }
 
       .navlist a:hover {
         text-decoration: none;
-        background: rgba(16, 24, 40, 0.55);
+        background: rgba(2, 6, 23, 0.04);
         border-color: var(--stroke2);
       }
 
       .navlist a[aria-current="true"] {
-        background: radial-gradient(120px 60px at 20% 30%, rgba(110, 231, 255, 0.18), transparent 62%),
-          rgba(16, 24, 40, 0.65);
-        border-color: rgba(110, 231, 255, 0.28);
-        color: rgba(248, 250, 252, 0.92);
+        background: radial-gradient(140px 70px at 18% 28%, rgba(79, 243, 255, 0.22), transparent 62%),
+          radial-gradient(160px 80px at 84% 18%, rgba(255, 79, 216, 0.14), transparent 60%),
+          rgba(255, 255, 255, 0.78);
+        border-color: rgba(10, 125, 255, 0.26);
+        color: rgba(2, 6, 23, 0.92);
       }
 
       .toc-badge {
@@ -345,8 +350,8 @@
         display: grid;
         place-items: center;
         border: 1px solid var(--stroke2);
-        background: rgba(8, 12, 22, 0.25);
-        color: rgba(226, 232, 240, 0.84);
+        background: rgba(255, 255, 255, 0.74);
+        color: rgba(2, 6, 23, 0.72);
         font-weight: 700;
         letter-spacing: 0.02em;
         flex: 0 0 auto;
@@ -355,7 +360,7 @@
       .tower {
         border: 1px solid var(--stroke);
         border-radius: var(--radius);
-        background: rgba(8, 12, 22, 0.32);
+        background: rgba(255, 255, 255, 0.7);
         box-shadow: var(--shadow2);
         overflow: hidden;
         position: relative;
@@ -365,8 +370,8 @@
         content: "";
         position: absolute;
         inset: 0;
-        background-image: linear-gradient(rgba(148, 163, 184, 0.07) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+        background-image: linear-gradient(rgba(2, 6, 23, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(2, 6, 23, 0.04) 1px, transparent 1px);
         background-size: 34px 34px;
         mask-image: radial-gradient(500px 500px at 50% 30%, black 0%, transparent 72%);
         opacity: 0.65;
@@ -384,7 +389,7 @@
         padding: 14px 14px;
         border: 1px solid var(--stroke2);
         border-radius: 16px;
-        background: linear-gradient(180deg, rgba(16, 24, 40, 0.55), rgba(8, 12, 22, 0.35));
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.66));
       }
 
       .article section + section {
@@ -402,7 +407,7 @@
         font-size: 13px;
         letter-spacing: 0.11em;
         text-transform: uppercase;
-        color: rgba(226, 232, 240, 0.74);
+        color: rgba(2, 6, 23, 0.6);
       }
 
       .article p {
@@ -418,7 +423,7 @@
       .article ul {
         margin: 10px 0 0;
         padding-left: 18px;
-        color: rgba(226, 232, 240, 0.78);
+        color: rgba(2, 6, 23, 0.74);
         line-height: 1.6;
       }
 
@@ -431,12 +436,12 @@
         padding: 12px 12px;
         border: 1px solid var(--stroke2);
         border-radius: 14px;
-        background: rgba(8, 12, 22, 0.25);
-        color: rgba(226, 232, 240, 0.78);
+        background: rgba(255, 255, 255, 0.74);
+        color: rgba(2, 6, 23, 0.74);
       }
 
       .callout b {
-        color: rgba(110, 231, 255, 0.92);
+        color: var(--accent);
       }
 
       .chips {
@@ -455,39 +460,39 @@
         padding: 8px 10px;
         border-radius: 999px;
         border: 1px solid var(--stroke2);
-        background: rgba(8, 12, 22, 0.22);
+        background: rgba(255, 255, 255, 0.7);
         font-size: 13px;
-        color: rgba(226, 232, 240, 0.82);
+        color: rgba(2, 6, 23, 0.78);
       }
 
       .chip i {
         width: 9px;
         height: 9px;
         border-radius: 999px;
-        background: rgba(110, 231, 255, 0.7);
-        box-shadow: 0 0 0 3px rgba(110, 231, 255, 0.12);
+        background: rgba(79, 243, 255, 0.72);
+        box-shadow: 0 0 0 3px rgba(79, 243, 255, 0.14);
       }
 
       .chip:nth-child(2) i {
-        background: rgba(167, 139, 250, 0.7);
-        box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.12);
+        background: rgba(255, 79, 216, 0.72);
+        box-shadow: 0 0 0 3px rgba(255, 79, 216, 0.14);
       }
 
       .chip:nth-child(3) i {
-        background: rgba(94, 234, 212, 0.7);
-        box-shadow: 0 0 0 3px rgba(94, 234, 212, 0.12);
+        background: rgba(167, 255, 79, 0.72);
+        box-shadow: 0 0 0 3px rgba(167, 255, 79, 0.14);
       }
 
       .chip:nth-child(4) i {
-        background: rgba(251, 191, 36, 0.7);
-        box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.12);
+        background: rgba(255, 176, 32, 0.74);
+        box-shadow: 0 0 0 3px rgba(255, 176, 32, 0.14);
       }
 
       .table-wrap {
         margin-top: 12px;
         border: 1px solid var(--stroke2);
         border-radius: 16px;
-        background: rgba(8, 12, 22, 0.22);
+        background: rgba(255, 255, 255, 0.74);
         overflow: auto;
       }
 
@@ -501,16 +506,16 @@
         caption-side: top;
         text-align: left;
         padding: 12px 12px 10px;
-        color: rgba(226, 232, 240, 0.82);
+        color: rgba(2, 6, 23, 0.78);
         font-weight: 650;
       }
 
       th,
       td {
         padding: 10px 12px;
-        border-top: 1px solid rgba(148, 163, 184, 0.14);
+        border-top: 1px solid rgba(2, 6, 23, 0.1);
         vertical-align: top;
-        color: rgba(226, 232, 240, 0.78);
+        color: rgba(2, 6, 23, 0.74);
         line-height: 1.55;
       }
 
@@ -518,12 +523,12 @@
         font-size: 12.5px;
         letter-spacing: 0.1em;
         text-transform: uppercase;
-        color: rgba(226, 232, 240, 0.72);
-        background: rgba(16, 24, 40, 0.35);
+        color: rgba(2, 6, 23, 0.6);
+        background: rgba(2, 6, 23, 0.035);
       }
 
       td strong {
-        color: rgba(248, 250, 252, 0.9);
+        color: rgba(2, 6, 23, 0.92);
       }
 
       footer {
@@ -531,8 +536,8 @@
         padding: 18px 18px;
         border: 1px solid var(--stroke);
         border-radius: var(--radius);
-        background: rgba(8, 12, 22, 0.32);
-        color: rgba(226, 232, 240, 0.72);
+        background: rgba(255, 255, 255, 0.74);
+        color: rgba(2, 6, 23, 0.68);
         line-height: 1.6;
       }
 
@@ -589,7 +594,7 @@
               />
               <path
                 d="M8 12h8M12 8v8"
-                stroke="rgba(167,139,250,0.9)"
+                stroke="rgba(255,79,216,0.9)"
                 stroke-width="1.6"
                 stroke-linecap="round"
               />
@@ -644,7 +649,7 @@
       <header class="hero">
         <div class="kicker"><b>Research note</b> Practical System‑2 infrastructure for AI‑accelerated science</div>
         <h1>Toward a Practical “System 2” for AI‑Assisted Research</h1>
-        <p class="subtitle">Principles, Failure Modes, Evaluation Signals, and the TRL Gap to a Real Scientific Reviewer</p>
+        <p class="subtitle">Principles, Failure Modes, and Evaluation Signals for Rigorous Review</p>
         <p class="lede">
           This short paper condenses observations from building AGISystem2 using an AI‑assisted, specification‑driven
           methodology. It treats “System 1 / System 2” as a workflow metaphor: fast generation must be separated from
@@ -663,28 +668,16 @@
               <a href="#abstract" data-sec="A" aria-current="true"><span class="toc-badge">A</span>Abstract</a>
             </li>
             <li>
-              <a href="#keywords" data-sec="K"><span class="toc-badge">K</span>Keywords</a>
+              <a href="#principles" data-sec="1"><span class="toc-badge">1</span>Principles</a>
             </li>
             <li>
-              <a href="#background" data-sec="1"><span class="toc-badge">1</span>Background &amp; frame</a>
+              <a href="#failure-modes" data-sec="2"><span class="toc-badge">2</span>Failure modes</a>
             </li>
             <li>
-              <a href="#case-anchor" data-sec="2"><span class="toc-badge">2</span>Case anchor</a>
+              <a href="#evaluation-signals" data-sec="3"><span class="toc-badge">3</span>Evaluation signals</a>
             </li>
             <li>
-              <a href="#principles" data-sec="3"><span class="toc-badge">3</span>Principles</a>
-            </li>
-            <li>
-              <a href="#failure-modes" data-sec="4"><span class="toc-badge">4</span>Failure modes</a>
-            </li>
-            <li>
-              <a href="#trl-gap" data-sec="5"><span class="toc-badge">5</span>TRL status</a>
-            </li>
-            <li>
-              <a href="#evaluation-signals" data-sec="6"><span class="toc-badge">6</span>Evaluation signals</a>
-            </li>
-            <li>
-              <a href="#discussion" data-sec="7"><span class="toc-badge">7</span>Discussion</a>
+              <a href="#discussion" data-sec="4"><span class="toc-badge">4</span>Conclusion</a>
             </li>
           </ul>
         </nav>
@@ -694,101 +687,28 @@
             <section id="abstract" aria-labelledby="abstract-title">
               <h2 id="abstract-title">Abstract</h2>
               <p>
-                Agentic AI systems built around large language models (LLMs) have shifted research practice from
-                “assisted writing” toward workflow orchestration: models can draft specifications, generate and refactor
-                multi‑file codebases, write tests, and iterate via tool feedback loops. This creates a synthetic “System
-                1” that is fast, associative, and locally fluent, but it remains fragile under long‑horizon constraint
-                satisfaction, global coherence, and citation integrity—capabilities traditionally associated with “System
-                2” in dual‑process theory.
+                LLM‑based agents have shifted research practice from “assisted writing” toward workflow orchestration:
+                drafting specifications, generating and refactoring multi‑file codebases, writing tests, and iterating
+                via tool feedback. This creates a synthetic “System 1” that is fast and locally fluent—but fragile under
+                long‑horizon constraint satisfaction, global coherence, and citation integrity.
               </p>
               <p>
-                This note condenses observations from a practical experiment in which current AI systems were used to
-                co‑design and implement a System‑2‑like reasoning substrate (AGISystem2) under a specification‑driven
-                methodology. We extract principles for AI‑assisted research (specifications as governance; separation of
-                generation from validation; first‑class traceability; epistemic redundancy via multi‑agent cross‑checking;
-                explicit representational commitments; and optimization for global coherence) and map recurring failure
-                modes to mitigations.
+                Based on building AGISystem2 with an AI‑assisted, specification‑driven methodology, we summarize
+                practical principles for rigorous AI‑assisted research, map recurring failure modes to mitigations, and
+                propose evaluation signals that track not only throughput, but coherence and epistemic integrity.
               </p>
-              <p>
-                We argue that today’s System‑2‑like technologies remain at TRL1–TRL2: feasibility and concept
-                demonstration, not reviewer‑grade scientific validation. We conclude by motivating a discipline‑agnostic
-                “real System 2” capable of deterministic review, explicit semantics, tool‑integrated proof/analysis, and
-                adversarial falsification procedures as essential infrastructure for AI‑accelerated science.
-              </p>
-            </section>
-
-            <section id="keywords" aria-labelledby="keywords-title">
-              <h2 id="keywords-title">Keywords</h2>
-              <ul class="chips" aria-label="Keywords">
-                <li class="chip"><i></i>Dual‑process metaphor</li>
-                <li class="chip"><i></i>Agentic AI</li>
-                <li class="chip"><i></i>Specification‑driven R&amp;D</li>
-                <li class="chip"><i></i>Traceability</li>
-                <li class="chip"><i></i>Epistemic redundancy</li>
-                <li class="chip"><i></i>Global coherence</li>
-                <li class="chip"><i></i>Epistemic integrity</li>
-                <li class="chip"><i></i>Trustworthy AI</li>
-                <li class="chip"><i></i>TRL</li>
-              </ul>
-            </section>
-
-            <section id="background" aria-labelledby="background-title">
-              <h2 id="background-title">1. Background and conceptual frame</h2>
-              <p>
-                Dual‑process theory usefully distinguishes between fast associative production (“System 1”) and slow
-                deliberative validation (“System 2”). In contemporary AI practice, LLMs and their agentic wrappers behave
-                largely as a synthetic System 1: they generate plausible code, text, and arguments with high local
-                fluency, yet they drift under long contexts, mishandle corner cases, and frequently confabulate
-                citations.
-              </p>
-              <p>
-                The decisive shift is not simply better text completion but workflow orchestration: agents can browse
-                repositories, edit files, run tests, and iterate toward stated goals. This compresses time‑to‑prototype
-                but also amplifies a known epistemic hazard: success on a self‑constructed test suite can be mistaken for
-                scientific correctness or explanatory adequacy. The result is a recognizable “engineering‑first science”
-                tendency, in which specification satisfaction and benchmark‑like suites substitute for deeper
-                justification unless additional governance is introduced.
-              </p>
-              <p>
-                This paper treats the System‑1/System‑2 contrast as a workflow metaphor rather than a claim about minds.
-                The methodological implication is concrete: LLMs should be used as high‑throughput proposers of
-                candidate artifacts, while acceptance should be mediated by separate System‑2‑like mechanisms—
-                deterministic checks, explicit semantics, and reproducible traces—so that the synthetic System 1 does
-                not certify itself.
-              </p>
-            </section>
-
-            <section id="case-anchor" aria-labelledby="case-anchor-title">
-              <h2 id="case-anchor-title">2. Case anchor: building a System‑2‑like layer with AI assistance</h2>
-              <p>
-                The motivating experiment was the rapid construction of a System‑2‑like reasoning substrate, AGISystem2,
-                intended as a “minimum lovable product” for trustworthy AI research. The purpose of the case anchor is
-                not product description but methodological extraction: the project required niche architectural
-                decisions, coordinated multiple AI assistants with distinct roles (architecture, implementation,
-                refactoring, tests, review), and used a specification hierarchy as epistemic control.
-              </p>
-              <p>
-                AGISystem2 was designed to externalize parts of “review” into explicit mechanisms. At a high level it
-                functions as a System‑2 layer by representing claims in structured form, applying rule/geometry‑based
-                operations with defined semantics, and returning inspectable traces. The design emphasizes explicit
-                representational commitments (e.g., a constrained intermediate language, structured theories, and
-                interpretable partitions between factual and value‑laden dimensions) so that validation can be performed
-                independently of narrative persuasion.
-              </p>
-              <p>
-                Crucially, the development method treated specifications as first‑class artifacts. A URS/FS/NFS/DS
-                hierarchy guided the global architecture, while micro‑specifications were applied at file level to
-                constrain agentic generation and enable targeted tests. The resulting workflow resembled managing a
-                small virtual team: each agent could move quickly, but coherence was maintained via stable constraints,
-                traceability, and deterministic gates.
-              </p>
+              <div class="callout">
+                <b>Core idea:</b> use AI for high‑throughput generation, but gate acceptance through independent
+                validation: explicit semantics, deterministic checks, and auditable traces. Prompting is never a
+                substitute for review.
+              </div>
             </section>
 
             <section id="principles" aria-labelledby="principles-title">
-              <h2 id="principles-title">3. Observed principles for AI‑assisted research</h2>
+              <h2 id="principles-title">Principles for AI‑assisted research</h2>
               <p>
-                The experiment suggests that AI assistance becomes reliably productive when it is placed inside a
-                governance structure that externalizes constraints and separates generation from acceptance.
+                AI assistance becomes reliably useful when it is placed inside governance that externalizes constraints
+                and separates generation from acceptance.
               </p>
 
               <div class="table-wrap" role="group" aria-label="Table 1">
@@ -867,7 +787,7 @@
             </section>
 
             <section id="failure-modes" aria-labelledby="failure-modes-title">
-              <h2 id="failure-modes-title">4. Failure modes and mitigations</h2>
+              <h2 id="failure-modes-title">Failure modes and mitigations</h2>
               <p>
                 The workflow reveals characteristic failure modes that are likely to generalize across AI‑assisted
                 research projects.
@@ -934,34 +854,8 @@
               </div>
             </section>
 
-            <section id="trl-gap" aria-labelledby="trl-gap-title">
-              <h2 id="trl-gap-title">5. System‑2 layer as a research artifact and TRL status</h2>
-              <p>
-                A “System‑2 layer” is best defined functionally: a substrate that performs validation with explicit
-                semantics and produces inspectable traces. It may be realized through formal methods, constraint
-                solvers, typed intermediate representations, theorem provers, or neuro‑symbolic engines; the common
-                requirement is that acceptance is not a narrative act but a checkable procedure.
-              </p>
-              <p>
-                This clarifies why “better prompting” is insufficient: prompting can improve local behavior but does not
-                provide stable semantics, deterministic gates, or auditable traces at scale.
-              </p>
-              <p>
-                The experiment demonstrates that a System‑2‑like layer can be prototyped quickly with current AI
-                assistance, but maturity limits remain. The correct characterization is TRL1–TRL2: feasibility and
-                concept demonstration. The prototype can enforce project‑local constraints and produce structured traces,
-                but it is not yet a reviewer‑grade scientific validator.
-              </p>
-              <p>
-                Scientific review requires discipline‑agnostic correctness criteria, robust handling of adversarial or
-                out‑of‑distribution cases, faithful encoding of assumptions, and reliable integration with validated
-                external instruments. A TRL1–TRL2 System‑2‑like engine shows the design space; it does not yet substitute
-                for peer review or cross‑domain validation.
-              </p>
-            </section>
-
             <section id="evaluation-signals" aria-labelledby="evaluation-signals-title">
-              <h2 id="evaluation-signals-title">6. Evaluation signals and what should be measured</h2>
+              <h2 id="evaluation-signals-title">Evaluation signals: what to measure</h2>
               <p>
                 AI‑assisted research should be evaluated not only by throughput but by coherence and epistemic integrity.
                 The categories below provide a minimal evaluation vocabulary aligned with the principles and failure
@@ -1007,7 +901,7 @@
             </section>
 
             <section id="discussion" aria-labelledby="discussion-title">
-              <h2 id="discussion-title">7. Discussion and conclusion</h2>
+              <h2 id="discussion-title">Conclusion</h2>
               <p>
                 The central observation is that AI assistance does not merely speed up research; it changes the dominant
                 bottleneck. When synthesis is cheap and fluent, epistemic control becomes the scarce resource. The
@@ -1017,8 +911,9 @@
               </p>
               <p>
                 The AGISystem2 experiment indicates that System‑2‑like layers can be prototyped rapidly with current
-                tools, but their maturity is best described as TRL1–TRL2. They are promising as project‑local validators
-                and scaffolding for trustworthy pipelines, yet they do not constitute a real scientific reviewer.
+                tools, but turning them into reviewer‑grade validators is still hard: it requires explicit assumptions,
+                robust handling of adversarial and out‑of‑distribution cases, and reproducible traces that survive
+                scrutiny.
               </p>
               <p>
                 The broader requirement is a discipline‑agnostic System 2 that can perform deterministic review and
@@ -1103,4 +998,3 @@
     </script>
   </body>
 </html>
-

@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="color-scheme" content="light" />
     <meta
       name="description"
       content="AGISystem2 documents experiments and a System 2 vision for reliable, CPU-friendly, verifiable AI agents for high-stakes enterprise R&D."
     />
-    <meta name="theme-color" content="#0b1220" />
+    <meta name="theme-color" content="#f7fbff" />
 
     <meta property="og:title" content="AGISystem2 — System 2 Engineering for AI Agents" />
     <meta
@@ -22,21 +22,21 @@
 
     <style>
       :root {
-        --bg0: #070a12;
-        --bg1: #0b1220;
-        --card: rgba(16, 24, 40, 0.72);
-        --card2: rgba(8, 12, 22, 0.55);
-        --stroke: rgba(148, 163, 184, 0.22);
-        --stroke2: rgba(148, 163, 184, 0.14);
-        --text: rgba(248, 250, 252, 0.92);
-        --muted: rgba(226, 232, 240, 0.72);
-        --faint: rgba(226, 232, 240, 0.55);
-        --accent: #6ee7ff;
-        --accent2: #a78bfa;
-        --good: #5eead4;
-        --warn: #fbbf24;
-        --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
-        --shadow2: 0 12px 30px rgba(0, 0, 0, 0.4);
+        --bg0: #f7fbff;
+        --bg1: #fff7fb;
+        --card: rgba(255, 255, 255, 0.78);
+        --card2: rgba(255, 255, 255, 0.62);
+        --stroke: rgba(2, 6, 23, 0.16);
+        --stroke2: rgba(2, 6, 23, 0.1);
+        --text: rgba(2, 6, 23, 0.92);
+        --muted: rgba(2, 6, 23, 0.72);
+        --faint: rgba(2, 6, 23, 0.56);
+        --accent: #0a7dff;
+        --accent2: #ff2bd6;
+        --good: #00c389;
+        --warn: #ff8a00;
+        --shadow: 0 20px 60px rgba(2, 6, 23, 0.12);
+        --shadow2: 0 14px 34px rgba(2, 6, 23, 0.1);
         --radius: 18px;
         --radius2: 14px;
         --maxw: 1120px;
@@ -57,9 +57,10 @@
         font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
           "Apple Color Emoji", "Segoe UI Emoji";
         color: var(--text);
-        background: radial-gradient(1200px 600px at 20% -10%, rgba(110, 231, 255, 0.12), transparent 60%),
-          radial-gradient(900px 500px at 90% 10%, rgba(167, 139, 250, 0.14), transparent 60%),
-          radial-gradient(900px 500px at 30% 100%, rgba(94, 234, 212, 0.08), transparent 60%),
+        background: radial-gradient(900px 480px at 12% -10%, rgba(79, 243, 255, 0.28), transparent 62%),
+          radial-gradient(900px 520px at 92% 0%, rgba(255, 79, 216, 0.22), transparent 60%),
+          radial-gradient(900px 520px at 12% 110%, rgba(167, 255, 79, 0.22), transparent 62%),
+          radial-gradient(900px 520px at 92% 110%, rgba(255, 176, 32, 0.18), transparent 60%),
           linear-gradient(180deg, var(--bg0), var(--bg1));
       }
 
@@ -74,7 +75,7 @@
 
       a:focus-visible,
       button:focus-visible {
-        outline: 2px solid rgba(110, 231, 255, 0.7);
+        outline: 2px solid rgba(10, 125, 255, 0.55);
         outline-offset: 2px;
       }
 
@@ -83,7 +84,7 @@
         left: -999px;
         top: 0;
         padding: 10px 12px;
-        background: rgba(10, 16, 28, 0.95);
+        background: rgba(255, 255, 255, 0.95);
         border: 1px solid var(--stroke);
         border-radius: 12px;
         z-index: 50;
@@ -107,7 +108,7 @@
         gap: 12px;
         padding: 14px 14px;
         border: 1px solid var(--stroke);
-        background: linear-gradient(180deg, rgba(16, 24, 40, 0.66), rgba(8, 12, 22, 0.5));
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.62));
         backdrop-filter: blur(10px);
         border-radius: var(--radius);
         box-shadow: var(--shadow2);
@@ -128,10 +129,11 @@
         height: 34px;
         flex: 0 0 auto;
         border-radius: 12px;
-        border: 1px solid rgba(110, 231, 255, 0.35);
-        background: radial-gradient(18px 18px at 30% 25%, rgba(110, 231, 255, 0.25), transparent 60%),
-          radial-gradient(22px 18px at 75% 70%, rgba(167, 139, 250, 0.22), transparent 60%),
-          rgba(8, 12, 22, 0.35);
+        border: 1px solid rgba(10, 125, 255, 0.32);
+        background: radial-gradient(18px 18px at 30% 25%, rgba(79, 243, 255, 0.3), transparent 60%),
+          radial-gradient(22px 18px at 75% 70%, rgba(255, 79, 216, 0.24), transparent 60%),
+          radial-gradient(22px 18px at 45% 85%, rgba(167, 255, 79, 0.16), transparent 60%),
+          rgba(255, 255, 255, 0.78);
         display: grid;
         place-items: center;
       }
@@ -181,7 +183,7 @@
         padding: 9px 11px;
         border: 1px solid var(--stroke);
         border-radius: 999px;
-        background: rgba(8, 12, 22, 0.35);
+        background: rgba(255, 255, 255, 0.7);
         color: var(--text);
         font-size: 13px;
         line-height: 1;
@@ -194,9 +196,10 @@
       }
 
       .pill.primary {
-        border-color: rgba(110, 231, 255, 0.35);
-        background: radial-gradient(60px 40px at 20% 30%, rgba(110, 231, 255, 0.16), transparent 60%),
-          rgba(8, 12, 22, 0.35);
+        border-color: rgba(10, 125, 255, 0.28);
+        background: radial-gradient(70px 46px at 18% 30%, rgba(79, 243, 255, 0.18), transparent 60%),
+          radial-gradient(90px 60px at 86% 18%, rgba(255, 79, 216, 0.14), transparent 62%),
+          rgba(255, 255, 255, 0.7);
       }
 
       .hero {
@@ -207,7 +210,7 @@
         padding: 22px;
         border: 1px solid var(--stroke);
         border-radius: var(--radius);
-        background: linear-gradient(180deg, rgba(16, 24, 40, 0.55), rgba(8, 12, 22, 0.38));
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.62));
         backdrop-filter: blur(10px);
         box-shadow: var(--shadow);
         overflow: hidden;
@@ -218,8 +221,9 @@
         content: "";
         position: absolute;
         inset: -1px;
-        background: radial-gradient(600px 240px at 20% 0%, rgba(110, 231, 255, 0.12), transparent 60%),
-          radial-gradient(520px 240px at 90% 30%, rgba(167, 139, 250, 0.14), transparent 60%);
+        background: radial-gradient(680px 280px at 18% 0%, rgba(79, 243, 255, 0.22), transparent 60%),
+          radial-gradient(620px 280px at 90% 22%, rgba(255, 79, 216, 0.2), transparent 60%),
+          radial-gradient(560px 280px at 60% 120%, rgba(167, 255, 79, 0.16), transparent 62%);
         pointer-events: none;
       }
 
@@ -235,13 +239,13 @@
         padding: 8px 10px;
         border: 1px solid var(--stroke2);
         border-radius: 999px;
-        background: rgba(8, 12, 22, 0.3);
+        background: rgba(255, 255, 255, 0.72);
         color: var(--muted);
         font-size: 13px;
       }
 
       .kicker b {
-        color: rgba(110, 231, 255, 0.95);
+        color: var(--accent);
         font-weight: 700;
       }
 
@@ -275,7 +279,7 @@
         padding: 11px 14px;
         border-radius: 999px;
         border: 1px solid var(--stroke);
-        background: rgba(8, 12, 22, 0.3);
+        background: rgba(255, 255, 255, 0.72);
         color: var(--text);
         font-size: 14px;
         line-height: 1;
@@ -287,9 +291,10 @@
       }
 
       .btn.primary {
-        border-color: rgba(110, 231, 255, 0.4);
-        background: radial-gradient(80px 44px at 25% 40%, rgba(110, 231, 255, 0.22), transparent 60%),
-          rgba(8, 12, 22, 0.35);
+        border-color: rgba(10, 125, 255, 0.32);
+        background: radial-gradient(90px 48px at 22% 40%, rgba(79, 243, 255, 0.24), transparent 60%),
+          radial-gradient(100px 56px at 82% 18%, rgba(255, 79, 216, 0.18), transparent 62%),
+          rgba(255, 255, 255, 0.78);
       }
 
       .btn:hover {
@@ -300,7 +305,7 @@
       .hero-aside {
         border: 1px solid var(--stroke2);
         border-radius: var(--radius2);
-        background: rgba(8, 12, 22, 0.32);
+        background: rgba(255, 255, 255, 0.74);
         padding: 14px;
         overflow: hidden;
         position: relative;
@@ -310,7 +315,7 @@
         content: "";
         position: absolute;
         inset: 0;
-        background: linear-gradient(180deg, transparent, rgba(8, 12, 22, 0.75));
+        background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.92));
         pointer-events: none;
       }
 
@@ -319,7 +324,7 @@
         font-size: 13px;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: rgba(226, 232, 240, 0.78);
+        color: rgba(2, 6, 23, 0.62);
       }
 
       .chips {
@@ -338,32 +343,32 @@
         padding: 8px 10px;
         border-radius: 999px;
         border: 1px solid var(--stroke2);
-        background: rgba(8, 12, 22, 0.22);
+        background: rgba(255, 255, 255, 0.7);
         font-size: 13px;
-        color: rgba(226, 232, 240, 0.82);
+        color: rgba(2, 6, 23, 0.78);
       }
 
       .chip i {
         width: 9px;
         height: 9px;
         border-radius: 999px;
-        background: rgba(110, 231, 255, 0.7);
-        box-shadow: 0 0 0 3px rgba(110, 231, 255, 0.12);
+        background: rgba(79, 243, 255, 0.72);
+        box-shadow: 0 0 0 3px rgba(79, 243, 255, 0.14);
       }
 
       .chip:nth-child(2) i {
-        background: rgba(167, 139, 250, 0.7);
-        box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.12);
+        background: rgba(255, 79, 216, 0.72);
+        box-shadow: 0 0 0 3px rgba(255, 79, 216, 0.14);
       }
 
       .chip:nth-child(3) i {
-        background: rgba(94, 234, 212, 0.7);
-        box-shadow: 0 0 0 3px rgba(94, 234, 212, 0.12);
+        background: rgba(167, 255, 79, 0.72);
+        box-shadow: 0 0 0 3px rgba(167, 255, 79, 0.14);
       }
 
       .chip:nth-child(4) i {
-        background: rgba(251, 191, 36, 0.7);
-        box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.12);
+        background: rgba(255, 176, 32, 0.74);
+        box-shadow: 0 0 0 3px rgba(255, 176, 32, 0.14);
       }
 
       .robot-sketch {
@@ -387,7 +392,7 @@
         top: 92px;
         border: 1px solid var(--stroke);
         border-radius: var(--radius);
-        background: rgba(8, 12, 22, 0.35);
+        background: rgba(255, 255, 255, 0.74);
         backdrop-filter: blur(10px);
         box-shadow: var(--shadow2);
         overflow: hidden;
@@ -406,12 +411,12 @@
         font-size: 13px;
         letter-spacing: 0.11em;
         text-transform: uppercase;
-        color: rgba(226, 232, 240, 0.78);
+        color: rgba(2, 6, 23, 0.62);
       }
 
       .elevator header span {
         font-size: 12.5px;
-        color: rgba(226, 232, 240, 0.62);
+        color: rgba(2, 6, 23, 0.5);
       }
 
       .navlist {
@@ -430,21 +435,22 @@
         padding: 10px 10px;
         border-radius: 12px;
         border: 1px solid transparent;
-        color: rgba(226, 232, 240, 0.84);
+        color: rgba(2, 6, 23, 0.78);
         font-size: 13.5px;
       }
 
       .navlist a:hover {
         text-decoration: none;
-        background: rgba(16, 24, 40, 0.55);
+        background: rgba(2, 6, 23, 0.04);
         border-color: var(--stroke2);
       }
 
       .navlist a[aria-current="true"] {
-        background: radial-gradient(120px 60px at 20% 30%, rgba(110, 231, 255, 0.18), transparent 62%),
-          rgba(16, 24, 40, 0.65);
-        border-color: rgba(110, 231, 255, 0.28);
-        color: rgba(248, 250, 252, 0.92);
+        background: radial-gradient(140px 70px at 18% 28%, rgba(79, 243, 255, 0.22), transparent 62%),
+          radial-gradient(160px 80px at 84% 18%, rgba(255, 79, 216, 0.14), transparent 60%),
+          rgba(255, 255, 255, 0.78);
+        border-color: rgba(10, 125, 255, 0.26);
+        color: rgba(2, 6, 23, 0.92);
       }
 
       .floor-badge {
@@ -454,8 +460,8 @@
         display: grid;
         place-items: center;
         border: 1px solid var(--stroke2);
-        background: rgba(8, 12, 22, 0.25);
-        color: rgba(226, 232, 240, 0.84);
+        background: rgba(255, 255, 255, 0.74);
+        color: rgba(2, 6, 23, 0.72);
         font-weight: 700;
         letter-spacing: 0.02em;
       }
@@ -470,7 +476,7 @@
       .tower {
         border: 1px solid var(--stroke);
         border-radius: var(--radius);
-        background: rgba(8, 12, 22, 0.32);
+        background: rgba(255, 255, 255, 0.7);
         box-shadow: var(--shadow2);
         overflow: hidden;
         position: relative;
@@ -485,11 +491,12 @@
         width: 2px;
         background: linear-gradient(
           180deg,
-          rgba(110, 231, 255, 0.0),
-          rgba(110, 231, 255, 0.25),
-          rgba(167, 139, 250, 0.22),
-          rgba(94, 234, 212, 0.16),
-          rgba(110, 231, 255, 0.0)
+          rgba(79, 243, 255, 0.0),
+          rgba(79, 243, 255, 0.28),
+          rgba(255, 79, 216, 0.26),
+          rgba(167, 255, 79, 0.22),
+          rgba(255, 176, 32, 0.18),
+          rgba(79, 243, 255, 0.0)
         );
         opacity: 0.9;
         pointer-events: none;
@@ -499,8 +506,8 @@
         content: "";
         position: absolute;
         inset: 0;
-        background-image: linear-gradient(rgba(148, 163, 184, 0.07) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+        background-image: linear-gradient(rgba(2, 6, 23, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(2, 6, 23, 0.04) 1px, transparent 1px);
         background-size: 34px 34px;
         mask-image: radial-gradient(500px 500px at 50% 30%, black 0%, transparent 72%);
         opacity: 0.65;
@@ -522,7 +529,7 @@
 
       .floor {
         border: 1px solid var(--stroke2);
-        background: linear-gradient(180deg, rgba(16, 24, 40, 0.64), rgba(8, 12, 22, 0.42));
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.64));
         border-radius: var(--radius);
         overflow: hidden;
         position: relative;
@@ -536,24 +543,49 @@
         width: 22px;
         height: 22px;
         border-radius: 999px;
-        background: rgba(110, 231, 255, 0.26);
-        box-shadow: 0 0 0 4px rgba(110, 231, 255, 0.06);
+        background: rgba(79, 243, 255, 0.28);
+        box-shadow: 0 0 0 4px rgba(79, 243, 255, 0.07);
         pointer-events: none;
       }
 
       .floors > li:nth-child(2) .floor::before {
-        background: rgba(167, 139, 250, 0.25);
-        box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.06);
+        background: rgba(255, 79, 216, 0.26);
+        box-shadow: 0 0 0 4px rgba(255, 79, 216, 0.07);
       }
 
       .floors > li:nth-child(3) .floor::before {
+        background: rgba(167, 255, 79, 0.24);
+        box-shadow: 0 0 0 4px rgba(167, 255, 79, 0.07);
+      }
+
+      .floors > li:nth-child(4) .floor::before {
+        background: rgba(255, 176, 32, 0.2);
+        box-shadow: 0 0 0 4px rgba(255, 176, 32, 0.06);
+      }
+
+      .floors > li:nth-child(5) .floor::before {
         background: rgba(94, 234, 212, 0.22);
         box-shadow: 0 0 0 4px rgba(94, 234, 212, 0.06);
       }
 
-      .floors > li:nth-child(4) .floor::before {
-        background: rgba(251, 191, 36, 0.18);
-        box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.05);
+      .floors > li:nth-child(6) .floor::before {
+        background: rgba(79, 243, 255, 0.22);
+        box-shadow: 0 0 0 4px rgba(79, 243, 255, 0.06);
+      }
+
+      .floors > li:nth-child(7) .floor::before {
+        background: rgba(255, 79, 216, 0.2);
+        box-shadow: 0 0 0 4px rgba(255, 79, 216, 0.06);
+      }
+
+      .floors > li:nth-child(8) .floor::before {
+        background: rgba(167, 255, 79, 0.2);
+        box-shadow: 0 0 0 4px rgba(167, 255, 79, 0.06);
+      }
+
+      .floors > li:nth-child(9) .floor::before {
+        background: rgba(255, 176, 32, 0.18);
+        box-shadow: 0 0 0 4px rgba(255, 176, 32, 0.05);
       }
 
       .floor-header {
@@ -562,7 +594,7 @@
         gap: 12px;
         padding: 18px 18px 12px;
         padding-left: 68px;
-        border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+        border-bottom: 1px solid rgba(2, 6, 23, 0.08);
       }
 
       .floor-title {
@@ -576,7 +608,7 @@
         font-size: 14px;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: rgba(226, 232, 240, 0.72);
+        color: rgba(2, 6, 23, 0.56);
       }
 
       .floor-title h2 {
@@ -592,7 +624,7 @@
         height: 36px;
         border-radius: 14px;
         border: 1px solid var(--stroke2);
-        background: rgba(8, 12, 22, 0.28);
+        background: rgba(255, 255, 255, 0.72);
         display: grid;
         place-items: center;
       }
@@ -615,13 +647,13 @@
       }
 
       .floor-body p strong {
-        color: rgba(248, 250, 252, 0.9);
+        color: rgba(2, 6, 23, 0.92);
       }
 
       .floor-body ul {
         margin: 10px 0 0;
         padding-left: 18px;
-        color: rgba(226, 232, 240, 0.78);
+        color: rgba(2, 6, 23, 0.74);
         line-height: 1.55;
       }
 
@@ -634,12 +666,12 @@
         padding: 12px 12px;
         border: 1px solid var(--stroke2);
         border-radius: 14px;
-        background: rgba(8, 12, 22, 0.25);
-        color: rgba(226, 232, 240, 0.78);
+        background: rgba(255, 255, 255, 0.74);
+        color: rgba(2, 6, 23, 0.74);
       }
 
       .callout b {
-        color: rgba(110, 231, 255, 0.92);
+        color: var(--accent);
       }
 
       .exp-grid {
@@ -659,7 +691,7 @@
       .split > div {
         border: 1px solid var(--stroke2);
         border-radius: 16px;
-        background: rgba(8, 12, 22, 0.22);
+        background: rgba(255, 255, 255, 0.74);
         padding: 12px;
       }
 
@@ -668,7 +700,7 @@
         font-size: 13px;
         letter-spacing: 0.11em;
         text-transform: uppercase;
-        color: rgba(226, 232, 240, 0.72);
+        color: rgba(2, 6, 23, 0.6);
       }
 
       .split ul {
@@ -681,14 +713,14 @@
         border: 1px solid var(--stroke2);
         border-radius: 16px;
         padding: 12px;
-        background: rgba(8, 12, 22, 0.22);
-        color: rgba(248, 250, 252, 0.9);
+        background: rgba(255, 255, 255, 0.74);
+        color: rgba(2, 6, 23, 0.9);
       }
 
       .exp-card:hover {
         text-decoration: none;
-        border-color: rgba(110, 231, 255, 0.28);
-        background: rgba(16, 24, 40, 0.5);
+        border-color: rgba(10, 125, 255, 0.28);
+        background: rgba(255, 255, 255, 0.88);
       }
 
       .exp-card strong {
@@ -702,7 +734,7 @@
 
       .exp-card span {
         display: block;
-        color: rgba(226, 232, 240, 0.7);
+        color: rgba(2, 6, 23, 0.6);
         font-size: 13px;
         line-height: 1.5;
       }
@@ -719,8 +751,8 @@
         padding: 18px 18px;
         border: 1px solid var(--stroke);
         border-radius: var(--radius);
-        background: rgba(8, 12, 22, 0.32);
-        color: rgba(226, 232, 240, 0.72);
+        background: rgba(255, 255, 255, 0.74);
+        color: rgba(2, 6, 23, 0.68);
         line-height: 1.6;
       }
 
@@ -784,7 +816,7 @@
               />
               <path
                 d="M8 12h8M12 8v8"
-                stroke="rgba(167,139,250,0.9)"
+                stroke="rgba(255,79,216,0.9)"
                 stroke-width="1.6"
                 stroke-linecap="round"
               />
@@ -910,7 +942,7 @@
             <defs>
               <linearGradient id="g1" x1="0" y1="0" x2="520" y2="340">
                 <stop offset="0" stop-color="rgba(110,231,255,0.9)" />
-                <stop offset="0.55" stop-color="rgba(167,139,250,0.85)" />
+                <stop offset="0.55" stop-color="rgba(255,79,216,0.9)" />
                 <stop offset="1" stop-color="rgba(94,234,212,0.85)" />
               </linearGradient>
               <filter id="noise">
@@ -940,17 +972,17 @@
             />
             <path
               d="M156 130c26-20 58-30 94-30s68 10 94 30"
-              stroke="rgba(167,139,250,0.6)"
+              stroke="rgba(255,79,216,0.65)"
               stroke-width="1.6"
               stroke-linecap="round"
             />
-            <circle cx="220" cy="154" r="22" stroke="rgba(226,232,240,0.5)" stroke-width="1.6" />
-            <circle cx="300" cy="154" r="22" stroke="rgba(226,232,240,0.5)" stroke-width="1.6" />
+            <circle cx="220" cy="154" r="22" stroke="rgba(2,6,23,0.22)" stroke-width="1.6" />
+            <circle cx="300" cy="154" r="22" stroke="rgba(2,6,23,0.22)" stroke-width="1.6" />
             <circle cx="220" cy="154" r="6.5" fill="rgba(110,231,255,0.7)" />
             <circle cx="300" cy="154" r="6.5" fill="rgba(94,234,212,0.7)" />
             <path
               d="M238 206c18 12 36 12 54 0"
-              stroke="rgba(226,232,240,0.55)"
+              stroke="rgba(2,6,23,0.26)"
               stroke-width="1.8"
               stroke-linecap="round"
             />
@@ -973,7 +1005,7 @@
               stroke-linecap="round"
             />
             <g filter="url(#noise)" opacity="0.5">
-              <rect x="0" y="0" width="520" height="340" fill="rgba(226,232,240,0.2)" />
+              <rect x="0" y="0" width="520" height="340" fill="rgba(2,6,23,0.07)" />
             </g>
           </svg>
         </aside>
@@ -1751,8 +1783,7 @@
                   <div class="callout">
                     <b>Research insight:</b>
                     <a href="ai-assisted-research.html">Toward a Practical “System 2” for AI‑Assisted Research</a>
-                    — principles, failure modes, evaluation signals, and the TRL gap to a reviewer‑grade scientific
-                    validator.
+                    — principles, failure modes, and evaluation signals for rigorous, auditable AI‑assisted research.
                   </div>
                 </div>
               </section>
@@ -1813,8 +1844,8 @@
                     </div>
                   </div>
                   <div class="callout" style="margin-top: 12px">
-                    <b>TRL reality check:</b> today’s System‑2‑like tooling is best described as TRL1–TRL2 (feasibility
-                    and concept demonstration), not a reviewer‑grade scientific validator.
+                    <b>Maturity note:</b> today’s System‑2‑like tooling is promising but still early—use it as a
+                    project‑local validator, not as a substitute for reviewer‑grade scientific scrutiny.
                   </div>
                   <p style="margin-top: 12px">
                     Read the full note:
