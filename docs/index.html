@@ -1,2 +1,1770 @@
-Hello world! again!
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta
+      name="description"
+      content="AGISystem2 documents experiments and a System 2 vision for reliable, CPU-friendly, verifiable AI agents for high-stakes enterprise R&D."
+    />
+    <meta name="theme-color" content="#0b1220" />
 
+    <meta property="og:title" content="AGISystem2 — System 2 Engineering for AI Agents" />
+    <meta
+      property="og:description"
+      content="A tower of ideas: verification, neuro-symbolic reasoning, hyperdimensional computing, and semantic programming for trustworthy AI agents."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://agisystem2.com/" />
+
+    <title>AGISystem2 — System 2 Engineering for AI Agents</title>
+
+    <style>
+      :root {
+        --bg0: #070a12;
+        --bg1: #0b1220;
+        --card: rgba(16, 24, 40, 0.72);
+        --card2: rgba(8, 12, 22, 0.55);
+        --stroke: rgba(148, 163, 184, 0.22);
+        --stroke2: rgba(148, 163, 184, 0.14);
+        --text: rgba(248, 250, 252, 0.92);
+        --muted: rgba(226, 232, 240, 0.72);
+        --faint: rgba(226, 232, 240, 0.55);
+        --accent: #6ee7ff;
+        --accent2: #a78bfa;
+        --good: #5eead4;
+        --warn: #fbbf24;
+        --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+        --shadow2: 0 12px 30px rgba(0, 0, 0, 0.4);
+        --radius: 18px;
+        --radius2: 14px;
+        --maxw: 1120px;
+        --navw: 250px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100%;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+          "Apple Color Emoji", "Segoe UI Emoji";
+        color: var(--text);
+        background: radial-gradient(1200px 600px at 20% -10%, rgba(110, 231, 255, 0.12), transparent 60%),
+          radial-gradient(900px 500px at 90% 10%, rgba(167, 139, 250, 0.14), transparent 60%),
+          radial-gradient(900px 500px at 30% 100%, rgba(94, 234, 212, 0.08), transparent 60%),
+          linear-gradient(180deg, var(--bg0), var(--bg1));
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid rgba(110, 231, 255, 0.7);
+        outline-offset: 2px;
+      }
+
+      .skip-link {
+        position: absolute;
+        left: -999px;
+        top: 0;
+        padding: 10px 12px;
+        background: rgba(10, 16, 28, 0.95);
+        border: 1px solid var(--stroke);
+        border-radius: 12px;
+        z-index: 50;
+      }
+
+      .skip-link:focus {
+        left: 12px;
+        top: 12px;
+      }
+
+      .shell {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 22px 18px 64px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 14px;
+        border: 1px solid var(--stroke);
+        background: linear-gradient(180deg, rgba(16, 24, 40, 0.66), rgba(8, 12, 22, 0.5));
+        backdrop-filter: blur(10px);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow2);
+        position: sticky;
+        top: 14px;
+        z-index: 20;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .brand-mark {
+        width: 34px;
+        height: 34px;
+        flex: 0 0 auto;
+        border-radius: 12px;
+        border: 1px solid rgba(110, 231, 255, 0.35);
+        background: radial-gradient(18px 18px at 30% 25%, rgba(110, 231, 255, 0.25), transparent 60%),
+          radial-gradient(22px 18px at 75% 70%, rgba(167, 139, 250, 0.22), transparent 60%),
+          rgba(8, 12, 22, 0.35);
+        display: grid;
+        place-items: center;
+      }
+
+      .brand-mark svg {
+        width: 22px;
+        height: 22px;
+        opacity: 0.95;
+      }
+
+      .brand-title {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+      }
+
+      .brand-title strong {
+        font-weight: 720;
+        letter-spacing: 0.2px;
+        line-height: 1.15;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .brand-title span {
+        color: var(--muted);
+        font-size: 12.5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .top-links {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 11px;
+        border: 1px solid var(--stroke);
+        border-radius: 999px;
+        background: rgba(8, 12, 22, 0.35);
+        color: var(--text);
+        font-size: 13px;
+        line-height: 1;
+      }
+
+      .pill svg {
+        width: 16px;
+        height: 16px;
+        opacity: 0.92;
+      }
+
+      .pill.primary {
+        border-color: rgba(110, 231, 255, 0.35);
+        background: radial-gradient(60px 40px at 20% 30%, rgba(110, 231, 255, 0.16), transparent 60%),
+          rgba(8, 12, 22, 0.35);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 22px;
+        margin-top: 18px;
+        padding: 22px;
+        border: 1px solid var(--stroke);
+        border-radius: var(--radius);
+        background: linear-gradient(180deg, rgba(16, 24, 40, 0.55), rgba(8, 12, 22, 0.38));
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        position: relative;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        background: radial-gradient(600px 240px at 20% 0%, rgba(110, 231, 255, 0.12), transparent 60%),
+          radial-gradient(520px 240px at 90% 30%, rgba(167, 139, 250, 0.14), transparent 60%);
+        pointer-events: none;
+      }
+
+      .hero > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border: 1px solid var(--stroke2);
+        border-radius: 999px;
+        background: rgba(8, 12, 22, 0.3);
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .kicker b {
+        color: rgba(110, 231, 255, 0.95);
+        font-weight: 700;
+      }
+
+      h1 {
+        margin: 12px 0 10px;
+        font-size: clamp(26px, 3.3vw, 42px);
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+      }
+
+      .lede {
+        margin: 0;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.55;
+        max-width: 70ch;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 16px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 11px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--stroke);
+        background: rgba(8, 12, 22, 0.3);
+        color: var(--text);
+        font-size: 14px;
+        line-height: 1;
+      }
+
+      .btn svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      .btn.primary {
+        border-color: rgba(110, 231, 255, 0.4);
+        background: radial-gradient(80px 44px at 25% 40%, rgba(110, 231, 255, 0.22), transparent 60%),
+          rgba(8, 12, 22, 0.35);
+      }
+
+      .btn:hover {
+        text-decoration: none;
+        filter: brightness(1.05);
+      }
+
+      .hero-aside {
+        border: 1px solid var(--stroke2);
+        border-radius: var(--radius2);
+        background: rgba(8, 12, 22, 0.32);
+        padding: 14px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .hero-aside::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent, rgba(8, 12, 22, 0.75));
+        pointer-events: none;
+      }
+
+      .hero-aside h2 {
+        margin: 0 0 10px;
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(226, 232, 240, 0.78);
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 0 0 10px;
+        padding: 0;
+        list-style: none;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--stroke2);
+        background: rgba(8, 12, 22, 0.22);
+        font-size: 13px;
+        color: rgba(226, 232, 240, 0.82);
+      }
+
+      .chip i {
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        background: rgba(110, 231, 255, 0.7);
+        box-shadow: 0 0 0 3px rgba(110, 231, 255, 0.12);
+      }
+
+      .chip:nth-child(2) i {
+        background: rgba(167, 139, 250, 0.7);
+        box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.12);
+      }
+
+      .chip:nth-child(3) i {
+        background: rgba(94, 234, 212, 0.7);
+        box-shadow: 0 0 0 3px rgba(94, 234, 212, 0.12);
+      }
+
+      .chip:nth-child(4) i {
+        background: rgba(251, 191, 36, 0.7);
+        box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.12);
+      }
+
+      .robot-sketch {
+        width: 100%;
+        height: auto;
+        display: block;
+        opacity: 0.9;
+        filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: var(--navw) 1fr;
+        gap: 18px;
+        align-items: start;
+        margin-top: 18px;
+      }
+
+      .elevator {
+        position: sticky;
+        top: 92px;
+        border: 1px solid var(--stroke);
+        border-radius: var(--radius);
+        background: rgba(8, 12, 22, 0.35);
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow2);
+        overflow: hidden;
+      }
+
+      .elevator header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 14px 12px;
+        border-bottom: 1px solid var(--stroke2);
+      }
+
+      .elevator header strong {
+        font-size: 13px;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: rgba(226, 232, 240, 0.78);
+      }
+
+      .elevator header span {
+        font-size: 12.5px;
+        color: rgba(226, 232, 240, 0.62);
+      }
+
+      .navlist {
+        list-style: none;
+        margin: 0;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .navlist a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 10px;
+        border-radius: 12px;
+        border: 1px solid transparent;
+        color: rgba(226, 232, 240, 0.84);
+        font-size: 13.5px;
+      }
+
+      .navlist a:hover {
+        text-decoration: none;
+        background: rgba(16, 24, 40, 0.55);
+        border-color: var(--stroke2);
+      }
+
+      .navlist a[aria-current="true"] {
+        background: radial-gradient(120px 60px at 20% 30%, rgba(110, 231, 255, 0.18), transparent 62%),
+          rgba(16, 24, 40, 0.65);
+        border-color: rgba(110, 231, 255, 0.28);
+        color: rgba(248, 250, 252, 0.92);
+      }
+
+      .floor-badge {
+        width: 34px;
+        height: 34px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--stroke2);
+        background: rgba(8, 12, 22, 0.25);
+        color: rgba(226, 232, 240, 0.84);
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      .navicon {
+        width: 16px;
+        height: 16px;
+        opacity: 0.92;
+        flex: 0 0 auto;
+      }
+
+      .tower {
+        border: 1px solid var(--stroke);
+        border-radius: var(--radius);
+        background: rgba(8, 12, 22, 0.32);
+        box-shadow: var(--shadow2);
+        overflow: hidden;
+        position: relative;
+      }
+
+      .tower::before {
+        content: "";
+        position: absolute;
+        left: 42px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: linear-gradient(
+          180deg,
+          rgba(110, 231, 255, 0.0),
+          rgba(110, 231, 255, 0.25),
+          rgba(167, 139, 250, 0.22),
+          rgba(94, 234, 212, 0.16),
+          rgba(110, 231, 255, 0.0)
+        );
+        opacity: 0.9;
+        pointer-events: none;
+      }
+
+      .tower::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient(rgba(148, 163, 184, 0.07) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+        background-size: 34px 34px;
+        mask-image: radial-gradient(500px 500px at 50% 30%, black 0%, transparent 72%);
+        opacity: 0.65;
+        pointer-events: none;
+      }
+
+      .floors {
+        margin: 0;
+        padding: 12px;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      section.floor {
+        scroll-margin-top: 110px;
+      }
+
+      .floor {
+        border: 1px solid var(--stroke2);
+        background: linear-gradient(180deg, rgba(16, 24, 40, 0.64), rgba(8, 12, 22, 0.42));
+        border-radius: var(--radius);
+        overflow: hidden;
+        position: relative;
+      }
+
+      .floor::before {
+        content: "";
+        position: absolute;
+        left: 32px;
+        top: 18px;
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        background: rgba(110, 231, 255, 0.26);
+        box-shadow: 0 0 0 4px rgba(110, 231, 255, 0.06);
+        pointer-events: none;
+      }
+
+      .floors > li:nth-child(2) .floor::before {
+        background: rgba(167, 139, 250, 0.25);
+        box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.06);
+      }
+
+      .floors > li:nth-child(3) .floor::before {
+        background: rgba(94, 234, 212, 0.22);
+        box-shadow: 0 0 0 4px rgba(94, 234, 212, 0.06);
+      }
+
+      .floors > li:nth-child(4) .floor::before {
+        background: rgba(251, 191, 36, 0.18);
+        box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.05);
+      }
+
+      .floor-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 18px 18px 12px;
+        padding-left: 68px;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+      }
+
+      .floor-title {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        min-width: 0;
+      }
+
+      .floor-title strong {
+        font-size: 14px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(226, 232, 240, 0.72);
+      }
+
+      .floor-title h2 {
+        margin: 0;
+        font-size: 20px;
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+      }
+
+      .floor-icon {
+        margin-left: auto;
+        width: 36px;
+        height: 36px;
+        border-radius: 14px;
+        border: 1px solid var(--stroke2);
+        background: rgba(8, 12, 22, 0.28);
+        display: grid;
+        place-items: center;
+      }
+
+      .floor-icon svg {
+        width: 18px;
+        height: 18px;
+        opacity: 0.9;
+      }
+
+      .floor-body {
+        padding: 14px 18px 18px;
+        padding-left: 68px;
+      }
+
+      .floor-body p {
+        margin: 0 0 10px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .floor-body p strong {
+        color: rgba(248, 250, 252, 0.9);
+      }
+
+      .floor-body ul {
+        margin: 10px 0 0;
+        padding-left: 18px;
+        color: rgba(226, 232, 240, 0.78);
+        line-height: 1.55;
+      }
+
+      .floor-body li {
+        margin: 8px 0;
+      }
+
+      .callout {
+        margin-top: 12px;
+        padding: 12px 12px;
+        border: 1px solid var(--stroke2);
+        border-radius: 14px;
+        background: rgba(8, 12, 22, 0.25);
+        color: rgba(226, 232, 240, 0.78);
+      }
+
+      .callout b {
+        color: rgba(110, 231, 255, 0.92);
+      }
+
+      .exp-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .exp-card {
+        display: block;
+        border: 1px solid var(--stroke2);
+        border-radius: 16px;
+        padding: 12px;
+        background: rgba(8, 12, 22, 0.22);
+        color: rgba(248, 250, 252, 0.9);
+      }
+
+      .exp-card:hover {
+        text-decoration: none;
+        border-color: rgba(110, 231, 255, 0.28);
+        background: rgba(16, 24, 40, 0.5);
+      }
+
+      .exp-card strong {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 14px;
+        margin-bottom: 6px;
+      }
+
+      .exp-card span {
+        display: block;
+        color: rgba(226, 232, 240, 0.7);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .ext {
+        width: 14px;
+        height: 14px;
+        opacity: 0.85;
+        flex: 0 0 auto;
+      }
+
+      footer {
+        margin-top: 18px;
+        padding: 18px 18px;
+        border: 1px solid var(--stroke);
+        border-radius: var(--radius);
+        background: rgba(8, 12, 22, 0.32);
+        color: rgba(226, 232, 240, 0.72);
+        line-height: 1.6;
+      }
+
+      footer p {
+        margin: 0 0 10px;
+      }
+
+      footer p:last-child {
+        margin-bottom: 0;
+      }
+
+      @media (max-width: 980px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .elevator {
+          position: relative;
+          top: 0;
+        }
+
+        .navlist {
+          flex-direction: row;
+          overflow-x: auto;
+          padding: 10px;
+        }
+
+        .navlist a {
+          white-space: nowrap;
+          flex: 0 0 auto;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="shell">
+      <div class="topbar" role="banner">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 2.8c4.95 0 9 4.05 9 9s-4.05 9-9 9-9-4.05-9-9 4.05-9 9-9Z"
+                stroke="rgba(110,231,255,0.85)"
+                stroke-width="1.6"
+              />
+              <path
+                d="M8 12h8M12 8v8"
+                stroke="rgba(167,139,250,0.9)"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+              <path
+                d="M6.2 15.2c1.6 2 3.5 3 5.8 3 2.3 0 4.2-1 5.8-3"
+                stroke="rgba(94,234,212,0.9)"
+                stroke-width="1.4"
+                stroke-linecap="round"
+              />
+            </svg>
+          </div>
+          <div class="brand-title">
+            <strong>AGISystem2</strong>
+            <span>System 2 engineering for reliable AI agents</span>
+          </div>
+        </div>
+
+        <div class="top-links" aria-label="Quick links">
+          <a class="pill primary" href="#executive-summary">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M4 19V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14"
+                stroke="currentColor"
+                stroke-width="1.6"
+              />
+              <path
+                d="M8 7h8M8 11h8M8 15h6"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+            </svg>
+            Start
+          </a>
+          <a class="pill" href="#experiments">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M10 2v4.5l-5.2 9a5 5 0 0 0 4.3 7.5h5.8a5 5 0 0 0 4.3-7.5l-5.2-9V2"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M8.7 14.5h6.6"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+            </svg>
+            Experiments
+          </a>
+          <a class="pill" href="https://agisystem2.com">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M12 21s-7-4.4-7-10a7 7 0 0 1 14 0c0 5.6-7 10-7 10Z"
+                stroke="currentColor"
+                stroke-width="1.6"
+              />
+              <path
+                d="M9.5 10.9 11 12.4l3.7-3.9"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            agisystem2.com
+          </a>
+        </div>
+      </div>
+
+      <header class="hero">
+        <div>
+          <div class="kicker"><b>Tower</b> A structured path from vision → experiments → deployable systems</div>
+          <h1>Build trustworthy AI agents that reason, verify, and run efficiently.</h1>
+          <p class="lede">
+            AGISystem2 is a research platform and engineering effort inspired by <strong>System 2</strong>—the slow,
+            deliberate mode of human reasoning. We explore verifiable, neuro-symbolic, CPU‑friendly architectures that
+            can move enterprise AI from impressive demos to reliable systems.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#executive-summary">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="M12 5v14M5 12h14"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+              </svg>
+              Enter the tower
+            </a>
+            <a class="btn" href="#experiments">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="M4 6h16M7 6v12a3 3 0 0 0 3 3h4a3 3 0 0 0 3-3V6"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M9.2 11.3 11 13l3.8-4"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              See public experiments
+            </a>
+          </div>
+        </div>
+
+        <aside class="hero-aside" aria-label="Sketch and themes">
+          <h2>Core Themes</h2>
+          <ul class="chips">
+            <li class="chip"><i></i>System 2 reasoning</li>
+            <li class="chip"><i></i>Verification & traces</li>
+            <li class="chip"><i></i>CPU‑friendly representations</li>
+            <li class="chip"><i></i>Enterprise R&amp;D adoption</li>
+          </ul>
+          <svg class="robot-sketch" viewBox="0 0 520 340" fill="none" role="img" aria-label="Robotic blueprint sketch">
+            <defs>
+              <linearGradient id="g1" x1="0" y1="0" x2="520" y2="340">
+                <stop offset="0" stop-color="rgba(110,231,255,0.9)" />
+                <stop offset="0.55" stop-color="rgba(167,139,250,0.85)" />
+                <stop offset="1" stop-color="rgba(94,234,212,0.85)" />
+              </linearGradient>
+              <filter id="noise">
+                <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" stitchTiles="stitch" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .18 0" />
+                <feComposite operator="in" in2="SourceGraphic" />
+              </filter>
+            </defs>
+
+            <path
+              d="M40 280c120-42 240-42 360 0"
+              stroke="rgba(148,163,184,0.35)"
+              stroke-width="1"
+              stroke-dasharray="6 6"
+            />
+            <path
+              d="M120 82c0-32 26-58 58-58h164c32 0 58 26 58 58v104c0 32-26 58-58 58H178c-32 0-58-26-58-58V82Z"
+              stroke="url(#g1)"
+              stroke-width="2.2"
+              opacity="0.92"
+            />
+            <path
+              d="M170 76h180"
+              stroke="rgba(110,231,255,0.55)"
+              stroke-width="1.4"
+              stroke-linecap="round"
+            />
+            <path
+              d="M156 130c26-20 58-30 94-30s68 10 94 30"
+              stroke="rgba(167,139,250,0.6)"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+            <circle cx="220" cy="154" r="22" stroke="rgba(226,232,240,0.5)" stroke-width="1.6" />
+            <circle cx="300" cy="154" r="22" stroke="rgba(226,232,240,0.5)" stroke-width="1.6" />
+            <circle cx="220" cy="154" r="6.5" fill="rgba(110,231,255,0.7)" />
+            <circle cx="300" cy="154" r="6.5" fill="rgba(94,234,212,0.7)" />
+            <path
+              d="M238 206c18 12 36 12 54 0"
+              stroke="rgba(226,232,240,0.55)"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+            <path
+              d="M148 260c24-30 50-46 78-48h68c28 2 54 18 78 48"
+              stroke="rgba(148,163,184,0.42)"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+            <path
+              d="M130 106h-28m28 48h-44m304-48h28m-28 48h44"
+              stroke="rgba(148,163,184,0.32)"
+              stroke-width="1.4"
+              stroke-linecap="round"
+            />
+            <path
+              d="M86 106h10m-32 48h10m356-48h10m-32 48h10"
+              stroke="rgba(110,231,255,0.45)"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+            <g filter="url(#noise)" opacity="0.5">
+              <rect x="0" y="0" width="520" height="340" fill="rgba(226,232,240,0.2)" />
+            </g>
+          </svg>
+        </aside>
+      </header>
+
+      <div class="layout" id="main">
+        <nav class="elevator" aria-label="Tower floors">
+          <header>
+            <strong>Floors</strong>
+            <span id="floor-readout">—</span>
+          </header>
+          <ul class="navlist">
+            <li>
+              <a href="#executive-summary" data-floor="01" aria-current="true">
+                <span class="floor-badge">01</span>
+                <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path
+                    d="M4 20V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  />
+                  <path
+                    d="M8 9h8M8 13h8M8 17h5"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                Executive Summary
+              </a>
+            </li>
+            <li>
+              <a href="#how" data-floor="02">
+                <span class="floor-badge">02</span>
+                <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path
+                    d="M12 20c4.4 0 8-3.6 8-8s-3.6-8-8-8-8 3.6-8 8 3.6 8 8 8Z"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  />
+                  <path
+                    d="M12 8v5l3 2"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                How We Research
+              </a>
+            </li>
+            <li>
+              <a href="#vision" data-floor="03">
+                <span class="floor-badge">03</span>
+                <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path
+                    d="M12 4c5 0 9 5 9 8s-4 8-9 8-9-5-9-8 4-8 9-8Z"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  />
+                  <path
+                    d="M12 12a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4Z"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  />
+                  <path
+                    d="M4.5 12h2.2M17.3 12h2.2"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                System 2 Vision
+              </a>
+            </li>
+            <li>
+              <a href="#ai-assisted-rd" data-floor="04">
+                <span class="floor-badge">04</span>
+                <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path
+                    d="M10 2v4.5l-5.2 9a5 5 0 0 0 4.3 7.5h5.8a5 5 0 0 0 4.3-7.5l-5.2-9V2"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M8.2 15.2h7.6"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                AI‑Assisted R&amp;D
+              </a>
+            </li>
+            <li>
+              <a href="#languages" data-floor="05">
+                <span class="floor-badge">05</span>
+                <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path
+                    d="M8 7 4 12l4 5M16 7l4 5-4 5"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M13 6 11 18"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                Languages
+              </a>
+            </li>
+            <li>
+              <a href="#cpu-reasoning" data-floor="06">
+                <span class="floor-badge">06</span>
+                <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path
+                    d="M9 4v2m6-2v2M9 18v2m6-2v2M4 9h2m-2 6h2m14-6h2m-2 6h2"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M8 8h8v8H8V8Z"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  />
+                </svg>
+                CPU Reasoning
+              </a>
+            </li>
+            <li>
+              <a href="#current-results" data-floor="07">
+                <span class="floor-badge">07</span>
+                <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path
+                    d="M6 18V9m6 9V6m6 12v-7"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M5 18h14"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                Current Results
+              </a>
+            </li>
+            <li>
+              <a href="#experiments" data-floor="08">
+                <span class="floor-badge">08</span>
+                <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path
+                    d="M7 20h10M9 20V8l-2-2h10l-2 2v12"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M9 12h6"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                Experiments
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <main class="tower" aria-label="Tower content">
+          <ol class="floors">
+            <li>
+              <section class="floor" id="executive-summary" aria-labelledby="executive-summary-title">
+                <div class="floor-header">
+                  <div class="floor-title">
+                    <strong>Floor 01</strong>
+                    <h2 id="executive-summary-title">Executive Summary for Investors</h2>
+                  </div>
+                  <div class="floor-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M7 14c.8 1.2 2.2 2 5 2 3 0 5-1.2 5-3s-1.4-2.4-4.2-2.8C10.7 9.9 9 9.2 9 7.6 9 6 10.7 5 13 5c2.2 0 3.7.7 4.6 1.9"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path d="M12 4v16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="floor-body">
+                  <p>
+                    This site documents our experiments and long‑term vision for the evolution of AI—especially for
+                    high‑stakes enterprise adoption (e.g., pharma), where today’s limitations of large language models
+                    become increasingly visible.
+                  </p>
+                  <p>
+                    LLMs have proven that machines can <strong>ingest vast information</strong>, structure it into
+                    coherent models, and communicate with humans in natural language. Yet in real workflows they remain
+                    brittle: inconsistent reasoning, hallucinations, poor energy efficiency (relative to humans for
+                    comparable intellectual work), and dependence on expensive GPUs.
+                  </p>
+	                  <p>
+	                    We believe these are transitional constraints. With better reasoning architectures, verification,
+	                    and CPU‑efficient representations, we can build AI that is <strong>reliable</strong>,
+	                    <strong>auditable</strong>, and <strong>deployable beyond centralized datacenters</strong>.
+	                  </p>
+	                  <p>
+	                    Our goal is to grow an <strong>open‑source community</strong> and secure research funding and
+	                    investment partnerships to turn validated ideas into end‑to‑end systems that can be demonstrated,
+	                    benchmarked, and safely deployed.
+	                  </p>
+	                  <div class="callout">
+	                    <b>Principle:</b> We don’t aim for AI monopolies. Concentrating control in a few datacenters reduces
+	                    resilience and increases systemic risk. A healthier path is open, widely deployable technology with
+	                    strong safety and governance.
+                  </div>
+                  <p style="margin-top: 12px">
+                    Another key observation: there are hundreds (if not thousands) of promising ideas in the literature,
+                    but typical academic incentives rarely fund the sustained engineering needed to turn them into
+                    end‑to‑end systems. Our approach is to run fast, well‑scoped experiments, bring together
+                    complementary experts (researchers and engineers), and build demonstrable prototypes that can be
+                    evaluated, improved, and scaled.
+                  </p>
+                </div>
+              </section>
+            </li>
+
+            <li>
+              <section class="floor" id="how" aria-labelledby="how-title">
+                <div class="floor-header">
+                  <div class="floor-title">
+                    <strong>Floor 02</strong>
+                    <h2 id="how-title">How We Do Our Research</h2>
+                  </div>
+                  <div class="floor-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M12 21s-7-4.4-7-10a7 7 0 0 1 14 0c0 5.6-7 10-7 10Z"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                      />
+                      <path
+                        d="M12 12.2a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4Z"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="floor-body">
+                  <p>
+                    We pursue an aggressive but practical hypothesis: use AI agents to help us solve the problem of
+                    building better AI agents. Even partial success is valuable—it tells us where the architecture is
+                    working and where it fails.
+                  </p>
+                  <ul>
+                    <li>
+                      <strong>Agent‑assisted engineering:</strong> We build our own agents and orchestration layers, and
+                      also leverage mainstream tools (Codex, Gemini CLI, OpenCode, Kiro, etc.) to accelerate iteration.
+                    </li>
+                    <li>
+                      <strong>Spec‑first loops:</strong> We treat specifications as first‑class artifacts—audited,
+                      validated by humans and AI, and connected to deterministic evaluation suites.
+                    </li>
+                    <li>
+                      <strong>Fast experiments, hard evidence:</strong> Rapid prototypes are only useful if they produce
+                      measurable signals (tests, traces, benchmarks, failure modes).
+                    </li>
+                    <li>
+                      <strong>Engineering culture:</strong> The bottleneck is rarely ideas. The bottleneck is turning
+                      deep ideas into minimal, testable systems that can be composed into a reliable stack.
+                    </li>
+                  </ul>
+                </div>
+              </section>
+            </li>
+
+            <li>
+              <section class="floor" id="vision" aria-labelledby="vision-title">
+                <div class="floor-header">
+                  <div class="floor-title">
+                    <strong>Floor 03</strong>
+                    <h2 id="vision-title">Vision: A System 2 for AI Agents</h2>
+                  </div>
+                  <div class="floor-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M12 4c5 0 9 5 9 8s-4 8-9 8-9-5-9-8 4-8 9-8Z"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                      />
+                      <path
+                        d="M9 15c.8 1 1.9 1.6 3 1.6S14.2 16 15 15"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        d="M8 10.6c.8-.8 1.8-1.2 3-1.2s2.2.4 3 1.2"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="floor-body">
+                  <p>
+                    In cognitive psychology, <strong>System 2</strong> is the slow, deliberate, logical mode of
+                    reasoning—complementary to <strong>System 1</strong>, which is fast and intuitive. We use this
+                    distinction as an engineering metaphor: augment fast generative models with mechanisms that can
+                    reason, verify, and explain.
+                  </p>
+                  <p>
+                    AGISystem2 is inspired by European research initiatives (including the
+                    <a href="https://www.achilles-project.eu/" target="_blank" rel="noopener noreferrer">Achilles project</a>)
+                    and brings together themes like <strong>formal verification</strong>,
+                    <strong>neural‑symbolic hybrid reasoning</strong>, and <strong>hyperdimensional computing</strong>.
+                  </p>
+                  <div class="callout">
+                    <b>Positioning:</b> “AGISystem2” is a brand for a direction—not a claim that a single monolithic AGI
+                    is well defined or desirable. We believe the next pragmatic step is building many specialized,
+                    controlled systems that gradually assist or automate concrete tasks.
+                  </div>
+                </div>
+              </section>
+            </li>
+
+            <li>
+              <section class="floor" id="ai-assisted-rd" aria-labelledby="ai-assisted-rd-title">
+                <div class="floor-header">
+                  <div class="floor-title">
+                    <strong>Floor 04</strong>
+                    <h2 id="ai-assisted-rd-title">AI‑Assisted R&amp;D: Research, Accelerated</h2>
+                  </div>
+                  <div class="floor-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M9 3h6M10 3v5l-4.7 8.1A5 5 0 0 0 9.6 23h4.8a5 5 0 0 0 4.3-6.9L14 8V3"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M8.7 14.4h6.6"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="floor-body">
+                  <p>
+                    The future of intellectual work is shifting toward ecosystems of AI agents. We envision research as
+                    an orchestrated process—agents can reason, synthesize, and document while humans steer priorities
+                    and judgment.
+                  </p>
+                  <p>
+                    A key idea is a generic, universal IDE for agentic projects: a platform to build, debug, evaluate,
+                    and deploy specialized digital entities as cognitive extensions of researchers and engineers.
+                  </p>
+                  <ul>
+                    <li>
+                      <strong>Evidence‑first workflows:</strong> keep a verifiable trail of decisions, data, and
+                      execution traces.
+                    </li>
+                    <li>
+                      <strong>Governance &amp; compliance:</strong> compatibility with regulated environments (e.g.,
+                      GxP / GAMP) through traceability and deterministic evaluation.
+                    </li>
+                    <li>
+                      <strong>End‑to‑end integration:</strong> eliminate silos by connecting data, reasoning, and
+                      deployment in one stack.
+                    </li>
+                  </ul>
+                  <p style="margin-top: 10px">
+                    The goal is not “automation for its own sake”, but a complete technology layer for building
+                    specialized, trustworthy intelligence—where safety, rigor, and transparency are built in.
+                  </p>
+                </div>
+              </section>
+            </li>
+
+            <li>
+              <section class="floor" id="languages" aria-labelledby="languages-title">
+                <div class="floor-header">
+                  <div class="floor-title">
+                    <strong>Floor 05</strong>
+                    <h2 id="languages-title">Programming Languages for the AI Era</h2>
+                  </div>
+                  <div class="floor-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M8 7 4 12l4 5M16 7l4 5-4 5"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M13 6 11 18"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="floor-body">
+                  <p>
+                    Programming languages evolve when the computing paradigm changes. In an era of LLMs and agentic
+                    systems, languages can be optimized not only for humans, but for <strong>human‑AI collaboration</strong>
+                    and <strong>machine verification</strong>.
+                  </p>
+                  <ul>
+                    <li>
+                      <strong>Semantic DSLs:</strong> languages that encode common reasoning patterns with
+                      machine‑verifiable meaning—without forcing humans to write raw formal logic.
+                    </li>
+                    <li>
+                      <strong>Constrained natural language (CNL):</strong> structured fragments of language with formal
+                      semantics, enabling deterministic execution, proofs/traces, and evaluation coverage.
+                    </li>
+                    <li>
+                      <strong>Auditable agent behavior:</strong> when reasoning is expressed in a checkable language,
+                      agents can be debugged like software.
+                    </li>
+                  </ul>
+                </div>
+              </section>
+            </li>
+
+            <li>
+              <section class="floor" id="cpu-reasoning" aria-labelledby="cpu-reasoning-title">
+                <div class="floor-header">
+                  <div class="floor-title">
+                    <strong>Floor 06</strong>
+                    <h2 id="cpu-reasoning-title">CPU‑Optimized Reasoning &amp; Neuro‑Symbolic Architectures</h2>
+                  </div>
+                  <div class="floor-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M9 4v2m6-2v2M9 18v2m6-2v2M4 9h2m-2 6h2m14-6h2m-2 6h2"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                      <path d="M8 8h8v8H8V8Z" stroke="currentColor" stroke-width="1.6" />
+                      <path
+                        d="M10 10h4v4h-4v-4Z"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        opacity="0.75"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="floor-body">
+                  <p>
+                    Modern AI has been built around massive GPU scaling. We explore an alternative trajectory:
+                    <strong>reasoning that runs efficiently on CPUs</strong> using symbolic structure, bitset / VSA / HDC
+                    representations, and deterministic execution paths.
+                  </p>
+                  <ul>
+                    <li>
+                      <strong>Energy‑aware reasoning:</strong> aim for strong reasoning signals without transformer‑scale
+                      inference costs.
+                    </li>
+                    <li>
+                      <strong>Neuro‑symbolic hybrids:</strong> combine learned components with symbolic constraints for
+                      compositionality and interpretability.
+                    </li>
+                    <li>
+                      <strong>Deployment realism:</strong> commodity hardware, edge scenarios, and enterprise
+                      infrastructure—not only hyperscale.
+                    </li>
+                  </ul>
+                </div>
+              </section>
+            </li>
+
+            <li>
+              <section class="floor" id="current-results" aria-labelledby="current-results-title">
+                <div class="floor-header">
+                  <div class="floor-title">
+                    <strong>Floor 07</strong>
+                    <h2 id="current-results-title">Current Results</h2>
+                  </div>
+                  <div class="floor-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M7 20V9m5 11V6m5 14v-8"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        d="M5 20h14"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="floor-body">
+                  <ul>
+                    <li>
+                      <strong>Specification‑driven development:</strong> our experiments show that as specifications
+                      become more rigorous (prepared, audited, validated), AI systems can tackle increasingly complex
+                      engineering problems. AI can help draft and review specs, but human judgment remains essential.
+                    </li>
+                    <li>
+                      <strong>Knowledge representation (VSA/HDC/HRR):</strong> results suggest that meaningful semantic
+                      processing on CPU is feasible, potentially without GPUs or very large models. Alternative
+                      encodings—e.g., polynomials or large integers—appear to provide room for fine discriminations.
+                    </li>
+                    <li>
+                      <strong>Constrained natural language for programming:</strong> to reduce the gap between informal
+                      requirements and formal logic, we investigate CNL/DSL approaches where natural language fragments
+                      receive formal semantics (more precisely: formal pragmatics). This enables strict validation by
+                      executing the “CNL program.”
+                    </li>
+                  </ul>
+                  <div class="callout">
+                    <b>What’s next:</b> reaching a complete demonstration likely requires hundreds of additional
+                    experiments and sustained engineering. The direction is clear; the open question is which
+                    combinations scale best.
+                  </div>
+                </div>
+              </section>
+            </li>
+
+            <li>
+              <section class="floor" id="experiments" aria-labelledby="experiments-title">
+                <div class="floor-header">
+                  <div class="floor-title">
+                    <strong>Floor 08</strong>
+                    <h2 id="experiments-title">Experiments</h2>
+                  </div>
+                  <div class="floor-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M7 20h10M9 20V8l-2-2h10l-2 2v12"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M9 12h6"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="floor-body">
+                  <p>Public references and running prototypes (open source):</p>
+                  <div class="exp-grid">
+                    <a
+                      class="exp-card"
+                      href="https://outfinityresearch.github.io/CNL"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <strong>
+                        Executable CNL
+                        <svg class="ext" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path
+                            d="M14 5h5v5"
+                            stroke="currentColor"
+                            stroke-width="1.6"
+                            stroke-linecap="round"
+                          />
+                          <path
+                            d="M10 14 19 5"
+                            stroke="currentColor"
+                            stroke-width="1.6"
+                            stroke-linecap="round"
+                          />
+                          <path
+                            d="M19 14v5h-5"
+                            stroke="currentColor"
+                            stroke-width="1.6"
+                            stroke-linecap="round"
+                            opacity="0.6"
+                          />
+                          <path
+                            d="M5 10v9h9"
+                            stroke="currentColor"
+                            stroke-width="1.6"
+                            stroke-linecap="round"
+                            opacity="0.6"
+                          />
+                        </svg>
+                      </strong>
+                      <span>Executable programming language based on constrained natural language syntax.</span>
+                    </a>
+
+                    <a
+                      class="exp-card"
+                      href="https://outfinityresearch.github.io/VSAVM"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <strong>
+                        VSAVM
+                        <svg class="ext" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M14 5h5v5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                          <path d="M10 14 19 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                          <path
+                            d="M19 14v5h-5"
+                            stroke="currentColor"
+                            stroke-width="1.6"
+                            stroke-linecap="round"
+                            opacity="0.6"
+                          />
+                          <path d="M5 10v9h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity="0.6" />
+                        </svg>
+                      </strong>
+                      <span>VSA + symbolic VM for learning and structured manipulation.</span>
+                    </a>
+
+                    <a
+                      class="exp-card"
+                      href="https://outfinityresearch.github.io/VSARepresentations/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <strong>
+                        VSA Representations
+                        <svg class="ext" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M14 5h5v5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                          <path d="M10 14 19 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                          <path
+                            d="M19 14v5h-5"
+                            stroke="currentColor"
+                            stroke-width="1.6"
+                            stroke-linecap="round"
+                            opacity="0.6"
+                          />
+                          <path d="M5 10v9h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity="0.6" />
+                        </svg>
+                      </strong>
+                      <span>Deep experiments with VSA/HDC representations and tradeoffs.</span>
+                    </a>
+
+                    <a
+                      class="exp-card"
+                      href="https://outfinityresearch.github.io/HDC-RE/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <strong>
+                        HDC‑RE
+                        <svg class="ext" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M14 5h5v5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                          <path d="M10 14 19 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                          <path
+                            d="M19 14v5h-5"
+                            stroke="currentColor"
+                            stroke-width="1.6"
+                            stroke-linecap="round"
+                            opacity="0.6"
+                          />
+                          <path d="M5 10v9h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity="0.6" />
+                        </svg>
+                      </strong>
+                      <span>Reasoning engine built on hyperdimensional representations.</span>
+                    </a>
+
+                    <a class="exp-card" href="https://outfinityresearch.github.io/BSP/" target="_blank" rel="noopener noreferrer">
+                      <strong>
+                        BSP
+                        <svg class="ext" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M14 5h5v5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                          <path d="M10 14 19 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                          <path
+                            d="M19 14v5h-5"
+                            stroke="currentColor"
+                            stroke-width="1.6"
+                            stroke-linecap="round"
+                            opacity="0.6"
+                          />
+                          <path d="M5 10v9h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity="0.6" />
+                        </svg>
+                      </strong>
+                      <span>Bitset System for Prediction: CPU‑friendly continuous learning without transformers.</span>
+                    </a>
+
+                    <a
+                      class="exp-card"
+                      href="https://outfinityresearch.github.io/UBHNL/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <strong>
+                        UBHNL
+                        <svg class="ext" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M14 5h5v5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                          <path d="M10 14 19 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                          <path
+                            d="M19 14v5h-5"
+                            stroke="currentColor"
+                            stroke-width="1.6"
+                            stroke-linecap="round"
+                            opacity="0.6"
+                          />
+                          <path d="M5 10v9h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity="0.6" />
+                        </svg>
+                      </strong>
+                      <span>Universal Boolean Hypergraph kernel with a CNL/DSL front‑end.</span>
+                    </a>
+
+                    <a
+                      class="exp-card"
+                      href="https://outfinityresearch.github.io/spock"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <strong>
+                        Spock
+                        <svg class="ext" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M14 5h5v5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                          <path d="M10 14 19 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                          <path
+                            d="M19 14v5h-5"
+                            stroke="currentColor"
+                            stroke-width="1.6"
+                            stroke-linecap="round"
+                            opacity="0.6"
+                          />
+                          <path d="M5 10v9h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity="0.6" />
+                        </svg>
+                      </strong>
+                      <span>Deterministic neuro‑symbolic geometry for explainable reasoning.</span>
+                    </a>
+                  </div>
+                </div>
+              </section>
+            </li>
+          </ol>
+        </main>
+      </div>
+
+      <footer>
+        <p>
+          Research conducted by
+          <a href="https://www.axiologic.net/" target="_blank" rel="noopener noreferrer">Axiologic Research</a>
+          as part of the European research project
+          <a href="https://www.achilles-project.eu/" target="_blank" rel="noopener noreferrer">Achilles</a>.
+        </p>
+        <p>
+          Commercialization partnership with
+          <a href="https://lydiarx.com/" target="_blank" rel="noopener noreferrer">LydiaRX Venture Studio</a>.
+        </p>
+        <p>
+          Disclaimer: this documentation was generated with AI assistance (LLMs) and may contain errors, exaggerations,
+          or hallucinations. The public experiments are open source—verify claims by examining the code, evaluation
+          suites, and automated tests.
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      (() => {
+        const navLinks = Array.from(document.querySelectorAll(".navlist a"));
+        const floorReadout = document.getElementById("floor-readout");
+        const sections = navLinks
+          .map((a) => document.querySelector(a.getAttribute("href")))
+          .filter(Boolean);
+
+        const setActive = (sectionId) => {
+          for (const a of navLinks) {
+            const isActive = a.getAttribute("href") === `#${sectionId}`;
+            a.setAttribute("aria-current", isActive ? "true" : "false");
+            if (isActive && floorReadout) {
+              floorReadout.textContent = `Active: ${a.dataset.floor}`;
+            }
+          }
+        };
+
+        const initialId = (location.hash ? location.hash.slice(1) : "executive-summary") || "executive-summary";
+        setActive(initialId);
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const visible = entries
+              .filter((e) => e.isIntersecting)
+              .sort((a, b) => (b.intersectionRatio || 0) - (a.intersectionRatio || 0))[0];
+            if (!visible) return;
+            setActive(visible.target.id);
+          },
+          { rootMargin: "-15% 0px -70% 0px", threshold: [0.08, 0.18, 0.32] }
+        );
+
+        for (const section of sections) observer.observe(section);
+
+        window.addEventListener(
+          "hashchange",
+          () => {
+            const id = (location.hash || "").slice(1);
+            if (id) setActive(id);
+          },
+          { passive: true }
+        );
+      })();
+    </script>
+  </body>
+</html>
