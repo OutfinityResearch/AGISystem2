@@ -649,6 +649,33 @@
         margin-top: 12px;
       }
 
+      .split {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .split > div {
+        border: 1px solid var(--stroke2);
+        border-radius: 16px;
+        background: rgba(8, 12, 22, 0.22);
+        padding: 12px;
+      }
+
+      .split h3 {
+        margin: 0 0 8px;
+        font-size: 13px;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: rgba(226, 232, 240, 0.72);
+      }
+
+      .split ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+
       .exp-card {
         display: block;
         border: 1px solid var(--stroke2);
@@ -711,6 +738,10 @@
         }
 
         .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .split {
           grid-template-columns: 1fr;
         }
 
@@ -1117,6 +1148,27 @@
                   />
                 </svg>
                 Experiments
+              </a>
+            </li>
+            <li>
+              <a href="#principles" data-floor="09">
+                <span class="floor-badge">09</span>
+                <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path
+                    d="M12 21c4.4 0 8-3.6 8-8 0-3.4-2.1-6.3-5.1-7.5L12 3 9.1 5.5C6.1 6.7 4 9.6 4 13c0 4.4 3.6 8 8 8Z"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M9.5 12.2 11.2 14l3.7-4.1"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                Principles
               </a>
             </li>
           </ul>
@@ -1696,6 +1748,93 @@
                       <span>Deterministic neuro‑symbolic geometry for explainable reasoning.</span>
                     </a>
                   </div>
+                  <div class="callout">
+                    <b>Research insight:</b>
+                    <a href="ai-assisted-research.html">Toward a Practical “System 2” for AI‑Assisted Research</a>
+                    — principles, failure modes, evaluation signals, and the TRL gap to a reviewer‑grade scientific
+                    validator.
+                  </div>
+                </div>
+              </section>
+            </li>
+
+            <li>
+              <section class="floor" id="principles" aria-labelledby="principles-title">
+                <div class="floor-header">
+                  <div class="floor-title">
+                    <strong>Floor 09</strong>
+                    <h2 id="principles-title">Principles for AI‑Assisted Research</h2>
+                  </div>
+                  <div class="floor-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M12 3 9 5.7C6 7 4 9.9 4 13.3 4 18 7.6 21 12 21s8-3 8-7.7c0-3.4-2-6.3-5-7.6L12 3Z"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M9.2 12.1 11 13.9l3.8-4.2"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="floor-body">
+                  <p>
+                    When synthesis becomes cheap and fluent, <strong>epistemic control</strong> becomes the scarce
+                    resource. We treat LLM‑based agents as a high‑throughput “System 1” and introduce a practical “System
+                    2” layer: deterministic gates, explicit semantics, and auditable traces.
+                  </p>
+                  <div class="split" role="group" aria-label="Principles and failure modes">
+                    <div>
+                      <h3>Principles</h3>
+                      <ul>
+                        <li><strong>Specifications are governance:</strong> stable intent + bounded search.</li>
+                        <li><strong>Separate generation from validation:</strong> do not let System 1 certify itself.</li>
+                        <li><strong>Traceability is first‑class:</strong> evidence, mappings, reproducible changes.</li>
+                        <li><strong>Epistemic redundancy:</strong> multi‑agent cross‑checking and disagreement surfacing.</li>
+                        <li><strong>Representational commitments:</strong> DSLs/IRs/invariants to make checks meaningful.</li>
+                        <li><strong>Global coherence over local plausibility:</strong> spec↔code↔docs consistency.</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>Failure Modes</h3>
+                      <ul>
+                        <li><strong>Engineering ≠ science:</strong> passing suites can hide weak assumptions.</li>
+                        <li><strong>Shallow theory import:</strong> fast summaries conceal constraints and caveats.</li>
+                        <li><strong>Premature lock‑in:</strong> early prototypes reduce exploratory depth.</li>
+                        <li><strong>Hallucinated authority:</strong> unverified citations and invented references.</li>
+                        <li><strong>Hidden technical debt:</strong> brittle edges and security risks in “polished” code.</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="callout" style="margin-top: 12px">
+                    <b>TRL reality check:</b> today’s System‑2‑like tooling is best described as TRL1–TRL2 (feasibility
+                    and concept demonstration), not a reviewer‑grade scientific validator.
+                  </div>
+                  <p style="margin-top: 12px">
+                    Read the full note:
+                    <a class="btn primary" href="ai-assisted-research.html" style="margin-left: 8px">
+                      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path
+                          d="M6 19V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v14"
+                          stroke="currentColor"
+                          stroke-width="1.6"
+                        />
+                        <path
+                          d="M8.5 8.2h7M8.5 12h7M8.5 15.8h5.2"
+                          stroke="currentColor"
+                          stroke-width="1.6"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                      Toward a Practical System 2
+                    </a>
+                  </p>
                 </div>
               </section>
             </li>
