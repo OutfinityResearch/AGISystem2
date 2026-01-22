@@ -13,7 +13,7 @@
     <meta property="og:title" content="AGISystem2 — System 2 Engineering for AI Agents" />
     <meta
       property="og:description"
-      content="A tower of ideas: verification, neuro-symbolic reasoning, hyperdimensional computing, and semantic programming for trustworthy AI agents."
+      content="A structured set of ideas: verification, neuro-symbolic reasoning, hyperdimensional computing, and semantic programming for trustworthy AI agents."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://agisystem2.com/" />
@@ -453,7 +453,7 @@
         color: rgba(2, 6, 23, 0.92);
       }
 
-      .floor-badge {
+      .nav-badge {
         width: 34px;
         height: 34px;
         border-radius: 12px;
@@ -473,7 +473,7 @@
         flex: 0 0 auto;
       }
 
-      .tower {
+      .stack {
         border: 1px solid var(--stroke);
         border-radius: var(--radius);
         background: rgba(255, 255, 255, 0.7);
@@ -482,7 +482,7 @@
         position: relative;
       }
 
-      .tower::before {
+      .stack::before {
         content: "";
         position: absolute;
         left: 42px;
@@ -502,7 +502,7 @@
         pointer-events: none;
       }
 
-      .tower::after {
+      .stack::after {
         content: "";
         position: absolute;
         inset: 0;
@@ -514,7 +514,7 @@
         pointer-events: none;
       }
 
-      .floors {
+      .sections {
         margin: 0;
         padding: 12px;
         list-style: none;
@@ -523,11 +523,11 @@
         gap: 12px;
       }
 
-      section.floor {
+      section.panel {
         scroll-margin-top: 110px;
       }
 
-      .floor {
+      .panel {
         border: 1px solid var(--stroke2);
         background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.64));
         border-radius: var(--radius);
@@ -535,7 +535,7 @@
         position: relative;
       }
 
-      .floor::before {
+      .panel::before {
         content: "";
         position: absolute;
         left: 32px;
@@ -548,47 +548,47 @@
         pointer-events: none;
       }
 
-      .floors > li:nth-child(2) .floor::before {
+      .sections > li:nth-child(2) .panel::before {
         background: rgba(255, 79, 216, 0.26);
         box-shadow: 0 0 0 4px rgba(255, 79, 216, 0.07);
       }
 
-      .floors > li:nth-child(3) .floor::before {
+      .sections > li:nth-child(3) .panel::before {
         background: rgba(167, 255, 79, 0.24);
         box-shadow: 0 0 0 4px rgba(167, 255, 79, 0.07);
       }
 
-      .floors > li:nth-child(4) .floor::before {
+      .sections > li:nth-child(4) .panel::before {
         background: rgba(255, 176, 32, 0.2);
         box-shadow: 0 0 0 4px rgba(255, 176, 32, 0.06);
       }
 
-      .floors > li:nth-child(5) .floor::before {
+      .sections > li:nth-child(5) .panel::before {
         background: rgba(94, 234, 212, 0.22);
         box-shadow: 0 0 0 4px rgba(94, 234, 212, 0.06);
       }
 
-      .floors > li:nth-child(6) .floor::before {
+      .sections > li:nth-child(6) .panel::before {
         background: rgba(79, 243, 255, 0.22);
         box-shadow: 0 0 0 4px rgba(79, 243, 255, 0.06);
       }
 
-      .floors > li:nth-child(7) .floor::before {
+      .sections > li:nth-child(7) .panel::before {
         background: rgba(255, 79, 216, 0.2);
         box-shadow: 0 0 0 4px rgba(255, 79, 216, 0.06);
       }
 
-      .floors > li:nth-child(8) .floor::before {
+      .sections > li:nth-child(8) .panel::before {
         background: rgba(167, 255, 79, 0.2);
         box-shadow: 0 0 0 4px rgba(167, 255, 79, 0.06);
       }
 
-      .floors > li:nth-child(9) .floor::before {
+      .sections > li:nth-child(9) .panel::before {
         background: rgba(255, 176, 32, 0.18);
         box-shadow: 0 0 0 4px rgba(255, 176, 32, 0.05);
       }
 
-      .floor-header {
+      .panel-header {
         display: flex;
         align-items: center;
         gap: 12px;
@@ -597,28 +597,28 @@
         border-bottom: 1px solid rgba(2, 6, 23, 0.08);
       }
 
-      .floor-title {
+      .panel-title {
         display: flex;
         flex-direction: column;
         gap: 3px;
         min-width: 0;
       }
 
-      .floor-title strong {
+      .panel-title strong {
         font-size: 14px;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: rgba(2, 6, 23, 0.56);
       }
 
-      .floor-title h2 {
+      .panel-title h2 {
         margin: 0;
         font-size: 20px;
         line-height: 1.2;
         letter-spacing: -0.01em;
       }
 
-      .floor-icon {
+      .panel-icon {
         margin-left: auto;
         width: 36px;
         height: 36px;
@@ -629,35 +629,35 @@
         place-items: center;
       }
 
-      .floor-icon svg {
+      .panel-icon svg {
         width: 18px;
         height: 18px;
         opacity: 0.9;
       }
 
-      .floor-body {
+      .panel-body {
         padding: 14px 18px 18px;
         padding-left: 68px;
       }
 
-      .floor-body p {
+      .panel-body p {
         margin: 0 0 10px;
         color: var(--muted);
         line-height: 1.6;
       }
 
-      .floor-body p strong {
+      .panel-body p strong {
         color: rgba(2, 6, 23, 0.92);
       }
 
-      .floor-body ul {
+      .panel-body ul {
         margin: 10px 0 0;
         padding-left: 18px;
         color: rgba(2, 6, 23, 0.74);
         line-height: 1.55;
       }
 
-      .floor-body li {
+      .panel-body li {
         margin: 8px 0;
       }
 
@@ -890,7 +890,7 @@
 
       <header class="hero">
         <div>
-          <div class="kicker"><b>Tower</b> A structured path from vision → experiments → deployable systems</div>
+          <div class="kicker"><b>Map</b> A structured path from vision → experiments → deployable systems</div>
           <h1>Build trustworthy AI agents that reason, verify, and run efficiently.</h1>
           <p class="lede">
             AGISystem2 is a research platform and engineering effort inspired by <strong>System 2</strong>—the slow,
@@ -907,7 +907,7 @@
                   stroke-linecap="round"
                 />
               </svg>
-              Enter the tower
+              Start exploring
             </a>
             <a class="btn" href="#experiments">
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -1012,15 +1012,15 @@
       </header>
 
       <div class="layout" id="main">
-        <nav class="elevator" aria-label="Tower floors">
+        <nav class="elevator" aria-label="Sections">
           <header>
-            <strong>Floors</strong>
-            <span id="floor-readout">—</span>
+            <strong>Contents</strong>
+            <span id="nav-readout">—</span>
           </header>
           <ul class="navlist">
             <li>
-              <a href="#executive-summary" data-floor="01" aria-current="true">
-                <span class="floor-badge">01</span>
+              <a href="#executive-summary" data-step="01" aria-current="true">
+                <span class="nav-badge">01</span>
                 <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path
                     d="M4 20V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14"
@@ -1038,8 +1038,8 @@
               </a>
             </li>
             <li>
-              <a href="#how" data-floor="02">
-                <span class="floor-badge">02</span>
+              <a href="#how" data-step="02">
+                <span class="nav-badge">02</span>
                 <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path
                     d="M12 20c4.4 0 8-3.6 8-8s-3.6-8-8-8-8 3.6-8 8 3.6 8 8 8Z"
@@ -1058,8 +1058,8 @@
               </a>
             </li>
             <li>
-              <a href="#vision" data-floor="03">
-                <span class="floor-badge">03</span>
+              <a href="#vision" data-step="03">
+                <span class="nav-badge">03</span>
                 <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path
                     d="M12 4c5 0 9 5 9 8s-4 8-9 8-9-5-9-8 4-8 9-8Z"
@@ -1082,8 +1082,8 @@
               </a>
             </li>
             <li>
-              <a href="#ai-assisted-rd" data-floor="04">
-                <span class="floor-badge">04</span>
+              <a href="#ai-assisted-rd" data-step="04">
+                <span class="nav-badge">04</span>
                 <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path
                     d="M10 2v4.5l-5.2 9a5 5 0 0 0 4.3 7.5h5.8a5 5 0 0 0 4.3-7.5l-5.2-9V2"
@@ -1102,8 +1102,8 @@
               </a>
             </li>
             <li>
-              <a href="#languages" data-floor="05">
-                <span class="floor-badge">05</span>
+              <a href="#languages" data-step="05">
+                <span class="nav-badge">05</span>
                 <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path
                     d="M8 7 4 12l4 5M16 7l4 5-4 5"
@@ -1123,8 +1123,8 @@
               </a>
             </li>
             <li>
-              <a href="#cpu-reasoning" data-floor="06">
-                <span class="floor-badge">06</span>
+              <a href="#cpu-reasoning" data-step="06">
+                <span class="nav-badge">06</span>
                 <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path
                     d="M9 4v2m6-2v2M9 18v2m6-2v2M4 9h2m-2 6h2m14-6h2m-2 6h2"
@@ -1142,8 +1142,8 @@
               </a>
             </li>
             <li>
-              <a href="#current-results" data-floor="07">
-                <span class="floor-badge">07</span>
+              <a href="#current-results" data-step="07">
+                <span class="nav-badge">07</span>
                 <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path
                     d="M6 18V9m6 9V6m6 12v-7"
@@ -1162,8 +1162,8 @@
               </a>
             </li>
             <li>
-              <a href="#experiments" data-floor="08">
-                <span class="floor-badge">08</span>
+              <a href="#experiments" data-step="08">
+                <span class="nav-badge">08</span>
                 <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path
                     d="M7 20h10M9 20V8l-2-2h10l-2 2v12"
@@ -1183,8 +1183,8 @@
               </a>
             </li>
             <li>
-              <a href="#principles" data-floor="09">
-                <span class="floor-badge">09</span>
+              <a href="#principles" data-step="09">
+                <span class="nav-badge">09</span>
                 <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path
                     d="M12 21c4.4 0 8-3.6 8-8 0-3.4-2.1-6.3-5.1-7.5L12 3 9.1 5.5C6.1 6.7 4 9.6 4 13c0 4.4 3.6 8 8 8Z"
@@ -1206,16 +1206,15 @@
           </ul>
         </nav>
 
-        <main class="tower" aria-label="Tower content">
-          <ol class="floors">
+        <main class="stack" aria-label="Content">
+          <ol class="sections">
             <li>
-              <section class="floor" id="executive-summary" aria-labelledby="executive-summary-title">
-                <div class="floor-header">
-                  <div class="floor-title">
-                    <strong>Floor 01</strong>
+              <section class="panel" id="executive-summary" aria-labelledby="executive-summary-title">
+                <div class="panel-header">
+                  <div class="panel-title">
                     <h2 id="executive-summary-title">Executive Summary for Investors</h2>
                   </div>
-                  <div class="floor-icon" aria-hidden="true">
+                  <div class="panel-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none">
                       <path
                         d="M7 14c.8 1.2 2.2 2 5 2 3 0 5-1.2 5-3s-1.4-2.4-4.2-2.8C10.7 9.9 9 9.2 9 7.6 9 6 10.7 5 13 5c2.2 0 3.7.7 4.6 1.9"
@@ -1228,7 +1227,7 @@
                     </svg>
                   </div>
                 </div>
-                <div class="floor-body">
+                <div class="panel-body">
                   <p>
                     This site documents our experiments and long‑term vision for the evolution of AI—especially for
                     high‑stakes enterprise adoption (e.g., pharma), where today’s limitations of large language models
@@ -1267,13 +1266,12 @@
             </li>
 
             <li>
-              <section class="floor" id="how" aria-labelledby="how-title">
-                <div class="floor-header">
-                  <div class="floor-title">
-                    <strong>Floor 02</strong>
+              <section class="panel" id="how" aria-labelledby="how-title">
+                <div class="panel-header">
+                  <div class="panel-title">
                     <h2 id="how-title">How We Do Our Research</h2>
                   </div>
-                  <div class="floor-icon" aria-hidden="true">
+                  <div class="panel-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none">
                       <path
                         d="M12 21s-7-4.4-7-10a7 7 0 0 1 14 0c0 5.6-7 10-7 10Z"
@@ -1288,7 +1286,7 @@
                     </svg>
                   </div>
                 </div>
-                <div class="floor-body">
+                <div class="panel-body">
                   <p>
                     We pursue an aggressive but practical hypothesis: use AI agents to help us solve the problem of
                     building better AI agents. Even partial success is valuable—it tells us where the architecture is
@@ -1317,13 +1315,12 @@
             </li>
 
             <li>
-              <section class="floor" id="vision" aria-labelledby="vision-title">
-                <div class="floor-header">
-                  <div class="floor-title">
-                    <strong>Floor 03</strong>
+              <section class="panel" id="vision" aria-labelledby="vision-title">
+                <div class="panel-header">
+                  <div class="panel-title">
                     <h2 id="vision-title">Vision: A System 2 for AI Agents</h2>
                   </div>
-                  <div class="floor-icon" aria-hidden="true">
+                  <div class="panel-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none">
                       <path
                         d="M12 4c5 0 9 5 9 8s-4 8-9 8-9-5-9-8 4-8 9-8Z"
@@ -1345,7 +1342,7 @@
                     </svg>
                   </div>
                 </div>
-                <div class="floor-body">
+                <div class="panel-body">
                   <p>
                     In cognitive psychology, <strong>System 2</strong> is the slow, deliberate, logical mode of
                     reasoning—complementary to <strong>System 1</strong>, which is fast and intuitive. We use this
@@ -1368,13 +1365,12 @@
             </li>
 
             <li>
-              <section class="floor" id="ai-assisted-rd" aria-labelledby="ai-assisted-rd-title">
-                <div class="floor-header">
-                  <div class="floor-title">
-                    <strong>Floor 04</strong>
+              <section class="panel" id="ai-assisted-rd" aria-labelledby="ai-assisted-rd-title">
+                <div class="panel-header">
+                  <div class="panel-title">
                     <h2 id="ai-assisted-rd-title">AI‑Assisted R&amp;D: Research, Accelerated</h2>
                   </div>
-                  <div class="floor-icon" aria-hidden="true">
+                  <div class="panel-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none">
                       <path
                         d="M9 3h6M10 3v5l-4.7 8.1A5 5 0 0 0 9.6 23h4.8a5 5 0 0 0 4.3-6.9L14 8V3"
@@ -1391,7 +1387,7 @@
                     </svg>
                   </div>
                 </div>
-                <div class="floor-body">
+                <div class="panel-body">
                   <p>
                     The future of intellectual work is shifting toward ecosystems of AI agents. We envision research as
                     an orchestrated process—agents can reason, synthesize, and document while humans steer priorities
@@ -1424,13 +1420,12 @@
             </li>
 
             <li>
-              <section class="floor" id="languages" aria-labelledby="languages-title">
-                <div class="floor-header">
-                  <div class="floor-title">
-                    <strong>Floor 05</strong>
+              <section class="panel" id="languages" aria-labelledby="languages-title">
+                <div class="panel-header">
+                  <div class="panel-title">
                     <h2 id="languages-title">Programming Languages for the AI Era</h2>
                   </div>
-                  <div class="floor-icon" aria-hidden="true">
+                  <div class="panel-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none">
                       <path
                         d="M8 7 4 12l4 5M16 7l4 5-4 5"
@@ -1448,7 +1443,7 @@
                     </svg>
                   </div>
                 </div>
-                <div class="floor-body">
+                <div class="panel-body">
                   <p>
                     Programming languages evolve when the computing paradigm changes. In an era of LLMs and agentic
                     systems, languages can be optimized not only for humans, but for <strong>human‑AI collaboration</strong>
@@ -1473,13 +1468,12 @@
             </li>
 
             <li>
-              <section class="floor" id="cpu-reasoning" aria-labelledby="cpu-reasoning-title">
-                <div class="floor-header">
-                  <div class="floor-title">
-                    <strong>Floor 06</strong>
+              <section class="panel" id="cpu-reasoning" aria-labelledby="cpu-reasoning-title">
+                <div class="panel-header">
+                  <div class="panel-title">
                     <h2 id="cpu-reasoning-title">CPU‑Optimized Reasoning &amp; Neuro‑Symbolic Architectures</h2>
                   </div>
-                  <div class="floor-icon" aria-hidden="true">
+                  <div class="panel-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none">
                       <path
                         d="M9 4v2m6-2v2M9 18v2m6-2v2M4 9h2m-2 6h2m14-6h2m-2 6h2"
@@ -1497,7 +1491,7 @@
                     </svg>
                   </div>
                 </div>
-                <div class="floor-body">
+                <div class="panel-body">
                   <p>
                     Modern AI has been built around massive GPU scaling. We explore an alternative trajectory:
                     <strong>reasoning that runs efficiently on CPUs</strong> using symbolic structure, bitset / VSA / HDC
@@ -1522,13 +1516,12 @@
             </li>
 
             <li>
-              <section class="floor" id="current-results" aria-labelledby="current-results-title">
-                <div class="floor-header">
-                  <div class="floor-title">
-                    <strong>Floor 07</strong>
+              <section class="panel" id="current-results" aria-labelledby="current-results-title">
+                <div class="panel-header">
+                  <div class="panel-title">
                     <h2 id="current-results-title">Current Results</h2>
                   </div>
-                  <div class="floor-icon" aria-hidden="true">
+                  <div class="panel-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none">
                       <path
                         d="M7 20V9m5 11V6m5 14v-8"
@@ -1545,7 +1538,7 @@
                     </svg>
                   </div>
                 </div>
-                <div class="floor-body">
+                <div class="panel-body">
                   <ul>
                     <li>
                       <strong>Specification‑driven development:</strong> our experiments show that as specifications
@@ -1574,13 +1567,12 @@
             </li>
 
             <li>
-              <section class="floor" id="experiments" aria-labelledby="experiments-title">
-                <div class="floor-header">
-                  <div class="floor-title">
-                    <strong>Floor 08</strong>
+              <section class="panel" id="experiments" aria-labelledby="experiments-title">
+                <div class="panel-header">
+                  <div class="panel-title">
                     <h2 id="experiments-title">Experiments</h2>
                   </div>
-                  <div class="floor-icon" aria-hidden="true">
+                  <div class="panel-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none">
                       <path
                         d="M7 20h10M9 20V8l-2-2h10l-2 2v12"
@@ -1598,7 +1590,7 @@
                     </svg>
                   </div>
                 </div>
-                <div class="floor-body">
+                <div class="panel-body">
                   <p>Public references and running prototypes (open source):</p>
                   <div class="exp-grid">
                     <a
@@ -1790,13 +1782,12 @@
             </li>
 
             <li>
-              <section class="floor" id="principles" aria-labelledby="principles-title">
-                <div class="floor-header">
-                  <div class="floor-title">
-                    <strong>Floor 09</strong>
+              <section class="panel" id="principles" aria-labelledby="principles-title">
+                <div class="panel-header">
+                  <div class="panel-title">
                     <h2 id="principles-title">Principles for AI‑Assisted Research</h2>
                   </div>
-                  <div class="floor-icon" aria-hidden="true">
+                  <div class="panel-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none">
                       <path
                         d="M12 3 9 5.7C6 7 4 9.9 4 13.3 4 18 7.6 21 12 21s8-3 8-7.7c0-3.4-2-6.3-5-7.6L12 3Z"
@@ -1814,7 +1805,7 @@
                     </svg>
                   </div>
                 </div>
-                <div class="floor-body">
+                <div class="panel-body">
                   <p>
                     When synthesis becomes cheap and fluent, <strong>epistemic control</strong> becomes the scarce
                     resource. We treat LLM‑based agents as a high‑throughput “System 1” and introduce a practical “System
@@ -1895,7 +1886,7 @@
     <script>
       (() => {
         const navLinks = Array.from(document.querySelectorAll(".navlist a"));
-        const floorReadout = document.getElementById("floor-readout");
+        const navReadout = document.getElementById("nav-readout");
         const sections = navLinks
           .map((a) => document.querySelector(a.getAttribute("href")))
           .filter(Boolean);
@@ -1904,8 +1895,8 @@
           for (const a of navLinks) {
             const isActive = a.getAttribute("href") === `#${sectionId}`;
             a.setAttribute("aria-current", isActive ? "true" : "false");
-            if (isActive && floorReadout) {
-              floorReadout.textContent = `Active: ${a.dataset.floor}`;
+            if (isActive && navReadout) {
+              navReadout.textContent = `Active: ${a.dataset.step}`;
             }
           }
         };
