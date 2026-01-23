@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Formal Verification Languages — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
+        --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff; --radius: 18px; --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h2 { color: var(--accent); margin-top: 24px; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div><strong>AGISystem2 Research</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>Formal Verification Languages</h1>
+        <p>Proving that systems work as intended, before a single line of code is run.</p>
+      </header>
+      <main class="stack">
+        <h2>System Design as Science</h2>
+        <p>Formal verification involves using mathematical methods to prove that a system (hardware, software, or an AI agent) satisfies a set of specifications. This is the foundation of <strong>Auditable System 2 Engineering</strong>.</p>
+
+        <h3>Key Modeling Languages</h3>
+        <ul>
+          <li><strong><a href="https://lamport.azurewebsites.net/tla/tla.html" target="_blank">TLA+ (Temporal Logic of Actions)</a>:</strong> Developed by Leslie Lamport, TLA+ is used to model concurrent and distributed systems. It is an industry standard at companies like Amazon (AWS) for verifying complex protocols.</li>
+          <li><strong><a href="https://alloytools.org/" target="_blank">Alloy</a>:</strong> A declarative specification language for expressing structural properties and behavior. It uses SAT solvers to automatically find counterexamples to a design.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/B-Method" target="_blank">B-Method / Event-B</a>:</strong> Used extensively in the railway industry (e.g., Alstom, Siemens) to prove the safety of automated train control systems.</li>
+        </ul>
+
+        <h2>AI-Assisted Verification</h2>
+        <p>We are researching how agents can automatically generate TLA+ or Alloy specifications from high-level goals. This allows us to use <strong>Model Checking</strong> to prove that an agentic workflow is deadlock-free and safe before deploying it.</p>
+
+        <h3>Resources</h3>
+        <ul>
+          <li><strong><a href="https://github.com/tlaplus/tlaplus" target="_blank">TLA+ Tools (GitHub)</a></strong></li>
+          <li><strong><a href="https://github.com/AlloyTools/org.alloytools.alloy" target="_blank">Alloy Analyzer (GitHub)</a></strong></li>
+        </ul>
+      </main>
+    </div>
+  </body>
+</html>

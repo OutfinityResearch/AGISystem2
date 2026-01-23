@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ontologies & Knowledge Graphs — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
+        --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff; --radius: 18px; --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h2 { color: var(--accent); margin-top: 24px; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div><strong>AGISystem2 Research</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>Ontologies & Knowledge Graphs</h1>
+        <p>Structuring the world's knowledge for machine-readable common sense.</p>
+      </header>
+      <main class="stack">
+        <h2>What are <a href="https://en.wikipedia.org/wiki/Ontology_(information_science)" target="_blank">Ontologies</a>?</h2>
+        <p>An ontology is a formal naming and definition of the categories, properties, and relations between the concepts that exist for a particular domain of discourse. In the context of AGISystem2, ontologies provide the "Common Sense" anchor for our agents.</p>
+
+        <h3>Core Initiatives</h3>
+        <ul>
+          <li><strong><a href="https://cyc.com/" target="_blank">Cyc</a>:</strong> The world's longest-lived AI project, aiming to codify general common-sense knowledge into a massive logic-based engine.</li>
+          <li><strong><a href="https://wordnet.princeton.edu/" target="_blank">WordNet</a>:</strong> A large lexical database of English, where nouns, verbs, adjectives and adverbs are grouped into sets of cognitive synonyms (synsets).</li>
+          <li><strong><a href="http://www.adampease.org/OP/" target="_blank">SUMO (Suggested Upper Merged Ontology)</a>:</strong> The largest open-source ontology in existence, mapped to WordNet.</li>
+        </ul>
+
+        <h2>Knowledge Graphs & the Semantic Web</h2>
+        <p>Technologies like <strong><a href="https://en.wikipedia.org/wiki/Resource_Description_Framework" target="_blank">RDF</a></strong> and <strong><a href="https://en.wikipedia.org/wiki/SPARQL" target="_blank">SPARQL</a></strong> enable the linking of data across the web. We use Knowledge Graphs to ground LLM outputs in verifiable facts, reducing hallucinations by checking claims against a structured graph of entities.</p>
+
+        <h2>Strategic Value</h2>
+        <p>Ontologies provide the <strong>Deterministic Verification</strong> layer for System 2. By mapping an agent's reasoning path to an upper ontology like SUMO, we can formally prove whether a chain of reasoning is logically consistent with established facts.</p>
+
+        <h3>Links</h3>
+        <ul>
+          <li><strong><a href="https://github.com/ontologyportal/sumo" target="_blank">SUMO Ontology (GitHub)</a></strong></li>
+          <li><strong><a href="https://schema.org/" target="_blank">Schema.org</a></strong></li>
+        </ul>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Verifiable Computing & ZKPs for AI — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
+        --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff; --radius: 18px; --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h2 { color: var(--accent); margin-top: 24px; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div><strong>AGISystem2 Research</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>Verifiable Computing & ZKPs</h1>
+        <p>Proving that AI computation is correct without compromising privacy.</p>
+      </header>
+      <main class="stack">
+        <h2>What is <a href="https://en.wikipedia.org/wiki/Verifiable_computing" target="_blank">Verifiable Computing</a>?</h2>
+        <p>Verifiable computing allows a client to outsource the computation of a function to an untrusted server, while receiving a proof that the computation was performed correctly. In the AI era, this is known as <strong>zkML (Zero-Knowledge Machine Learning)</strong>.</p>
+
+        <h3>Core Technologies</h3>
+        <ul>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Non-interactive_zero-knowledge_proof" target="_blank">ZK-SNARKs</a>:</strong> Succinct Non-interactive Arguments of Knowledge. These are tiny proofs that can verify massive AI computations in milliseconds.</li>
+          <li><strong>Fully Homomorphic Encryption (FHE):</strong> Allowing AI to run directly on encrypted data.</li>
+        </ul>
+
+        <h2>Strategic Value</h2>
+        <p>Auditability is a pillar of AGISystem2. By using <strong>zkML</strong>, we can provide a cryptographic guarantee that an agent followed its <a href="cnl-formal-semantics.html">formal specifications</a> and utilized only approved evidence, without the auditor needing access to the proprietary data or models.</p>
+
+        <h3>References</h3>
+        <ul>
+          <li><strong><a href="https://github.com/zkonduit/ezkl" target="_blank">ezkl (GitHub)</a>:</strong> A library for proving ONNX models using ZK-SNARKs.</li>
+          <li><strong><a href="https://github.com/moduluslabs" target="_blank">Modulus Labs (GitHub)</a>:</strong> Pioneering zero-knowledge proofs for AI.</li>
+        </ul>
+      </main>
+    </div>
+  </body>
+</html>

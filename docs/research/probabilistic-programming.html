@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Probabilistic Programming — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
+        --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff; --radius: 18px; --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h2 { color: var(--accent); margin-top: 24px; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div><strong>AGISystem2 Research</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>Probabilistic Programming</h1>
+        <p>Codifying uncertainty through the lens of Bayesian inference.</p>
+      </header>
+      <main class="stack">
+        <h2>What is <a href="https://en.wikipedia.org/wiki/Probabilistic_programming" target="_blank">Probabilistic Programming</a>?</h2>
+        <p>Probabilistic Programming Languages (PPLs) allow developers to define complex probabilistic models using code. The language's compiler then automatically performs <strong>Bayesian Inference</strong> to discover the parameters that best explain the data.</p>
+
+        <h3>Core Frameworks</h3>
+        <ul>
+          <li><strong><a href="https://mc-stan.org/" target="_blank">Stan</a>:</strong> A state-of-the-art platform for statistical modeling and high-performance statistical computation.</li>
+          <li><strong><a href="https://pyro.ai/" target="_blank">Pyro (Uber)</a>:</strong> A deep probabilistic programming language built on PyTorch, designed for scalability and research.</li>
+          <li><strong><a href="https://github.com/blei-lab/edward" target="_blank">Edward (GitHub)</a>:</strong> A library for probabilistic modeling, inference, and criticism.</li>
+        </ul>
+
+        <h2>System 2 and Uncertainty</h2>
+        <p>A key role of <strong>System 2</strong> is to manage uncertainty. We use PPLs to build internal models for agents that don't just provide a single answer, but a distribution of possible outcomes with associated confidence intervals. This allows for risk-aware decision making in enterprise workflows.</p>
+
+        <h3>Resources</h3>
+        <ul>
+          <li><strong><a href="https://github.com/pyro-ppl/pyro" target="_blank">Pyro PPL (GitHub)</a></strong></li>
+          <li><strong><a href="https://github.com/stan-dev/stan" target="_blank">Stan (GitHub)</a></strong></li>
+        </ul>
+      </main>
+    </div>
+  </body>
+</html>

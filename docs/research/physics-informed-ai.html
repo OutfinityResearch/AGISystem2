@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Physics-Informed AI: Hard Constraints — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
+        --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff; --radius: 18px; --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h2 { color: var(--accent); margin-top: 24px; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div><strong>AGISystem2 Research</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>Physics-Informed AI</h1>
+        <p>Baking the laws of the universe into neural network training.</p>
+      </header>
+      <main class="stack">
+        <h2>What are <a href="https://en.wikipedia.org/wiki/Physics-informed_neural_networks" target="_blank">PINNs</a>?</h2>
+        <p>Physics-Informed Neural Networks (PINNs) are a class of neural networks that are trained to solve supervised learning tasks while also respecting any given laws of physics described by general nonlinear partial differential equations (PDEs).</p>
+
+        <h3>Core Idea</h3>
+        <p>Instead of just using a data loss function, PINNs include a <strong>Physics Loss</strong> term that penalizes the model if its outputs violate physical laws (e.g., conservation of mass, energy, or Navier-Stokes equations).</p>
+
+        <h2>Strategic Goal</h2>
+        <p>For agents operating in the physical world (robotics, pharma, logistics), purely data-driven models are too risky. We use PINNs to ensure that our agents' <strong>World Models</strong> (System 2) are physically plausible and "grounded" in the real world.</p>
+
+        <h3>References</h3>
+        <ul>
+          <li><strong><a href="https://github.com/maziarraissi/PINNs" target="_blank">PINNs: Official Implementation (GitHub)</a></strong></li>
+          <li><strong><a href="https://github.com/lululxvi/deepxde" target="_blank">DeepXDE: A library for PINNs (GitHub)</a></strong></li>
+        </ul>
+      </main>
+    </div>
+  </body>
+</html>

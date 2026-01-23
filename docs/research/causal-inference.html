@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Causal Inference: Beyond Correlation — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
+        --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff; --radius: 18px; --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h2 { color: var(--accent); margin-top: 24px; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div><strong>AGISystem2 Research</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>Causal Inference</h1>
+        <p>Enabling AI to ask "Why?" and "What if?" through causal reasoning.</p>
+      </header>
+      <main class="stack">
+        <h2>The Ladder of Causation</h2>
+        <p>Championed by <strong>Judea Pearl</strong>, Causal Inference moves AI from curve-fitting (correlations) to understanding mechanisms (causality). This is essential for true <strong>System 2 Reasoning</strong>.</p>
+
+        <h3>The Three Levels</h3>
+        <ol>
+          <li><strong>Association (System 1):</strong> What does one thing tell me about another? (e.g., correlations in LLMs).</li>
+          <li><strong>Intervention:</strong> What happens if I change something? (e.g., the <code>do-calculus</code>).</li>
+          <li><strong>Counterfactuals:</strong> Why did it happen? What if I had acted differently?</li>
+        </ol>
+
+        <h2>Strategic Goal</h2>
+        <p>Standard LLMs are stuck at Level 1. In AGISystem2, we integrate <strong>Structural Causal Models (SCMs)</strong> to allow agents to reason about the consequences of their actions and explain their decisions in terms of cause and effect.</p>
+
+        <h3>Libraries & Links</h3>
+        <ul>
+          <li><strong><a href="https://github.com/microsoft/dowhy" target="_blank">DoWhy (GitHub)</a>:</strong> A Microsoft library for causal inference that combines causal graphical models and potential outcomes.</li>
+          <li><strong><a href="https://github.com/py-why/pycegp" target="_blank">PyWhy (Ecosystem)</a>:</strong> An open-source ecosystem for causal machine learning.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Causal_inference" target="_blank">Causal Inference (Wikipedia)</a></strong></li>
+        </ul>
+      </main>
+    </div>
+  </body>
+</html>

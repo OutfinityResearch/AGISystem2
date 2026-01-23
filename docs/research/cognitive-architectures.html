@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cognitive Architectures: SOAR & ACT-R — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
+        --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff; --radius: 18px; --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h2 { color: var(--accent); margin-top: 24px; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div><strong>AGISystem2 Research</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>Cognitive Architectures</h1>
+        <p>Merging symbolic and sub-symbolic layers into a unified mind model.</p>
+      </header>
+      <main class="stack">
+        <h2>What is a <a href="https://en.wikipedia.org/wiki/Cognitive_architecture" target="_blank">Cognitive Architecture</a>?</h2>
+        <p>Cognitive architectures are frameworks that aim to model the full breadth of human intelligence. Unlike narrow AI models, they integrate perception, memory, reasoning, and motor control into a single system.</p>
+
+        <h3>Classic Systems</h3>
+        <ul>
+          <li><strong><a href="https://soar.eecs.umich.edu/" target="_blank">SOAR</a>:</strong> A symbolic architecture based on production rules and problem-solving through state-space search. It is one of the most mature models of general intelligence.</li>
+          <li><strong><a href="http://act-r.psy.cmu.edu/" target="_blank">ACT-R</a>:</strong> Developed by John Anderson, ACT-R models human cognition by combining symbolic production rules with sub-symbolic activation processes.</li>
+          <li><strong><a href="https://github.com/opencog" target="_blank">OpenCog (GitHub)</a>:</strong> An open-source project aimed at building a decentralized Artificial General Intelligence (AGI) based on the "AtomSpace" hypergraph.</li>
+        </ul>
+
+        <h2>Hybridizing with LLMs</h2>
+        <p>We believe the future of <strong>System 2</strong> lies in using LLMs as the "associative memory" and "language interface" while using a Cognitive Architecture like SOAR to maintain long-term goals, logical consistency, and deliberate planning.</p>
+
+        <h3>References</h3>
+        <ul>
+          <li><strong><a href="https://github.com/soartech/soar" target="_blank">SOAR Cognitive Architecture (GitHub)</a></strong></li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/ACT-R" target="_blank">ACT-R (Wikipedia)</a></strong></li>
+        </ul>
+      </main>
+    </div>
+  </body>
+</html>

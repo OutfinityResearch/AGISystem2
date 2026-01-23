@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>World Models & JEPA: Predictive Agents — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
+        --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff; --radius: 18px; --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h2 { color: var(--accent); margin-top: 24px; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div><strong>AGISystem2 Research</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>World Models & JEPA</h1>
+        <p>Yann LeCun's vision for autonomous AI that learns, reasons, and plans.</p>
+      </header>
+      <main class="stack">
+        <h2>The <a href="https://ai.meta.com/blog/yann-lecun-ai-model-autonomous-agents/" target="_blank">JEPA</a> Architecture</h2>
+        <p>Meta AI's <strong>Joint Embedding Predictive Architecture (JEPA)</strong> is a non-generative approach to AI. Instead of predicting pixels or tokens, JEPA learns to predict the <strong>latent representations</strong> (meanings) of missing parts of an input. This allows it to learn "World Models" without being bogged down by irrelevant details.</p>
+
+        <h3>Key components of an Autonomous Agent</h3>
+        <ul>
+          <li><strong>World Model:</strong> Predicts what will happen in the environment as a result of an action.</li>
+          <li><strong>Cost Module:</strong> Evaluates how "bad" a predicted state is.</li>
+          <li><strong>Actor:</strong> Proposes actions to minimize the cost predicted by the World Model.</li>
+        </ul>
+
+        <h2>World Models as System 2</h2>
+        <p>At AGISystem2, we see World Models as the engine for <strong>mental simulation</strong>. Before an agent takes a high-stakes action, it can "run" the action through its internal world model to verify outcomes—a quintessentially System 2 function.</p>
+
+        <h3>References</h3>
+        <ul>
+          <li><strong><a href="https://github.com/facebookresearch/v-jepa" target="_blank">V-JEPA (Video JEPA) GitHub</a></strong></li>
+          <li><strong><a href="https://worldmodels.github.io/" target="_blank">World Models Research (Ha & Schmidhuber)</a></strong></li>
+        </ul>
+      </main>
+    </div>
+  </body>
+</html>

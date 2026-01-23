@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kolmogorov-Arnold Networks (KAN): A New MLP? — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
+        --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff; --radius: 18px; --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h2 { color: var(--accent); margin-top: 24px; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div><strong>AGISystem2 Research</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>Kolmogorov-Arnold Networks (KAN)</h1>
+        <p>An interpretable and efficient alternative to Multi-Layer Perceptrons.</p>
+      </header>
+      <main class="stack">
+        <h2>Moving Beyond MLPs</h2>
+        <p>Multi-Layer Perceptrons (MLPs) have been the backbone of deep learning for decades. However, <strong>Kolmogorov-Arnold Networks (KAN)</strong>, proposed by researchers at MIT and Caltech, introduce a radical change: they place <strong>learnable activation functions on the edges (weights)</strong> rather than the nodes (neurons).</p>
+
+        <h3>Advantages over traditional Deep Learning</h3>
+        <ul>
+          <li><strong>Interpretability:</strong> KANs can often discover the underlying mathematical formulas of a dataset (Symbolic Regression).</li>
+          <li><strong>Efficiency:</strong> They can achieve better accuracy than MLPs with far fewer parameters.</li>
+          <li><strong>Continuous Learning:</strong> KANs are less prone to catastrophic forgetting, making them ideal for long-lived agents.</li>
+        </ul>
+
+        <h2>Alignment with AGISystem2</h2>
+        <p>The interpretability of KANs makes them a strong candidate for <strong>Auditable AI</strong>. Being able to "read" the activation functions as mathematical formulas allows for a level of verification that is impossible with standard black-box neural networks.</p>
+
+        <h3>References</h3>
+        <ul>
+          <li><strong><a href="https://github.com/KindXiaanyu/pykan" target="_blank">pykan: Official KAN Implementation (GitHub)</a></strong></li>
+          <li><strong><a href="https://arxiv.org/abs/2404.19756" target="_blank">KAN: Kolmogorov-Arnold Networks (Research Paper)</a></strong></li>
+        </ul>
+      </main>
+    </div>
+  </body>
+</html>

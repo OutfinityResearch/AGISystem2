@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Multi-Agent Systems (MAS) & Coordination — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
+        --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff; --radius: 18px; --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h2 { color: var(--accent); margin-top: 24px; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div><strong>AGISystem2 Research</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>Multi-Agent Systems (MAS)</h1>
+        <p>Orchestrating intelligence through formal coordination and consensus.</p>
+      </header>
+      <main class="stack">
+        <h2>What is a <a href="https://en.wikipedia.org/wiki/Multi-agent_system" target="_blank">Multi-Agent System</a>?</h2>
+        <p>A multi-agent system is a computerized system composed of multiple interacting intelligent agents. In our research, we move from "one large model" to "many specialized agents" that must coordinate to solve complex problems.</p>
+
+        <h3>Key Coordination Mechanisms</h3>
+        <ul>
+          <li><strong>Consensus Protocols:</strong> Algorithms that allow agents to agree on a single state of the world (e.g., Paxos, Raft).</li>
+          <li><strong>Agent Communication Languages (ACL):</strong> Using structured protocols (like FIPA-ACL or our own <a href="cnl-formal-semantics.html">CNL-based</a> languages) to exchange intentions.</li>
+          <li><strong>Market-Based Coordination:</strong> Using economic principles (bidding, auctions) to allocate resources and tasks between agents.</li>
+        </ul>
+
+        <h2>Epistemic Redundancy</h2>
+        <p>MAS allows for "System 2" robustness at the network level. By having different agents assume different roles (e.g., a "Generator" and an "Adversarial Verifier"), we can surface disagreements and errors that a single model would miss.</p>
+
+        <h3>References</h3>
+        <ul>
+          <li><strong><a href="https://github.com/microsoft/autogen" target="_blank">AutoGen (Microsoft GitHub)</a>:</strong> A framework for building LLM applications with multiple conversing agents.</li>
+          <li><strong><a href="https://github.com/assafelovic/gpt-researcher" target="_blank">GPT Researcher (GitHub)</a>:</strong> An autonomous agent designed for comprehensive online research.</li>
+        </ul>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Explainable AI (XAI) — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
+        --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff; --radius: 18px; --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h2 { color: var(--accent); margin-top: 24px; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div><strong>AGISystem2 Research</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>Explainable AI (XAI)</h1>
+        <p>Creating trust through transparency and auditable reasoning.</p>
+      </header>
+      <main class="stack">
+        <h2>Why <a href="https://en.wikipedia.org/wiki/Explainable_artificial_intelligence" target="_blank">XAI</a>?</h2>
+        <p>As AI is deployed in high-stakes environments (finance, medicine, law), the "black box" nature of deep learning becomes a liability. XAI aims to provide humans with a clear understanding of <strong>why</strong> a model made a specific decision.</p>
+
+        <h3>Core Techniques</h3>
+        <ul>
+          <li><strong>Post-hoc Interpretability:</strong> Using tools like <a href="https://github.com/slundberg/shap" target="_blank">SHAP</a> or <a href="https://github.com/marcotcr/lime" target="_blank">LIME</a> to explain existing models.</li>
+          <li><strong>Intrinsically Interpretable Models:</strong> Building models that are readable by design, such as Decision Trees or <a href="kolmogorov-arnold-networks.html">KANs</a>.</li>
+          <li><strong>Reasoning Traces:</strong> Generating human-readable rationales alongside every agent action.</li>
+        </ul>
+
+        <h2>Integration in System 2</h2>
+        <p>Explainability is not just a feature—it is a requirement for <strong>System 2 Engineering</strong>. Every decision made by an AGISystem2 agent must be accompanied by an auditable trace that links back to formal specifications and evidence.</p>
+
+        <h3>Links & Resources</h3>
+        <ul>
+          <li><strong><a href="https://github.com/microsoft/interpret" target="_blank">InterpretML (Microsoft GitHub)</a></strong></li>
+          <li><strong><a href="https://github.com/interpretml/interpret-community" target="_blank">Interpret Community (GitHub)</a></strong></li>
+        </ul>
+      </main>
+    </div>
+  </body>
+</html>

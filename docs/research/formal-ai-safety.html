@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Formal AI Safety & Alignment — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
+        --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff; --radius: 18px; --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h2 { color: var(--accent); margin-top: 24px; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div><strong>AGISystem2 Research</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>Formal AI Safety</h1>
+        <p>Hard-coding alignment through mathematical constraints.</p>
+      </header>
+      <main class="stack">
+        <h2>Beyond "RLHF"</h2>
+        <p>Most current alignment techniques rely on <strong>Reinforcement Learning from Human Feedback (RLHF)</strong>, which is essentially statistical "politeness." Formal AI safety instead uses <strong><a href="https://en.wikipedia.org/wiki/Formal_methods" target="_blank">Formal Methods</a></strong> to prove that an agent's behavior stays within safe bounds.</p>
+
+        <h3>Core Concepts</h3>
+        <ul>
+          <li><strong>Safe Reinforcement Learning:</strong> Modifying the objective function to include hard constraints that the agent cannot violate during exploration.</li>
+          <li><strong>Certified Robustness:</strong> Providing mathematical proofs that a model's output will not change drastically under small perturbations.</li>
+          <li><strong>Shielding:</strong> An external "System 2" monitor that intercepts unsafe actions proposed by a "System 1" neural network and replaces them with safe alternatives.</li>
+        </ul>
+
+        <h2>System 2 Verification</h2>
+        <p>In AGISystem2, safety is not a "vibe"—it is a <strong>Formal Specification</strong>. We use languages like <a href="formal-verification-languages.html">TLA+</a> to model safety properties and ensure that our agentic workflows are inherently aligned with human intentions by design.</p>
+
+        <h3>Links & Resources</h3>
+        <ul>
+          <li><strong><a href="https://futureoflife.org/ai-safety/" target="_blank">Future of Life Institute: AI Safety</a></strong></li>
+          <li><strong><a href="https://www.alignmentforum.org/" target="_blank">AI Alignment Forum</a></strong></li>
+        </ul>
+      </main>
+    </div>
+  </body>
+</html>
