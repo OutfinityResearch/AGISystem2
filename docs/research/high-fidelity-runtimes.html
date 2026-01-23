@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Computational Sovereignty: High-Fidelity Runtimes — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
+        --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff; --radius: 18px; --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h2 { color: var(--accent); margin-top: 24px; }
+      .callout { padding: 16px; background: #f0f7ff; border-radius: 12px; border-left: 4px solid var(--accent); margin: 16px 0; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div><strong>AGISystem2 Research</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>Computational Sovereignty</h1>
+        <p>High-Fidelity CPU Runtimes for Emerging Markets.</p>
+      </header>
+      <main class="stack">
+        <h2>Ziroh Labs and Kompact AI</h2>
+        <p>Based in India, Ziroh Labs developed <strong>Kompact AI</strong> to break the GPU barrier for emerging markets. Unlike quantization-focused efforts, they prioritize high fidelity.</p>
+        
+        <h3>Full-Precision (BF16) Performance</h3>
+        <p>While many local inference techniques degrade precision to 4-bit, Kompact AI runs models at Full Precision (BF16) through a runtime that manages memory and compute cycles with extreme efficiency. This is critical for legal or medical fields where quantization errors are unacceptable.</p>
+
+        <h3>"Elephant" Semantic Cache</h3>
+        <p>A key innovation is the <strong>Elephant</strong> semantic caching layer, which detects semantic similarities between queries to skip redundant inference cycles.</p>
+        <div class="callout">
+          <strong>Result:</strong> Processing speeds of 164 tokens/sec (comparable to an NVIDIA A100) and peaks of 10,000 tokens/sec for repetitive tasks.
+        </div>
+
+        <h2>Geopolitics and AI Sovereignty</h2>
+        <p>As export controls on advanced accelerators tighten, Kompact AI provides a path to build nation-grade AI infrastructure using commodity CPU servers (x86 or ARM) that are commercially available and not subject to sanctions.</p>
+      </main>
+    </div>
+  </body>
+</html>

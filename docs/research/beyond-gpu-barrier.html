@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f7fbff" />
+    <title>Beyond the GPU Barrier: CPU-Centric Machine Learning — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --card: rgba(255, 255, 255, 0.78);
+        --stroke: rgba(2, 6, 23, 0.16); --text: rgba(2, 6, 23, 0.92);
+        --muted: rgba(2, 6, 23, 0.72); --accent: #0a7dff;
+        --shadow: 0 20px 60px rgba(2, 6, 23, 0.12); --radius: 18px;
+        --maxw: 1120px;
+      }
+      body {
+        margin: 0; font-family: ui-sans-serif, system-ui, sans-serif;
+        color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1));
+      }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 14px; border: 1px solid var(--stroke);
+        background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px);
+        border-radius: var(--radius); position: sticky; top: 14px; z-index: 20;
+      }
+      .brand { display: flex; align-items: center; gap: 10px; }
+      .brand strong { font-weight: 720; }
+      .pill {
+        display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px;
+        border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none;
+      }
+      .pill.primary { background: var(--card); border-color: rgba(10, 125, 255, 0.28); }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h1 { font-size: clamp(24px, 4vw, 36px); margin: 0 0 16px; }
+      p { margin-bottom: 16px; color: var(--muted); }
+      footer { margin-top: 18px; padding: 18px; border: 1px solid var(--stroke); border-radius: var(--radius); font-size: 14px; color: var(--muted); }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand"><strong>AGISystem2</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back to Research</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>Beyond the GPU Barrier: CPU-Centric Machine Learning</h1>
+        <p>Architectural and Algorithmic Paradigms for the Next Generation of AI.</p>
+      </header>
+      <main class="stack">
+        <h2>The GPU Hegemony and the Need for a Paradigm Shift</h2>
+        <p>The contemporary AI landscape is defined by a fundamental paradox: while the demand for computing power to train and deploy Large Language Models (LLMs) is growing exponentially, the supply of specialized hardware—specifically GPUs—remains constrained by prohibitive costs, limited energy availability, and geopolitical bottlenecks.</p>
+        <p>This "GPU hegemony," characterized by the dominance of the NVIDIA CUDA ecosystem, has created a hardware lottery where access to top-tier accelerators dictates research capabilities and commercial viability.</p>
+        <p>However, a less visible revolution is reshaping the field. By reimagining the fundamental mathematics of deep learning—moving from dense matrix multiplication to sparse hash-based searches and integer arithmetic—a new cohort of researchers is proving that CPUs are high-performance engines for the next generation of AI.</p>
+        <p>This report explores the innovations decoupling machine learning from GPU dependency, from ThirdAI's BOLT engine to the democratization of inference through llama.cpp and Rust-based ecosystems.</p>
+      </main>
+      <footer>
+        <p>Research curated by AGISystem2 Team. References: ThirdAI, Ziroh Labs, llama.cpp.</p>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Rise of Systems Languages: Rust for ML — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
+        --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff; --radius: 18px; --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h2 { color: var(--accent); margin-top: 24px; }
+      table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+      th, td { border: 1px solid var(--stroke); padding: 12px; text-align: left; }
+      th { background: #f9f9f9; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div><strong>AGISystem2 Research</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>The Rise of Systems Languages</h1>
+        <p>Building high-performance ML frameworks with Rust.</p>
+      </header>
+      <main class="stack">
+        <h2>Why Rust?</h2>
+        <p>As the limitations of Python (GIL, runtime overhead) become apparent in high-performance inference, Rust has emerged as a serious contender. It offers memory safety with the raw performance of C++.</p>
+
+        <h2>Candle (Hugging Face)</h2>
+        <p>A minimalist ML framework designed for <strong>Serverless Inference</strong>. It eliminates the "weight" of PyTorch, enabling lightweight binaries and instant "cold boots" on CPU-based serverless functions.</p>
+
+        <h2>Burn: JIT Compilation</h2>
+        <p>A comprehensive framework with a dynamic computation graph. Its <strong>CubeCL</strong> backend generates extremely optimized CPU kernels on the fly, adapting to the specific vector extensions (AVX, NEON) available on the host machine.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Candle</th>
+              <th>Burn</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Primary Focus</td>
+              <td>Serverless, Ease of deployment</td>
+              <td>Flexibility, JIT Kernels</td>
+            </tr>
+            <tr>
+              <td>Backend</td>
+              <td>Bindings to MKL/Accelerate</td>
+              <td>JIT via CubeCL</td>
+            </tr>
+            <tr>
+              <td>Performance</td>
+              <td>Optimized external libraries</td>
+              <td>Optimized native code generation</td>
+            </tr>
+          </tbody>
+        </table>
+      </main>
+    </div>
+  </body>
+</html>

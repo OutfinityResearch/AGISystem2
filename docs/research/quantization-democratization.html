@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Democratization through Quantization: llama.cpp — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
+        --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff; --radius: 18px; --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h2 { color: var(--accent); margin-top: 24px; }
+      code { background: #f0f0f0; padding: 2px 4px; border-radius: 4px; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div><strong>AGISystem2 Research</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>Democratization through Quantization</h1>
+        <p>Making LLMs accessible on everyday hardware with llama.cpp.</p>
+      </header>
+      <main class="stack">
+        <h2>llama.cpp and the GGML/GGUF Ecosystem</h2>
+        <p>Started by Georgi Gerganov, <code>llama.cpp</code> has become the de facto standard for local AI. By writing custom tensor libraries in pure C/C++, it avoids the overhead of Python and heavy frameworks like PyTorch.</p>
+
+        <h3>Aggressive Quantization (k-quants)</h3>
+        <p>The project popularized mapping 16-bit weights to 4-bit integers. This allows a 7B parameter model, which normally requires ~14GB VRAM, to run in just ~4-5GB of system RAM.</p>
+
+        <h3>SIMD Optimization and Apple Silicon</h3>
+        <p>Hand-optimized for AVX2/AVX-512 (x86) and NEON (ARM), llama.cpp leverages the high-bandwidth unified memory of Apple M-series chips to achieve GPU-like speeds on a CPU.</p>
+
+        <h3>The "Shadow AI" Ecosystem</h3>
+        <ul>
+          <li><strong>Ollama:</strong> Packages llama.cpp for a Docker-like experience, enabling one-command local APIs.</li>
+          <li><strong>LM Studio:</strong> A GUI that makes downloading and running quantized models accessible to non-engineers.</li>
+        </ul>
+      </main>
+    </div>
+  </body>
+</html>

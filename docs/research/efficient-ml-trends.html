@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Efficient ML Execution: Current Trends — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
+        --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff; --radius: 18px; --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h2 { color: var(--accent); margin-top: 24px; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 16px; }
+      .card { padding: 16px; border: 1px solid var(--stroke); border-radius: 12px; }
+      .card strong { display: block; margin-bottom: 8px; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div><strong>AGISystem2 Research</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>Efficient ML Execution Trends</h1>
+        <p>A survey of optimized runtimes, compilers, and libraries.</p>
+      </header>
+      <main class="stack">
+        <h2>Optimized Inference Runtimes</h2>
+        <div class="grid">
+          <div class="card">
+            <strong>ONNX Runtime</strong>
+            <span>Microsoft's cross-platform engine using Execution Providers (EP) like OpenVINO or XNNPACK.</span>
+          </div>
+          <div class="card">
+            <strong>OpenVINO</strong>
+            <span>Intel's toolkit for maximizing performance on Intel silicon using INT8 quantization and IR conversion.</span>
+          </div>
+          <div class="card">
+            <strong>TensorFlow Lite</strong>
+            <span>Google's framework for mobile/edge, using FlatBuffers and XNNPACK for low-footprint inference.</span>
+          </div>
+          <div class="card">
+            <strong>Core ML</strong>
+            <span>Apple's on-device framework that seamlessly falls back to CPU when the Neural Engine isn't available.</span>
+          </div>
+        </div>
+
+        <h2>ML Compilers</h2>
+        <p>Compilers like <strong>Apache TVM</strong> and <strong>XLA</strong> produce optimized machine code, closing the gap between high-level frameworks and raw hardware performance through operator fusion and auto-tuning.</p>
+
+        <h2>Low-Level Kernel Libraries</h2>
+        <ul>
+          <li><strong>oneDNN:</strong> Intel's foundational library for deep learning building blocks.</li>
+          <li><strong>XNNPACK:</strong> Google's highly optimized solution for ARM, x86, and WebAssembly.</li>
+          <li><strong>FBGEMM:</strong> Meta's library for high-performance low-precision server-side inference.</li>
+        </ul>
+      </main>
+    </div>
+  </body>
+</html>

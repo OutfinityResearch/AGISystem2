@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f7fbff" />
+    <title>Research Index — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --card: rgba(255, 255, 255, 0.78);
+        --stroke: rgba(2, 6, 23, 0.16); --text: rgba(2, 6, 23, 0.92);
+        --muted: rgba(2, 6, 23, 0.72); --accent: #0a7dff;
+        --shadow: 0 20px 60px rgba(2, 6, 23, 0.12); --radius: 18px;
+        --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .pill.primary { background: var(--card); border-color: rgba(10, 125, 255, 0.28); }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-top: 24px; }
+      .article-card { display: block; padding: 20px; border: 1px solid var(--stroke); border-radius: var(--radius); text-decoration: none; color: inherit; transition: border-color 0.2s; }
+      .article-card:hover { border-color: var(--accent); }
+      .article-card h3 { margin: 0 0 8px; color: var(--accent); }
+      .article-card p { margin: 0; font-size: 14px; color: var(--muted); }
+      .intro-box { padding: 20px; background: #fffbeb; border: 1px solid #fef3c7; border-radius: 12px; margin-bottom: 24px; color: #92400e; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand"><strong>AGISystem2</strong></div>
+        <div class="top-links">
+          <a class="pill" href="index.html">Home</a>
+          <a class="pill" href="ai-assisted-research.html">Principles</a>
+          <a class="pill primary" href="research.html">Research</a>
+        </div>
+      </div>
+
+      <header class="hero">
+        <h1>Research Notes</h1>
+        <p>Exploring the frontier of efficient, reliable, and verifiable AI.</p>
+      </header>
+
+      <main class="stack">
+        <div class="intro-box">
+          The research landscape in this field is highly diverse, with numerous powerful ideas emerging. However, there is a critical shortage of resources needed to combine and scale these directions into unified, industry-grade systems.
+        </div>
+
+        <div class="grid">
+          <a href="research/beyond-gpu-barrier.html" class="article-card">
+            <h3>Beyond the GPU Barrier</h3>
+            <p>The architectural shift from GPU-centric to CPU-first AI systems.</p>
+          </a>
+          <a href="research/algorithmic-revolution.html" class="article-card">
+            <h3>The Algorithmic Revolution</h3>
+            <p>Probabilistic sparsity, SLIDE, and the BOLT engine for sub-linear deep learning.</p>
+          </a>
+          <a href="research/high-fidelity-runtimes.html" class="article-card">
+            <h3>High-Fidelity Runtimes</h3>
+            <p>Computational sovereignty and running BF16 full-precision on CPUs with Ziroh Labs.</p>
+          </a>
+          <a href="research/quantization-democratization.html" class="article-card">
+            <h3>Quantization & Democratization</h3>
+            <p>The impact of llama.cpp, GGML, and GGUF on local AI accessibility.</p>
+          </a>
+          <a href="research/rust-systems-ml.html" class="article-card">
+            <h3>Rust for Systems ML</h3>
+            <p>Memory-safe, high-performance frameworks like Candle and Burn.</p>
+          </a>
+          <a href="research/vendor-optimizations.html" class="article-card">
+            <h3>Silicon Giant Optimizations</h3>
+            <p>How Intel and AMD are baking AI acceleration (AMX, ZenDNN) into the processor.</p>
+          </a>
+          <a href="research/efficient-ml-trends.html" class="article-card">
+            <h3>Efficient ML Trends</h3>
+            <p>A survey of modern inference runtimes, compilers, and low-level libraries.</p>
+          </a>
+        </div>
+
+        <h2 style="margin-top: 40px;">External References</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/1.58-bit_large_language_model" target="_blank">BitNet: 1.58-bit Large Language Models</a></li>
+        </ul>
+      </main>
+
+      <footer>
+        <p>© 2026 Axiologic Research & AGISystem2 Team.</p>
+      </footer>
+    </div>
+  </body>
+</html>
