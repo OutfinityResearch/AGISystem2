@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BitNet & 1.58-bit LLMs: The End of Multiplication — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
+        --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff; --radius: 18px; --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h2 { color: var(--accent); margin-top: 24px; }
+      .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
+      .stat-card { padding: 16px; background: #f8fafc; border-radius: 12px; border: 1px solid var(--stroke); text-align: center; }
+      .stat-card strong { display: block; font-size: 20px; color: var(--accent); }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div><strong>AGISystem2 Research</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>BitNet & 1.58-bit LLMs</h1>
+        <p>Eliminating floating-point multiplication from the heart of AI.</p>
+      </header>
+      <main class="stack">
+        <h2>The 1.58-bit Paradigm ({-1, 0, 1})</h2>
+        <p>Microsoft's <strong>BitNet b1.58</strong> represents a radical departure from traditional LLM training. Instead of 16-bit or 32-bit floating-point weights, every weight is constrained to just three values: <strong>-1, 0, or 1</strong>. This effectively requires only 1.58 bits per parameter.</p>
+
+        <h3>The Death of GEMM</h3>
+        <p>In standard Transformers, the primary operation is Matrix Multiplication (GEMM). In BitNet, because weights are {-1, 0, 1}, the multiplication operation is replaced by <strong>integer addition and subtraction</strong>. This is a massive win for CPU architectures, which can perform additions orders of magnitude more efficiently than floating-point multiplications.</p>
+
+        <div class="stat-grid">
+          <div class="stat-card"><strong>6.25x</strong> Speedup over FP16</div>
+          <div class="stat-card"><strong>80%</strong> Energy Reduction</div>
+          <div class="stat-card"><strong>~4x</strong> Memory Reduction</div>
+        </div>
+
+        <h2>Technical Advantages</h2>
+        <ul>
+          <li><strong>BitLinear Layers:</strong> Replaces standard linear layers with a quantization-aware Ternary strategy.</li>
+          <li><strong>Accuracy:</strong> Surprisingly, BitNet 1.58b achieves performance parity with full-precision models of the same size (e.g., Llama 3 equivalents) across benchmarks like MMLU and GSM8K.</li>
+          <li><strong>bitnet.cpp:</strong> Optimized kernels for x86 and ARM allow running 2B+ parameter models on simple CPUs with sub-millisecond latency.</li>
+        </ul>
+
+        <h2>Strategic Importance</h2>
+        <p>BitNet is a cornerstone of our vision for <strong>Edge AI</strong>. It allows us to deploy "heavyweight" intelligence on low-power devices, serverless functions (like AWS Lambda), and legacy hardware that lacks GPU acceleration.</p>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Programming Languages for the AI Era — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
+        --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff; --radius: 18px; --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h2 { color: var(--accent); margin-top: 24px; }
+      .language-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 16px; }
+      .lang-card { padding: 16px; border: 1px solid var(--stroke); border-radius: 12px; background: #fcfcfc; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div><strong>AGISystem2 Research</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>Languages for the AI Era</h1>
+        <p>Beyond Python: Rethinking programming for probabilistic and agentic systems.</p>
+      </header>
+      <main class="stack">
+        <h2>The Paradigm Shift</h2>
+        <p>Traditional programming is imperative and deterministic. In the era of Generative AI, we need languages that can handle non-deterministic LLM calls, self-optimizing pipelines, and hardware-level performance for tensor operations.</p>
+
+        <div class="language-grid">
+          <div class="lang-card">
+            <strong>DSPy (Declarative)</strong>
+            <span>Moves from "prompting" to "programming". It uses a compiler to automatically optimize prompts and model parameters based on a metric.</span>
+          </div>
+          <div class="lang-card">
+            <strong>Mojo (Performance)</strong>
+            <span>Combines the usability of Python with the performance of C++. It is designed for hardware-level control of AI hardware (CPU/GPU).</span>
+          </div>
+          <div class="lang-card">
+            <strong>Semantic DSLs</strong>
+            <span>Domain-Specific Languages where keywords have formal semantic meaning, allowing agents to reason about the code they are generating.</span>
+          </div>
+        </div>
+
+        <h2>Agent-Centric Execution</h2>
+        <p>Future languages will treat "Agents" as first-class citizens. This means having built-in support for:</p>
+        <ul>
+          <li><strong>Probabilistic Logic:</strong> Handling uncertain outputs without crashing.</li>
+          <li><strong>Memory Management:</strong> Specialized handling of context windows and long-term embeddings.</li>
+          <li><strong>Differentiable Programming:</strong> Where every part of the program can be optimized via backpropagation or reinforcement learning.</li>
+        </ul>
+
+        <h2>Conclusion</h2>
+        <p>At AGISystem2, we believe the next 10 years will see a "new Lisp moment"—the emergence of a language that perfectly captures the structural and fluid nature of AI reasoning, much like Lisp did for symbolic AI in the 1960s.</p>
+      </main>
+    </div>
+  </body>
+</html>
