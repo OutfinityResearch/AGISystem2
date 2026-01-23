@@ -34,19 +34,19 @@
         <p>Making LLMs accessible on everyday hardware with llama.cpp.</p>
       </header>
       <main class="stack">
-        <h2>llama.cpp and the GGML/GGUF Ecosystem</h2>
-        <p>Started by Georgi Gerganov, <code>llama.cpp</code> has become the de facto standard for local AI. By writing custom tensor libraries in pure C/C++, it avoids the overhead of Python and heavy frameworks like PyTorch.</p>
+        <h2><a href="https://github.com/ggml-org/llama.cpp" target="_blank">llama.cpp</a> and the GGML/GGUF Ecosystem</h2>
+        <p>Started by <a href="https://github.com/ggerganov" target="_blank">Georgi Gerganov</a>, <code>llama.cpp</code> has become the de facto standard for local AI. By writing custom tensor libraries in pure C/C++, it avoids the overhead of Python and heavy frameworks like PyTorch.</p>
 
-        <h3>Aggressive Quantization (k-quants)</h3>
+        <h3>Aggressive <a href="https://en.wikipedia.org/wiki/Quantization_(signal_processing)" target="_blank">Quantization</a> (k-quants)</h3>
         <p>The project popularized mapping 16-bit weights to 4-bit integers. This allows a 7B parameter model, which normally requires ~14GB VRAM, to run in just ~4-5GB of system RAM.</p>
 
         <h3>SIMD Optimization and Apple Silicon</h3>
-        <p>Hand-optimized for AVX2/AVX-512 (x86) and NEON (ARM), llama.cpp leverages the high-bandwidth unified memory of Apple M-series chips to achieve GPU-like speeds on a CPU.</p>
+        <p>Hand-optimized for <a href="https://en.wikipedia.org/wiki/Advanced_Vector_Extensions" target="_blank">AVX2/AVX-512</a> (x86) and <a href="https://en.wikipedia.org/wiki/ARM_architecture#Advanced_SIMD_(Neon)" target="_blank">NEON</a> (ARM), llama.cpp leverages the high-bandwidth unified memory of Apple M-series chips to achieve GPU-like speeds on a CPU.</p>
 
         <h3>The "Shadow AI" Ecosystem</h3>
         <ul>
-          <li><strong>Ollama:</strong> Packages llama.cpp for a Docker-like experience, enabling one-command local APIs.</li>
-          <li><strong>LM Studio:</strong> A GUI that makes downloading and running quantized models accessible to non-engineers.</li>
+          <li><strong><a href="https://ollama.com/" target="_blank">Ollama</a>:</strong> Packages llama.cpp for a Docker-like experience, enabling one-command local APIs.</li>
+          <li><strong><a href="https://lmstudio.ai/" target="_blank">LM Studio</a>:</strong> A GUI that makes downloading and running quantized models accessible to non-engineers.</li>
         </ul>
       </main>
     </div>
