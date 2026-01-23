@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Brain-Inspired Computing: Numenta & HTM — AGISystem2</title>
+    <style>
+      :root {
+        --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
+        --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff; --radius: 18px; --maxw: 1120px;
+      }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
+      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
+      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
+      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
+      h2 { color: var(--accent); margin-top: 24px; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div><strong>AGISystem2 Research</strong></div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Back</a>
+        </div>
+      </div>
+      <header class="hero">
+        <h1>Brain-Inspired Computing</h1>
+        <p>Moving beyond backpropagation with Numenta's biological intelligence theories.</p>
+      </header>
+      <main class="stack">
+        <h2><a href="https://numenta.com/" target="_blank">Numenta</a>: The Neocortical Path</h2>
+        <p>Founded by Jeff Hawkins, Numenta focuses on reverse-engineering the neocortex to find the fundamental principles of intelligence. Their research suggests that intelligence is not about deep static layers, but about continuous learning and reference frames.</p>
+
+        <h3><a href="https://en.wikipedia.org/wiki/Hierarchical_temporal_memory" target="_blank">Hierarchical Temporal Memory (HTM)</a></h3>
+        <p>HTM is a machine learning framework that models the structural and algorithmic properties of the neocortex. Unlike standard Deep Learning, HTM is unsupervised, continuous, and highly sparse.</p>
+
+        <h3>The <a href="https://numenta.com/blog/2019/01/16/the-thousand-brains-theory-of-intelligence-explained/" target="_blank">Thousand Brains Theory</a></h3>
+        <p>This theory posits that the neocortex is composed of thousands of identical processing units called cortical columns. Each unit learns complete models of objects through sensory-motor integration. This decentralization provides extreme robustness and efficiency.</p>
+
+        <h2>Technical Synergies</h2>
+        <ul>
+          <li><strong>Sparsity:</strong> Numenta's models use extremely sparse representations (SDRs), which align perfectly with the <a href="algorithmic-revolution.html">Algorithmic Revolution</a> and CPU-centric processing.</li>
+          <li><strong>On-Device Learning:</strong> HTM models can learn continuously from data streams without the catastrophic forgetting common in neural networks.</li>
+          <li><strong><a href="https://github.com/numenta/nupic" target="_blank">NuPIC (GitHub)</a>:</strong> The Numenta Platform for Intelligent Computing is an open-source project implementing HTM algorithms.</li>
+        </ul>
+      </main>
+    </div>
+  </body>
+</html>
