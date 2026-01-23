@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Physics-Informed AI: Hard Constraints — AGISystem2</title>
+    <title>Physics-Informed AI: Formal Constraints — AGISystem2</title>
     <style>
       :root {
         --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
@@ -30,17 +30,17 @@
       </div>
       <header class="hero">
         <h1>Physics-Informed AI</h1>
-        <p>Baking the laws of the universe into neural network training.</p>
+        <p>Integration of domain-specific physical laws as hard constraints in neural network training.</p>
       </header>
       <main class="stack">
-        <h2>What are <a href="https://en.wikipedia.org/wiki/Physics-informed_neural_networks" target="_blank">PINNs</a>?</h2>
-        <p>Physics-Informed Neural Networks (PINNs) are a class of neural networks that are trained to solve supervised learning tasks while also respecting any given laws of physics described by general nonlinear partial differential equations (PDEs).</p>
+        <h2>Principles of <a href="https://en.wikipedia.org/wiki/Physics-informed_neural_networks" target="_blank">PINNs</a></h2>
+        <p>Physics-Informed Neural Networks (PINNs) are neural architectures trained to solve supervised learning tasks while satisfying constraints described by nonlinear partial differential equations (PDEs).</p>
 
-        <h3>Core Idea</h3>
-        <p>Instead of just using a data loss function, PINNs include a <strong>Physics Loss</strong> term that penalizes the model if its outputs violate physical laws (e.g., conservation of mass, energy, or Navier-Stokes equations).</p>
+        <h3>Technical Objective</h3>
+        <p>Instead of relying solely on data-driven loss functions, PINNs incorporate a <strong>Physics Loss</strong> term. This term penalizes the model for violating physical invariants such as the Navier-Stokes equations, conservation of mass, or thermodynamic laws.</p>
 
         <h2>Strategic Goal</h2>
-        <p>For agents operating in the physical world (robotics, pharma, logistics), purely data-driven models are too risky. We use PINNs to ensure that our agents' <strong>World Models</strong> (System 2) are physically plausible and "grounded" in the real world.</p>
+        <p>The implementation of PINNs aims to improve the reliability of autonomous systems operating in physical environments. By enforcing physical consistency within internal world models, the architecture reduces the risk of generating physically impossible predictions common in unconstrained neural networks.</p>
 
         <h3>References</h3>
         <ul>

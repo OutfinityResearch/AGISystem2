@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CNL & Formal Semantics: Bridging Ambiguity and Logic — AGISystem2</title>
+    <title>CNL & Formal Semantics: Precision in Communication — AGISystem2</title>
     <style>
       :root {
         --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
@@ -31,29 +31,29 @@
       </div>
       <header class="hero">
         <h1>CNL & Formal Semantics</h1>
-        <p>Eliminating ambiguity in human-agent communication through structured subsets of natural language.</p>
+        <p>Addressing ambiguity in human-agent interaction through structured language subsets.</p>
       </header>
       <main class="stack">
-        <h2>The Problem of Ambiguity</h2>
-        <p>Natural language is inherently "lossy" and ambiguous. Large Language Models (System 1) are excellent at parsing this ambiguity but struggle to map it to deterministic execution or formal logic without hallucinations.</p>
+        <h2>Language Ambiguity and AI Constraints</h2>
+        <p>Natural language is characterized by inherent ambiguity. While Large Language Models effectively parse such inputs, mapping them to deterministic execution environments or formal logic remains prone to hallucinations.</p>
 
         <h2><a href="https://en.wikipedia.org/wiki/Controlled_natural_language" target="_blank">Constrained Natural Language (CNL)</a></h2>
-        <p>CNLs are subsets of natural languages with restricted grammar and vocabulary. They look like English but behave like a formal language (like SQL or Lisp). Key examples include <strong><a href="https://en.wikipedia.org/wiki/Attempto_Controlled_English" target="_blank">Attempto Controlled English (ACE)</a></strong> and the <strong><a href="https://www.grammaticalframework.org/" target="_blank">Grammatical Framework (GF)</a></strong>.</p>
+        <p>CNLs are subsets of natural languages with restricted grammar and controlled vocabulary. They maintain the readability of English while exhibiting the properties of formal languages. Notable examples include <strong><a href="https://en.wikipedia.org/wiki/Attempto_Controlled_English" target="_blank">Attempto Controlled English (ACE)</a></strong> and the <strong><a href="https://www.grammaticalframework.org/" target="_blank">Grammatical Framework (GF)</a></strong>.</p>
 
         <div class="concept-box">
-          <strong>Formal Pragmatics:</strong> We don't just care about the definition of words (semantics), but how they are used in context to trigger actions. In AGISystem2, CNL serves as the "System 2" interface that validates agent intentions.
+          <strong>Formal Pragmatics:</strong> The objective is to define not only the semantics but also the pragmatic context of language to enable consistent action triggering. CNLs act as an interface for validating agent intentions through formal gates.
         </div>
 
-        <h2>Executable Natural Language</h2>
-        <p>By mapping CNL directly to <strong>Formal Semantics</strong> (e.g., mapping a sentence to a SPARQL query or a Lisp program), we achieve:</p>
+        <h2>Executable Semantics</h2>
+        <p>Direct mapping of CNL to <strong>Formal Semantics</strong> (such as mapping sentences to SPARQL or logic programs) provides several technical benefits:</p>
         <ul>
-          <li><strong>Auditability:</strong> Humans can read the "code" as plain English.</li>
-          <li><strong>Zero Hallucination:</strong> If a sentence doesn't fit the CNL grammar, the agent cannot execute it.</li>
-          <li><strong>Bi-directional Mapping:</strong> Converting raw data/logic back into human-readable, verifiable claims.</li>
+          <li><strong>Deterministic Verification:</strong> Inputs failing the CNL grammar are rejected, preventing hallucinated logic.</li>
+          <li><strong>Auditability:</strong> Reasoning steps are represented in human-readable yet formally grounded text.</li>
+          <li><strong>Bi-directional Transformation:</strong> Enables the conversion of formal data into verifiable human-readable claims.</li>
         </ul>
 
-        <h2>Research Directions</h2>
-        <p>We are investigating the use of LLMs as "translators" from natural language to CNL, which is then processed by deterministic symbolic engines. This hybrid approach combines the fluency of AI with the rigor of formal verification.</p>
+        <h2>Objective</h2>
+        <p>The research focus is the development of systems where LLMs function as translators from natural language into CNLs, which are subsequently processed by deterministic symbolic engines. This hybrid approach aims to combine linguistic fluency with formal rigor.</p>
       </main>
     </div>
   </body>

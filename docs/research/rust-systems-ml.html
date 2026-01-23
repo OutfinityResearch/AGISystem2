@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>The Rise of Systems Languages: Rust for ML — AGISystem2</title>
+    <title>Systems Languages for ML: Rust — AGISystem2</title>
     <style>
       :root {
         --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
@@ -32,42 +32,42 @@
         </div>
       </div>
       <header class="hero">
-        <h1>The Rise of Systems Languages</h1>
-        <p>Building high-performance ML frameworks with Rust.</p>
+        <h1>Systems Languages for ML</h1>
+        <p>Technical evaluation of Rust-based frameworks for high-performance inference.</p>
       </header>
       <main class="stack">
-        <h2>Why <a href="https://en.wikipedia.org/wiki/Rust_(programming_language)" target="_blank">Rust</a>?</h2>
-        <p>As the limitations of Python (GIL, runtime overhead) become apparent in high-performance inference, Rust has emerged as a serious contender. It offers memory safety with the raw performance of C++.</p>
+        <h2>Language-Level Bottlenecks</h2>
+        <p>The limitations of interpreted languages (such as Python's Global Interpreter Lock) often constrain high-performance inference. <strong><a href="https://en.wikipedia.org/wiki/Rust_(programming_language)" target="_blank">Rust</a></strong> is emerging as an alternative, providing memory safety and control over computational primitives comparable to C++.</p>
 
         <h2><a href="https://github.com/huggingface/candle" target="_blank">Candle</a> (Hugging Face)</h2>
-        <p>A minimalist ML framework designed for <strong>Serverless Inference</strong>. It eliminates the "weight" of PyTorch, enabling lightweight binaries and instant "cold boots" on CPU-based serverless functions.</p>
+        <p>A minimalist ML framework designed for <strong>Serverless Inference</strong>. Its objective is to eliminate the dependencies of heavy frameworks like PyTorch, enabling small binary sizes and rapid cold starts on CPU-based cloud functions.</p>
 
-        <h2><a href="https://burn.dev/" target="_blank">Burn</a>: <a href="https://en.wikipedia.org/wiki/Just-in-time_compilation" target="_blank">JIT Compilation</a></h2>
-        <p>A comprehensive framework with a dynamic computation graph. Its <a href="https://github.com/tracel-ai/burn" target="_blank">CubeCL</a> backend generates extremely optimized CPU kernels on the fly, adapting to the specific vector extensions (AVX, NEON) available on the host machine.</p>
+        <h2><a href="https://burn.dev/" target="_blank">Burn</a>: Optimized Execution Graphs</h2>
+        <p>Burn is a deep learning framework focused on performance and portability. The <a href="https://github.com/tracel-ai/burn" target="_blank">CubeCL</a> backend generates optimized kernels for specific hardware targets, adapting to vector extensions such as AVX and NEON via <a href="https://en.wikipedia.org/wiki/Just-in-time_compilation" target="_blank">JIT Compilation</a>.</p>
 
         <table>
           <thead>
             <tr>
-              <th>Feature</th>
+              <th>Technical Feature</th>
               <th>Candle</th>
               <th>Burn</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Primary Focus</td>
-              <td>Serverless, Ease of deployment</td>
-              <td>Flexibility, JIT Kernels</td>
+              <td>Design Goal</td>
+              <td>Lightweight deployment</td>
+              <td>Graph flexibility and custom kernels</td>
             </tr>
             <tr>
-              <td>Backend</td>
-              <td>Bindings to MKL/Accelerate</td>
-              <td>JIT via CubeCL</td>
+              <td>Backend Strategy</td>
+              <td>External library bindings</td>
+              <td>Native code generation (JIT)</td>
             </tr>
             <tr>
-              <td>Performance</td>
-              <td>Optimized external libraries</td>
-              <td>Optimized native code generation</td>
+              <td>CPU Performance</td>
+              <td>High (via optimized BLAS)</td>
+              <td>High (via hardware-specific adaptivity)</td>
             </tr>
           </tbody>
         </table>

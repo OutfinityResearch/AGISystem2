@@ -30,21 +30,21 @@
       </div>
       <header class="hero">
         <h1>Small Language Models (SLMs)</h1>
-        <p>Proving that "bigger" is not always better for intelligence.</p>
+        <p>Analysis of high-parameter efficiency and specialized reasoning kernels.</p>
       </header>
       <main class="stack">
-        <h2>The Rise of SLMs</h2>
-        <p>While the industry focuses on trillion-parameter models, a parallel trend is perfecting models with fewer than 3 billion parameters. These models, such as <strong>Microsoft Phi-3</strong>, <strong>TinyLlama</strong>, and <strong>Google Gemma 2B</strong>, often outperform much larger models on reasoning tasks through high-quality data curation.</p>
+        <h2>Trends in Model Scaling</h2>
+        <p>Recent research indicates that high-quality data curation allows models with fewer than 3 billion parameters to exhibit reasoning capabilities comparable to significantly larger architectures. Models such as <strong>Microsoft Phi-3</strong>, <strong>TinyLlama</strong>, and <strong>Google Gemma 2B</strong> utilize these principles for efficient execution.</p>
 
-        <h3>Key Techniques</h3>
+        <h3>Technical Methodologies</h3>
         <ul>
-          <li><strong>Knowledge Distillation:</strong> Training a smaller "student" model to mimic the behavior of a larger "teacher" model.</li>
-          <li><strong>Textbook Quality Data:</strong> Using synthetic, perfectly structured data to teach reasoning rather than raw web-scrapes.</li>
-          <li><strong>Low-Bit Training:</strong> Integrating schemes like <a href="bitnet-extreme-quantization.html">BitNet</a> early in the training process.</li>
+          <li><strong>Knowledge Distillation:</strong> The process of training a compact "student" model to replicate the functional output of a larger "teacher" model.</li>
+          <li><strong>Synthetic Data Curation:</strong> Utilizing structured, logic-heavy datasets to improve reasoning performance per parameter.</li>
+          <li><strong>Quantization-Aware Training:</strong> Integrating low-bit precision schemes (e.g., <a href="bitnet-extreme-quantization.html">BitNet</a>) during the initial training phase to optimize for CPU inference.</li>
         </ul>
 
-        <h2>Strategic Goal</h2>
-        <p>SLMs are essential for our <strong>PocketLLM</strong> vision. They allow us to deploy "reasoning kernels" on local CPUs, ensuring that an agent's System 2 functions are always available, even without internet access or high-end GPUs.</p>
+        <h2>Operational Objective</h2>
+        <p>SLMs enable the deployment of localized "reasoning kernels" on standard CPU hardware. This facilitates the execution of autonomous agents in environments characterized by restricted bandwidth, limited energy availability, or the absence of specialized accelerators.</p>
 
         <h3>References</h3>
         <ul>

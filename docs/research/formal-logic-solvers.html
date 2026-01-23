@@ -30,28 +30,28 @@
       </div>
       <header class="hero">
         <h1>Formal Logic & Automated Reasoning</h1>
-        <p>Providing the deterministic backbone for verifiable AI decisions.</p>
+        <p>Deterministic frameworks for verifiable machine decision-making.</p>
       </header>
       <main class="stack">
-        <h2>Logic as the "Gold Standard"</h2>
-        <p>While neural networks are probabilistic, <strong><a href="https://en.wikipedia.org/wiki/Mathematical_logic" target="_blank">Formal Logic</a></strong> is binary: a statement is either true, false, or unprovable. This is the ultimate tool for <strong>Auditable AI</strong>.</p>
+        <h2>Logic-Based Verification</h2>
+        <p>In contrast to probabilistic neural networks, <strong><a href="https://en.wikipedia.org/wiki/Mathematical_logic" target="_blank">Formal Logic</a></strong> provides a binary verification system. Statements are processed as true, false, or unprovable, serving as a foundation for auditable computation.</p>
 
         <h3>Core Frameworks</h3>
         <ul>
-          <li><strong><a href="https://en.wikipedia.org/wiki/First-order_logic" target="_blank">First-Order Logic (FOL)</a>:</strong> The foundational language for representing objects, properties, and relationships.</li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Description_logic" target="_blank">Description Logic (DL)</a>:</strong> A family of formal knowledge representation languages that are more computationally efficient than FOL, used extensively in the Semantic Web (OWL).</li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Satisfiability_modulo_theories" target="_blank">Satisfiability Modulo Theories (SMT)</a>:</strong> Checking if a formula is satisfiable with respect to a background theory (like arithmetic).</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/First-order_logic" target="_blank">First-Order Logic (FOL)</a>:</strong> Foundational language for representing discrete objects and relational structures.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Description_logic" target="_blank">Description Logic (DL)</a>:</strong> Efficient sub-languages of FOL used for modeling knowledge domains (e.g., OWL in the Semantic Web).</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Satisfiability_modulo_theories" target="_blank">Satisfiability Modulo Theories (SMT)</a>:</strong> Determining the satisfiability of formulas relative to specific background theories such as linear arithmetic or bit-vectors.</li>
         </ul>
 
-        <h2>Modern Solvers</h2>
-        <p>We leverage industrial-grade solvers to verify the consistency of agent actions:</p>
+        <h2>Automated Solvers</h2>
+        <p>Industrial-grade solvers are utilized to verify logical consistency in agent workflows:</p>
         <ul>
-          <li><strong><a href="https://github.com/Z3Prover/z3" target="_blank">Z3 Solver (Microsoft Research)</a>:</strong> A high-performance SMT solver used for software verification and constraint solving.</li>
-          <li><strong><a href="https://github.com/cvc5/cvc5" target="_blank">CVC5</a>:</strong> An efficient automatic theorem prover for SMT problems.</li>
+          <li><strong><a href="https://github.com/Z3Prover/z3" target="_blank">Z3 Solver (Microsoft Research)</a>:</strong> High-performance SMT solver used for hardware/software verification and constraint solving.</li>
+          <li><strong><a href="https://github.com/cvc5/cvc5" target="_blank">CVC5</a>:</strong> An automated theorem prover for SMT and related logical problems.</li>
         </ul>
 
-        <h2>Integration in System 2</h2>
-        <p>In our architecture, an LLM proposes a reasoning chain, which is then translated into a formal logical representation and passed to an SMT solver. If the solver finds a contradiction, the reasoning is rejected—ensuring that the agent never violates fundamental physical or logical laws.</p>
+        <h2>Strategic Role</h2>
+        <p>The objective is to translate LLM-proposed reasoning chains into formal logic representations. By passing these representations to SMT solvers, it is possible to verify that actions do not violate defined logical or physical invariants, ensuring a higher level of system reliability.</p>
       </main>
     </div>
   </body>

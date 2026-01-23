@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Causal Inference: Beyond Correlation — AGISystem2</title>
+    <title>Causal Inference: Structural Modeling — AGISystem2</title>
     <style>
       :root {
         --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
@@ -30,26 +30,26 @@
       </div>
       <header class="hero">
         <h1>Causal Inference</h1>
-        <p>Enabling AI to ask "Why?" and "What if?" through causal reasoning.</p>
+        <p>Theoretical frameworks for modeling structural mechanisms and counterfactual reasoning.</p>
       </header>
       <main class="stack">
         <h2>The Ladder of Causation</h2>
-        <p>Championed by <strong>Judea Pearl</strong>, Causal Inference moves AI from curve-fitting (correlations) to understanding mechanisms (causality). This is essential for true <strong>System 2 Reasoning</strong>.</p>
+        <p>Causal Inference, developed extensively by <strong>Judea Pearl</strong>, transitions machine learning from statistical curve-fitting (correlations) to the modeling of underlying mechanisms (causality).</p>
 
-        <h3>The Three Levels</h3>
+        <h3>Levels of Causal Reasoning</h3>
         <ol>
-          <li><strong>Association (System 1):</strong> What does one thing tell me about another? (e.g., correlations in LLMs).</li>
-          <li><strong>Intervention:</strong> What happens if I change something? (e.g., the <code>do-calculus</code>).</li>
-          <li><strong>Counterfactuals:</strong> Why did it happen? What if I had acted differently?</li>
+          <li><strong>Association:</strong> Identifying statistical relationships between variables (typical of standard neural networks).</li>
+          <li><strong>Intervention:</strong> Predicting the effects of direct changes to a system (modeled via the <code>do-calculus</code>).</li>
+          <li><strong>Counterfactuals:</strong> Retrospective analysis of specific outcomes to determine the influence of alternate actions ("What if I had acted differently?").</li>
         </ol>
 
-        <h2>Strategic Goal</h2>
-        <p>Standard LLMs are stuck at Level 1. In AGISystem2, we integrate <strong>Structural Causal Models (SCMs)</strong> to allow agents to reason about the consequences of their actions and explain their decisions in terms of cause and effect.</p>
+        <h2>Technical Objective</h2>
+        <p>Standard LLMs operate primarily at the level of association. The integration of <strong>Structural Causal Models (SCMs)</strong> enables agents to predict action consequences and provide mechanistic explanations for their decision-making processes based on cause-effect relationships.</p>
 
         <h3>Libraries & Links</h3>
         <ul>
-          <li><strong><a href="https://github.com/microsoft/dowhy" target="_blank">DoWhy (GitHub)</a>:</strong> A Microsoft library for causal inference that combines causal graphical models and potential outcomes.</li>
-          <li><strong><a href="https://github.com/py-why/pycegp" target="_blank">PyWhy (Ecosystem)</a>:</strong> An open-source ecosystem for causal machine learning.</li>
+          <li><strong><a href="https://github.com/microsoft/dowhy" target="_blank">DoWhy (GitHub)</a>:</strong> A framework for causal inference combining graphical models and potential outcomes.</li>
+          <li><strong><a href="https://github.com/py-why/pycegp" target="_blank">PyWhy</a>:</strong> An ecosystem for causal machine learning research.</li>
           <li><strong><a href="https://en.wikipedia.org/wiki/Causal_inference" target="_blank">Causal Inference (Wikipedia)</a></strong></li>
         </ul>
       </main>

@@ -31,22 +31,22 @@
       </div>
       <header class="hero">
         <h1>Democratization through Quantization</h1>
-        <p>Making LLMs accessible on everyday hardware with llama.cpp.</p>
+        <p>Technical analysis of local LLM inference via the llama.cpp ecosystem.</p>
       </header>
       <main class="stack">
-        <h2><a href="https://github.com/ggml-org/llama.cpp" target="_blank">llama.cpp</a> and the GGML/GGUF Ecosystem</h2>
-        <p>Started by <a href="https://github.com/ggerganov" target="_blank">Georgi Gerganov</a>, <code>llama.cpp</code> has become the de facto standard for local AI. By writing custom tensor libraries in pure C/C++, it avoids the overhead of Python and heavy frameworks like PyTorch.</p>
+        <h2><a href="https://github.com/ggml-org/llama.cpp" target="_blank">llama.cpp</a> and the GGML/GGUF Format</h2>
+        <p>Developed by <a href="https://github.com/ggerganov" target="_blank">Georgi Gerganov</a>, <code>llama.cpp</code> is an implementation of Transformer inference in pure C/C++. The objective is to enable large model execution on commodity CPUs by eliminating the runtime overhead of high-level frameworks.</p>
 
         <h3>Aggressive <a href="https://en.wikipedia.org/wiki/Quantization_(signal_processing)" target="_blank">Quantization</a> (k-quants)</h3>
-        <p>The project popularized mapping 16-bit weights to 4-bit integers. This allows a 7B parameter model, which normally requires ~14GB VRAM, to run in just ~4-5GB of system RAM.</p>
+        <p>The project focuses on mapping 16-bit floating-point weights to 4-bit and 5-bit integers. This reduction allows a 7B parameter model, which typically requires ~14GB VRAM, to operate within ~5GB of system RAM.</p>
 
-        <h3>SIMD Optimization and Apple Silicon</h3>
-        <p>Hand-optimized for <a href="https://en.wikipedia.org/wiki/Advanced_Vector_Extensions" target="_blank">AVX2/AVX-512</a> (x86) and <a href="https://en.wikipedia.org/wiki/ARM_architecture#Advanced_SIMD_(Neon)" target="_blank">NEON</a> (ARM), llama.cpp leverages the high-bandwidth unified memory of Apple M-series chips to achieve GPU-like speeds on a CPU.</p>
+        <h3>Hardware-Specific SIMD Optimization</h3>
+        <p>Implementation details include manual optimization for <a href="https://en.wikipedia.org/wiki/Advanced_Vector_Extensions" target="_blank">AVX2/AVX-512</a> (x86) and <a href="https://en.wikipedia.org/wiki/ARM_architecture#Advanced_SIMD_(Neon)" target="_blank">NEON</a> (ARM). On Apple Silicon, the framework leverages high-bandwidth unified memory to achieve performance parity with entry-level discrete accelerators.</p>
 
-        <h3>The "Shadow AI" Ecosystem</h3>
+        <h3>Ecosystem Integration</h3>
         <ul>
-          <li><strong><a href="https://ollama.com/" target="_blank">Ollama</a>:</strong> Packages llama.cpp for a Docker-like experience, enabling one-command local APIs.</li>
-          <li><strong><a href="https://lmstudio.ai/" target="_blank">LM Studio</a>:</strong> A GUI that makes downloading and running quantized models accessible to non-engineers.</li>
+          <li><strong><a href="https://ollama.com/" target="_blank">Ollama</a>:</strong> A tool for packaging and serving local models through standardized APIs.</li>
+          <li><strong><a href="https://lmstudio.ai/" target="_blank">LM Studio</a>:</strong> A graphical interface for the deployment and benchmarking of quantized models.</li>
         </ul>
       </main>
     </div>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Computational Sovereignty: High-Fidelity Runtimes — AGISystem2</title>
+    <title>High-Fidelity Runtimes: BF16 on CPU — AGISystem2</title>
     <style>
       :root {
         --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
@@ -17,7 +17,7 @@
       .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
       h2 { color: var(--accent); margin-top: 24px; }
-      .callout { padding: 16px; background: #f0f7ff; border-radius: 12px; border-left: 4px solid var(--accent); margin: 16px 0; }
+      .callout { padding: 16px; background: #f8fafc; border-radius: 12px; border: 1px solid var(--stroke); margin: 16px 0; }
     </style>
   </head>
   <body>
@@ -30,24 +30,24 @@
         </div>
       </div>
       <header class="hero">
-        <h1>Computational Sovereignty</h1>
-        <p>High-Fidelity CPU Runtimes for Emerging Markets.</p>
+        <h1>High-Fidelity Runtimes</h1>
+        <p>Execution strategies for high-precision inference on commodity CPU hardware.</p>
       </header>
       <main class="stack">
-        <h2><a href="https://ziroh.com/" target="_blank">Ziroh Labs</a> and Kompact AI</h2>
-        <p>Based in India, Ziroh Labs developed <strong>Kompact AI</strong> to break the GPU barrier for emerging markets. Unlike quantization-focused efforts, they prioritize high fidelity.</p>
+        <h2>Ziroh Labs and Kompact AI</h2>
+        <p><a href="https://ziroh.com/" target="_blank">Ziroh Labs</a> focuses on the development of runtimes that circumvent the GPU barrier. Their <strong>Kompact AI</strong> project explores inference without the fidelity loss typical of low-bit quantization.</p>
         
-        <h3>Full-Precision (<a href="https://en.wikipedia.org/wiki/Bfloat16_floating-point_format" target="_blank">BF16</a>) Performance</h3>
-        <p>While many local inference techniques degrade precision to 4-bit, Kompact AI runs models at Full Precision (BF16 - Brain Floating Point 16) through a runtime that manages memory and compute cycles with extreme efficiency. This is critical for legal or medical fields where quantization errors are unacceptable.</p>
+        <h3>Full-Precision (<a href="https://en.wikipedia.org/wiki/Bfloat16_floating-point_format" target="_blank">BF16</a>) Execution</h3>
+        <p>The technical objective is to run models at Full Precision (BF16) on CPUs by optimizing memory cycles and computation scheduling. This is applicable in domains where the stochastic errors introduced by 4-bit quantization are not tolerable.</p>
 
-        <h3>"Elephant" Semantic Cache</h3>
-        <p>A key innovation is the <strong>Elephant</strong> semantic caching layer, which detects semantic similarities between queries to skip redundant inference cycles.</p>
+        <h3>Semantic Caching Layers</h3>
+        <p>The implementation of an internal semantic caching layer (designated "Elephant") aims to detect input similarities to bypass redundant inference cycles. This architecture is designed for repetitive enterprise workloads.</p>
         <div class="callout">
-          <strong>Result:</strong> Processing speeds of 164 tokens/sec (comparable to an NVIDIA A100) and peaks of 10,000 tokens/sec for repetitive tasks.
+          <strong>Performance Analysis:</strong> Benchmarks indicate throughput levels of 164 tokens/sec on standard CPUs, targeting efficiency comparable to discrete accelerators for specific batch-size configurations.
         </div>
 
-        <h2>Geopolitics and AI Sovereignty</h2>
-        <p>As export controls on advanced accelerators tighten, Kompact AI provides a path to build nation-grade AI infrastructure using commodity CPU servers (x86 or ARM) that are commercially available and not subject to sanctions.</p>
+        <h2>Infrastructure and Independence</h2>
+        <p>The development of these runtimes enables the creation of high-performance AI infrastructure using commercially available commodity hardware, reducing dependency on proprietary specialized accelerators.</p>
       </main>
     </div>
   </body>

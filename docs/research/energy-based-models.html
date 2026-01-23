@@ -30,20 +30,20 @@
       </div>
       <header class="hero">
         <h1>Energy-Based Models (EBMs)</h1>
-        <p>Capturing dependencies by learning a scalar energy function.</p>
+        <p>Mathematical frameworks for dependency modeling through scalar energy minimization.</p>
       </header>
       <main class="stack">
-        <h2>What are <a href="https://en.wikipedia.org/wiki/Energy-based_model" target="_blank">Energy-Based Models</a>?</h2>
-        <p>Championed by <strong>Yann LeCun</strong>, EBMs represent a different approach to probabilistic modeling. Instead of predicting a probability distribution directly, an EBM learns a mathematical function that assigns a low "energy" value to configurations of variables that are compatible and a high "energy" value to those that are not.</p>
+        <h2>Principles of <a href="https://en.wikipedia.org/wiki/Energy-based_model" target="_blank">EBMs</a></h2>
+        <p>Energy-Based Models, championed by <strong>Yann LeCun</strong>, provide an alternative to traditional generative modeling. An EBM learns a scalar function that assigns a low "energy" value to compatible configurations of variables and a high value to incompatible ones.</p>
 
-        <h3>Key Philosophy</h3>
+        <h3>Technical Characteristics</h3>
         <ul>
-          <li><strong>Avoiding Normalization:</strong> Unlike traditional probabilistic models, EBMs do not require the calculation of a partition function (normalization constant), which is often computationally intractable.</li>
-          <li><strong>Compatibility as Reasoning:</strong> Inference becomes an optimization problem: find the configuration of variables that minimizes the energy function.</li>
+          <li><strong>Non-Probabilistic Foundations:</strong> EBMs avoid the computational cost of normalized probability distributions, making them more scalable for complex dependencies.</li>
+          <li><strong>Inference as Optimization:</strong> Reasoning is modeled as an energy minimization problem, where the goal is to find the variable state that optimizes the compatibility function.</li>
         </ul>
 
-        <h2>Relevance to System 2</h2>
-        <p>EBMs are naturally suited for <strong>Constraint Satisfaction</strong>. In our System 2 vision, energy functions can be used to validate if an agent's proposed action is "compatible" with high-level safety constraints or logical requirements.</p>
+        <h2>Operational Utility</h2>
+        <p>EBMs are applicable in scenarios requiring <strong>Constraint Satisfaction</strong>. Energy functions serve as validators for checking if proposed system states or agent actions are compatible with high-level logical or safety constraints.</p>
 
         <h3>Research & Resources</h3>
         <ul>

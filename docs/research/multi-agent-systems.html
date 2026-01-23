@@ -30,26 +30,26 @@
       </div>
       <header class="hero">
         <h1>Multi-Agent Systems (MAS)</h1>
-        <p>Orchestrating intelligence through formal coordination and consensus.</p>
+        <p>Coordination and consensus protocols for distributed intelligent agents.</p>
       </header>
       <main class="stack">
-        <h2>What is a <a href="https://en.wikipedia.org/wiki/Multi-agent_system" target="_blank">Multi-Agent System</a>?</h2>
-        <p>A multi-agent system is a computerized system composed of multiple interacting intelligent agents. In our research, we move from "one large model" to "many specialized agents" that must coordinate to solve complex problems.</p>
+        <h2>Principles of <a href="https://en.wikipedia.org/wiki/Multi-agent_system" target="_blank">MAS</a></h2>
+        <p>A multi-agent system comprises multiple interacting intelligent entities. The research shift is from single monolithic models to ecosystems of specialized agents that must coordinate to achieve complex objectives.</p>
 
-        <h3>Key Coordination Mechanisms</h3>
+        <h3>Coordination and Communication</h3>
         <ul>
-          <li><strong>Consensus Protocols:</strong> Algorithms that allow agents to agree on a single state of the world (e.g., Paxos, Raft).</li>
-          <li><strong>Agent Communication Languages (ACL):</strong> Using structured protocols (like FIPA-ACL or our own <a href="cnl-formal-semantics.html">CNL-based</a> languages) to exchange intentions.</li>
-          <li><strong>Market-Based Coordination:</strong> Using economic principles (bidding, auctions) to allocate resources and tasks between agents.</li>
+          <li><strong>Consensus Protocols:</strong> Implementation of algorithms (e.g., Paxos, Raft) to ensure agents maintain a synchronized state of information.</li>
+          <li><strong>Agent Communication Languages (ACL):</strong> The use of structured protocols, including <a href="cnl-formal-semantics.html">CNL-based languages</a>, for the exchange of intentions and evidence.</li>
+          <li><strong>Economic Coordination:</strong> Utilizing bidding mechanisms and auction theory for task allocation and resource management among agents.</li>
         </ul>
 
-        <h2>Epistemic Redundancy</h2>
-        <p>MAS allows for "System 2" robustness at the network level. By having different agents assume different roles (e.g., a "Generator" and an "Adversarial Verifier"), we can surface disagreements and errors that a single model would miss.</p>
+        <h2>Analysis</h2>
+        <p>Multi-agent architectures enable distributed verification processes. By implementing roles such as generator and adversarial verifier, systems can achieve <strong>Epistemic Redundancy</strong>, where multiple independent models validate outputs to surface errors or biases that a single model would fail to detect.</p>
 
         <h3>References</h3>
         <ul>
-          <li><strong><a href="https://github.com/microsoft/autogen" target="_blank">AutoGen (Microsoft GitHub)</a>:</strong> A framework for building LLM applications with multiple conversing agents.</li>
-          <li><strong><a href="https://github.com/assafelovic/gpt-researcher" target="_blank">GPT Researcher (GitHub)</a>:</strong> An autonomous agent designed for comprehensive online research.</li>
+          <li><strong><a href="https://github.com/microsoft/autogen" target="_blank">AutoGen (Microsoft GitHub)</a>:</strong> A framework for coordinating conversing agents based on LLMs.</li>
+          <li><strong><a href="https://github.com/assafelovic/gpt-researcher" target="_blank">GPT Researcher (GitHub)</a>:</strong> An implementation of autonomous research agents.</li>
         </ul>
       </main>
     </div>

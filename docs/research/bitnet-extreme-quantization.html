@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>BitNet & 1.58-bit LLMs: The End of Multiplication — AGISystem2</title>
+    <title>BitNet & 1.58-bit LLMs: Ternary Quantization — AGISystem2</title>
     <style>
       :root {
         --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
@@ -33,14 +33,14 @@
       </div>
       <header class="hero">
         <h1>BitNet & 1.58-bit LLMs</h1>
-        <p>Eliminating floating-point multiplication from the heart of AI.</p>
+        <p>Implementation of ternary weight systems to replace floating-point multiplication.</p>
       </header>
       <main class="stack">
         <h2>The 1.58-bit Paradigm ({-1, 0, 1})</h2>
-        <p>Microsoft's <strong><a href="https://github.com/microsoft/BitNet" target="_blank">BitNet b1.58</a></strong> represents a radical departure from traditional LLM training. Instead of 16-bit or 32-bit floating-point weights, every weight is constrained to just three values: <strong>-1, 0, or 1</strong>. This effectively requires only 1.58 bits per parameter.</p>
+        <p>Microsoft's <strong><a href="https://github.com/microsoft/BitNet" target="_blank">BitNet b1.58</a></strong> represents a shift in LLM architecture. Weights are constrained to ternary values: <strong>-1, 0, or 1</strong>, requiring approximately 1.58 bits per parameter.</p>
 
-        <h3>The Death of GEMM</h3>
-        <p>In standard Transformers, the primary operation is Matrix Multiplication (GEMM). In BitNet, because weights are {-1, 0, 1}, the multiplication operation is replaced by <strong>integer addition and subtraction</strong>. This is a massive win for CPU architectures, which can perform additions orders of magnitude more efficiently than floating-point multiplications.</p>
+        <h3>Computational Efficiency</h3>
+        <p>In standard Transformer architectures, the Matrix Multiplication (GEMM) operation is the primary bottleneck. BitNet replaces standard multiplications with <strong>integer addition and subtraction</strong>. This optimization is particularly effective for CPU architectures, which can execute these operations with high throughput.</p>
 
         <div class="stat-grid">
           <div class="stat-card"><strong>6.25x</strong> Speedup over FP16</div>
@@ -48,15 +48,15 @@
           <div class="stat-card"><strong>~4x</strong> Memory Reduction</div>
         </div>
 
-        <h2>Technical Advantages</h2>
+        <h2>Technical Implementation</h2>
         <ul>
-          <li><strong>BitLinear Layers:</strong> Replaces standard linear layers with a quantization-aware Ternary strategy.</li>
-          <li><strong>Accuracy:</strong> Surprisingly, BitNet 1.58b achieves performance parity with full-precision models of the same size (e.g., Llama 3 equivalents) across benchmarks like MMLU and GSM8K.</li>
-          <li><strong><a href="https://github.com/microsoft/BitNet" target="_blank">bitnet.cpp</a>:</strong> Optimized kernels for x86 and ARM allow running 2B+ parameter models on simple CPUs with sub-millisecond latency.</li>
+          <li><strong>BitLinear Layers:</strong> Utilizes a quantization-aware ternary strategy to maintain performance parity with full-precision models.</li>
+          <li><strong>Benchmarking:</strong> BitNet 1.58b achieves competitive results on benchmarks such as MMLU and GSM8K compared to FP16 models.</li>
+          <li><strong><a href="https://github.com/microsoft/BitNet" target="_blank">bitnet.cpp</a>:</strong> Provides optimized kernels for x86 and ARM architectures, facilitating low-latency inference on standard CPUs.</li>
         </ul>
 
-        <h2>Strategic Importance</h2>
-        <p>BitNet is a cornerstone of our vision for <strong>Edge AI</strong>. It allows us to deploy "heavyweight" intelligence on low-power devices, serverless functions (like AWS Lambda), and legacy hardware that lacks GPU acceleration.</p>
+        <h2>Objective</h2>
+        <p>The 1.58-bit paradigm enables the deployment of high-parameter models on low-power devices and legacy hardware by minimizing memory footprint and eliminating floating-point dependency.</p>
       </main>
     </div>
   </body>

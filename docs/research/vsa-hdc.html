@@ -17,7 +17,6 @@
       .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
       h2 { color: var(--accent); margin-top: 24px; }
-      .math-box { font-family: monospace; background: #f8f9fa; padding: 12px; border-radius: 8px; border: 1px solid var(--stroke); }
     </style>
   </head>
   <body>
@@ -31,29 +30,29 @@
       </div>
       <header class="hero">
         <h1>VSA & HDC: Algebraic Reasoning</h1>
-        <p>Beyond Matrix Multiplication: Neuro-Symbolic Computing in High-Dimensional Spaces.</p>
+        <p>Neuro-Symbolic computing through algebraic operations in high-dimensional spaces.</p>
       </header>
       <main class="stack">
         <h2>What are <a href="https://en.wikipedia.org/wiki/Vector_symbolic_architecture" target="_blank">Vector Symbolic Architectures (VSA)</a>?</h2>
-        <p>Vector Symbolic Architectures, also known as <strong><a href="https://en.wikipedia.org/wiki/Hyperdimensional_computing" target="_blank">Hyperdimensional Computing (HDC)</a></strong>, represent a paradigm where information is encoded into extremely wide vectors (typically 10,000+ dimensions). Unlike traditional deep learning, which relies on dense weight matrices, VSA uses structured algebraic operations.</p>
+        <p>Vector Symbolic Architectures, or <strong><a href="https://en.wikipedia.org/wiki/Hyperdimensional_computing" target="_blank">Hyperdimensional Computing (HDC)</a></strong>, represent information using wide vectors (typically &gt;10,000 dimensions). This paradigm replaces dense weight matrices with structured algebraic operations.</p>
 
-        <h3>Core Operations</h3>
+        <h3>Core Algebraic Operations</h3>
         <ul>
-          <li><strong>Superposition (+):</strong> Adding vectors to represent a set of items.</li>
-          <li><strong>Binding (⊗):</strong> Associating two vectors (e.g., a "Key" and a "Value") into a new vector.</li>
-          <li><strong>Permutation (ρ):</strong> Shifting elements to represent sequences or structural positions.</li>
+          <li><strong>Superposition (+):</strong> Aggregates vectors to represent sets or collections.</li>
+          <li><strong>Binding (&otimes;):</strong> Associates independent vectors (e.g., Key and Value) into a composite representation.</li>
+          <li><strong>Permutation (&rho;):</strong> Facilitates the representation of sequences and structural hierarchies.</li>
         </ul>
 
-        <h2>Why it's a "System 2" Technology</h2>
-        <p>Current LLMs are "System 1" engines—they predict the next token based on statistical patterns. VSA allows us to introduce <strong>System 2</strong> functions:</p>
+        <h2>Theoretical and Practical Utility</h2>
+        <p>Current LLMs function primarily as predictive engines. VSA introduces capabilities for structured and auditable reasoning:</p>
         <ul>
-          <li><strong>Transparency:</strong> Because operations are algebraic, representations can be "unbound" to audit the reasoning process.</li>
-          <li><strong>CPU Efficiency:</strong> Superposition and Binding can be implemented using simple bitwise XOR and popcount operations, which are extremely fast on modern CPUs.</li>
-          <li><strong>Zero-Shot Structural Manipulation:</strong> VSA can perform complex symbolic tasks (like variable binding) that are notoriously difficult for standard Transformers.</li>
+          <li><strong>Transparency:</strong> Operations are algebraic, allowing for the decomposition ("unbinding") of representations to audit reasoning chains.</li>
+          <li><strong>Efficiency:</strong> Core operations like binding and superposition can be implemented using bitwise XOR and popcount, which are high-performance on modern CPUs.</li>
+          <li><strong>Structural Manipulation:</strong> VSA enables symbolic tasks, such as variable binding and tree traversal, with constant-time complexity relative to representation width.</li>
         </ul>
 
-        <h2>Application in AGISystem2</h2>
-        <p>We leverage VSA to build <strong>Semantic DSLs</strong> and <strong>Knowledge Graphs</strong> that run entirely on CPU. By representing symbols as hyperdimensional vectors, we can perform semantic searches and structural reasoning without the need for expensive GPU-bound embedding models during every step of the inference chain.</p>
+        <h2>Objective</h2>
+        <p>The implementation of VSA facilitates the creation of <strong>Semantic DSLs</strong> and <strong>Knowledge Graphs</strong> that operate on CPUs. By utilizing hyperdimensional vectors, semantic search and relational reasoning can be performed without continuous reliance on GPU-bound embedding models.</p>
       </main>
     </div>
   </body>

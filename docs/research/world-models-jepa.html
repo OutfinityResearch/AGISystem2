@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>World Models & JEPA: Predictive Agents — AGISystem2</title>
+    <title>World Models & JEPA: Latent Space Planning — AGISystem2</title>
     <style>
       :root {
         --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
@@ -30,21 +30,21 @@
       </div>
       <header class="hero">
         <h1>World Models & JEPA</h1>
-        <p>Yann LeCun's vision for autonomous AI that learns, reasons, and plans.</p>
+        <p>Predictive architectures for autonomous agent planning and latent representation learning.</p>
       </header>
       <main class="stack">
         <h2>The <a href="https://ai.meta.com/blog/yann-lecun-ai-model-autonomous-agents/" target="_blank">JEPA</a> Architecture</h2>
-        <p>Meta AI's <strong>Joint Embedding Predictive Architecture (JEPA)</strong> is a non-generative approach to AI. Instead of predicting pixels or tokens, JEPA learns to predict the <strong>latent representations</strong> (meanings) of missing parts of an input. This allows it to learn "World Models" without being bogged down by irrelevant details.</p>
+        <p>The <strong>Joint Embedding Predictive Architecture (JEPA)</strong>, developed by Meta AI, is a non-generative paradigm for model training. Unlike standard models that predict tokens or pixels, JEPA learns to predict <strong>latent representations</strong> of missing information. This approach prioritizes semantic consistency over high-frequency surface details.</p>
 
-        <h3>Key components of an Autonomous Agent</h3>
+        <h3>Components of Predictive Agents</h3>
         <ul>
-          <li><strong>World Model:</strong> Predicts what will happen in the environment as a result of an action.</li>
-          <li><strong>Cost Module:</strong> Evaluates how "bad" a predicted state is.</li>
-          <li><strong>Actor:</strong> Proposes actions to minimize the cost predicted by the World Model.</li>
+          <li><strong>World Model:</strong> An internal module that predicts state transitions resulting from specific actions.</li>
+          <li><strong>Cost Module:</strong> A function that evaluates the desirability or safety of predicted future states.</li>
+          <li><strong>Actor:</strong> A policy engine that proposes actions to optimize state transitions according to the cost module.</li>
         </ul>
 
-        <h2>World Models as System 2</h2>
-        <p>At AGISystem2, we see World Models as the engine for <strong>mental simulation</strong>. Before an agent takes a high-stakes action, it can "run" the action through its internal world model to verify outcomes—a quintessentially System 2 function.</p>
+        <h2>Theoretical Impact</h2>
+        <p>World Models facilitate <strong>mental simulation</strong> and look-ahead planning. By simulating actions within an internal model before execution, agents can verify outcomes against constraints—a critical capability for deliberative reasoning systems.</p>
 
         <h3>References</h3>
         <ul>

@@ -33,37 +33,37 @@
       </div>
       <header class="hero">
         <h1>Efficient ML Execution Trends</h1>
-        <p>A survey of optimized runtimes, compilers, and libraries.</p>
+        <p>A technical survey of optimized runtimes, compilers, and libraries for CPU-centric inference.</p>
       </header>
       <main class="stack">
-        <h2>Optimized Inference Runtimes</h2>
+        <h2>Inference Runtimes</h2>
         <div class="grid">
           <div class="card">
             <strong><a href="https://onnxruntime.ai/" target="_blank">ONNX Runtime</a></strong>
-            <span>Microsoft's cross-platform engine using Execution Providers (EP) like OpenVINO or XNNPACK.</span>
+            <span>A cross-platform engine by Microsoft that abstracts hardware through Execution Providers (EP) such as OpenVINO or XNNPACK.</span>
           </div>
           <div class="card">
             <strong><a href="https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/overview.html" target="_blank">OpenVINO</a></strong>
-            <span>Intel's toolkit for maximizing performance on Intel silicon using INT8 quantization and IR conversion.</span>
+            <span>Intel's framework optimized for Intel hardware, focusing on INT8 quantization and operator fusion.</span>
           </div>
           <div class="card">
             <strong><a href="https://www.tensorflow.org/lite" target="_blank">TensorFlow Lite</a></strong>
-            <span>Google's framework for mobile/edge, using FlatBuffers and XNNPACK for low-footprint inference.</span>
+            <span>A framework for mobile and edge devices utilizing FlatBuffers and the XNNPACK library for reduced memory footprints.</span>
           </div>
           <div class="card">
             <strong><a href="https://developer.apple.com/documentation/coreml" target="_blank">Core ML</a></strong>
-            <span>Apple's on-device framework that seamlessly falls back to CPU when the Neural Engine isn't available.</span>
+            <span>Apple's on-device framework designed for heterogeneous execution across CPU, GPU, and Neural Engine (ANE).</span>
           </div>
         </div>
 
         <h2>ML Compilers</h2>
-        <p>Compilers like <strong><a href="https://tvm.apache.org/" target="_blank">Apache TVM</a></strong> and <strong><a href="https://openxla.org/xla" target="_blank">XLA</a></strong> produce optimized machine code, closing the gap between high-level frameworks and raw hardware performance through operator fusion and auto-tuning.</p>
+        <p>Compilers such as <strong><a href="https://tvm.apache.org/" target="_blank">Apache TVM</a></strong> and <strong><a href="https://openxla.org/xla" target="_blank">XLA</a></strong> automate the generation of optimized machine code. The objective is to reduce overhead through graph-level optimizations like constant folding and kernel fusion.</p>
 
-        <h2>Low-Level Kernel Libraries</h2>
+        <h2>Lower-Level Kernel Libraries</h2>
         <ul>
-          <li><strong><a href="https://github.com/uxlfoundation/oneDNN" target="_blank">oneDNN</a>:</strong> Intel's foundational library for deep learning building blocks.</li>
-          <li><strong><a href="https://github.com/google/XNNPACK" target="_blank">XNNPACK</a>:</strong> Google's highly optimized solution for ARM, x86, and WebAssembly.</li>
-          <li><strong><a href="https://github.com/pytorch/FBGEMM" target="_blank">FBGEMM</a>:</strong> Meta's library for high-performance low-precision server-side inference.</li>
+          <li><strong><a href="https://github.com/uxlfoundation/oneDNN" target="_blank">oneDNN</a>:</strong> Foundational deep learning primitives for x86 and ARM architectures.</li>
+          <li><strong><a href="https://github.com/google/XNNPACK" target="_blank">XNNPACK</a>:</strong> Optimized primitives for mobile, server, and WebAssembly (WASM).</li>
+          <li><strong><a href="https://github.com/pytorch/FBGEMM" target="_blank">FBGEMM</a>:</strong> Meta's high-performance library for low-precision inference on server-side CPUs.</li>
         </ul>
       </main>
     </div>

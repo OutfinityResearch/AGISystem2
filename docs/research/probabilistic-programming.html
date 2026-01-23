@@ -30,21 +30,21 @@
       </div>
       <header class="hero">
         <h1>Probabilistic Programming</h1>
-        <p>Codifying uncertainty through the lens of Bayesian inference.</p>
+        <p>Formal modeling of uncertainty via Bayesian inference and automated statistical computation.</p>
       </header>
       <main class="stack">
-        <h2>What is <a href="https://en.wikipedia.org/wiki/Probabilistic_programming" target="_blank">Probabilistic Programming</a>?</h2>
-        <p>Probabilistic Programming Languages (PPLs) allow developers to define complex probabilistic models using code. The language's compiler then automatically performs <strong>Bayesian Inference</strong> to discover the parameters that best explain the data.</p>
+        <h2>Definition of <a href="https://en.wikipedia.org/wiki/Probabilistic_programming" target="_blank">Probabilistic Programming</a></h2>
+        <p>Probabilistic Programming Languages (PPLs) enable the definition of generative models as code. PPL compilers automate the process of <strong>Bayesian Inference</strong>, determining parameters that best represent observed data through sampling or variational optimization.</p>
 
         <h3>Core Frameworks</h3>
         <ul>
-          <li><strong><a href="https://mc-stan.org/" target="_blank">Stan</a>:</strong> A state-of-the-art platform for statistical modeling and high-performance statistical computation.</li>
-          <li><strong><a href="https://pyro.ai/" target="_blank">Pyro (Uber)</a>:</strong> A deep probabilistic programming language built on PyTorch, designed for scalability and research.</li>
-          <li><strong><a href="https://github.com/blei-lab/edward" target="_blank">Edward (GitHub)</a>:</strong> A library for probabilistic modeling, inference, and criticism.</li>
+          <li><strong><a href="https://mc-stan.org/" target="_blank">Stan</a>:</strong> A platform for high-performance statistical modeling utilizing Hamiltonian Monte Carlo (HMC) sampling.</li>
+          <li><strong><a href="https://pyro.ai/" target="_blank">Pyro (Uber)</a>:</strong> A deep probabilistic programming language built on PyTorch, supporting large-scale variational inference.</li>
+          <li><strong><a href="https://github.com/blei-lab/edward" target="_blank">Edward (GitHub)</a>:</strong> A library for probabilistic modeling and statistical criticism.</li>
         </ul>
 
-        <h2>System 2 and Uncertainty</h2>
-        <p>A key role of <strong>System 2</strong> is to manage uncertainty. We use PPLs to build internal models for agents that don't just provide a single answer, but a distribution of possible outcomes with associated confidence intervals. This allows for risk-aware decision making in enterprise workflows.</p>
+        <h2>Analysis</h2>
+        <p>PPLs facilitate the modeling of uncertainty in autonomous agents. By representing agent beliefs as probability distributions rather than point estimates, it is possible to perform risk-sensitive inference and belief updating based on evidence streams.</p>
 
         <h3>Resources</h3>
         <ul>

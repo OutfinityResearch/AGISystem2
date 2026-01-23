@@ -34,25 +34,25 @@
       </div>
       <header class="hero">
         <h1>The Algorithmic Revolution</h1>
-        <p>From Dense Matrix Multiplication to Probabilistic Sparsity.</p>
+        <p>Transitioning from Dense Matrix Multiplication to Probabilistic Sparsity.</p>
       </header>
       <main class="stack">
         <h2>1.1 The SLIDE Algorithm: Sub-Linear Deep Learning Engine</h2>
-        <p>Developed at Rice University, SLIDE challenges the assumption that training requires calculating the output of every neuron. It uses <a href="https://en.wikipedia.org/wiki/Locality-sensitive_hashing" target="_blank">Locality Sensitive Hashing (LSH)</a> to identify only active neurons for a given input.</p>
+        <p>The SLIDE architecture, developed at Rice University, addresses the computational cost of neural network training by utilizing <strong><a href="https://en.wikipedia.org/wiki/Locality-sensitive_hashing" target="_blank">Locality Sensitive Hashing (LSH)</a></strong>. It identifies active neurons for specific inputs without computing full layer activations.</p>
         <ul>
-          <li><strong>O(1) Complexity:</strong> Reduces complexity from linear O(N) to essentially constant time searches.</li>
-          <li><strong>CPU Advantage:</strong> CPUs excel at the random memory access and branching required for hash table lookups, which would stall a GPU's SIMD architecture.</li>
+          <li><strong>O(1) Complexity:</strong> Aims for constant-time lookups rather than O(N) linear complexity.</li>
+          <li><strong>CPU Optimization:</strong> Efficiently utilizes large L3 caches and branch prediction, which are less effective in GPU-centric SIMD architectures.</li>
         </ul>
 
-        <h2>1.2 ThirdAI and the BOLT Engine</h2>
-        <p><a href="https://www.thirdai.com/" target="_blank">ThirdAI</a> commercialized SLIDE through <a href="https://www.thirdai.com/bolt/" target="_blank">BOLT</a>, a production-grade engine for <strong>Dynamic Sparsity</strong>. It allows training billion-parameter models on commodity CPUs.</p>
+        <h2>1.2 ThirdAI and Dynamic Sparsity</h2>
+        <p><a href="https://www.thirdai.com/" target="_blank">ThirdAI</a> commercialized these concepts through the <a href="https://www.thirdai.com/bolt/" target="_blank">BOLT engine</a>. The objective is to enable training and fine-tuning of large-scale models directly on standard x86 and ARM CPUs.</p>
         <ul>
-          <li><strong>PocketLLM:</strong> Training and fine-tuning directly on laptops or x86 servers.</li>
-          <li><strong>Privacy:</strong> On-premise training enables "air-gapped" data privacy for sensitive sectors.</li>
+          <li><strong>Training Efficiency:</strong> Focus on dynamic sparsity during training, avoiding the need for high-bandwidth VRAM.</li>
+          <li><strong>Privacy:</strong> On-premise deployment for sensitive medical or financial datasets.</li>
         </ul>
 
-        <h2>1.3 Neural Magic: DeepSparse and vLLM</h2>
-        <p><a href="https://neuralmagic.com/" target="_blank">Neural Magic</a>, born from MIT, focuses on <strong>Sparsification</strong>, pruning networks by 80-90% without losing accuracy. Following their 2025 acquisition by Red Hat, they have pivoted to contributing these optimizations directly to <a href="https://github.com/vllm-project/vllm" target="_blank">vLLM</a> via the <a href="https://github.com/neuralmagic/nm-vllm" target="_blank">nm-vllm</a> project.</p>
+        <h2>1.3 Neural Magic: Sparsification and serving</h2>
+        <p><a href="https://neuralmagic.com/" target="_blank">Neural Magic</a> utilizes weight pruning techniques to sparsify networks by up to 90% while maintaining accuracy. Post-acquisition by Red Hat, the research focus has shifted toward integrating these optimizations into the <a href="https://github.com/vllm-project/vllm" target="_blank">vLLM</a> framework via the <a href="https://github.com/neuralmagic/nm-vllm" target="_blank">nm-vllm</a> project.</p>
       </main>
     </div>
   </body>

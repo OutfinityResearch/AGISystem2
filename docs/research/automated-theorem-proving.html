@@ -30,30 +30,30 @@
       </div>
       <header class="hero">
         <h1>Automated Theorem Proving (ATP)</h1>
-        <p>Turning AI from a "guesser" into a "verifier" of mathematical truth.</p>
+        <p>Formal verification of mathematical claims and reasoning chains.</p>
       </header>
       <main class="stack">
-        <h2>What is <a href="https://en.wikipedia.org/wiki/Automated_theorem_proving" target="_blank">ATP</a>?</h2>
-        <p>Automated Theorem Proving is the endeavor to prove mathematical theorems by computer programs. In the AI era, this has evolved from pure brute-force search to a synergistic partnership between LLMs and formal proof assistants.</p>
+        <h2>Principles of <a href="https://en.wikipedia.org/wiki/Automated_theorem_proving" target="_blank">ATP</a></h2>
+        <p>Automated Theorem Proving involves the automated verification of mathematical proofs via computer programs. The current research frontier integrates Large Language Models (LLMs) with formal proof assistants to automate the discovery and verification of complex logical claims.</p>
 
-        <h3>Core Proof Assistants</h3>
+        <h3>Modern Proof Assistants</h3>
         <ul>
-          <li><strong><a href="https://lean-lang.org/" target="_blank">Lean</a>:</strong> A modern theorem prover and programming language developed at Microsoft Research. It is currently the primary target for AI-for-math initiatives (e.g., Google DeepMind's AlphaGeometry).</li>
-          <li><strong><a href="https://coq.inria.fr/" target="_blank">Coq</a>:</strong> A formal proof management system that allows the expression of mathematical assertions and mechanically checks proofs of these assertions.</li>
-          <li><strong><a href="https://isabelle.in.tum.de/" target="_blank">Isabelle/HOL</a>:</strong> A generic proof assistant used for formalizing mathematics and verifying software.</li>
+          <li><strong><a href="https://lean-lang.org/" target="_blank">Lean</a>:</strong> A functional programming language and theorem prover developed at Microsoft Research. It is a primary target for AI-driven mathematical reasoning (e.g., AlphaGeometry).</li>
+          <li><strong><a href="https://coq.inria.fr/" target="_blank">Coq</a>:</strong> A formal proof management system based on the Calculus of Inductive Constructions, facilitating mechanical proof checking.</li>
+          <li><strong><a href="https://isabelle.in.tum.de/" target="_blank">Isabelle/HOL</a>:</strong> A generic interactive theorem prover utilized for formalizing mathematics and software verification.</li>
         </ul>
 
-        <h2>AI + Formal Proofs</h2>
-        <p>We are tracking the trend of using LLMs to generate <strong>Formal Proof Scripts</strong>. Because proof assistants like Lean are "merciless" verifiers, the LLM receives immediate feedback: if the script compiles, the reasoning is guaranteed to be correct.</p>
+        <h2>AI and Formal Integration</h2>
+        <p>The research focus is the use of LLMs to generate <strong>Formal Proof Scripts</strong>. Because proof assistants provide deterministic feedback, the generated reasoning is guaranteed to be mathematically sound if it successfully compiles within the assistant's kernel.</p>
 
-        <h3>Links & Resources</h3>
+        <h3>Resources</h3>
         <ul>
           <li><strong><a href="https://github.com/leanprover-community/mathlib4" target="_blank">Lean Mathlib (GitHub)</a></strong></li>
           <li><strong><a href="https://github.com/meta-ler/reprover" target="_blank">ReProver: Retrieval-Augmented Prover (GitHub)</a></strong></li>
         </ul>
 
-        <h2>Impact on AGISystem2</h2>
-        <p>ATP is the "hard gate" of our System 2 vision. For high-stakes enterprise decisions, we aim to have the agent output not just a recommendation, but a <strong>Machine-Verified Proof</strong> that the recommendation follows from the provided evidence and constraints.</p>
+        <h2>Objective</h2>
+        <p>Automated theorem proving serves as a validation gate for high-stakes decision-making. The goal is to provide machine-verified proofs that autonomous system recommendations logically follow from provided evidence and constraints.</p>
       </main>
     </div>
   </body>

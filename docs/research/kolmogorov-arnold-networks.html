@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kolmogorov-Arnold Networks (KAN): A New MLP? — AGISystem2</title>
+    <title>Kolmogorov-Arnold Networks (KAN): Interpretable Architectures — AGISystem2</title>
     <style>
       :root {
         --bg0: #f7fbff; --bg1: #fff7fb; --stroke: rgba(2, 6, 23, 0.16);
@@ -30,21 +30,21 @@
       </div>
       <header class="hero">
         <h1>Kolmogorov-Arnold Networks (KAN)</h1>
-        <p>An interpretable and efficient alternative to Multi-Layer Perceptrons.</p>
+        <p>Mathematical foundations for interpretable neural architectures via spline-based activations.</p>
       </header>
       <main class="stack">
-        <h2>Moving Beyond MLPs</h2>
-        <p>Multi-Layer Perceptrons (MLPs) have been the backbone of deep learning for decades. However, <strong>Kolmogorov-Arnold Networks (KAN)</strong>, proposed by researchers at MIT and Caltech, introduce a radical change: they place <strong>learnable activation functions on the edges (weights)</strong> rather than the nodes (neurons).</p>
+        <h2>Architecture Evolution</h2>
+        <p>Multi-Layer Perceptrons (MLPs) utilize fixed activation functions on nodes. <strong>Kolmogorov-Arnold Networks (KAN)</strong>, proposed by researchers at MIT and Caltech, replace fixed activations with <strong>learnable univariate functions on edges</strong>. This design is based on the Kolmogorov-Arnold representation theorem.</p>
 
-        <h3>Advantages over traditional Deep Learning</h3>
+        <h3>Technical Advantages</h3>
         <ul>
-          <li><strong>Interpretability:</strong> KANs can often discover the underlying mathematical formulas of a dataset (Symbolic Regression).</li>
-          <li><strong>Efficiency:</strong> They can achieve better accuracy than MLPs with far fewer parameters.</li>
-          <li><strong>Continuous Learning:</strong> KANs are less prone to catastrophic forgetting, making them ideal for long-lived agents.</li>
+          <li><strong>Symbolic Interpretability:</strong> KANs enable the discovery of underlying mathematical relationships within datasets through symbolic regression.</li>
+          <li><strong>Parameter Efficiency:</strong> Research indicates that KANs can achieve higher accuracy than standard MLPs with fewer parameters.</li>
+          <li><strong>Catastrophic Forgetting Mitigation:</strong> The local nature of spline-based activations reduces the interference typical of global weight updates in standard neural networks.</li>
         </ul>
 
-        <h2>Alignment with AGISystem2</h2>
-        <p>The interpretability of KANs makes them a strong candidate for <strong>Auditable AI</strong>. Being able to "read" the activation functions as mathematical formulas allows for a level of verification that is impossible with standard black-box neural networks.</p>
+        <h2>Operational Goal</h2>
+        <p>The implementation of KANs addresses the requirement for <strong>Auditable AI</strong>. By representing activations as readable mathematical formulas, the architecture facilitates the verification of learned relationships in data-driven models.</p>
 
         <h3>References</h3>
         <ul>

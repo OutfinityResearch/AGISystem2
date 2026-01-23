@@ -30,25 +30,25 @@
       </div>
       <header class="hero">
         <h1>Verifiable Computing & ZKPs</h1>
-        <p>Proving that AI computation is correct without compromising privacy.</p>
+        <p>Cryptographic protocols for verifying AI computation integrity and privacy.</p>
       </header>
       <main class="stack">
-        <h2>What is <a href="https://en.wikipedia.org/wiki/Verifiable_computing" target="_blank">Verifiable Computing</a>?</h2>
-        <p>Verifiable computing allows a client to outsource the computation of a function to an untrusted server, while receiving a proof that the computation was performed correctly. In the AI era, this is known as <strong>zkML (Zero-Knowledge Machine Learning)</strong>.</p>
+        <h2>Definition of <a href="https://en.wikipedia.org/wiki/Verifiable_computing" target="_blank">Verifiable Computing</a></h2>
+        <p>Verifiable computing enables a client to outsource computational tasks to an untrusted server while receiving a succinct proof that the computation was executed correctly. In AI research, this is implemented as <strong>zkML (Zero-Knowledge Machine Learning)</strong>.</p>
 
         <h3>Core Technologies</h3>
         <ul>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Non-interactive_zero-knowledge_proof" target="_blank">ZK-SNARKs</a>:</strong> Succinct Non-interactive Arguments of Knowledge. These are tiny proofs that can verify massive AI computations in milliseconds.</li>
-          <li><strong>Fully Homomorphic Encryption (FHE):</strong> Allowing AI to run directly on encrypted data.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Non-interactive_zero-knowledge_proof" target="_blank">ZK-SNARKs</a>:</strong> Cryptographic primitives that allow for the verification of high-parameter model execution without access to model weights or input data.</li>
+          <li><strong>Fully Homomorphic Encryption (FHE):</strong> A method allowing computations to be performed on ciphertext, maintaining data privacy during inference.</li>
         </ul>
 
-        <h2>Strategic Value</h2>
-        <p>Auditability is a pillar of AGISystem2. By using <strong>zkML</strong>, we can provide a cryptographic guarantee that an agent followed its <a href="cnl-formal-semantics.html">formal specifications</a> and utilized only approved evidence, without the auditor needing access to the proprietary data or models.</p>
+        <h2>Analysis</h2>
+        <p>The application of <strong>zkML</strong> provides a mechanism for the formal auditing of autonomous systems. It allows for cryptographic guarantees that an agent has adhered to its <a href="cnl-formal-semantics.html">specifications</a> and evidence protocols without compromising proprietary datasets.</p>
 
         <h3>References</h3>
         <ul>
-          <li><strong><a href="https://github.com/zkonduit/ezkl" target="_blank">ezkl (GitHub)</a>:</strong> A library for proving ONNX models using ZK-SNARKs.</li>
-          <li><strong><a href="https://github.com/moduluslabs" target="_blank">Modulus Labs (GitHub)</a>:</strong> Pioneering zero-knowledge proofs for AI.</li>
+          <li><strong><a href="https://github.com/zkonduit/ezkl" target="_blank">ezkl (GitHub)</a>:</strong> A framework for generating ZK proofs for models in the ONNX format.</li>
+          <li><strong><a href="https://github.com/moduluslabs" target="_blank">Modulus Labs (GitHub)</a>:</strong> Research and tooling for zero-knowledge proofs in AI inference.</li>
         </ul>
       </main>
     </div>
