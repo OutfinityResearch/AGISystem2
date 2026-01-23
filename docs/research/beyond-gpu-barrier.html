@@ -56,7 +56,15 @@
         <h2>Hardware Constraints and the Need for Optimization</h2>
         <p>The contemporary AI landscape is defined by a reliance on high-throughput parallel processing units (GPUs). The "GPU hegemony," characterized by the dominance of the <a href="https://en.wikipedia.org/wiki/CUDA" target="_blank">NVIDIA CUDA</a> ecosystem, has created constraints regarding cost, energy consumption, and supply chain availability.</p>
         <p>A transition is occurring toward reimagining the fundamental mathematics of deep learning. By moving from dense matrix multiplication to sparse hash-based searches and integer arithmetic, it is possible to leverage the serial processing strengths and large memory hierarchies of modern CPUs.</p>
-        <p>Relevant technical directions include <a href="https://www.thirdai.com/bolt/" target="_blank">probabilistic sparsity</a>, optimized C++ inference runtimes like <a href="https://github.com/ggml-org/llama.cpp" target="_blank">llama.cpp</a>, and systems languages like Rust for memory-safe tensor operations. These shifts suggest a potential for AI ubiquity on standard infrastructure, moving away from Moore's Law limitations and addressing the <a href="https://en.wikipedia.org/wiki/Jevons_paradox" target="_blank">Jevons Paradox</a> in computing resources.</p>
+        <p>This report explores the innovations decoupling machine learning from GPU dependency, from <a href="https://www.thirdai.com/bolt/" target="_blank">ThirdAI's BOLT engine</a> to the democratization of inference through <a href="https://github.com/ggml-org/llama.cpp" target="_blank">llama.cpp</a> and Rust-based ecosystems. The analysis suggests a future where AI becomes ubiquitous on existing infrastructure, defying Moore's Law and the <a href="https://en.wikipedia.org/wiki/Jevons_paradox" target="_blank">Jevons Paradox</a>.</p>
+
+        <h2>Alternative Hardware Paradigms</h2>
+        <ul>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Analog_computer" target="_blank">Analog Computing</a>:</strong> A historical paradigm regaining relevance for its potential to perform vector-matrix multiplications at near-zero energy cost compared to digital logic.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Field-programmable_gate_array" target="_blank">FPGAs (Field-Programmable Gate Arrays)</a>:</strong> Utilizing high-level synthesis (HLS) to create custom logic paths for specific model architectures, providing a middle ground between CPU flexibility and ASIC efficiency.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/In-memory_processing" target="_blank">Processing-in-Memory (PIM)</a>:</strong> Architectures that integrate logic directly into the DRAM or SRAM, eliminating the "memory wall" bottleneck that affects both CPUs and GPUs.</li>
+          <li><strong>Optical Computing:</strong> Research into using light instead of electrons for neural network activations, targeting terahertz-scale processing speeds.</li>
+        </ul>
       </main>
       <footer>
         <p>Research Reference Index. Sources: ThirdAI, Ziroh Labs, llama.cpp.</p>

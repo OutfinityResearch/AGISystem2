@@ -52,7 +52,15 @@
         </ul>
 
         <h2>1.3 Neural Magic: Sparsification and serving</h2>
-        <p><a href="https://neuralmagic.com/" target="_blank">Neural Magic</a> utilizes weight pruning techniques to sparsify networks by up to 90% while maintaining accuracy. Post-acquisition by Red Hat, the research focus has shifted toward integrating these optimizations into the <a href="https://github.com/vllm-project/vllm" target="_blank">vLLM</a> framework via the <a href="https://github.com/neuralmagic/nm-vllm" target="_blank">nm-vllm</a> project.</p>
+        <p><a href="https://neuralmagic.com/" target="_blank">Neural Magic</a>, born from MIT, focuses on <strong>Sparsification</strong>, pruning networks by 80-90% without losing accuracy. Following their 2025 acquisition by Red Hat, they have pivoted to contributing these optimizations directly to <a href="https://github.com/vllm-project/vllm" target="_blank">vLLM</a> via the <a href="https://github.com/neuralmagic/nm-vllm" target="_blank">nm-vllm</a> project.</p>
+
+        <h2>Alternative Sparse Methods</h2>
+        <ul>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Random_projection" target="_blank">Random Projections</a>:</strong> Based on the Johnson-Lindenstrauss lemma, these techniques reduce data dimensionality while preserving distances, providing a CPU-friendly alternative to deep embedding layers.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Bloom_filter" target="_blank">Bloom Filters in ML</a>:</strong> Utilizing probabilistic data structures for ultra-fast, constant-time set membership tests in large-scale classification tasks.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/MinHash" target="_blank">MinHash</a>:</strong> A technique for estimating the similarity of sets, used in large-scale deduplication and clustering before neural processing.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Count%E2%80%93min_sketch" target="_blank">Count-Min Sketch</a>:</strong> A probabilistic data structure used for frequency estimation in data streams, useful for real-time feature selection on CPUs.</li>
+        </ul>
       </main>
     </div>
   </body>

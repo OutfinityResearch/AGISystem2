@@ -52,7 +52,15 @@
         <ul>
           <li><strong>BitLinear Layers:</strong> Utilizes a quantization-aware ternary strategy to maintain performance parity with full-precision models.</li>
           <li><strong>Benchmarking:</strong> BitNet 1.58b achieves competitive results on benchmarks such as MMLU and GSM8K compared to FP16 models.</li>
-          <li><strong><a href="https://github.com/microsoft/BitNet" target="_blank">bitnet.cpp</a>:</strong> Provides optimized kernels for x86 and ARM architectures, facilitating low-latency inference on standard CPUs.</li>
+          <li><strong><a href="https://github.com/microsoft/bitnet" target="_blank">bitnet.cpp</a>:</strong> Provides optimized kernels for x86 and ARM architectures, facilitating low-latency inference on standard CPUs.</li>
+        </ul>
+
+        <h2>Historical Low-Bit Initiatives</h2>
+        <ul>
+          <li><strong><a href="https://arxiv.org/abs/1602.02830" target="_blank">BinaryNet (2016)</a>:</strong> One of the first successful attempts to train neural networks with binary weights and activations.</li>
+          <li><strong><a href="https://arxiv.org/abs/1603.05279" target="_blank">XNOR-Net</a>:</strong> A milestone research paper demonstrating that convolution operations can be performed using XOR and bitcounting.</li>
+          <li><strong><a href="https://arxiv.org/abs/1605.04711" target="_blank">DoReFa-Net</a>:</strong> A framework for training low bitwidth convolutional neural networks with arbitrary bitwidth weights, activations, and gradients.</li>
+          <li><strong>Ternary Weight Networks (TWN):</strong> Early research into discretizing weights to {-1, 0, 1} which paved the way for modern ternary LLMs.</li>
         </ul>
 
         <h2>Objective</h2>

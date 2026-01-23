@@ -39,6 +39,14 @@
         <h3>Technical Objective</h3>
         <p>Instead of relying solely on data-driven loss functions, PINNs incorporate a <strong>Physics Loss</strong> term. This term penalizes the model for violating physical invariants such as the Navier-Stokes equations, conservation of mass, or thermodynamic laws.</p>
 
+        <h2>Related Hybrid Approaches</h2>
+        <ul>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Neural_ordinary_differential_equations" target="_blank">Neural Ordinary Differential Equations (Neural ODEs)</a>:</strong> Modeling the hidden state of a network as a continuous dynamical system governed by a differential equation.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Physics-informed_machine_learning" target="_blank">Operator Learning (DeepONet)</a>:</strong> Learning continuous operators rather than functions, allowing for the mapping between infinite-dimensional function spaces.</li>
+          <li><strong>Differentiable Simulators:</strong> Physical simulators written in differentiable frameworks, enabling gradient-based optimization through complex physical interactions.</li>
+          <li><strong>Thermodynamic AI:</strong> Research into computing systems that utilize physical fluctuations and energy landscapes to perform inference.</li>
+        </ul>
+
         <h2>Strategic Goal</h2>
         <p>The implementation of PINNs aims to improve the reliability of autonomous systems operating in physical environments. By enforcing physical consistency within internal world models, the architecture reduces the risk of generating physically impossible predictions common in unconstrained neural networks.</p>
 
