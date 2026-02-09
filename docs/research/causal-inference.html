@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Theoretical frameworks for modeling structural mechanisms and counterfactual reasoning." />
+    <meta property="og:title" content="Causal Inference: Structural Modeling — AGISystem2" />
+    <meta property="og:description" content="Theoretical frameworks for modeling structural mechanisms and counterfactual reasoning." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/research/causal-inference.html" />
     <title>Causal Inference: Structural Modeling — AGISystem2</title>
     <style>
       :root {
@@ -17,9 +22,22 @@
       .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
       h2 { color: var(--accent); margin-top: 24px; }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div><strong>AGISystem2 Research</strong></div>
@@ -32,7 +50,7 @@
         <h1>Causal Inference</h1>
         <p>Theoretical frameworks for modeling structural mechanisms and counterfactual reasoning.</p>
       </header>
-      <main class="stack">
+      <main class="stack" id="main">
         <h2>The Ladder of Causation</h2>
         <p>Causal Inference, developed extensively by <strong>Judea Pearl</strong>, transitions machine learning from statistical curve-fitting (correlations) to the modeling of underlying mechanisms (causality).</p>
 
@@ -45,9 +63,9 @@
 
         <h2>Historical & Alternative Methods</h2>
         <ul>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Structural_equation_modeling" target="_blank">Structural Equation Modeling (SEM)</a>:</strong> A statistical technique that combines factor analysis and multiple regression analysis to examine structural relationships between variables.</li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Granger_causality" target="_blank">Granger Causality</a>:</strong> A statistical hypothesis test for determining whether one time series is useful in forecasting another, widely used in economics and neuroscience.</li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Instrumental_variables_estimation" target="_blank">Instrumental Variables (IV)</a>:</strong> A method used in econometrics to estimate causal relationships when controlled experiments are not possible.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Structural_equation_modeling" target="_blank" rel="noopener noreferrer">Structural Equation Modeling (SEM)</a>:</strong> A statistical technique that combines factor analysis and multiple regression analysis to examine structural relationships between variables.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Granger_causality" target="_blank" rel="noopener noreferrer">Granger Causality</a>:</strong> A statistical hypothesis test for determining whether one time series is useful in forecasting another, widely used in economics and neuroscience.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Instrumental_variables_estimation" target="_blank" rel="noopener noreferrer">Instrumental Variables (IV)</a>:</strong> A method used in econometrics to estimate causal relationships when controlled experiments are not possible.</li>
           <li><strong>Potential Outcomes Framework (Rubin-Neyman):</strong> An alternative mathematical approach to causality focusing on the comparison of outcomes under different treatment assignments.</li>
         </ul>
 
@@ -56,9 +74,9 @@
 
         <h3>Libraries & Links</h3>
         <ul>
-          <li><strong><a href="https://github.com/microsoft/dowhy" target="_blank">DoWhy (GitHub)</a>:</strong> A framework for causal inference combining graphical models and potential outcomes.</li>
-          <li><strong><a href="https://github.com/py-why/pycegp" target="_blank">PyWhy</a>:</strong> An ecosystem for causal machine learning research.</li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Causal_inference" target="_blank">Causal Inference (Wikipedia)</a></strong></li>
+          <li><strong><a href="https://github.com/microsoft/dowhy" target="_blank" rel="noopener noreferrer">DoWhy (GitHub)</a>:</strong> A framework for causal inference combining graphical models and potential outcomes.</li>
+          <li><strong><a href="https://www.pywhy.org/" target="_blank" rel="noopener noreferrer">PyWhy</a>:</strong> An ecosystem for causal machine learning research.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Causal_inference" target="_blank" rel="noopener noreferrer">Causal Inference (Wikipedia)</a></strong></li>
         </ul>
       </main>
     </div>

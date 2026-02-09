@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Formal verification of mathematical claims and reasoning chains." />
+    <meta property="og:title" content="Automated Theorem Proving &amp; AI — AGISystem2" />
+    <meta property="og:description" content="Formal verification of mathematical claims and reasoning chains." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/research/automated-theorem-proving.html" />
     <title>Automated Theorem Proving & AI — AGISystem2</title>
     <style>
       :root {
@@ -17,9 +22,22 @@
       .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
       h2 { color: var(--accent); margin-top: 24px; }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div><strong>AGISystem2 Research</strong></div>
@@ -32,23 +50,23 @@
         <h1>Automated Theorem Proving (ATP)</h1>
         <p>Formal verification of mathematical claims and reasoning chains.</p>
       </header>
-      <main class="stack">
-        <h2>Principles of <a href="https://en.wikipedia.org/wiki/Automated_theorem_proving" target="_blank">ATP</a></h2>
+      <main class="stack" id="main">
+        <h2>Principles of <a href="https://en.wikipedia.org/wiki/Automated_theorem_proving" target="_blank" rel="noopener noreferrer">ATP</a></h2>
         <p>Automated Theorem Proving involves the automated verification of mathematical proofs via computer programs. The current research frontier integrates Large Language Models (LLMs) with formal proof assistants to automate the discovery and verification of complex logical claims.</p>
 
         <h3>Modern Proof Assistants</h3>
         <ul>
-          <li><strong><a href="https://lean-lang.org/" target="_blank">Lean</a>:</strong> A functional programming language and theorem prover developed at Microsoft Research. It is a primary target for AI-driven mathematical reasoning (e.g., AlphaGeometry).</li>
-          <li><strong><a href="https://coq.inria.fr/" target="_blank">Coq</a>:</strong> A formal proof management system based on the Calculus of Inductive Constructions, facilitating mechanical proof checking.</li>
-          <li><strong><a href="https://isabelle.in.tum.de/" target="_blank">Isabelle/HOL</a>:</strong> A generic interactive theorem prover utilized for formalizing mathematics and software verification.</li>
+          <li><strong><a href="https://lean-lang.org/" target="_blank" rel="noopener noreferrer">Lean</a>:</strong> A functional programming language and theorem prover developed at Microsoft Research. It is a primary target for AI-driven mathematical reasoning (e.g., AlphaGeometry).</li>
+          <li><strong><a href="https://coq.inria.fr/" target="_blank" rel="noopener noreferrer">Coq</a>:</strong> A formal proof management system based on the Calculus of Inductive Constructions, facilitating mechanical proof checking.</li>
+          <li><strong><a href="https://isabelle.in.tum.de/" target="_blank" rel="noopener noreferrer">Isabelle/HOL</a>:</strong> A generic interactive theorem prover utilized for formalizing mathematics and software verification.</li>
         </ul>
 
         <h2>Legacy and Specialized ATP Systems</h2>
         <ul>
-          <li><strong><a href="https://www.cs.utexas.edu/users/moore/acl2/" target="_blank">ACL2</a>:</strong> An industrial-strength automated theorem prover for a subset of Common Lisp, used extensively for hardware verification at companies like AMD.</li>
-          <li><strong><a href="https://pvs.csl.sri.com/" target="_blank">PVS (Prototype Verification System)</a>:</strong> A high-level specification language and theorem prover based on higher-order logic.</li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Mizar_system" target="_blank">Mizar</a>:</strong> One of the oldest projects for the formalization of mathematics, utilizing a human-readable proof language.</li>
-          <li><strong><a href="https://vampire.group/" target="_blank">Vampire</a>:</strong> A high-performance automated theorem prover for first-order logic with equality.</li>
+          <li><strong><a href="https://www.cs.utexas.edu/users/moore/acl2/" target="_blank" rel="noopener noreferrer">ACL2</a>:</strong> An industrial-strength automated theorem prover for a subset of Common Lisp, used extensively for hardware verification at companies like AMD.</li>
+          <li><strong><a href="https://pvs.csl.sri.com/" target="_blank" rel="noopener noreferrer">PVS (Prototype Verification System)</a>:</strong> A high-level specification language and theorem prover based on higher-order logic.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Mizar_system" target="_blank" rel="noopener noreferrer">Mizar</a>:</strong> One of the oldest projects for the formalization of mathematics, utilizing a human-readable proof language.</li>
+          <li><strong><a href="https://vampire.group/" target="_blank" rel="noopener noreferrer">Vampire</a>:</strong> An optimized automated theorem prover for first-order logic with equality.</li>
         </ul>
 
         <h2>AI and Formal Integration</h2>
@@ -56,8 +74,8 @@
 
         <h3>Resources</h3>
         <ul>
-          <li><strong><a href="https://github.com/leanprover-community/mathlib4" target="_blank">Lean Mathlib (GitHub)</a></strong></li>
-          <li><strong><a href="https://github.com/meta-ler/reprover" target="_blank">ReProver: Retrieval-Augmented Prover (GitHub)</a></strong></li>
+          <li><strong><a href="https://github.com/leanprover-community/mathlib4" target="_blank" rel="noopener noreferrer">Lean Mathlib (GitHub)</a></strong></li>
+          <li><strong><a href="https://github.com/lean-dojo/ReProver" target="_blank" rel="noopener noreferrer">ReProver: Retrieval-Augmented Prover (GitHub)</a></strong></li>
         </ul>
 
         <h2>Objective</h2>

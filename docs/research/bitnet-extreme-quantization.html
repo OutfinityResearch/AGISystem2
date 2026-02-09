@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Implementation of ternary weight systems to replace floating-point multiplication." />
+    <meta property="og:title" content="BitNet &amp; 1.58-bit LLMs: Ternary Quantization — AGISystem2" />
+    <meta property="og:description" content="Implementation of ternary weight systems to replace floating-point multiplication." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/research/bitnet-extreme-quantization.html" />
     <title>BitNet & 1.58-bit LLMs: Ternary Quantization — AGISystem2</title>
     <style>
       :root {
@@ -20,9 +25,22 @@
       .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
       .stat-card { padding: 16px; background: #f8fafc; border-radius: 12px; border: 1px solid var(--stroke); text-align: center; }
       .stat-card strong { display: block; font-size: 20px; color: var(--accent); }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div><strong>AGISystem2 Research</strong></div>
@@ -35,9 +53,9 @@
         <h1>BitNet & 1.58-bit LLMs</h1>
         <p>Implementation of ternary weight systems to replace floating-point multiplication.</p>
       </header>
-      <main class="stack">
+      <main class="stack" id="main">
         <h2>The 1.58-bit Paradigm ({-1, 0, 1})</h2>
-        <p>Microsoft's <strong><a href="https://github.com/microsoft/BitNet" target="_blank">BitNet b1.58</a></strong> represents a shift in LLM architecture. Weights are constrained to ternary values: <strong>-1, 0, or 1</strong>, requiring approximately 1.58 bits per parameter.</p>
+        <p>Microsoft's <strong><a href="https://github.com/microsoft/BitNet" target="_blank" rel="noopener noreferrer">BitNet b1.58</a></strong> represents a shift in LLM architecture. Weights are constrained to ternary values: <strong>-1, 0, or 1</strong>, requiring approximately 1.58 bits per parameter.</p>
 
         <h3>Computational Efficiency</h3>
         <p>In standard Transformer architectures, the Matrix Multiplication (GEMM) operation is the primary bottleneck. BitNet replaces standard multiplications with <strong>integer addition and subtraction</strong>. This optimization is particularly effective for CPU architectures, which can execute these operations with high throughput.</p>
@@ -52,14 +70,14 @@
         <ul>
           <li><strong>BitLinear Layers:</strong> Utilizes a quantization-aware ternary strategy to maintain performance parity with full-precision models.</li>
           <li><strong>Benchmarking:</strong> BitNet 1.58b achieves competitive results on benchmarks such as MMLU and GSM8K compared to FP16 models.</li>
-          <li><strong><a href="https://github.com/microsoft/bitnet" target="_blank">bitnet.cpp</a>:</strong> Provides optimized kernels for x86 and ARM architectures, facilitating low-latency inference on standard CPUs.</li>
+          <li><strong><a href="https://github.com/microsoft/bitnet" target="_blank" rel="noopener noreferrer">bitnet.cpp</a>:</strong> Provides optimized kernels for x86 and ARM architectures, facilitating low-latency inference on standard CPUs.</li>
         </ul>
 
         <h2>Historical Low-Bit Initiatives</h2>
         <ul>
-          <li><strong><a href="https://arxiv.org/abs/1602.02830" target="_blank">BinaryNet (2016)</a>:</strong> One of the first successful attempts to train neural networks with binary weights and activations.</li>
-          <li><strong><a href="https://arxiv.org/abs/1603.05279" target="_blank">XNOR-Net</a>:</strong> A milestone research paper demonstrating that convolution operations can be performed using XOR and bitcounting.</li>
-          <li><strong><a href="https://arxiv.org/abs/1605.04711" target="_blank">DoReFa-Net</a>:</strong> A framework for training low bitwidth convolutional neural networks with arbitrary bitwidth weights, activations, and gradients.</li>
+          <li><strong><a href="https://arxiv.org/abs/1602.02830" target="_blank" rel="noopener noreferrer">BinaryNet (2016)</a>:</strong> One of the first successful attempts to train neural networks with binary weights and activations.</li>
+          <li><strong><a href="https://arxiv.org/abs/1603.05279" target="_blank" rel="noopener noreferrer">XNOR-Net</a>:</strong> An influential research paper demonstrating that convolution operations can be performed using XOR and bitcounting.</li>
+          <li><strong><a href="https://arxiv.org/abs/1605.04711" target="_blank" rel="noopener noreferrer">DoReFa-Net</a>:</strong> A framework for training low bitwidth convolutional neural networks with arbitrary bitwidth weights, activations, and gradients.</li>
           <li><strong>Ternary Weight Networks (TWN):</strong> Early research into discretizing weights to {-1, 0, 1} which paved the way for modern ternary LLMs.</li>
         </ul>
 

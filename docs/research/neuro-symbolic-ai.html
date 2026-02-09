@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Integration of connectionist pattern recognition and symbolic logical reasoning." />
+    <meta property="og:title" content="Neuro-Symbolic AI: The Third Wave — AGISystem2" />
+    <meta property="og:description" content="Integration of connectionist pattern recognition and symbolic logical reasoning." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/research/neuro-symbolic-ai.html" />
     <title>Neuro-Symbolic AI: The Third Wave — AGISystem2</title>
     <style>
       :root {
@@ -17,9 +22,22 @@
       .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
       h2 { color: var(--accent); margin-top: 24px; }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div><strong>AGISystem2 Research</strong></div>
@@ -32,7 +50,7 @@
         <h1>Neuro-Symbolic AI</h1>
         <p>Integration of connectionist pattern recognition and symbolic logical reasoning.</p>
       </header>
-      <main class="stack">
+      <main class="stack" id="main">
         <h2>Hybrid AI Paradigms</h2>
         <p>Neuro-symbolic AI unifies the strengths of <strong>Connectionism</strong> (gradient-based learning) and <strong>Symbolism</strong> (logic and rules). This convergence addresses the limitations of modern Large Language Models, particularly regarding grounded reasoning and consistency.</p>
 
@@ -48,8 +66,8 @@
 
         <h3>Prominent Research Centers</h3>
         <ul>
-          <li><strong><a href="https://research.ibm.com/topics/neuro-symbolic-ai" target="_blank">IBM Research: Neuro-Symbolic AI</a></strong></li>
-          <li><strong><a href="https://mitibmwatsonailab.mit.edu/research/topics/neuro-symbolic-ai/" target="_blank">MIT-IBM Watson AI Lab</a></strong></li>
+          <li><strong><a href="https://research.ibm.com/topics/neuro-symbolic-ai" target="_blank" rel="noopener noreferrer">IBM Research: Neuro-Symbolic AI</a></strong></li>
+          <li><strong><a href="https://mitibmwatsonailab.mit.edu/" target="_blank" rel="noopener noreferrer">MIT-IBM Watson AI Lab</a></strong></li>
         </ul>
       </main>
     </div>

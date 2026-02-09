@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Technical analysis of local LLM inference via the llama.cpp ecosystem." />
+    <meta property="og:title" content="Democratization through Quantization: llama.cpp — AGISystem2" />
+    <meta property="og:description" content="Technical analysis of local LLM inference via the llama.cpp ecosystem." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/research/quantization-democratization.html" />
     <title>Democratization through Quantization: llama.cpp — AGISystem2</title>
     <style>
       :root {
@@ -18,9 +23,22 @@
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
       h2 { color: var(--accent); margin-top: 24px; }
       code { background: #f0f0f0; padding: 2px 4px; border-radius: 4px; }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div><strong>AGISystem2 Research</strong></div>
@@ -33,20 +51,20 @@
         <h1>Democratization through Quantization</h1>
         <p>Technical analysis of local LLM inference via the llama.cpp ecosystem.</p>
       </header>
-      <main class="stack">
-        <h2><a href="https://github.com/ggml-org/llama.cpp" target="_blank">llama.cpp</a> and the GGML/GGUF Format</h2>
-        <p>Developed by <a href="https://github.com/ggerganov" target="_blank">Georgi Gerganov</a>, <code>llama.cpp</code> is an implementation of Transformer inference in pure C/C++. The objective is to enable large model execution on commodity CPUs by eliminating the runtime overhead of high-level frameworks.</p>
+      <main class="stack" id="main">
+        <h2><a href="https://github.com/ggml-org/llama.cpp" target="_blank" rel="noopener noreferrer">llama.cpp</a> and the GGML/GGUF Format</h2>
+        <p>Developed by <a href="https://github.com/ggerganov" target="_blank" rel="noopener noreferrer">Georgi Gerganov</a>, <code>llama.cpp</code> is an implementation of Transformer inference in pure C/C++. The objective is to enable large model execution on commodity CPUs by eliminating the runtime overhead of high-level frameworks.</p>
 
-        <h3>Aggressive <a href="https://en.wikipedia.org/wiki/Quantization_(signal_processing)" target="_blank">Quantization</a> (k-quants)</h3>
+        <h3>Aggressive <a href="https://en.wikipedia.org/wiki/Quantization_(signal_processing)" target="_blank" rel="noopener noreferrer">Quantization</a> (k-quants)</h3>
         <p>The project focuses on mapping 16-bit floating-point weights to 4-bit and 5-bit integers. This reduction allows a 7B parameter model, which typically requires ~14GB VRAM, to operate within ~5GB of system RAM.</p>
 
         <h3>Hardware-Specific SIMD Optimization</h3>
-        <p>Implementation details include manual optimization for <a href="https://en.wikipedia.org/wiki/Advanced_Vector_Extensions" target="_blank">AVX2/AVX-512</a> (x86) and <a href="https://en.wikipedia.org/wiki/ARM_architecture#Advanced_SIMD_(Neon)" target="_blank">NEON</a> (ARM). On Apple Silicon, the framework leverages high-bandwidth unified memory to achieve performance parity with entry-level discrete accelerators.</p>
+        <p>Implementation details include manual optimization for <a href="https://en.wikipedia.org/wiki/Advanced_Vector_Extensions" target="_blank" rel="noopener noreferrer">AVX2/AVX-512</a> (x86) and <a href="https://en.wikipedia.org/wiki/ARM_architecture#Advanced_SIMD_(Neon)" target="_blank" rel="noopener noreferrer">NEON</a> (ARM). On Apple Silicon, the framework leverages high-bandwidth unified memory to achieve performance parity with entry-level discrete accelerators.</p>
 
         <h3>Ecosystem Integration</h3>
         <ul>
-          <li><strong><a href="https://ollama.com/" target="_blank">Ollama</a>:</strong> A tool for packaging and serving local models through standardized APIs.</li>
-          <li><strong><a href="https://lmstudio.ai/" target="_blank">LM Studio</a>:</strong> A graphical interface for the deployment and benchmarking of quantized models.</li>
+          <li><strong><a href="https://ollama.com/" target="_blank" rel="noopener noreferrer">Ollama</a>:</strong> A tool for packaging and serving local models through standardized APIs.</li>
+          <li><strong><a href="https://lmstudio.ai/" target="_blank" rel="noopener noreferrer">LM Studio</a>:</strong> A graphical interface for the deployment and benchmarking of quantized models.</li>
         </ul>
       </main>
     </div>

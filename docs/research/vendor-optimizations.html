@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="How Intel and AMD are baking AI acceleration into the processor." />
+    <meta property="og:title" content="Silicon Giants: Native CPU Optimizations — AGISystem2" />
+    <meta property="og:description" content="How Intel and AMD are baking AI acceleration into the processor." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/research/vendor-optimizations.html" />
     <title>Silicon Giants: Native CPU Optimizations — AGISystem2</title>
     <style>
       :root {
@@ -17,9 +22,22 @@
       .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
       h2 { color: var(--accent); margin-top: 24px; }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div><strong>AGISystem2 Research</strong></div>
@@ -32,15 +50,15 @@
         <h1>Silicon Giants: Native Optimizations</h1>
         <p>How Intel and AMD are baking AI acceleration into the processor.</p>
       </header>
-      <main class="stack">
-        <h2>Intel: <a href="https://github.com/intel/intel-extension-for-pytorch" target="_blank">IPEX</a> and AMX</h2>
-        <p>Intel has aggressively integrated AI acceleration instructions (<a href="https://en.wikipedia.org/wiki/AVX-512" target="_blank">AVX-512</a>, DL Boost, AMX) into its silicon. The <strong>Intel Extension for PyTorch (IPEX)</strong> allows standard models to leverage <a href="https://en.wikipedia.org/wiki/Advanced_Matrix_Extensions" target="_blank">Advanced Matrix Extensions (AMX)</a>—essentially small matrix multiplication accelerators built directly into the CPU core.</p>
+      <main class="stack" id="main">
+        <h2>Intel: <a href="https://github.com/intel/intel-extension-for-pytorch" target="_blank" rel="noopener noreferrer">IPEX</a> and AMX</h2>
+        <p>Intel has integrated AI acceleration instructions (<a href="https://en.wikipedia.org/wiki/AVX-512" target="_blank" rel="noopener noreferrer">AVX-512</a>, DL Boost, AMX) into its silicon. The <strong>Intel Extension for PyTorch (IPEX)</strong> allows standard models to leverage <a href="https://en.wikipedia.org/wiki/Advanced_Matrix_Extensions" target="_blank" rel="noopener noreferrer">Advanced Matrix Extensions (AMX)</a>—essentially small matrix multiplication accelerators built directly into the CPU core.</p>
 
-        <h2>AMD: <a href="https://www.amd.com/en/developer/zendnn.html" target="_blank">ZenDNN</a></h2>
-        <p>AMD's <strong>ZenDNN</strong> is a deep neural network library optimized for EPYC and Ryzen processors. ZenDNN 5.0 claims a 400% performance uplift for LLM inference through advanced auto-tuning and INT4 quantization support.</p>
+        <h2>AMD: <a href="https://www.amd.com/en/developer/zendnn.html" target="_blank" rel="noopener noreferrer">ZenDNN</a></h2>
+        <p>AMD's <strong>ZenDNN</strong> is a deep neural network library optimized for EPYC and Ryzen processors. ZenDNN 5.0 reports significant inference gains for selected LLM workloads through auto-tuning and INT4 quantization support.</p>
 
         <h2>Convergence</h2>
-        <p>The next frontier is combining algorithmic sparsity with hardware-level quantization. This ecosystem promises a future where AI is ubiquitous, private, and capable of running on the infrastructure the world already owns, rather than the infrastructure it is waiting in line to buy.</p>
+        <p>A key direction is combining algorithmic sparsity with hardware-level quantization. This trend can improve privacy and lower deployment costs by running more workloads on existing infrastructure.</p>
       </main>
     </div>
   </body>

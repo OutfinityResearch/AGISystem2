@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Mathematical modeling for the verification of system specifications and protocols." />
+    <meta property="og:title" content="Formal Verification Languages — AGISystem2" />
+    <meta property="og:description" content="Mathematical modeling for the verification of system specifications and protocols." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/research/formal-verification-languages.html" />
     <title>Formal Verification Languages — AGISystem2</title>
     <style>
       :root {
@@ -17,9 +22,22 @@
       .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
       h2 { color: var(--accent); margin-top: 24px; }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div><strong>AGISystem2 Research</strong></div>
@@ -32,22 +50,22 @@
         <h1>Formal Verification Languages</h1>
         <p>Mathematical modeling for the verification of system specifications and protocols.</p>
       </header>
-      <main class="stack">
+      <main class="stack" id="main">
         <h2>Rigorous System Specification</h2>
         <p>Formal verification involves the use of mathematical methods to prove that a system (hardware, software, or agentic workflow) adheres to its intended specification. This approach enables the detection of design errors before implementation.</p>
 
         <h3>Core Specification Languages</h3>
         <ul>
-          <li><strong><a href="https://lamport.azurewebsites.net/tla/tla.html" target="_blank">TLA+ (Temporal Logic of Actions)</a>:</strong> Created by Leslie Lamport, TLA+ is designed for modeling concurrent and distributed systems. It is utilized in industry for verifying complex cloud protocols and critical infrastructure.</li>
-          <li><strong><a href="https://alloytools.org/" target="_blank">Alloy</a>:</strong> A declarative language for expressing structural properties. It leverages SAT solvers to perform exhaustive searches for counterexamples within a bounded model.</li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/B-Method" target="_blank">B-Method / Event-B</a>:</strong> A formal method utilized in safety-critical domains, such as railway signaling, to prove system safety through refinement and mathematical proof.</li>
+          <li><strong><a href="https://lamport.azurewebsites.net/tla/tla.html" target="_blank" rel="noopener noreferrer">TLA+ (Temporal Logic of Actions)</a>:</strong> Created by Leslie Lamport, TLA+ is designed for modeling concurrent and distributed systems. It is utilized in industry for verifying complex cloud protocols and critical infrastructure.</li>
+          <li><strong><a href="https://alloytools.org/" target="_blank" rel="noopener noreferrer">Alloy</a>:</strong> A declarative language for expressing structural properties. It leverages SAT solvers to perform exhaustive searches for counterexamples within a bounded model.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/B-Method" target="_blank" rel="noopener noreferrer">B-Method / Event-B</a>:</strong> A formal method utilized in safety-critical domains, such as railway signaling, to prove system safety through refinement and mathematical proof.</li>
         </ul>
 
         <h2>Industrial & Specialized Tools</h2>
         <ul>
-          <li><strong><a href="https://www.ansys.com/products/embedded-software/ansys-scade-suite" target="_blank">SCADE</a>:</strong> A model-based development environment for safety-critical systems used in aerospace and automotive industries (e.g., Airbus flight control).</li>
-          <li><strong><a href="https://spinroot.com/spin/whatispin.html" target="_blank">SPIN / Promela</a>:</strong> A widely used tool for verifying the correctness of distributed software models and communication protocols.</li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Static_program_analysis" target="_blank">Astrée</a>:</strong> A static analyzer that proves the absence of run-time errors in safety-critical C programs.</li>
+          <li><strong><a href="https://www.ansys.com/products/embedded-software/ansys-scade-suite" target="_blank" rel="noopener noreferrer">SCADE</a>:</strong> A model-based development environment for safety-critical systems used in aerospace and automotive industries (e.g., Airbus flight control).</li>
+          <li><strong><a href="https://spinroot.com/spin/whatispin.html" target="_blank" rel="noopener noreferrer">SPIN / Promela</a>:</strong> A widely used tool for verifying the correctness of distributed software models and communication protocols.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Static_program_analysis" target="_blank" rel="noopener noreferrer">Astrée</a>:</strong> A static analyzer that proves the absence of run-time errors in safety-critical C programs.</li>
           <li><strong>CompCert:</strong> A formally verified C compiler that guarantees the generated assembly code has the exact same semantics as the source code.</li>
         </ul>
 
@@ -56,8 +74,8 @@
 
         <h3>Resources</h3>
         <ul>
-          <li><strong><a href="https://github.com/tlaplus/tlaplus" target="_blank">TLA+ Tools (GitHub)</a></strong></li>
-          <li><strong><a href="https://github.com/AlloyTools/org.alloytools.alloy" target="_blank">Alloy Analyzer (GitHub)</a></strong></li>
+          <li><strong><a href="https://github.com/tlaplus/tlaplus" target="_blank" rel="noopener noreferrer">TLA+ Tools (GitHub)</a></strong></li>
+          <li><strong><a href="https://github.com/AlloyTools/org.alloytools.alloy" target="_blank" rel="noopener noreferrer">Alloy Analyzer (GitHub)</a></strong></li>
         </ul>
       </main>
     </div>

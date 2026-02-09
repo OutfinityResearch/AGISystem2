@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Exploring the frontier of efficient, reliable, and verifiable AI." />
+    <meta property="og:title" content="Research Index — AGISystem2" />
+    <meta property="og:description" content="Exploring the frontier of efficient, reliable, and verifiable AI." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://agisystem2.com/research.html" />
     <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#f7fbff" />
     <title>Research Index — AGISystem2</title>
@@ -21,15 +26,28 @@
       .pill.primary { background: var(--card); border-color: rgba(10, 125, 255, 0.28); }
       .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
-      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-top: 24px; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 18px; margin-top: 24px; }
       .article-card { display: block; padding: 20px; border: 1px solid var(--stroke); border-radius: var(--radius); text-decoration: none; color: inherit; transition: border-color 0.2s; }
       .article-card:hover { border-color: var(--accent); }
       .article-card h3 { margin: 0 0 8px; color: var(--accent); }
       .article-card p { margin: 0; font-size: 14px; color: var(--muted); }
       .intro-box { padding: 20px; background: #fffbeb; border: 1px solid #fef3c7; border-radius: 12px; margin-bottom: 24px; color: #92400e; }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div class="brand"><strong>AGISystem2</strong></div>
@@ -45,167 +63,167 @@
         <p>Exploring the frontier of efficient, reliable, and verifiable AI.</p>
       </header>
 
-      <main class="stack">
+      <main class="stack" id="main">
         <div class="intro-box">
-          The research landscape in this field is highly diverse, with numerous powerful ideas emerging. However, there is a critical shortage of resources needed to combine and scale these directions into unified, industry-grade systems.
+          The research landscape in this field is diverse, with many promising ideas. However, there are limited resources for combining and scaling these directions into cohesive, production-ready systems.
         </div>
 
         <div class="grid">
           <a href="research/beyond-gpu-barrier.html" class="article-card">
-            <h3>Beyond the GPU Barrier</h3>
-            <p>The architectural shift from GPU-centric to CPU-first AI systems.</p>
+            <h3>Beyond the GPU Barrier: CPU-Centric Machine Learning</h3>
+            <p>Analysis of algorithmic shifts toward CPU-efficient AI architectures.</p>
           </a>
           <a href="research/algorithmic-revolution.html" class="article-card">
             <h3>The Algorithmic Revolution</h3>
-            <p>Probabilistic sparsity, SLIDE, and the BOLT engine for sub-linear deep learning.</p>
+            <p>Transitioning from Dense Matrix Multiplication to Probabilistic Sparsity.</p>
           </a>
           <a href="research/high-fidelity-runtimes.html" class="article-card">
             <h3>High-Fidelity Runtimes</h3>
-            <p>Computational sovereignty and running BF16 full-precision on CPUs with Ziroh Labs.</p>
+            <p>Execution strategies for high-precision inference on commodity CPU hardware.</p>
           </a>
           <a href="research/quantization-democratization.html" class="article-card">
-            <h3>Quantization & Democratization</h3>
-            <p>The impact of llama.cpp, GGML, and GGUF on local AI accessibility.</p>
+            <h3>Democratization through Quantization</h3>
+            <p>Technical analysis of local LLM inference via the llama.cpp ecosystem.</p>
           </a>
           <a href="research/rust-systems-ml.html" class="article-card">
-            <h3>Rust for Systems ML</h3>
-            <p>Memory-safe, high-performance frameworks like Candle and Burn.</p>
+            <h3>Systems Languages for ML</h3>
+            <p>Technical evaluation of Rust-based frameworks for high-performance inference.</p>
           </a>
           <a href="research/vendor-optimizations.html" class="article-card">
-            <h3>Silicon Giant Optimizations</h3>
-            <p>How Intel and AMD are baking AI acceleration (AMX, ZenDNN) into the processor.</p>
+            <h3>Silicon Giants: Native Optimizations</h3>
+            <p>How Intel and AMD are baking AI acceleration into the processor.</p>
           </a>
           <a href="research/efficient-ml-trends.html" class="article-card">
-            <h3>Efficient ML Trends</h3>
-            <p>A survey of modern inference runtimes, compilers, and low-level libraries.</p>
+            <h3>Efficient ML Execution Trends</h3>
+            <p>A technical survey of optimized runtimes, compilers, and libraries for CPU-centric inference.</p>
           </a>
           <a href="research/vsa-hdc.html" class="article-card">
-            <h3>VSA & HDC</h3>
-            <p>Algebraic reasoning and neuro-symbolic computing in high-dimensional spaces.</p>
+            <h3>VSA &amp; HDC: Algebraic Reasoning</h3>
+            <p>Neuro-Symbolic computing through algebraic operations in high-dimensional spaces.</p>
           </a>
           <a href="research/bitnet-extreme-quantization.html" class="article-card">
-            <h3>BitNet & 1.58-bit LLMs</h3>
-            <p>The radical shift to ternary weights and the elimination of multiplication in AI.</p>
+            <h3>BitNet &amp; 1.58-bit LLMs</h3>
+            <p>Implementation of ternary weight systems to replace floating-point multiplication.</p>
           </a>
           <a href="research/cnl-formal-semantics.html" class="article-card">
-            <h3>CNL & Formal Semantics</h3>
-            <p>Bridging natural language ambiguity and formal logic for auditable agent reasoning.</p>
+            <h3>CNL &amp; Formal Semantics</h3>
+            <p>Addressing ambiguity in human-agent interaction through structured language subsets.</p>
           </a>
           <a href="research/ai-native-languages.html" class="article-card">
-            <h3>AI-Native Languages</h3>
-            <p>Rethinking programming paradigms for probabilistic, agentic, and self-optimizing systems.</p>
+            <h3>Languages for the AI Era</h3>
+            <p>Evolution of programming paradigms for probabilistic and agentic systems.</p>
           </a>
           <a href="research/brain-inspired-computing.html" class="article-card">
             <h3>Brain-Inspired Computing</h3>
-            <p>Jeff Hawkins' Thousand Brains Theory and Numenta's path to biological intelligence.</p>
+            <p>Theoretical frameworks for biological intelligence modeling and continuous learning.</p>
           </a>
           <a href="research/liquid-neural-networks.html" class="article-card">
             <h3>Liquid Neural Networks</h3>
-            <p>MIT CSAIL and Liquid AI's continuous-time systems for adaptive and efficient intelligence.</p>
+            <p>Continuous-time AI systems for stable and adaptive intelligence.</p>
           </a>
           <a href="research/neuromorphic-computing.html" class="article-card">
             <h3>Neuromorphic Computing</h3>
-            <p>Event-driven AI and Spiking Neural Networks (SNNs) for extreme energy efficiency.</p>
+            <p>Event-driven AI architectures for energy-efficient, real-time processing.</p>
           </a>
           <a href="research/active-inference.html" class="article-card">
             <h3>Active Inference</h3>
-            <p>Karl Friston's Free Energy Principle and the mathematical foundation for proactive agents.</p>
+            <p>Theoretical foundations for purposeful behavior via the Free Energy Principle.</p>
           </a>
           <a href="research/energy-based-models.html" class="article-card">
-            <h3>Energy-Based Models</h3>
-            <p>Yann LeCun's alternative to probabilistic modeling through compatibility functions.</p>
+            <h3>Energy-Based Models (EBMs)</h3>
+            <p>Mathematical frameworks for dependency modeling through scalar energy minimization.</p>
           </a>
           <a href="research/world-models-jepa.html" class="article-card">
-            <h3>World Models & JEPA</h3>
-            <p>Predictive architectures for autonomous agents that learn, reason, and plan in latent spaces.</p>
+            <h3>World Models &amp; JEPA</h3>
+            <p>Predictive architectures for autonomous agent planning and latent representation learning.</p>
           </a>
           <a href="research/kolmogorov-arnold-networks.html" class="article-card">
-            <h3>KAN Networks</h3>
-            <p>A radical alternative to MLPs using learnable activation functions on weights for better interpretability.</p>
+            <h3>Kolmogorov-Arnold Networks (KAN)</h3>
+            <p>Mathematical foundations for interpretable neural architectures via spline-based activations.</p>
           </a>
           <a href="research/neuro-symbolic-ai.html" class="article-card">
             <h3>Neuro-Symbolic AI</h3>
-            <p>The convergence of connectionist pattern recognition and symbolic logical reasoning.</p>
+            <p>Integration of connectionist pattern recognition and symbolic logical reasoning.</p>
           </a>
           <a href="research/conceptual-spaces.html" class="article-card">
             <h3>Conceptual Spaces</h3>
-            <p>Geometric information representation bridging the gap between neurons and symbols.</p>
+            <p>A geometric framework for knowledge representation and semantic reasoning.</p>
           </a>
           <a href="research/ontologies-knowledge-graphs.html" class="article-card">
-            <h3>Ontologies & KG</h3>
-            <p>Structured knowledge and common-sense reasoning via Cyc, WordNet, and SUMO.</p>
+            <h3>Ontologies &amp; Knowledge Graphs</h3>
+            <p>Formal definitions and structured representations for machine-interpretable knowledge.</p>
           </a>
           <a href="research/formal-logic-solvers.html" class="article-card">
-            <h3>Formal Logic & Solvers</h3>
-            <p>Deterministic reasoning using SMT solvers like Z3 and description logics.</p>
+            <h3>Formal Logic &amp; Automated Reasoning</h3>
+            <p>Deterministic frameworks for verifiable machine decision-making.</p>
           </a>
           <a href="research/automated-theorem-proving.html" class="article-card">
-            <h3>Theorem Proving</h3>
-            <p>Integrating AI with formal proof assistants like Lean, Coq, and Isabelle.</p>
+            <h3>Automated Theorem Proving (ATP)</h3>
+            <p>Formal verification of mathematical claims and reasoning chains.</p>
           </a>
           <a href="research/formal-verification-languages.html" class="article-card">
-            <h3>Verification Languages</h3>
-            <p>Proving system correctness using TLA+, Alloy, and formal methods.</p>
+            <h3>Formal Verification Languages</h3>
+            <p>Mathematical modeling for the verification of system specifications and protocols.</p>
           </a>
           <a href="research/causal-inference.html" class="article-card">
             <h3>Causal Inference</h3>
-            <p>Moving beyond correlation to causal reasoning and counterfactuals with Judea Pearl's theories.</p>
+            <p>Theoretical frameworks for modeling structural mechanisms and counterfactual reasoning.</p>
           </a>
           <a href="research/cognitive-architectures.html" class="article-card">
             <h3>Cognitive Architectures</h3>
-            <p>Unified models of the mind like SOAR and ACT-R for integrated intelligence.</p>
+            <p>Integration of symbolic and sub-symbolic modules into unified intelligence models.</p>
           </a>
           <a href="research/probabilistic-programming.html" class="article-card">
             <h3>Probabilistic Programming</h3>
-            <p>Codifying uncertainty and Bayesian inference using Stan, Pyro, and Edward.</p>
+            <p>Formal modeling of uncertainty via Bayesian inference and automated statistical computation.</p>
           </a>
           <a href="research/geometric-deep-learning.html" class="article-card">
             <h3>Geometric Deep Learning</h3>
-            <p>Unifying AI architectures through symmetry, invariance, and graph-based representations.</p>
+            <p>Theoretical unification of AI architectures through symmetry and invariance.</p>
           </a>
           <a href="research/physics-informed-ai.html" class="article-card">
             <h3>Physics-Informed AI</h3>
-            <p>Integrating physical laws as hard constraints into neural network training (PINNs).</p>
+            <p>Integration of domain-specific physical laws as hard constraints in neural network training.</p>
           </a>
           <a href="research/program-synthesis.html" class="article-card">
             <h3>Program Synthesis</h3>
-            <p>Automatically constructing provably correct code from high-level specifications.</p>
+            <p>Automated construction of executable code from formal high-level specifications.</p>
           </a>
           <a href="research/differentiable-logic.html" class="article-card">
             <h3>Differentiable Logic</h3>
-            <p>Merging logical operations with gradient descent via Logical Neural Networks (LNN).</p>
+            <p>Mathematical integration of gradient-based learning with formal logical operators.</p>
           </a>
           <a href="research/explainable-ai.html" class="article-card">
             <h3>Explainable AI (XAI)</h3>
-            <p>Creating trust through transparency, auditable reasoning, and interpretability.</p>
+            <p>Methodologies for transparency and auditable logic in autonomous systems.</p>
           </a>
           <a href="research/verifiable-computing.html" class="article-card">
-            <h3>Verifiable Computing</h3>
-            <p>Cryptographic proofs (ZKPs) and zkML to ensure AI computation integrity and privacy.</p>
+            <h3>Verifiable Computing &amp; ZKPs</h3>
+            <p>Cryptographic protocols for verifying AI computation integrity and privacy.</p>
           </a>
           <a href="research/small-language-models.html" class="article-card">
-            <h3>Small Language Models</h3>
-            <p>Model distillation and specialized 3B-parameter "reasoning kernels" for edge deployment.</p>
+            <h3>Small Language Models (SLMs)</h3>
+            <p>Analysis of high-parameter efficiency and specialized reasoning kernels.</p>
           </a>
           <a href="research/decentralized-ai.html" class="article-card">
             <h3>Decentralized AI (DeAI)</h3>
-            <p>Removing centralized gatekeepers via Bittensor, Petals, and federated learning protocols.</p>
+            <p>Architectures for distributed model training and inference on peer-to-peer networks.</p>
           </a>
           <a href="research/formal-ai-safety.html" class="article-card">
             <h3>Formal AI Safety</h3>
-            <p>Moving beyond RLHF to mathematical alignment guarantees and safety shielding.</p>
+            <p>Mathematical frameworks for verifying safety and alignment properties in autonomous agents.</p>
           </a>
           <a href="research/multi-agent-systems.html" class="article-card">
-            <h3>Multi-Agent Systems</h3>
-            <p>Formal coordination, consensus protocols, and epistemic redundancy in agent ecosystems.</p>
+            <h3>Multi-Agent Systems (MAS)</h3>
+            <p>Coordination and consensus protocols for distributed intelligent agents.</p>
           </a>
           <a href="research/algorithmic-information-theory.html" class="article-card">
-            <h3>Information Theory</h3>
-            <p>Intelligence as compression: Kolmogorov complexity and the bedrocks of universal induction.</p>
+            <h3>Algorithmic Information Theory (AIT)</h3>
+            <p>Mathematical foundations of computation, information content, and complexity.</p>
           </a>
           <a href="research/european-research-initiatives.html" class="article-card">
-            <h3>European Initiatives</h3>
-            <p>Key research groups and projects in Switzerland and Europe focused on efficient and neuro-symbolic AI.</p>
+            <h3>European Research Initiatives</h3>
+            <p>A survey of key research groups and projects in Switzerland and Europe focused on efficient and neuro-symbolic AI.</p>
           </a>
         </div>
       </main>

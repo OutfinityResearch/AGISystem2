@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Mathematical frameworks for dependency modeling through scalar energy minimization." />
+    <meta property="og:title" content="Energy-Based Models (EBMs): Defining Compatibility — AGISystem2" />
+    <meta property="og:description" content="Mathematical frameworks for dependency modeling through scalar energy minimization." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/research/energy-based-models.html" />
     <title>Energy-Based Models (EBMs): Defining Compatibility — AGISystem2</title>
     <style>
       :root {
@@ -17,9 +22,22 @@
       .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
       h2 { color: var(--accent); margin-top: 24px; }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div><strong>AGISystem2 Research</strong></div>
@@ -32,8 +50,8 @@
         <h1>Energy-Based Models (EBMs)</h1>
         <p>Mathematical frameworks for dependency modeling through scalar energy minimization.</p>
       </header>
-      <main class="stack">
-        <h2>Principles of <a href="https://en.wikipedia.org/wiki/Energy-based_model" target="_blank">EBMs</a></h2>
+      <main class="stack" id="main">
+        <h2>Principles of <a href="https://en.wikipedia.org/wiki/Energy-based_model" target="_blank" rel="noopener noreferrer">EBMs</a></h2>
         <p>Energy-Based Models, championed by <strong>Yann LeCun</strong>, provide an alternative to traditional generative modeling. An EBM learns a scalar function that assigns a low "energy" value to compatible configurations of variables and a high value to incompatible ones.</p>
 
         <h3>Technical Characteristics</h3>
@@ -44,8 +62,8 @@
 
         <h2>Historical Context & Precursors</h2>
         <ul>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Hopfield_network" target="_blank">Hopfield Networks (1982)</a>:</strong> Foundational associative memory models where states evolve toward local minima of an energy function.</li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Boltzmann_machine" target="_blank">Boltzmann Machines</a>:</strong> Stochastic versions of Hopfield networks that introduced hidden units and temperature-based annealing.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Hopfield_network" target="_blank" rel="noopener noreferrer">Hopfield Networks (1982)</a>:</strong> Foundational associative memory models where states evolve toward local minima of an energy function.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Boltzmann_machine" target="_blank" rel="noopener noreferrer">Boltzmann Machines</a>:</strong> Stochastic versions of Hopfield networks that introduced hidden units and temperature-based annealing.</li>
           <li><strong>Restricted Boltzmann Machines (RBMs):</strong> A simplified architecture used extensively in the early 2000s for deep belief networks and unsupervised feature learning.</li>
           <li><strong>Harmoniums:</strong> Also known as undirected graphical models, representing an early framework for modeling joint distributions via potential functions.</li>
         </ul>
@@ -55,8 +73,8 @@
 
         <h3>Research & Resources</h3>
         <ul>
-          <li><strong><a href="https://yann.lecun.com/exdb/publis/pdf/lecun-06.pdf" target="_blank">A Tutorial on Energy-Based Models (LeCun et al.)</a></strong></li>
-          <li><strong><a href="https://github.com/openai/ebm" target="_blank">OpenAI EBM Implementation (GitHub)</a></strong></li>
+          <li><strong><a href="https://yann.lecun.com/exdb/publis/pdf/lecun-06.pdf" target="_blank" rel="noopener noreferrer">A Tutorial on Energy-Based Models (LeCun et al.)</a></strong></li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Energy-based_model" target="_blank" rel="noopener noreferrer">Energy-based models overview (Wikipedia)</a></strong></li>
         </ul>
       </main>
     </div>

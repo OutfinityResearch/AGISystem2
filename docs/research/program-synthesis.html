@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Automated construction of executable code from formal high-level specifications." />
+    <meta property="og:title" content="Program Synthesis: Code from Specifications — AGISystem2" />
+    <meta property="og:description" content="Automated construction of executable code from formal high-level specifications." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/research/program-synthesis.html" />
     <title>Program Synthesis: Code from Specifications — AGISystem2</title>
     <style>
       :root {
@@ -17,9 +22,22 @@
       .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
       h2 { color: var(--accent); margin-top: 24px; }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div><strong>AGISystem2 Research</strong></div>
@@ -32,8 +50,8 @@
         <h1>Program Synthesis</h1>
         <p>Automated construction of executable code from formal high-level specifications.</p>
       </header>
-      <main class="stack">
-        <h2>Definition of <a href="https://en.wikipedia.org/wiki/Program_synthesis" target="_blank">Program Synthesis</a></h2>
+      <main class="stack" id="main">
+        <h2>Definition of <a href="https://en.wikipedia.org/wiki/Program_synthesis" target="_blank" rel="noopener noreferrer">Program Synthesis</a></h2>
         <p>Program synthesis involves the automated generation of computer programs that satisfy a defined operational specification. The objective is to transition from manual code authorship to deterministic synthesis from requirements.</p>
 
         <h3>Technical Methodologies</h3>
@@ -45,10 +63,10 @@
 
         <h2>Legacy and Evolutionary Synthesis</h2>
         <ul>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Genetic_programming" target="_blank">Genetic Programming (GP)</a>:</strong> An evolutionary methodology that "evolves" computer programs to solve specific tasks through mutation and selection.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Genetic_programming" target="_blank" rel="noopener noreferrer">Genetic Programming (GP)</a>:</strong> An evolutionary methodology that "evolves" computer programs to solve specific tasks through mutation and selection.</li>
           <li><strong>ADATE (Automatic Design of Algorithms Through Evolution):</strong> A system for the automatic generation of recursive functional programs.</li>
           <li><strong>Early LISP Synthesizers:</strong> 1970s research into automatically generating recursive LISP functions from input-output pairs.</li>
-          <li><strong><a href="https://github.com/RosetteCode/rosette" target="_blank">Rosette (GitHub)</a>:</strong> A solver-aided language that turns a high-level model into a specialized program synthesizer.</li>
+          <li><strong><a href="https://github.com/emina/rosette" target="_blank" rel="noopener noreferrer">Rosette (GitHub)</a>:</strong> A solver-aided language that turns a high-level model into a specialized program synthesizer.</li>
         </ul>
 
         <h2>Operational Objective</h2>
@@ -56,8 +74,8 @@
 
         <h3>Projects & Links</h3>
         <ul>
-          <li><strong><a href="https://github.com/DreamCoder-AI/DreamCoder" target="_blank">DreamCoder (GitHub)</a>:</strong> A project combining neural networks with symbolic search to learn program abstractions.</li>
-          <li><strong><a href="https://github.com/microsoft/prose" target="_blank">Microsoft PROSE (GitHub)</a>:</strong> A framework for inductive program synthesis utilized in enterprise data processing.</li>
+          <li><strong><a href="https://github.com/ellisk42/ec" target="_blank" rel="noopener noreferrer">DreamCoder (GitHub)</a>:</strong> A project combining neural networks with symbolic search to learn program abstractions.</li>
+          <li><strong><a href="https://github.com/microsoft/prose" target="_blank" rel="noopener noreferrer">Microsoft PROSE (GitHub)</a>:</strong> A framework for inductive program synthesis utilized in enterprise data processing.</li>
         </ul>
       </main>
     </div>

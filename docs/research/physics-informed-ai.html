@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Integration of domain-specific physical laws as hard constraints in neural network training." />
+    <meta property="og:title" content="Physics-Informed AI: Formal Constraints — AGISystem2" />
+    <meta property="og:description" content="Integration of domain-specific physical laws as hard constraints in neural network training." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/research/physics-informed-ai.html" />
     <title>Physics-Informed AI: Formal Constraints — AGISystem2</title>
     <style>
       :root {
@@ -17,9 +22,22 @@
       .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
       h2 { color: var(--accent); margin-top: 24px; }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div><strong>AGISystem2 Research</strong></div>
@@ -32,8 +50,8 @@
         <h1>Physics-Informed AI</h1>
         <p>Integration of domain-specific physical laws as hard constraints in neural network training.</p>
       </header>
-      <main class="stack">
-        <h2>Principles of <a href="https://en.wikipedia.org/wiki/Physics-informed_neural_networks" target="_blank">PINNs</a></h2>
+      <main class="stack" id="main">
+        <h2>Principles of <a href="https://en.wikipedia.org/wiki/Physics-informed_neural_networks" target="_blank" rel="noopener noreferrer">PINNs</a></h2>
         <p>Physics-Informed Neural Networks (PINNs) are neural architectures trained to solve supervised learning tasks while satisfying constraints described by nonlinear partial differential equations (PDEs).</p>
 
         <h3>Technical Objective</h3>
@@ -41,8 +59,8 @@
 
         <h2>Related Hybrid Approaches</h2>
         <ul>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Neural_ordinary_differential_equations" target="_blank">Neural Ordinary Differential Equations (Neural ODEs)</a>:</strong> Modeling the hidden state of a network as a continuous dynamical system governed by a differential equation.</li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Physics-informed_machine_learning" target="_blank">Operator Learning (DeepONet)</a>:</strong> Learning continuous operators rather than functions, allowing for the mapping between infinite-dimensional function spaces.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Neural_ordinary_differential_equations" target="_blank" rel="noopener noreferrer">Neural Ordinary Differential Equations (Neural ODEs)</a>:</strong> Modeling the hidden state of a network as a continuous dynamical system governed by a differential equation.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Physics-informed_machine_learning" target="_blank" rel="noopener noreferrer">Operator Learning (DeepONet)</a>:</strong> Learning continuous operators rather than functions, allowing for the mapping between infinite-dimensional function spaces.</li>
           <li><strong>Differentiable Simulators:</strong> Physical simulators written in differentiable frameworks, enabling gradient-based optimization through complex physical interactions.</li>
           <li><strong>Thermodynamic AI:</strong> Research into computing systems that utilize physical fluctuations and energy landscapes to perform inference.</li>
         </ul>
@@ -52,8 +70,8 @@
 
         <h3>References</h3>
         <ul>
-          <li><strong><a href="https://github.com/maziarraissi/PINNs" target="_blank">PINNs: Official Implementation (GitHub)</a></strong></li>
-          <li><strong><a href="https://github.com/lululxvi/deepxde" target="_blank">DeepXDE: A library for PINNs (GitHub)</a></strong></li>
+          <li><strong><a href="https://github.com/maziarraissi/PINNs" target="_blank" rel="noopener noreferrer">PINNs: Official Implementation (GitHub)</a></strong></li>
+          <li><strong><a href="https://github.com/lululxvi/deepxde" target="_blank" rel="noopener noreferrer">DeepXDE: A library for PINNs (GitHub)</a></strong></li>
         </ul>
       </main>
     </div>

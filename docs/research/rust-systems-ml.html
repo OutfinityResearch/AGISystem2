@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Technical evaluation of Rust-based frameworks for high-performance inference." />
+    <meta property="og:title" content="Systems Languages for ML: Rust — AGISystem2" />
+    <meta property="og:description" content="Technical evaluation of Rust-based frameworks for high-performance inference." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/research/rust-systems-ml.html" />
     <title>Systems Languages for ML: Rust — AGISystem2</title>
     <style>
       :root {
@@ -17,12 +22,27 @@
       .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
       h2 { color: var(--accent); margin-top: 24px; }
+      .table-wrap { overflow-x: auto; margin-top: 16px; }
       table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+      .table-wrap table { margin-top: 0; min-width: 540px; }
       th, td { border: 1px solid var(--stroke); padding: 12px; text-align: left; }
       th { background: #f9f9f9; }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div><strong>AGISystem2 Research</strong></div>
@@ -35,42 +55,44 @@
         <h1>Systems Languages for ML</h1>
         <p>Technical evaluation of Rust-based frameworks for high-performance inference.</p>
       </header>
-      <main class="stack">
+      <main class="stack" id="main">
         <h2>Language-Level Bottlenecks</h2>
-        <p>The limitations of interpreted languages (such as Python's Global Interpreter Lock) often constrain high-performance inference. <strong><a href="https://en.wikipedia.org/wiki/Rust_(programming_language)" target="_blank">Rust</a></strong> is emerging as an alternative, providing memory safety and control over computational primitives comparable to C++.</p>
+        <p>The limitations of interpreted languages (such as Python's Global Interpreter Lock) often constrain high-performance inference. <strong><a href="https://en.wikipedia.org/wiki/Rust_(programming_language)" target="_blank" rel="noopener noreferrer">Rust</a></strong> is emerging as an alternative, providing memory safety and control over computational primitives comparable to C++.</p>
 
-        <h2><a href="https://github.com/huggingface/candle" target="_blank">Candle</a> (Hugging Face)</h2>
+        <h2><a href="https://github.com/huggingface/candle" target="_blank" rel="noopener noreferrer">Candle</a> (Hugging Face)</h2>
         <p>A minimalist ML framework designed for <strong>Serverless Inference</strong>. Its objective is to eliminate the dependencies of heavy frameworks like PyTorch, enabling small binary sizes and rapid cold starts on CPU-based cloud functions.</p>
 
-        <h2><a href="https://burn.dev/" target="_blank">Burn</a>: Optimized Execution Graphs</h2>
-        <p>Burn is a deep learning framework focused on performance and portability. The <a href="https://github.com/tracel-ai/burn" target="_blank">CubeCL</a> backend generates optimized kernels for specific hardware targets, adapting to vector extensions such as AVX and NEON via <a href="https://en.wikipedia.org/wiki/Just-in-time_compilation" target="_blank">JIT Compilation</a>.</p>
+        <h2><a href="https://burn.dev/" target="_blank" rel="noopener noreferrer">Burn</a>: Optimized Execution Graphs</h2>
+        <p>Burn is a deep learning framework focused on performance and portability. The <a href="https://github.com/tracel-ai/burn" target="_blank" rel="noopener noreferrer">CubeCL</a> backend generates optimized kernels for specific hardware targets, adapting to vector extensions such as AVX and NEON via <a href="https://en.wikipedia.org/wiki/Just-in-time_compilation" target="_blank" rel="noopener noreferrer">JIT Compilation</a>.</p>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Technical Feature</th>
-              <th>Candle</th>
-              <th>Burn</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Design Goal</td>
-              <td>Lightweight deployment</td>
-              <td>Graph flexibility and custom kernels</td>
-            </tr>
-            <tr>
-              <td>Backend Strategy</td>
-              <td>External library bindings</td>
-              <td>Native code generation (JIT)</td>
-            </tr>
-            <tr>
-              <td>CPU Performance</td>
-              <td>High (via optimized BLAS)</td>
-              <td>High (via hardware-specific adaptivity)</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Technical Feature</th>
+                <th>Candle</th>
+                <th>Burn</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Design Goal</td>
+                <td>Lightweight deployment</td>
+                <td>Graph flexibility and custom kernels</td>
+              </tr>
+              <tr>
+                <td>Backend Strategy</td>
+                <td>External library bindings</td>
+                <td>Native code generation (JIT)</td>
+              </tr>
+              <tr>
+                <td>CPU Performance</td>
+                <td>High (via optimized BLAS)</td>
+                <td>High (via hardware-specific adaptivity)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </main>
     </div>
   </body>

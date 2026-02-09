@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Mathematical foundations for interpretable neural architectures via spline-based activations." />
+    <meta property="og:title" content="Kolmogorov-Arnold Networks (KAN): Interpretable Architectures — AGISystem2" />
+    <meta property="og:description" content="Mathematical foundations for interpretable neural architectures via spline-based activations." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/research/kolmogorov-arnold-networks.html" />
     <title>Kolmogorov-Arnold Networks (KAN): Interpretable Architectures — AGISystem2</title>
     <style>
       :root {
@@ -17,9 +22,22 @@
       .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
       h2 { color: var(--accent); margin-top: 24px; }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div><strong>AGISystem2 Research</strong></div>
@@ -32,7 +50,7 @@
         <h1>Kolmogorov-Arnold Networks (KAN)</h1>
         <p>Mathematical foundations for interpretable neural architectures via spline-based activations.</p>
       </header>
-      <main class="stack">
+      <main class="stack" id="main">
         <h2>Architecture Evolution</h2>
         <p>Multi-Layer Perceptrons (MLPs) utilize fixed activation functions on nodes. <strong>Kolmogorov-Arnold Networks (KAN)</strong>, proposed by researchers at MIT and Caltech, replace fixed activations with <strong>learnable univariate functions on edges</strong>. This design is based on the Kolmogorov-Arnold representation theorem.</p>
 
@@ -48,8 +66,8 @@
 
         <h3>References</h3>
         <ul>
-          <li><strong><a href="https://github.com/KindXiaanyu/pykan" target="_blank">pykan: Official KAN Implementation (GitHub)</a></strong></li>
-          <li><strong><a href="https://arxiv.org/abs/2404.19756" target="_blank">KAN: Kolmogorov-Arnold Networks (Research Paper)</a></strong></li>
+          <li><strong><a href="https://github.com/KindXiaoming/pykan" target="_blank" rel="noopener noreferrer">pykan: Official KAN Implementation (GitHub)</a></strong></li>
+          <li><strong><a href="https://arxiv.org/abs/2404.19756" target="_blank" rel="noopener noreferrer">KAN: Kolmogorov-Arnold Networks (Research Paper)</a></strong></li>
         </ul>
       </main>
     </div>

@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Theoretical frameworks for biological intelligence modeling and continuous learning." />
+    <meta property="og:title" content="Brain-Inspired Computing: Neocortical Modeling — AGISystem2" />
+    <meta property="og:description" content="Theoretical frameworks for biological intelligence modeling and continuous learning." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/research/brain-inspired-computing.html" />
     <title>Brain-Inspired Computing: Neocortical Modeling — AGISystem2</title>
     <style>
       :root {
@@ -17,9 +22,22 @@
       .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
       h2 { color: var(--accent); margin-top: 24px; }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div><strong>AGISystem2 Research</strong></div>
@@ -32,20 +50,20 @@
         <h1>Brain-Inspired Computing</h1>
         <p>Theoretical frameworks for biological intelligence modeling and continuous learning.</p>
       </header>
-      <main class="stack">
+      <main class="stack" id="main">
         <h2>Neocortical Principles</h2>
-        <p>Research led by organizations such as <a href="https://numenta.com/" target="_blank">Numenta</a> focuses on reverse-engineering the structural properties of the neocortex. The objective is to identify fundamental principles of intelligence beyond static, layer-based neural networks.</p>
+        <p>Research led by organizations such as <a href="https://numenta.com/" target="_blank" rel="noopener noreferrer">Numenta</a> focuses on reverse-engineering the structural properties of the neocortex. The objective is to identify fundamental principles of intelligence beyond static, layer-based neural networks.</p>
 
-        <h3><a href="https://en.wikipedia.org/wiki/Hierarchical_temporal_memory" target="_blank">Hierarchical Temporal Memory (HTM)</a></h3>
+        <h3><a href="https://en.wikipedia.org/wiki/Hierarchical_temporal_memory" target="_blank" rel="noopener noreferrer">Hierarchical Temporal Memory (HTM)</a></h3>
         <p>HTM is a theoretical framework that models the algorithmic properties of neocortical circuits. Key features include unsupervised learning, high levels of sparsity, and temporal sequence prediction.</p>
 
-        <h3>The <a href="https://numenta.com/blog/2019/01/16/the-thousand-brains-theory-of-intelligence-explained/" target="_blank">Thousand Brains Theory</a></h3>
+        <h3>The <a href="https://www.numenta.com/resources/research-publications/papers/a-theory-of-how-columns-in-the-neocortex-enable-learning-the-structure-of-the-world/" target="_blank" rel="noopener noreferrer">Thousand Brains Theory</a></h3>
         <p>This theory posits that the neocortex is organized into processing units called cortical columns, which learn complete models of objects through sensory-motor integration. This decentralization aims for robustness and computational efficiency.</p>
 
         <h2>Historical Connectionist Approaches</h2>
         <ul>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Self-organizing_map" target="_blank">Self-Organizing Maps (Kohonen)</a>:</strong> A type of unsupervised neural network that produces a low-dimensional, discretized representation of the input space, similar to topographic maps in the brain.</li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Adaptive_resonance_theory" target="_blank">Adaptive Resonance Theory (ART)</a>:</strong> A theory developed by Stephen Grossberg on how the brain processes information, focusing on the stability-plasticity dilemma in learning.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Self-organizing_map" target="_blank" rel="noopener noreferrer">Self-Organizing Maps (Kohonen)</a>:</strong> A type of unsupervised neural network that produces a low-dimensional, discretized representation of the input space, similar to topographic maps in the brain.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Adaptive_resonance_theory" target="_blank" rel="noopener noreferrer">Adaptive Resonance Theory (ART)</a>:</strong> A theory developed by Stephen Grossberg on how the brain processes information, focusing on the stability-plasticity dilemma in learning.</li>
           <li><strong>Sparse Coding (Olshausen & Field):</strong> Foundational research demonstrating that the primary visual cortex utilizes sparse representations to encode natural images efficiently.</li>
           <li><strong>Neocognitron:</strong> A precursor to CNNs that drew heavy inspiration from the hierarchical structure of the visual cortex.</li>
         </ul>
@@ -54,7 +72,7 @@
         <ul>
           <li><strong>Sparse Representations:</strong> The use of Sparse Distributed Representations (SDRs) provides high noise tolerance and aligns with <a href="algorithmic-revolution.html">CPU-centric sparse processing</a>.</li>
           <li><strong>Online Learning:</strong> Biological models prioritize continuous learning from data streams without catastrophic forgetting.</li>
-          <li><strong><a href="https://github.com/numenta/nupic" target="_blank">NuPIC (GitHub)</a>:</strong> Implementation of HTM algorithms for research and evaluation.</li>
+          <li><strong><a href="https://github.com/numenta/nupic" target="_blank" rel="noopener noreferrer">NuPIC (GitHub)</a>:</strong> Implementation of HTM algorithms for research and evaluation.</li>
         </ul>
       </main>
     </div>

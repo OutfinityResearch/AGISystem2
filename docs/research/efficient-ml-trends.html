@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A technical survey of optimized runtimes, compilers, and libraries for CPU-centric inference." />
+    <meta property="og:title" content="Efficient ML Execution: Current Trends — AGISystem2" />
+    <meta property="og:description" content="A technical survey of optimized runtimes, compilers, and libraries for CPU-centric inference." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/research/efficient-ml-trends.html" />
     <title>Efficient ML Execution: Current Trends — AGISystem2</title>
     <style>
       :root {
@@ -17,12 +22,25 @@
       .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
       h2 { color: var(--accent); margin-top: 24px; }
-      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 16px; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 16px; margin-top: 16px; }
       .card { padding: 16px; border: 1px solid var(--stroke); border-radius: 12px; }
       .card strong { display: block; margin-bottom: 8px; }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div><strong>AGISystem2 Research</strong></div>
@@ -35,43 +53,43 @@
         <h1>Efficient ML Execution Trends</h1>
         <p>A technical survey of optimized runtimes, compilers, and libraries for CPU-centric inference.</p>
       </header>
-      <main class="stack">
+      <main class="stack" id="main">
         <h2>Inference Runtimes</h2>
         <div class="grid">
           <div class="card">
-            <strong><a href="https://onnxruntime.ai/" target="_blank">ONNX Runtime</a></strong>
+            <strong><a href="https://onnxruntime.ai/" target="_blank" rel="noopener noreferrer">ONNX Runtime</a></strong>
             <span>A cross-platform engine by Microsoft that abstracts hardware through Execution Providers (EP) such as OpenVINO or XNNPACK.</span>
           </div>
           <div class="card">
-            <strong><a href="https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/overview.html" target="_blank">OpenVINO</a></strong>
+            <strong><a href="https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/overview.html" target="_blank" rel="noopener noreferrer">OpenVINO</a></strong>
             <span>Intel's framework optimized for Intel hardware, focusing on INT8 quantization and operator fusion.</span>
           </div>
           <div class="card">
-            <strong><a href="https://www.tensorflow.org/lite" target="_blank">TensorFlow Lite</a></strong>
+            <strong><a href="https://www.tensorflow.org/lite" target="_blank" rel="noopener noreferrer">TensorFlow Lite</a></strong>
             <span>A framework for mobile and edge devices utilizing FlatBuffers and the XNNPACK library for reduced memory footprints.</span>
           </div>
           <div class="card">
-            <strong><a href="https://developer.apple.com/documentation/coreml" target="_blank">Core ML</a></strong>
+            <strong><a href="https://developer.apple.com/documentation/coreml" target="_blank" rel="noopener noreferrer">Core ML</a></strong>
             <span>Apple's on-device framework designed for heterogeneous execution across CPU, GPU, and Neural Engine (ANE).</span>
           </div>
         </div>
 
         <h2>ML Compilers</h2>
-        <p>Compilers such as <strong><a href="https://tvm.apache.org/" target="_blank">Apache TVM</a></strong> and <strong><a href="https://openxla.org/xla" target="_blank">XLA</a></strong> automate the generation of optimized machine code. The objective is to reduce overhead through graph-level optimizations like constant folding and kernel fusion.</p>
+        <p>Compilers such as <strong><a href="https://tvm.apache.org/" target="_blank" rel="noopener noreferrer">Apache TVM</a></strong> and <strong><a href="https://openxla.org/xla" target="_blank" rel="noopener noreferrer">XLA</a></strong> automate the generation of optimized machine code. The objective is to reduce overhead through graph-level optimizations like constant folding and kernel fusion.</p>
 
         <h2>Niche & Historical Runtimes</h2>
         <ul>
-          <li><strong><a href="https://mxnet.apache.org/" target="_blank">Apache MXNet</a>:</strong> A highly scalable deep learning framework that pioneered early memory-efficient execution and symbol-based graph optimization.</li>
-          <li><strong><a href="https://github.com/PaddlePaddle/Paddle-Lite" target="_blank">Paddle Lite</a>:</strong> Baidu's high-performance inference engine for mobile, embedded, and IoT devices.</li>
+          <li><strong><a href="https://mxnet.apache.org/" target="_blank" rel="noopener noreferrer">Apache MXNet</a>:</strong> A scalable deep learning framework that introduced early memory-efficient execution and symbol-based graph optimization.</li>
+          <li><strong><a href="https://github.com/PaddlePaddle/Paddle-Lite" target="_blank" rel="noopener noreferrer">Paddle Lite</a>:</strong> Baidu's inference engine for mobile, embedded, and IoT devices.</li>
           <li><strong>SNPE (Snapdragon Neural Processing Engine):</strong> Qualcomm's SDK for execution on Hexagon DSPs and Adreno GPUs, providing early examples of mobile-first AI acceleration.</li>
-          <li><strong><a href="https://github.com/Tencent/Tengine" target="_blank">Tengine</a>:</strong> An open-source intelligent software framework for ARM-based IoT devices.</li>
+          <li><strong><a href="https://github.com/OAID/Tengine" target="_blank" rel="noopener noreferrer">Tengine</a>:</strong> An open-source intelligent software framework for ARM-based IoT devices.</li>
         </ul>
 
         <h2>Lower-Level Kernel Libraries</h2>
         <ul>
-          <li><strong><a href="https://github.com/uxlfoundation/oneDNN" target="_blank">oneDNN</a>:</strong> Foundational deep learning primitives for x86 and ARM architectures.</li>
-          <li><strong><a href="https://github.com/google/XNNPACK" target="_blank">XNNPACK</a>:</strong> Optimized primitives for mobile, server, and WebAssembly (WASM).</li>
-          <li><strong><a href="https://github.com/pytorch/FBGEMM" target="_blank">FBGEMM</a>:</strong> Meta's high-performance library for low-precision inference on server-side CPUs.</li>
+          <li><strong><a href="https://github.com/uxlfoundation/oneDNN" target="_blank" rel="noopener noreferrer">oneDNN</a>:</strong> Foundational deep learning primitives for x86 and ARM architectures.</li>
+          <li><strong><a href="https://github.com/google/XNNPACK" target="_blank" rel="noopener noreferrer">XNNPACK</a>:</strong> Optimized primitives for mobile, server, and WebAssembly (WASM).</li>
+          <li><strong><a href="https://github.com/pytorch/FBGEMM" target="_blank" rel="noopener noreferrer">FBGEMM</a>:</strong> Meta's optimized library for low-precision inference on server-side CPUs.</li>
         </ul>
       </main>
     </div>

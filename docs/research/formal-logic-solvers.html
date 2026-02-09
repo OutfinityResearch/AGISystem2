@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Deterministic frameworks for verifiable machine decision-making." />
+    <meta property="og:title" content="Formal Logic &amp; Automated Reasoning — AGISystem2" />
+    <meta property="og:description" content="Deterministic frameworks for verifiable machine decision-making." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/research/formal-logic-solvers.html" />
     <title>Formal Logic & Automated Reasoning — AGISystem2</title>
     <style>
       :root {
@@ -17,9 +22,22 @@
       .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
       h2 { color: var(--accent); margin-top: 24px; }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div><strong>AGISystem2 Research</strong></div>
@@ -32,29 +50,29 @@
         <h1>Formal Logic & Automated Reasoning</h1>
         <p>Deterministic frameworks for verifiable machine decision-making.</p>
       </header>
-      <main class="stack">
+      <main class="stack" id="main">
         <h2>Logic-Based Verification</h2>
-        <p>In contrast to probabilistic neural networks, <strong><a href="https://en.wikipedia.org/wiki/Mathematical_logic" target="_blank">Formal Logic</a></strong> provides a binary verification system. Statements are processed as true, false, or unprovable, serving as a foundation for auditable computation.</p>
+        <p>In contrast to probabilistic neural networks, <strong><a href="https://en.wikipedia.org/wiki/Mathematical_logic" target="_blank" rel="noopener noreferrer">Formal Logic</a></strong> provides a binary verification system. Statements are processed as true, false, or unprovable, serving as a foundation for auditable computation.</p>
 
         <h3>Core Frameworks</h3>
         <ul>
-          <li><strong><a href="https://en.wikipedia.org/wiki/First-order_logic" target="_blank">First-Order Logic (FOL)</a>:</strong> Foundational language for representing discrete objects and relational structures.</li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Description_logic" target="_blank">Description Logic (DL)</a>:</strong> Efficient sub-languages of FOL used for modeling knowledge domains (e.g., OWL in the Semantic Web).</li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Satisfiability_modulo_theories" target="_blank">Satisfiability Modulo Theories (SMT)</a>:</strong> Determining the satisfiability of formulas relative to specific background theories such as linear arithmetic or bit-vectors.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/First-order_logic" target="_blank" rel="noopener noreferrer">First-Order Logic (FOL)</a>:</strong> Foundational language for representing discrete objects and relational structures.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Description_logic" target="_blank" rel="noopener noreferrer">Description Logic (DL)</a>:</strong> Efficient sub-languages of FOL used for modeling knowledge domains (e.g., OWL in the Semantic Web).</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Satisfiability_modulo_theories" target="_blank" rel="noopener noreferrer">Satisfiability Modulo Theories (SMT)</a>:</strong> Determining the satisfiability of formulas relative to specific background theories such as linear arithmetic or bit-vectors.</li>
         </ul>
 
         <h2>Automated Solvers</h2>
         <p>Industrial-grade solvers are utilized to verify logical consistency in agent workflows:</p>
         <ul>
-          <li><strong><a href="https://github.com/Z3Prover/z3" target="_blank">Z3 Solver (Microsoft Research)</a>:</strong> High-performance SMT solver used for hardware/software verification and constraint solving.</li>
-          <li><strong><a href="https://github.com/cvc5/cvc5" target="_blank">CVC5</a>:</strong> An automated theorem prover for SMT and related logical problems.</li>
+          <li><strong><a href="https://github.com/Z3Prover/z3" target="_blank" rel="noopener noreferrer">Z3 Solver (Microsoft Research)</a>:</strong> High-performance SMT solver used for hardware/software verification and constraint solving.</li>
+          <li><strong><a href="https://github.com/cvc5/cvc5" target="_blank" rel="noopener noreferrer">CVC5</a>:</strong> An automated theorem prover for SMT and related logical problems.</li>
         </ul>
 
         <h2>Related Logical Paradigms</h2>
         <ul>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Answer_set_programming" target="_blank">Answer Set Programming (ASP)</a>:</strong> A form of declarative programming oriented towards difficult search problems, widely used in planning and configuration tasks.</li>
-          <li><strong>The SAT Solver Heritage:</strong> Modern SMT solvers are built on decades of research into the <strong><a href="https://en.wikipedia.org/wiki/Boolean_satisfiability_problem" target="_blank">Boolean Satisfiability Problem (SAT)</a></strong>, with foundational algorithms like DPLL and CDCL.</li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Modal_logic" target="_blank">Modal Logic</a>:</strong> Used for reasoning about necessity, possibility, and temporal sequences in multi-agent environments.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Answer_set_programming" target="_blank" rel="noopener noreferrer">Answer Set Programming (ASP)</a>:</strong> A form of declarative programming oriented towards difficult search problems, widely used in planning and configuration tasks.</li>
+          <li><strong>The SAT Solver Heritage:</strong> Modern SMT solvers are built on decades of research into the <strong><a href="https://en.wikipedia.org/wiki/Boolean_satisfiability_problem" target="_blank" rel="noopener noreferrer">Boolean Satisfiability Problem (SAT)</a></strong>, with foundational algorithms like DPLL and CDCL.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Modal_logic" target="_blank" rel="noopener noreferrer">Modal Logic</a>:</strong> Used for reasoning about necessity, possibility, and temporal sequences in multi-agent environments.</li>
           <li><strong>Higher-Order Logic (HOL):</strong> A more expressive but computationally harder fragment of logic used for foundational mathematical verification.</li>
         </ul>
 

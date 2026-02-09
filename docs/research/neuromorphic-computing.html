@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Event-driven AI architectures for energy-efficient, real-time processing." />
+    <meta property="og:title" content="Neuromorphic Computing &amp; SNNs — AGISystem2" />
+    <meta property="og:description" content="Event-driven AI architectures for energy-efficient, real-time processing." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/research/neuromorphic-computing.html" />
     <title>Neuromorphic Computing & SNNs — AGISystem2</title>
     <style>
       :root {
@@ -17,9 +22,22 @@
       .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
       h2 { color: var(--accent); margin-top: 24px; }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div><strong>AGISystem2 Research</strong></div>
@@ -32,29 +50,29 @@
         <h1>Neuromorphic Computing</h1>
         <p>Event-driven AI architectures for energy-efficient, real-time processing.</p>
       </header>
-      <main class="stack">
-        <h2>Principles of <a href="https://en.wikipedia.org/wiki/Neuromorphic_engineering" target="_blank">Neuromorphic Engineering</a></h2>
+      <main class="stack" id="main">
+        <h2>Principles of <a href="https://en.wikipedia.org/wiki/Neuromorphic_engineering" target="_blank" rel="noopener noreferrer">Neuromorphic Engineering</a></h2>
         <p>Neuromorphic computing involves hardware and software architectures that emulate the physiological structure of biological brains. These systems utilize <strong>Spiking Neural Networks (SNNs)</strong>, which process information via discrete, asynchronous temporal events (spikes) rather than continuous matrix operations.</p>
 
         <h3>Technical Advantages</h3>
         <ul>
           <li><strong>Energy Efficiency:</strong> Power consumption is localized to active neurons during spike events, enabling significant energy reduction compared to standard deep learning.</li>
           <li><strong>Temporal Precision:</strong> SNNs are inherently suited for processing sensory-motor data streams in real-time.</li>
-          <li><strong>Architectural Examples:</strong> Notable hardware includes <a href="https://www.intel.com/content/www/us/en/research/neuromorphic-computing.html" target="_blank">Intel Loihi</a>, <a href="https://en.wikipedia.org/wiki/TrueNorth" target="_blank">IBM TrueNorth</a>, and <a href="https://synapstack.com/" target="_blank">SynSense</a>.</li>
+          <li><strong>Architectural Examples:</strong> Notable hardware includes <a href="https://www.intel.com/content/www/us/en/research/neuromorphic-computing.html" target="_blank" rel="noopener noreferrer">Intel Loihi</a>, <a href="https://en.wikipedia.org/wiki/TrueNorth" target="_blank" rel="noopener noreferrer">IBM TrueNorth</a>, and <a href="https://synapstack.com/" target="_blank" rel="noopener noreferrer">SynSense</a>.</li>
         </ul>
 
         <h2>Foundational Milestones</h2>
         <ul>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Carver_Mead" target="_blank">Carver Mead (1980s)</a>:</strong> The pioneer of neuromorphic engineering who first proposed using sub-threshold analog VLSI circuits to mimic the biological function of the cochlea and retina.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Carver_Mead" target="_blank" rel="noopener noreferrer">Carver Mead (1980s)</a>:</strong> An early researcher in neuromorphic engineering who proposed using sub-threshold analog VLSI circuits to mimic the biological function of the cochlea and retina.</li>
           <li><strong>FACETS / BrainScaleS:</strong> A European project that developed wafer-scale physical model systems for neuromorphic computing.</li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/SpiNNaker" target="_blank">SpiNNaker (University of Manchester)</a>:</strong> A massively parallel manycore computing system composed of over a million ARM processors, designed to simulate large-scale spiking neural networks in real-time.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/SpiNNaker" target="_blank" rel="noopener noreferrer">SpiNNaker (University of Manchester)</a>:</strong> A massively parallel manycore computing system composed of over a million ARM processors, designed to simulate large-scale spiking neural networks in real-time.</li>
           <li><strong>DVS (Dynamic Vision Sensors):</strong> Also known as "event cameras," these neuromorphic sensors only report changes in pixel intensity, providing extremely high temporal resolution and low latency.</li>
         </ul>
 
         <h2>Software Ecosystem</h2>
         <ul>
-          <li><strong><a href="https://lava-nc.org/" target="_blank">Lava (GitHub)</a>:</strong> An open-source framework for building SNNs that are portable across standard CPUs and specialized neuromorphic hardware.</li>
-          <li><strong><a href="https://github.com/norse/norse" target="_blank">Norse (GitHub)</a>:</strong> A library for bio-inspired neural network modeling utilizing the PyTorch backend.</li>
+          <li><strong><a href="https://lava-nc.org/" target="_blank" rel="noopener noreferrer">Lava (GitHub)</a>:</strong> An open-source framework for building SNNs that are portable across standard CPUs and specialized neuromorphic hardware.</li>
+          <li><strong><a href="https://github.com/norse/norse" target="_blank" rel="noopener noreferrer">Norse (GitHub)</a>:</strong> A library for bio-inspired neural network modeling utilizing the PyTorch backend.</li>
         </ul>
 
         <h2>Strategic Goal</h2>

@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Architectures for distributed model training and inference on peer-to-peer networks." />
+    <meta property="og:title" content="Decentralized AI (DeAI) — AGISystem2" />
+    <meta property="og:description" content="Architectures for distributed model training and inference on peer-to-peer networks." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/research/decentralized-ai.html" />
     <title>Decentralized AI (DeAI) — AGISystem2</title>
     <style>
       :root {
@@ -17,9 +22,22 @@
       .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
       h2 { color: var(--accent); margin-top: 24px; }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div><strong>AGISystem2 Research</strong></div>
@@ -32,22 +50,22 @@
         <h1>Decentralized AI (DeAI)</h1>
         <p>Architectures for distributed model training and inference on peer-to-peer networks.</p>
       </header>
-      <main class="stack">
-        <h2>Principles of <a href="https://en.wikipedia.org/wiki/Decentralized_AI" target="_blank">DeAI</a></h2>
+      <main class="stack" id="main">
+        <h2>Principles of <a href="https://en.wikipedia.org/wiki/Decentralized_AI" target="_blank" rel="noopener noreferrer">DeAI</a></h2>
         <p>Decentralized AI focuses on the execution of AI tasks across a distributed infrastructure rather than centralized data centers. The technical objective is to improve system resilience and mitigate the risks associated with centralized compute control.</p>
 
         <h3>Core Initiatives</h3>
         <ul>
-          <li><strong><a href="https://bittensor.com/" target="_blank">Bittensor</a>:</strong> A protocol utilizing market-based incentives to coordinate the production of machine intelligence across a network of independent nodes.</li>
-          <li><strong><a href="https://petals.dev/" target="_blank">Petals (GitHub)</a>:</strong> A framework for collaborative inference and fine-tuning of large-scale models by distributing parameter shards across consumer-grade hardware.</li>
-          <li><strong><a href="https://federated.withgoogle.com/" target="_blank">Federated Learning</a>:</strong> A distributed machine learning approach that enables model training on local datasets without data exchange, preserving data privacy.</li>
+          <li><strong><a href="https://bittensor.com/" target="_blank" rel="noopener noreferrer">Bittensor</a>:</strong> A protocol utilizing market-based incentives to coordinate the production of machine intelligence across a network of independent nodes.</li>
+          <li><strong><a href="https://petals.dev/" target="_blank" rel="noopener noreferrer">Petals (GitHub)</a>:</strong> A framework for collaborative inference and fine-tuning of large-scale models by distributing parameter shards across consumer-grade hardware.</li>
+          <li><strong><a href="https://federated.withgoogle.com/" target="_blank" rel="noopener noreferrer">Federated Learning</a>:</strong> A distributed machine learning approach that enables model training on local datasets without data exchange, preserving data privacy.</li>
         </ul>
 
         <h2>Precursors & Distributed Computing</h2>
         <ul>
-          <li><strong><a href="https://en.wikipedia.org/wiki/SETI@home" target="_blank">SETI@home</a>:</strong> A pioneer in volunteer computing that demonstrated the feasibility of utilizing millions of home computers for massive signal processing.</li>
-          <li><strong><a href="https://foldingathome.org/" target="_blank">Folding@home</a>:</strong> A distributed computing project for simulating protein dynamics, showcasing the power of P2P resources for scientific research.</li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/IPFS" target="_blank">IPFS (InterPlanetary File System)</a>:</strong> A protocol for decentralized data storage that is often used as the storage layer for decentralized AI assets.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/SETI@home" target="_blank" rel="noopener noreferrer">SETI@home</a>:</strong> An early volunteer-computing project that demonstrated the feasibility of utilizing millions of home computers for massive signal processing.</li>
+          <li><strong><a href="https://foldingathome.org/" target="_blank" rel="noopener noreferrer">Folding@home</a>:</strong> A distributed computing project for simulating protein dynamics, showcasing the power of P2P resources for scientific research.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/IPFS" target="_blank" rel="noopener noreferrer">IPFS (InterPlanetary File System)</a>:</strong> A protocol for decentralized data storage that is often used as the storage layer for decentralized AI assets.</li>
           <li><strong>Golem Network:</strong> A decentralized marketplace for computing power, targeting generalized rendering and AI workloads.</li>
         </ul>
 
@@ -56,8 +74,8 @@
 
         <h3>Links</h3>
         <ul>
-          <li><strong><a href="https://github.com/bigscience-workshop/petals" target="_blank">Petals Project (GitHub)</a></strong></li>
-          <li><strong><a href="https://github.com/opentensor/bittensor" target="_blank">Bittensor (GitHub)</a></strong></li>
+          <li><strong><a href="https://github.com/bigscience-workshop/petals" target="_blank" rel="noopener noreferrer">Petals Project (GitHub)</a></strong></li>
+          <li><strong><a href="https://github.com/opentensor/bittensor" target="_blank" rel="noopener noreferrer">Bittensor (GitHub)</a></strong></li>
         </ul>
       </main>
     </div>

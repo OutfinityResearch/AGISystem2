@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Theoretical unification of AI architectures through symmetry and invariance." />
+    <meta property="og:title" content="Geometric Deep Learning: Symmetry &amp; Invariance — AGISystem2" />
+    <meta property="og:description" content="Theoretical unification of AI architectures through symmetry and invariance." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/research/geometric-deep-learning.html" />
     <title>Geometric Deep Learning: Symmetry & Invariance — AGISystem2</title>
     <style>
       :root {
@@ -17,9 +22,22 @@
       .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
       .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
       h2 { color: var(--accent); margin-top: 24px; }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div><strong>AGISystem2 Research</strong></div>
@@ -32,8 +50,8 @@
         <h1>Geometric Deep Learning</h1>
         <p>Theoretical unification of AI architectures through symmetry and invariance.</p>
       </header>
-      <main class="stack">
-        <h2>Principles of <a href="https://geometricdeeplearning.com/" target="_blank">GDL</a></h2>
+      <main class="stack" id="main">
+        <h2>Principles of <a href="https://geometricdeeplearning.com/" target="_blank" rel="noopener noreferrer">GDL</a></h2>
         <p>Geometric Deep Learning (GDL), popularized by <strong>Michael Bronstein</strong> and others, is a framework that unifies diverse neural network architectures (such as CNNs, GNNs, and Transformers) via the concepts of symmetry groups and invariance. It posits that network architecture should be determined by the geometric structure of the data domain.</p>
 
         <h3>Theoretical Concepts</h3>
@@ -45,8 +63,8 @@
 
         <h2>Algebraic & Geometric Extensions</h2>
         <ul>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Clifford_algebra" target="_blank">Clifford Algebras (Geometric Algebra)</a>:</strong> A mathematical framework for generalizing rotations and reflections to higher dimensions, increasingly used in 3D-aware neural networks.</li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Harmonic_analysis" target="_blank">Harmonic Analysis on Graphs</a>:</strong> Utilizing spectral graph theory and graph Laplacians to perform signal processing on complex relational data.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Clifford_algebra" target="_blank" rel="noopener noreferrer">Clifford Algebras (Geometric Algebra)</a>:</strong> A mathematical framework for generalizing rotations and reflections to higher dimensions, increasingly used in 3D-aware neural networks.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Harmonic_analysis" target="_blank" rel="noopener noreferrer">Harmonic Analysis on Graphs</a>:</strong> Utilizing spectral graph theory and graph Laplacians to perform signal processing on complex relational data.</li>
           <li><strong>Gauge Equivariant CNNs:</strong> Generalizing equivariance to arbitrary manifolds where there is no global coordinate system.</li>
           <li><strong>Topological Data Analysis (TDA):</strong> Utilizing persistent homology to extract shape-based features from high-dimensional datasets.</li>
         </ul>
@@ -56,8 +74,8 @@
 
         <h3>References</h3>
         <ul>
-          <li><strong><a href="https://github.com/pyg-team/pytorch_geometric" target="_blank">PyTorch Geometric (GitHub)</a></strong></li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Geometric_deep_learning" target="_blank">Geometric Deep Learning (Wikipedia)</a></strong></li>
+          <li><strong><a href="https://github.com/pyg-team/pytorch_geometric" target="_blank" rel="noopener noreferrer">PyTorch Geometric (GitHub)</a></strong></li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Geometric_deep_learning" target="_blank" rel="noopener noreferrer">Geometric Deep Learning (Wikipedia)</a></strong></li>
         </ul>
       </main>
     </div>

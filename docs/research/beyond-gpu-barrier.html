@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Analysis of algorithmic shifts toward CPU-efficient AI architectures." />
+    <meta property="og:title" content="Beyond the GPU Barrier: CPU-Centric Machine Learning — AGISystem2" />
+    <meta property="og:description" content="Analysis of algorithmic shifts toward CPU-efficient AI architectures." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/research/beyond-gpu-barrier.html" />
     <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#f7fbff" />
     <title>Beyond the GPU Barrier: CPU-Centric Machine Learning — AGISystem2</title>
@@ -37,9 +42,22 @@
       h1 { font-size: clamp(24px, 4vw, 36px); margin: 0 0 16px; }
       p { margin-bottom: 16px; color: var(--muted); }
       footer { margin-top: 18px; padding: 18px; border: 1px solid var(--stroke); border-radius: var(--radius); font-size: 14px; color: var(--muted); }
+      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
+      .skip-link:focus { left: 12px; top: 12px; }
+
+      @media (max-width: 980px) {
+        .shell { padding: 16px 12px 40px; }
+        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
+        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero, .stack { padding: 22px 16px; }
+        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
+      }
+
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <div class="shell">
       <div class="topbar">
         <div class="brand"><strong>AGISystem2</strong></div>
@@ -52,17 +70,17 @@
         <h1>Beyond the GPU Barrier: CPU-Centric Machine Learning</h1>
         <p>Analysis of algorithmic shifts toward CPU-efficient AI architectures.</p>
       </header>
-      <main class="stack">
+      <main class="stack" id="main">
         <h2>Hardware Constraints and the Need for Optimization</h2>
-        <p>The contemporary AI landscape is defined by a reliance on high-throughput parallel processing units (GPUs). The "GPU hegemony," characterized by the dominance of the <a href="https://en.wikipedia.org/wiki/CUDA" target="_blank">NVIDIA CUDA</a> ecosystem, has created constraints regarding cost, energy consumption, and supply chain availability.</p>
+        <p>The contemporary AI landscape is defined by a reliance on high-throughput parallel processing units (GPUs). The current reliance on the <a href="https://en.wikipedia.org/wiki/CUDA" target="_blank" rel="noopener noreferrer">NVIDIA CUDA</a> ecosystem has created constraints regarding cost, energy consumption, and supply chain availability.</p>
         <p>A transition is occurring toward reimagining the fundamental mathematics of deep learning. By moving from dense matrix multiplication to sparse hash-based searches and integer arithmetic, it is possible to leverage the serial processing strengths and large memory hierarchies of modern CPUs.</p>
-        <p>This report explores the innovations decoupling machine learning from GPU dependency, from <a href="https://www.thirdai.com/bolt/" target="_blank">ThirdAI's BOLT engine</a> to the democratization of inference through <a href="https://github.com/ggml-org/llama.cpp" target="_blank">llama.cpp</a> and Rust-based ecosystems. The analysis suggests a future where AI becomes ubiquitous on existing infrastructure, defying Moore's Law and the <a href="https://en.wikipedia.org/wiki/Jevons_paradox" target="_blank">Jevons Paradox</a>.</p>
+        <p>This report explores the innovations decoupling machine learning from GPU dependency, from <a href="https://www.thirdai.com/" target="_blank" rel="noopener noreferrer">ThirdAI's BOLT engine</a> to the democratization of inference through <a href="https://github.com/ggml-org/llama.cpp" target="_blank" rel="noopener noreferrer">llama.cpp</a> and Rust-based ecosystems. The analysis suggests broader AI deployment on existing infrastructure, while highlighting open questions around Moore's Law and the <a href="https://en.wikipedia.org/wiki/Jevons_paradox" target="_blank" rel="noopener noreferrer">Jevons Paradox</a>.</p>
 
         <h2>Alternative Hardware Paradigms</h2>
         <ul>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Analog_computer" target="_blank">Analog Computing</a>:</strong> A historical paradigm regaining relevance for its potential to perform vector-matrix multiplications at near-zero energy cost compared to digital logic.</li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/Field-programmable_gate_array" target="_blank">FPGAs (Field-Programmable Gate Arrays)</a>:</strong> Utilizing high-level synthesis (HLS) to create custom logic paths for specific model architectures, providing a middle ground between CPU flexibility and ASIC efficiency.</li>
-          <li><strong><a href="https://en.wikipedia.org/wiki/In-memory_processing" target="_blank">Processing-in-Memory (PIM)</a>:</strong> Architectures that integrate logic directly into the DRAM or SRAM, eliminating the "memory wall" bottleneck that affects both CPUs and GPUs.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Analog_computer" target="_blank" rel="noopener noreferrer">Analog Computing</a>:</strong> A historical paradigm regaining relevance for its potential to perform vector-matrix multiplications at near-zero energy cost compared to digital logic.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/Field-programmable_gate_array" target="_blank" rel="noopener noreferrer">FPGAs (Field-Programmable Gate Arrays)</a>:</strong> Utilizing high-level synthesis (HLS) to create custom logic paths for specific model architectures, providing a middle ground between CPU flexibility and ASIC efficiency.</li>
+          <li><strong><a href="https://en.wikipedia.org/wiki/In-memory_processing" target="_blank" rel="noopener noreferrer">Processing-in-Memory (PIM)</a>:</strong> Architectures that integrate logic directly into the DRAM or SRAM, eliminating the "memory wall" bottleneck that affects both CPUs and GPUs.</li>
           <li><strong>Optical Computing:</strong> Research into using light instead of electrons for neural network activations, targeting terahertz-scale processing speeds.</li>
         </ul>
       </main>
