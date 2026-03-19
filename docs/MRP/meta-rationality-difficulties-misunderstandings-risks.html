@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f7fbff" />
+    <meta
+      name="description"
+      content="Why meta-rationality is difficult to explain, how it is commonly misunderstood, and which internal risks can degrade it into vagueness or pseudo-rigor."
+    />
+
+    <meta
+      property="og:title"
+      content="Meta-Rationality: Difficulties, Misunderstandings, and Internal Risks — AGISystem2"
+    />
+    <meta
+      property="og:description"
+      content="Why meta-rationality is difficult to explain, how it is misunderstood, and how it can fail from within."
+    />
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:url"
+      content="https://agisystem2.com/MRP/meta-rationality-difficulties-misunderstandings-risks.html"
+    />
+
+    <title>Meta-Rationality: Difficulties, Misunderstandings, and Internal Risks — AGISystem2</title>
+
+    <style>
+      :root {
+        --bg0: #f7fbff;
+        --bg1: #fff7fb;
+        --stroke: rgba(2, 6, 23, 0.16);
+        --stroke2: rgba(2, 6, 23, 0.1);
+        --text: rgba(2, 6, 23, 0.92);
+        --muted: rgba(2, 6, 23, 0.72);
+        --accent: #0a7dff;
+        --accent2: #ff7a00;
+        --shadow: 0 20px 60px rgba(2, 6, 23, 0.12);
+        --shadow2: 0 14px 34px rgba(2, 6, 23, 0.1);
+        --radius: 18px;
+        --maxw: 1120px;
+        --navw: 280px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+          "Apple Color Emoji", "Segoe UI Emoji";
+        color: var(--text);
+        background: radial-gradient(900px 480px at 12% -10%, rgba(79, 243, 255, 0.24), transparent 62%),
+          radial-gradient(900px 520px at 92% 0%, rgba(255, 79, 216, 0.18), transparent 60%),
+          radial-gradient(900px 520px at 12% 110%, rgba(255, 176, 32, 0.16), transparent 62%),
+          linear-gradient(180deg, var(--bg0), var(--bg1));
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      a:focus-visible {
+        outline: 2px solid rgba(10, 125, 255, 0.55);
+        outline-offset: 2px;
+      }
+
+      .skip-link {
+        position: absolute;
+        left: -999px;
+        top: 0;
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid var(--stroke);
+        border-radius: 12px;
+        z-index: 50;
+      }
+
+      .skip-link:focus {
+        left: 12px;
+        top: 12px;
+      }
+
+      .shell {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 22px 18px 64px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px;
+        border: 1px solid var(--stroke);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.62));
+        backdrop-filter: blur(10px);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow2);
+        position: sticky;
+        top: 14px;
+        z-index: 20;
+      }
+
+      .brand {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .brand strong {
+        font-weight: 720;
+      }
+
+      .brand span {
+        color: var(--muted);
+        font-size: 12.5px;
+      }
+
+      .top-links {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 11px;
+        border: 1px solid var(--stroke);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.7);
+        color: var(--text);
+        font-size: 13px;
+      }
+
+      .pill.primary {
+        border-color: rgba(10, 125, 255, 0.28);
+        background: radial-gradient(70px 46px at 18% 30%, rgba(79, 243, 255, 0.18), transparent 60%),
+          radial-gradient(90px 60px at 86% 18%, rgba(255, 176, 32, 0.18), transparent 62%),
+          rgba(255, 255, 255, 0.72);
+      }
+
+      .hero {
+        margin-top: 18px;
+        padding: 24px;
+        border: 1px solid var(--stroke);
+        border-radius: var(--radius);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.62));
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        background: radial-gradient(560px 240px at 18% 0%, rgba(79, 243, 255, 0.22), transparent 60%),
+          radial-gradient(540px 220px at 88% 18%, rgba(255, 176, 32, 0.16), transparent 58%),
+          radial-gradient(520px 260px at 66% 110%, rgba(255, 79, 216, 0.14), transparent 60%);
+        pointer-events: none;
+      }
+
+      .hero > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border: 1px solid var(--stroke2);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.72);
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .kicker b {
+        color: var(--accent2);
+      }
+
+      h1 {
+        margin: 12px 0 10px;
+        font-size: clamp(28px, 3.4vw, 42px);
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+      }
+
+      .subtitle {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+        max-width: 80ch;
+      }
+
+      .meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 16px;
+      }
+
+      .meta-pill {
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--stroke2);
+        background: rgba(255, 255, 255, 0.74);
+        color: rgba(2, 6, 23, 0.74);
+        font-size: 13px;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: var(--navw) 1fr;
+        gap: 18px;
+        align-items: start;
+        margin-top: 18px;
+      }
+
+      .toc {
+        position: sticky;
+        top: 92px;
+        border: 1px solid var(--stroke);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.74);
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow2);
+        overflow: hidden;
+      }
+
+      .toc header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px;
+        border-bottom: 1px solid var(--stroke2);
+      }
+
+      .toc header strong {
+        font-size: 13px;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: rgba(2, 6, 23, 0.62);
+      }
+
+      .toc header span {
+        color: rgba(2, 6, 23, 0.5);
+        font-size: 12.5px;
+      }
+
+      .navlist {
+        list-style: none;
+        margin: 0;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .navlist a {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 12px;
+        border: 1px solid transparent;
+        color: rgba(2, 6, 23, 0.78);
+        font-size: 13.5px;
+        line-height: 1.25;
+      }
+
+      .navlist a:hover {
+        text-decoration: none;
+        background: rgba(2, 6, 23, 0.04);
+        border-color: var(--stroke2);
+      }
+
+      .navlist a[aria-current="true"] {
+        background: radial-gradient(140px 70px at 18% 28%, rgba(79, 243, 255, 0.22), transparent 62%),
+          radial-gradient(160px 80px at 84% 18%, rgba(255, 176, 32, 0.14), transparent 60%),
+          rgba(255, 255, 255, 0.78);
+        border-color: rgba(10, 125, 255, 0.26);
+        color: rgba(2, 6, 23, 0.92);
+      }
+
+      .toc-badge {
+        width: 34px;
+        height: 34px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--stroke2);
+        background: rgba(255, 255, 255, 0.74);
+        color: rgba(2, 6, 23, 0.72);
+        font-weight: 700;
+        flex: 0 0 auto;
+      }
+
+      .stack {
+        border: 1px solid var(--stroke);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.74);
+        box-shadow: var(--shadow2);
+        overflow: hidden;
+      }
+
+      .article {
+        padding: 18px;
+      }
+
+      .article section {
+        scroll-margin-top: 110px;
+        padding: 18px;
+        border: 1px solid var(--stroke2);
+        border-radius: 16px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.66));
+      }
+
+      .article section + section {
+        margin-top: 12px;
+      }
+
+      .article h2 {
+        margin: 0 0 10px;
+        font-size: 20px;
+        line-height: 1.2;
+      }
+
+      .article h3 {
+        margin: 16px 0 8px;
+        font-size: 13px;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: rgba(2, 6, 23, 0.6);
+      }
+
+      .article p,
+      .article li {
+        color: var(--muted);
+        line-height: 1.72;
+      }
+
+      .article p {
+        margin: 0 0 10px;
+      }
+
+      .article p:last-child {
+        margin-bottom: 0;
+      }
+
+      .article ul,
+      .article ol {
+        margin: 10px 0 0;
+        padding-left: 18px;
+      }
+
+      .callout {
+        margin-top: 12px;
+        padding: 12px;
+        border: 1px solid var(--stroke2);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.74);
+        color: rgba(2, 6, 23, 0.74);
+      }
+
+      .callout b {
+        color: var(--accent);
+      }
+
+      footer {
+        margin-top: 18px;
+        padding: 18px;
+        border: 1px solid var(--stroke);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.74);
+        color: rgba(2, 6, 23, 0.68);
+        line-height: 1.6;
+      }
+
+      footer p {
+        margin: 0;
+      }
+
+      @media (max-width: 980px) {
+        .shell {
+          padding: 16px 12px 40px;
+        }
+
+        .topbar {
+          flex-wrap: wrap;
+          top: 8px;
+        }
+
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .toc {
+          position: relative;
+          top: 0;
+        }
+
+        .navlist {
+          flex-direction: row;
+          overflow-x: auto;
+        }
+
+        .navlist a {
+          white-space: nowrap;
+          flex: 0 0 auto;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <strong>AGISystem2 / MRP</strong>
+          <span>Meta Rational Pragmatics essay</span>
+        </div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Research</a>
+          <a class="pill primary" href="index.html">MRP Index</a>
+        </div>
+      </div>
+
+      <header class="hero">
+        <div class="kicker"><b>MRP Essay 01</b> Meta-rationality and epistemic discipline</div>
+        <h1>Meta-Rationality: Difficulties, Misunderstandings, and Internal Risks</h1>
+        <p class="subtitle">
+          Meta-rationality is most needed when inquiry hardens into premature certainty, yet it remains vulnerable
+          because any discourse about the limits of frameworks can drift into vagueness, inflation, or
+          disciplined-sounding confusion.
+        </p>
+        <div class="meta-row">
+          <span class="meta-pill">Author: Sînică Alboaie</span>
+          <span class="meta-pill">Series: Meta Rational Pragmatics</span>
+          <span class="meta-pill">Focus: Fallibility without collapse</span>
+        </div>
+      </header>
+
+      <div class="layout" id="main">
+        <aside class="toc" aria-label="Article outline">
+          <header>
+            <strong>Outline</strong>
+            <span id="nav-readout">—</span>
+          </header>
+          <ul class="navlist">
+            <li>
+              <a href="#overview" data-step="01" aria-current="true">
+                <span class="toc-badge">01</span>
+                Overview
+              </a>
+            </li>
+            <li>
+              <a href="#middle-ground" data-step="02">
+                <span class="toc-badge">02</span>
+                The Unstable Middle
+              </a>
+            </li>
+            <li>
+              <a href="#misreadings" data-step="03">
+                <span class="toc-badge">03</span>
+                Common Misreadings
+              </a>
+            </li>
+            <li>
+              <a href="#internal-risks" data-step="04">
+                <span class="toc-badge">04</span>
+                Internal Risks
+              </a>
+            </li>
+            <li>
+              <a href="#conclusion" data-step="05">
+                <span class="toc-badge">05</span>
+                Fallible Conclusion
+              </a>
+            </li>
+          </ul>
+        </aside>
+
+        <main class="stack">
+          <article class="article">
+            <section id="overview">
+              <h2>Necessary, but Vulnerable</h2>
+              <p>
+                Meta-rationality is difficult to explain because it is both necessary and vulnerable. It appears
+                necessary wherever inquiry becomes trapped by rigid assumptions, unexamined ontologies, or premature
+                confidence in local frameworks. Yet it is also vulnerable because any discourse that emphasizes the
+                limits of models, the revisability of theories, and the incompleteness of formalization can easily
+                drift into vagueness, rhetorical inflation, or disciplined-sounding confusion.
+              </p>
+              <p>
+                A serious account of meta-rationality must therefore proceed in two directions at once. It must show why
+                a more reflexive and self-critical mode of inquiry is needed, and it must also state clearly why such a
+                mode can fail, be abused, or become counterproductive.
+              </p>
+              <p>
+                In its strongest constructive form, meta-rationality is not a rejection of reason, science, truth, or
+                foundations. It is an attempt to pursue them without prematurely identifying any current theory,
+                ontology, or formalism with final reality. It does not claim that all views are equal, that all
+                interpretation is arbitrary, or that stable knowledge is impossible.
+              </p>
+              <div class="callout">
+                <b>Core claim:</b> Rational inquiry requires models, categories, validation regimes, and working
+                assumptions, but these must remain visible as tools rather than mistaken for final structures of the
+                world.
+              </div>
+            </section>
+
+            <section id="middle-ground">
+              <h2>The Unstable Middle Position</h2>
+              <p>
+                Meta-rationality is hard to communicate because it occupies an unstable middle position between two more
+                comfortable extremes. On one side lies rigid certainty, the comfort of believing that one already has
+                the correct frame. On the other side lies dissolving skepticism, the comfort of treating all frames as
+                equally contingent and therefore not worth defending strongly.
+              </p>
+              <p>
+                Meta-rationality rejects both. It asks for commitment without absolutization, criticism without
+                collapse, and orientation without self-deception. Many people resist it not because they are incapable
+                of understanding it, but because this combination is cognitively costly, socially awkward, and
+                psychologically demanding.
+              </p>
+            </section>
+
+            <section id="misreadings">
+              <h2>Seven Common Misreadings</h2>
+              <ol>
+                <li>Reduction to relativism.</li>
+                <li>Reduction to indecision.</li>
+                <li>Confusion with mere nuance.</li>
+                <li>Reification of current frameworks.</li>
+                <li>Identity-protective resistance.</li>
+                <li>Cognitive cost.</li>
+                <li>Institutional misalignment.</li>
+              </ol>
+
+              <h3>Reduction to Relativism</h3>
+              <p>
+                Any position that emphasizes the fallibility and revisability of knowledge is easily misread as a denial
+                of truth. But meta-rationality does not erase differences between stronger and weaker theories, better
+                and worse explanations, or more and less defensible judgments. It rejects not evaluation, but premature
+                closure.
+              </p>
+              <p>
+                It does not say that no map is better than another. It says that no map should be confused with the
+                territory simply because it is currently useful, elegant, or institutionally dominant.
+              </p>
+
+              <h3>Reduction to Indecision</h3>
+              <p>
+                Because meta-rationality keeps assumptions visible and revisable, it can appear hesitant. But this
+                confuses caution with paralysis. Meta-rationality does not require endless suspension of judgment. It
+                requires action under acknowledged uncertainty, followed by revision when revision becomes necessary.
+              </p>
+              <p>It seeks disciplined commitment, not permanent deferral.</p>
+
+              <h3>Confusion with Mere Nuance</h3>
+              <p>
+                Meta-rational discourse can easily become a style of sounding sophisticated without adding real
+                explanatory discipline. In that degraded form, it appears as a preference for complexity for its own
+                sake, or as a rhetorical performance of subtlety.
+              </p>
+              <p>
+                In its serious form, however, meta-rationality is not an aesthetic of ambiguity. It is a method for
+                examining assumptions, comparing rival frames, identifying boundary conditions, and preventing premature
+                reification. Its value lies not in sounding more complex, but in making inquiry more self-aware without
+                making it arbitrary.
+              </p>
+
+              <h3>Reification of Current Frameworks</h3>
+              <p>
+                Many people can critique claims made within a framework, but it is much harder to examine the framework
+                itself. Categories such as object, evidence, task, explanation, success, model, and reasoning are often
+                treated as if they were simply given. Meta-rationality becomes difficult exactly where it asks that
+                these too be treated as constructed, limited, and revisable.
+              </p>
+              <p>
+                This is not an invitation to discard them, but to stop treating them as self-justifying primitives.
+              </p>
+
+              <h3>Identity-Protective Resistance</h3>
+              <p>
+                Beliefs are rarely just cognitive instruments. They are also supports of belonging, competence, and
+                moral orientation. A framework that insists on holding even one’s deepest assumptions under pressure
+                from criticism and anomaly can therefore be experienced as a threat rather than as a discipline.
+              </p>
+              <p>
+                In this sense, the obstacle to meta-rationality is not merely conceptual. It is also existential. It
+                asks people to remain oriented without pretending that their current orientation is ultimate.
+              </p>
+
+              <h3>Cognitive Cost</h3>
+              <p>
+                Meta-rational thought requires sustained attention to both object-level claims and the conditions of
+                their validity. It asks one to track content and frame, theory and limit, evidence and interpretation,
+                commitment and revisability. This is harder than ordinary reasoning, which usually operates within a
+                single frame at a time.
+              </p>
+              <p>The resistance here is partly metabolic. Meta-rationality demands working-memory discipline and tolerance for unresolved tension.</p>
+
+              <h3>Institutional Misalignment</h3>
+              <p>
+                Most institutions reward clarity, speed, confidence, and legible commitment. Meta-rationality often
+                introduces delays that are epistemically healthy but socially inconvenient. It asks whether a problem
+                has been framed correctly, whether the validation regime is adequate, and whether apparent disagreement
+                reflects evidence, hidden assumptions, or incompatible ontologies of work.
+              </p>
+              <p>
+                Such questions are often treated as impractical even when they are exactly what a difficult problem
+                requires.
+              </p>
+            </section>
+
+            <section id="internal-risks">
+              <h2>Internal Risks of Meta-Rationality</h2>
+              <p>
+                These seven difficulties explain why meta-rationality is hard to understand. But they are not enough on
+                their own. It is equally important to state the internal risks of meta-rationality itself.
+              </p>
+
+              <h3>Vagueness and Performative Complexity</h3>
+              <p>
+                One serious risk is vagueness. A framework that constantly emphasizes revisability, plural frames, and
+                the incompleteness of formalization can become so elastic that it ceases to constrain thought. Another
+                is performative complexity: one can use meta-rational language to avoid clear commitments, to disguise
+                confusion as depth, or to protect weak arguments by continuously shifting the level of abstraction.
+              </p>
+              <p>In such cases, meta-rationality becomes not a discipline but a shield.</p>
+
+              <h3>Appropriation by Charlatans</h3>
+              <p>
+                A more dangerous risk is that it can be appropriated by charlatans. Precisely because it criticizes
+                naive certainty and inherited rigidity, it can be used by pseudoscientific or manipulative actors who
+                want to evade ordinary standards of evidence.
+              </p>
+              <p>
+                It is easy to say that mainstream frameworks are trapped by unexamined assumptions, that alternative
+                views are being excluded by intellectual inertia, and that complexity itself justifies suspension of
+                criticism. Without empirical seriousness, explicit criteria of acceptability, and genuine exposure to
+                failure, meta-rational language can be turned into a protective shell for pseudo-inquiry.
+              </p>
+              <p>
+                This danger must be acknowledged directly. A framework that is meant to resist dogmatism can itself
+                become a tool of sophisticated evasion.
+              </p>
+
+              <h3>Exceeding the Threshold of Usefulness</h3>
+              <p>
+                There is also the risk of exceeding the threshold of usefulness. Some problems genuinely require
+                reframing, foundational negotiation, or comparison across multiple regimes of explanation. Others do
+                not. A framework that remains too meta for too long can spend so much effort examining its own
+                assumptions that it loses contact with the practical scale of the problem.
+              </p>
+              <p>
+                At that point, meta-rationality ceases to function as a corrective to rigidity and becomes a source of
+                drift. A mature meta-rational stance must therefore include a sense of proportionality: not every
+                situation requires deeper reflection, and not every disagreement indicates a foundational crisis.
+              </p>
+            </section>
+
+            <section id="conclusion">
+              <h2>A Fallible Discipline, Not a Final Doctrine</h2>
+              <p>
+                For this reason, meta-rationality itself must be treated as fallible. It is not a final doctrine
+                standing outside the limits it diagnoses elsewhere. It too is a theory, a framing, a proposed
+                discipline of inquiry, and therefore subject to the same forms of criticism it directs outward.
+              </p>
+              <p>
+                It may overestimate how much explicit reflexivity is possible. It may underestimate the stabilizing role
+                of ordinary scientific practice. It may produce vocabularies that sound more profound than they are. It
+                may confuse local failures of framing with universal defects in inherited methods. It may even reify its
+                own anti-reification.
+              </p>
+              <p>
+                A serious defense of meta-rationality must therefore avoid presenting it as a final philosophy above all
+                others. It is better understood as a useful but limited proposal for preserving rational inquiry from
+                both rigidity and collapse.
+              </p>
+            </section>
+          </article>
+        </main>
+      </div>
+
+      <footer>
+        <p>This essay is published in the Meta Rational Pragmatics track of the AGISystem2 documentation site.</p>
+      </footer>
+    </div>
+
+    <script>
+      (() => {
+        const navLinks = Array.from(document.querySelectorAll(".navlist a"));
+        const navReadout = document.getElementById("nav-readout");
+        const sections = navLinks
+          .map((a) => document.querySelector(a.getAttribute("href")))
+          .filter(Boolean);
+
+        const setActive = (sectionId) => {
+          for (const a of navLinks) {
+            const isActive = a.getAttribute("href") === `#${sectionId}`;
+            a.setAttribute("aria-current", isActive ? "true" : "false");
+            if (isActive && navReadout) {
+              navReadout.textContent = `Active: ${a.dataset.step}`;
+            }
+          }
+        };
+
+        setActive((location.hash ? location.hash.slice(1) : "overview") || "overview");
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const visible = entries
+              .filter((entry) => entry.isIntersecting)
+              .sort((a, b) => (b.intersectionRatio || 0) - (a.intersectionRatio || 0))[0];
+            if (!visible) return;
+            setActive(visible.target.id);
+          },
+          { rootMargin: "-15% 0px -68% 0px", threshold: [0.08, 0.18, 0.32] }
+        );
+
+        for (const section of sections) observer.observe(section);
+      })();
+    </script>
+  </body>
+</html>

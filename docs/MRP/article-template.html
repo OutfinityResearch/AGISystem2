@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f7fbff" />
+    <meta
+      name="description"
+      content="Template for publishing new Meta Rational Pragmatics essays in the AGISystem2 documentation site."
+    />
+
+    <meta property="og:title" content="MRP Article Template — AGISystem2" />
+    <meta
+      property="og:description"
+      content="Template for publishing new Meta Rational Pragmatics essays in the AGISystem2 documentation site."
+    />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/MRP/article-template.html" />
+
+    <title>MRP Article Template — AGISystem2</title>
+
+    <style>
+      :root {
+        --bg0: #f7fbff;
+        --bg1: #fff7fb;
+        --stroke: rgba(2, 6, 23, 0.16);
+        --stroke2: rgba(2, 6, 23, 0.1);
+        --text: rgba(2, 6, 23, 0.92);
+        --muted: rgba(2, 6, 23, 0.72);
+        --faint: rgba(2, 6, 23, 0.56);
+        --accent: #0a7dff;
+        --accent2: #ff7a00;
+        --shadow: 0 20px 60px rgba(2, 6, 23, 0.12);
+        --shadow2: 0 14px 34px rgba(2, 6, 23, 0.1);
+        --radius: 18px;
+        --maxw: 1120px;
+        --navw: 280px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+          "Apple Color Emoji", "Segoe UI Emoji";
+        color: var(--text);
+        background: radial-gradient(900px 480px at 12% -10%, rgba(79, 243, 255, 0.24), transparent 62%),
+          radial-gradient(900px 520px at 92% 0%, rgba(255, 79, 216, 0.18), transparent 60%),
+          radial-gradient(900px 520px at 12% 110%, rgba(255, 176, 32, 0.16), transparent 62%),
+          linear-gradient(180deg, var(--bg0), var(--bg1));
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      a:focus-visible {
+        outline: 2px solid rgba(10, 125, 255, 0.55);
+        outline-offset: 2px;
+      }
+
+      .skip-link {
+        position: absolute;
+        left: -999px;
+        top: 0;
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid var(--stroke);
+        border-radius: 12px;
+        z-index: 50;
+      }
+
+      .skip-link:focus {
+        left: 12px;
+        top: 12px;
+      }
+
+      .shell {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 22px 18px 64px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px;
+        border: 1px solid var(--stroke);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.62));
+        backdrop-filter: blur(10px);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow2);
+        position: sticky;
+        top: 14px;
+        z-index: 20;
+      }
+
+      .brand {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .brand strong {
+        font-weight: 720;
+      }
+
+      .brand span {
+        color: var(--muted);
+        font-size: 12.5px;
+      }
+
+      .top-links {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 11px;
+        border: 1px solid var(--stroke);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.7);
+        color: var(--text);
+        font-size: 13px;
+      }
+
+      .pill.primary {
+        border-color: rgba(10, 125, 255, 0.28);
+        background: radial-gradient(70px 46px at 18% 30%, rgba(79, 243, 255, 0.18), transparent 60%),
+          radial-gradient(90px 60px at 86% 18%, rgba(255, 176, 32, 0.18), transparent 62%),
+          rgba(255, 255, 255, 0.72);
+      }
+
+      .hero {
+        margin-top: 18px;
+        padding: 24px;
+        border: 1px solid var(--stroke);
+        border-radius: var(--radius);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.62));
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        background: radial-gradient(560px 240px at 18% 0%, rgba(79, 243, 255, 0.22), transparent 60%),
+          radial-gradient(540px 220px at 88% 18%, rgba(255, 176, 32, 0.16), transparent 58%),
+          radial-gradient(520px 260px at 66% 110%, rgba(255, 79, 216, 0.14), transparent 60%);
+        pointer-events: none;
+      }
+
+      .hero > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border: 1px solid var(--stroke2);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.72);
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .kicker b {
+        color: var(--accent2);
+      }
+
+      h1 {
+        margin: 12px 0 10px;
+        font-size: clamp(28px, 3.4vw, 42px);
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+      }
+
+      .subtitle {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+        max-width: 78ch;
+      }
+
+      .meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 16px;
+      }
+
+      .meta-pill {
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--stroke2);
+        background: rgba(255, 255, 255, 0.74);
+        color: rgba(2, 6, 23, 0.74);
+        font-size: 13px;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: var(--navw) 1fr;
+        gap: 18px;
+        align-items: start;
+        margin-top: 18px;
+      }
+
+      .toc {
+        position: sticky;
+        top: 92px;
+        border: 1px solid var(--stroke);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.74);
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow2);
+        overflow: hidden;
+      }
+
+      .toc header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px;
+        border-bottom: 1px solid var(--stroke2);
+      }
+
+      .toc header strong {
+        font-size: 13px;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: rgba(2, 6, 23, 0.62);
+      }
+
+      .toc header span {
+        color: rgba(2, 6, 23, 0.5);
+        font-size: 12.5px;
+      }
+
+      .navlist {
+        list-style: none;
+        margin: 0;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .navlist a {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 12px;
+        border: 1px solid transparent;
+        color: rgba(2, 6, 23, 0.78);
+        font-size: 13.5px;
+        line-height: 1.25;
+      }
+
+      .navlist a:hover {
+        text-decoration: none;
+        background: rgba(2, 6, 23, 0.04);
+        border-color: var(--stroke2);
+      }
+
+      .navlist a[aria-current="true"] {
+        background: radial-gradient(140px 70px at 18% 28%, rgba(79, 243, 255, 0.22), transparent 62%),
+          radial-gradient(160px 80px at 84% 18%, rgba(255, 176, 32, 0.14), transparent 60%),
+          rgba(255, 255, 255, 0.78);
+        border-color: rgba(10, 125, 255, 0.26);
+        color: rgba(2, 6, 23, 0.92);
+      }
+
+      .toc-badge {
+        width: 34px;
+        height: 34px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--stroke2);
+        background: rgba(255, 255, 255, 0.74);
+        color: rgba(2, 6, 23, 0.72);
+        font-weight: 700;
+        flex: 0 0 auto;
+      }
+
+      .stack {
+        border: 1px solid var(--stroke);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.74);
+        box-shadow: var(--shadow2);
+        overflow: hidden;
+      }
+
+      .article {
+        padding: 18px;
+      }
+
+      .article section {
+        scroll-margin-top: 110px;
+        padding: 18px;
+        border: 1px solid var(--stroke2);
+        border-radius: 16px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.66));
+      }
+
+      .article section + section {
+        margin-top: 12px;
+      }
+
+      .article h2 {
+        margin: 0 0 10px;
+        font-size: 20px;
+        line-height: 1.2;
+      }
+
+      .article h3 {
+        margin: 16px 0 8px;
+        font-size: 13px;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: rgba(2, 6, 23, 0.6);
+      }
+
+      .article p,
+      .article li {
+        color: var(--muted);
+        line-height: 1.72;
+      }
+
+      .article p {
+        margin: 0 0 10px;
+      }
+
+      .article p:last-child {
+        margin-bottom: 0;
+      }
+
+      .article ul,
+      .article ol {
+        margin: 10px 0 0;
+        padding-left: 18px;
+      }
+
+      .callout {
+        margin-top: 12px;
+        padding: 12px;
+        border: 1px solid var(--stroke2);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.74);
+        color: rgba(2, 6, 23, 0.74);
+      }
+
+      .callout b {
+        color: var(--accent);
+      }
+
+      footer {
+        margin-top: 18px;
+        padding: 18px;
+        border: 1px solid var(--stroke);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.74);
+        color: rgba(2, 6, 23, 0.68);
+        line-height: 1.6;
+      }
+
+      footer p {
+        margin: 0;
+      }
+
+      @media (max-width: 980px) {
+        .shell {
+          padding: 16px 12px 40px;
+        }
+
+        .topbar {
+          flex-wrap: wrap;
+          top: 8px;
+        }
+
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .toc {
+          position: relative;
+          top: 0;
+        }
+
+        .navlist {
+          flex-direction: row;
+          overflow-x: auto;
+        }
+
+        .navlist a {
+          white-space: nowrap;
+          flex: 0 0 auto;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <strong>AGISystem2 / MRP</strong>
+          <span>Template for future Meta Rational Pragmatics essays</span>
+        </div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Research</a>
+          <a class="pill primary" href="index.html">MRP Index</a>
+        </div>
+      </div>
+
+      <header class="hero">
+        <div class="kicker"><b>Template</b> MRP publishing layout</div>
+        <h1>[Article Title]</h1>
+        <p class="subtitle">
+          [One-sentence subtitle summarizing the central claim, tension, or question of the article.]
+        </p>
+        <div class="meta-row">
+          <span class="meta-pill">Author: Sînică Alboaie</span>
+          <span class="meta-pill">Series: Meta Rational Pragmatics</span>
+          <span class="meta-pill">Status: Template</span>
+        </div>
+      </header>
+
+      <div class="layout" id="main">
+        <aside class="toc" aria-label="Article outline">
+          <header>
+            <strong>Outline</strong>
+            <span id="nav-readout">Template</span>
+          </header>
+          <ul class="navlist">
+            <li>
+              <a href="#overview" data-step="01" aria-current="true">
+                <span class="toc-badge">01</span>
+                Overview
+              </a>
+            </li>
+            <li>
+              <a href="#claims" data-step="02">
+                <span class="toc-badge">02</span>
+                Main Claims
+              </a>
+            </li>
+            <li>
+              <a href="#risks" data-step="03">
+                <span class="toc-badge">03</span>
+                Risks and Boundaries
+              </a>
+            </li>
+            <li>
+              <a href="#implications" data-step="04">
+                <span class="toc-badge">04</span>
+                Implications
+              </a>
+            </li>
+            <li>
+              <a href="#closing" data-step="05">
+                <span class="toc-badge">05</span>
+                Closing
+              </a>
+            </li>
+          </ul>
+        </aside>
+
+        <main class="stack">
+          <article class="article">
+            <section id="overview">
+              <h2>Overview</h2>
+              <p>
+                Replace this section with the opening of the article. It should state the problem clearly, explain why
+                the topic matters, and establish the tension that the essay will work through.
+              </p>
+              <div class="callout">
+                <b>Publishing note:</b> Update the page metadata, Open Graph tags, section anchors, and the article card
+                in <a href="index.html">the MRP index</a> when you publish a real essay.
+              </div>
+            </section>
+
+            <section id="claims">
+              <h2>Main Claims</h2>
+              <p>Use this section for the core thesis and its main supporting arguments.</p>
+              <h3>Suggested structure</h3>
+              <ul>
+                <li>State the strongest constructive claim first.</li>
+                <li>Separate object-level claims from claims about frames, methods, or limits.</li>
+                <li>Use subsections when the essay has multiple tensions that must be kept distinct.</li>
+              </ul>
+            </section>
+
+            <section id="risks">
+              <h2>Risks and Boundaries</h2>
+              <p>
+                Most MRP essays should explicitly state their own failure modes. If a framework can be misunderstood,
+                abused, or stretched beyond usefulness, say so directly.
+              </p>
+            </section>
+
+            <section id="implications">
+              <h2>Implications</h2>
+              <p>
+                Explain what follows if the article is right, and where the claim should remain limited or provisional.
+              </p>
+            </section>
+
+            <section id="closing">
+              <h2>Closing</h2>
+              <p>
+                End with a restrained conclusion. MRP essays should aim for clarity under pressure, not rhetorical
+                finality.
+              </p>
+            </section>
+          </article>
+        </main>
+      </div>
+
+      <footer>
+        <p>This template is part of the MRP publishing subsystem inside `docs/MRP/`.</p>
+      </footer>
+    </div>
+
+    <script>
+      (() => {
+        const navLinks = Array.from(document.querySelectorAll(".navlist a"));
+        const navReadout = document.getElementById("nav-readout");
+        const sections = navLinks
+          .map((a) => document.querySelector(a.getAttribute("href")))
+          .filter(Boolean);
+
+        const setActive = (sectionId) => {
+          for (const a of navLinks) {
+            const isActive = a.getAttribute("href") === `#${sectionId}`;
+            a.setAttribute("aria-current", isActive ? "true" : "false");
+            if (isActive && navReadout) {
+              navReadout.textContent = `Active: ${a.dataset.step}`;
+            }
+          }
+        };
+
+        setActive((location.hash ? location.hash.slice(1) : "overview") || "overview");
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const visible = entries
+              .filter((entry) => entry.isIntersecting)
+              .sort((a, b) => (b.intersectionRatio || 0) - (a.intersectionRatio || 0))[0];
+            if (!visible) return;
+            setActive(visible.target.id);
+          },
+          { rootMargin: "-15% 0px -68% 0px", threshold: [0.08, 0.18, 0.32] }
+        );
+
+        for (const section of sections) observer.observe(section);
+      })();
+    </script>
+  </body>
+</html>

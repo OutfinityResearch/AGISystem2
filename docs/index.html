@@ -588,6 +588,11 @@
         box-shadow: 0 0 0 4px rgba(255, 176, 32, 0.05);
       }
 
+      .sections > li:nth-child(10) .panel::before {
+        background: rgba(94, 234, 212, 0.2);
+        box-shadow: 0 0 0 4px rgba(94, 234, 212, 0.05);
+      }
+
       .panel-header {
         display: flex;
         align-items: center;
@@ -739,6 +744,58 @@
         line-height: 1.5;
       }
 
+      .essay-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .essay-card {
+        display: block;
+        border: 1px solid var(--stroke2);
+        border-radius: 16px;
+        padding: 14px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.68));
+        color: rgba(2, 6, 23, 0.9);
+      }
+
+      .essay-card:hover {
+        text-decoration: none;
+        border-color: rgba(10, 125, 255, 0.28);
+        background: rgba(255, 255, 255, 0.88);
+      }
+
+      .essay-card strong {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 15px;
+        line-height: 1.35;
+      }
+
+      .essay-card p {
+        margin: 0;
+        color: rgba(2, 6, 23, 0.62);
+        font-size: 13.5px;
+        line-height: 1.58;
+      }
+
+      .essay-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .essay-meta span {
+        padding: 6px 9px;
+        border-radius: 999px;
+        border: 1px solid var(--stroke2);
+        background: rgba(255, 255, 255, 0.76);
+        color: rgba(2, 6, 23, 0.62);
+        font-size: 12px;
+      }
+
       .ext {
         width: 14px;
         height: 14px;
@@ -774,6 +831,10 @@
         }
 
         .split {
+          grid-template-columns: 1fr;
+        }
+
+        .essay-grid {
           grid-template-columns: 1fr;
         }
 
@@ -885,6 +946,23 @@
             </svg>
             Research
           </a>
+          <a class="pill" href="MRP/index.html">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M12 4 6 7.5v9L12 20l6-3.5v-9L12 4Z"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M12 8.3 9.2 10v4l2.8 1.7 2.8-1.7v-4L12 8.3Z"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linejoin="round"
+              />
+            </svg>
+            MRP
+          </a>
         </div>
       </div>
 
@@ -926,6 +1004,23 @@
                 />
               </svg>
               See public experiments
+            </a>
+            <a class="btn" href="MRP/index.html">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="M12 4 6 7.5v9L12 20l6-3.5v-9L12 4Z"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M12 8.3 9.2 10v4l2.8 1.7 2.8-1.7v-4L12 8.3Z"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              Explore MRP essays
             </a>
           </div>
         </div>
@@ -1183,8 +1278,28 @@
               </a>
             </li>
             <li>
-              <a href="#principles" data-step="09">
+              <a href="#mrp" data-step="09">
                 <span class="nav-badge">09</span>
+                <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path
+                    d="M12 4 6 7.5v9L12 20l6-3.5v-9L12 4Z"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M12 8.3 9.2 10v4l2.8 1.7 2.8-1.7v-4L12 8.3Z"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                MRP Essays
+              </a>
+            </li>
+            <li>
+              <a href="#principles" data-step="10">
+                <span class="nav-badge">10</span>
                 <svg class="navicon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path
                     d="M12 21c4.4 0 8-3.6 8-8 0-3.4-2.1-6.3-5.1-7.5L12 3 9.1 5.5C6.1 6.7 4 9.6 4 13c0 4.4 3.6 8 8 8Z"
@@ -1852,6 +1967,89 @@
                     <a href="ai-assisted-research.html">Toward a Practical “System 2” for AI‑Assisted Research</a>
                     — principles, failure modes, and evaluation signals for rigorous, auditable AI‑assisted research.
                   </div>
+                </div>
+              </section>
+            </li>
+
+            <li>
+              <section class="panel" id="mrp" aria-labelledby="mrp-title">
+                <div class="panel-header">
+                  <div class="panel-title">
+                    <strong>New Essay Track</strong>
+                    <h2 id="mrp-title">Meta Rational Pragmatics (MRP)</h2>
+                  </div>
+                  <div class="panel-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M12 4 6 7.5v9L12 20l6-3.5v-9L12 4Z"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M12 8.3 9.2 10v4l2.8 1.7 2.8-1.7v-4L12 8.3Z"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="panel-body">
+                  <p>
+                    MRP is the new essay lane for higher-order questions about framing, scientific health,
+                    meta-rationality, and the internal failure modes of inquiry itself. It complements the technical
+                    research notes by working one level above ordinary implementation detail.
+                  </p>
+                  <div class="callout">
+                    <b>What lives here:</b> longer-form articles on reflexive inquiry, model fallibility, scientific
+                    discipline, and the boundary between strong criticism and epistemic drift.
+                  </div>
+                  <div class="essay-grid">
+                    <a class="essay-card" href="MRP/meta-rationality-difficulties-misunderstandings-risks.html">
+                      <strong>Meta-Rationality: Difficulties, Misunderstandings, and Internal Risks</strong>
+                      <p>
+                        Why meta-rationality is necessary when inquiry becomes trapped, why it is commonly misunderstood,
+                        and how it can decay into vagueness, performative complexity, or pseudo-rigorous evasion.
+                      </p>
+                      <div class="essay-meta">
+                        <span>Sînică Alboaie</span>
+                        <span>Essay 01</span>
+                        <span>Meta-rationality</span>
+                      </div>
+                    </a>
+                    <a class="essay-card" href="MRP/meta-rationality-ai-scientific-inquiry.html">
+                      <strong>Meta-Rationality, AI, and the Health of Scientific Inquiry</strong>
+                      <p>
+                        A restrained account of science, scientism, AI-enabled meta-analysis, and why civilizational
+                        resilience may depend on managing plurality without collapse into drift or coercive uniformity.
+                      </p>
+                      <div class="essay-meta">
+                        <span>Sînică Alboaie</span>
+                        <span>Essay 02</span>
+                        <span>Science and AI</span>
+                      </div>
+                    </a>
+                  </div>
+                  <p style="margin-top: 12px">
+                    Browse the full MRP section:
+                    <a class="btn primary" href="MRP/index.html" style="margin-left: 8px">
+                      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path
+                          d="M6 19V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v14"
+                          stroke="currentColor"
+                          stroke-width="1.6"
+                        />
+                        <path
+                          d="M8.5 8.2h7M8.5 12h7M8.5 15.8h5.2"
+                          stroke="currentColor"
+                          stroke-width="1.6"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                      Open MRP Index
+                    </a>
+                  </p>
                 </div>
               </section>
             </li>
