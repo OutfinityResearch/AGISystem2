@@ -20,442 +20,7 @@
 
     <title>Meta-Rational Pragmatics in Context — AGISystem2</title>
     <link rel="stylesheet" href="mrp-citation.css" />
-
-    <style>
-      :root {
-        --bg0: #ece7dd;
-        --bg1: #f5f1e8;
-        --paper: #fffdf8;
-        --paper-line: rgba(64, 46, 24, 0.16);
-        --stroke: rgba(64, 46, 24, 0.18);
-        --stroke2: rgba(64, 46, 24, 0.1);
-        --text: rgba(28, 21, 14, 0.94);
-        --muted: rgba(55, 43, 31, 0.78);
-        --faint: rgba(79, 62, 44, 0.58);
-        --accent: #1b4f72;
-        --accent2: #7a5c2e;
-        --shadow: 0 18px 32px rgba(47, 36, 20, 0.08);
-        --shadow2: 0 10px 18px rgba(47, 36, 20, 0.06);
-        --radius: 12px;
-        --maxw: 1120px;
-        --navw: 280px;
-        --ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", serif;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      html {
-        scroll-behavior: smooth;
-      }
-
-      body {
-        margin: 0;
-        font-family: var(--ui);
-        color: var(--text);
-        background: linear-gradient(180deg, var(--bg0), var(--bg1));
-      }
-
-      a {
-        color: var(--accent);
-        text-decoration: none;
-      }
-
-      a:hover {
-        text-decoration: underline;
-      }
-
-      a:focus-visible {
-        outline: 2px solid rgba(10, 125, 255, 0.55);
-        outline-offset: 2px;
-      }
-
-      .skip-link {
-        position: absolute;
-        left: -999px;
-        top: 0;
-        padding: 10px 12px;
-        background: rgba(255, 255, 255, 0.95);
-        border: 1px solid var(--stroke);
-        border-radius: 12px;
-        z-index: 50;
-      }
-
-      .skip-link:focus {
-        left: 12px;
-        top: 12px;
-      }
-
-      .shell {
-        max-width: var(--maxw);
-        margin: 0 auto;
-        padding: 22px 18px 64px;
-      }
-
-      .topbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 14px;
-        border: 1px solid var(--stroke);
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow2);
-        position: sticky;
-        top: 14px;
-        z-index: 20;
-      }
-
-      .brand {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-      }
-
-      .brand strong {
-        font-weight: 720;
-      }
-
-      .crumbs {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 6px;
-        font-weight: 720;
-        line-height: 1.15;
-      }
-
-      .crumbs a {
-        color: var(--text);
-        text-decoration: none;
-      }
-
-      .crumbs a:hover,
-      .crumbs a:focus-visible {
-        text-decoration: underline;
-        text-underline-offset: 0.16em;
-      }
-
-      .crumb-sep,
-      .crumb-current {
-        color: var(--muted);
-      }
-
-      .brand span {
-        color: var(--muted);
-        font-size: 12.5px;
-      }
-
-      .top-links {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 9px 11px;
-        border: 1px solid var(--stroke);
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.92);
-        color: var(--text);
-        font-size: 12.5px;
-      }
-
-      .pill.primary {
-        border-color: rgba(27, 79, 114, 0.2);
-        background: rgba(255, 255, 255, 0.96);
-      }
-
-      .hero {
-        margin-top: 18px;
-        padding: 24px 28px 20px;
-        border: 1px solid var(--paper-line);
-        border-radius: var(--radius);
-        background: var(--paper);
-        box-shadow: var(--shadow);
-        position: relative;
-        overflow: hidden;
-      }
-
-      .hero::before {
-        display: none;
-      }
-
-      .hero > * {
-        position: relative;
-        z-index: 1;
-      }
-
-      .kicker {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 0;
-        border: none;
-        background: transparent;
-        color: var(--faint);
-        font-size: 11.5px;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-
-      .kicker b {
-        color: var(--accent2);
-      }
-
-      h1 {
-        margin: 12px 0 10px;
-        font-family: var(--serif);
-        font-size: clamp(34px, 3.8vw, 48px);
-        line-height: 1.08;
-        letter-spacing: -0.01em;
-        font-weight: 600;
-      }
-
-      .subtitle {
-        margin: 0;
-        color: var(--muted);
-        font-family: var(--serif);
-        font-size: 18px;
-        line-height: 1.68;
-        max-width: 72ch;
-      }
-
-      .meta-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 14px;
-        margin-top: 16px;
-        padding-top: 12px;
-        border-top: 1px solid var(--paper-line);
-      }
-
-      .meta-pill {
-        padding: 0;
-        border: none;
-        background: transparent;
-        color: var(--faint);
-        font-size: 11.5px;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-
-      .layout {
-        display: grid;
-        grid-template-columns: var(--navw) 1fr;
-        gap: 22px;
-        align-items: start;
-        margin-top: 18px;
-      }
-
-      .toc {
-        position: sticky;
-        top: 88px;
-        border: 1px solid var(--paper-line);
-        border-radius: var(--radius);
-        background: rgba(255, 253, 248, 0.96);
-        box-shadow: none;
-        overflow: hidden;
-      }
-
-      .toc header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 14px;
-        border-bottom: 1px solid var(--stroke2);
-      }
-
-      .toc header strong {
-        font-size: 13px;
-        letter-spacing: 0.11em;
-        text-transform: uppercase;
-        color: rgba(2, 6, 23, 0.62);
-      }
-
-      .toc header span {
-        color: rgba(2, 6, 23, 0.5);
-        font-size: 12.5px;
-      }
-
-      .navlist {
-        list-style: none;
-        margin: 0;
-        padding: 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-      }
-
-      .navlist a {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        padding: 10px 12px;
-        border-radius: 8px;
-        border: 1px solid transparent;
-        color: rgba(2, 6, 23, 0.78);
-        font-size: 13px;
-        line-height: 1.35;
-      }
-
-      .navlist a:hover {
-        text-decoration: none;
-        background: rgba(2, 6, 23, 0.04);
-        border-color: var(--stroke2);
-      }
-
-      .navlist a[aria-current="true"] {
-        background: rgba(27, 79, 114, 0.06);
-        border-color: rgba(27, 79, 114, 0.16);
-        color: rgba(2, 6, 23, 0.92);
-      }
-
-      .toc-badge {
-        width: 30px;
-        height: 30px;
-        border-radius: 8px;
-        display: grid;
-        place-items: center;
-        border: 1px solid var(--stroke2);
-        background: rgba(255, 255, 255, 0.92);
-        color: var(--faint);
-        font-weight: 600;
-        font-size: 12px;
-        flex: 0 0 auto;
-      }
-
-      .stack {
-        border: 1px solid var(--paper-line);
-        border-radius: var(--radius);
-        background: var(--paper);
-        box-shadow: var(--shadow);
-        overflow: hidden;
-      }
-
-      .article {
-        padding: 34px 42px 38px;
-        font-family: var(--serif);
-      }
-
-      .article section {
-        scroll-margin-top: 100px;
-        padding: 0;
-        border: none;
-        border-radius: 0;
-        background: transparent;
-      }
-
-      .article section + section {
-        margin-top: 0;
-      }
-
-      .article h2 {
-        margin: 28px 0 12px;
-        font-family: var(--serif);
-        font-size: 26px;
-        line-height: 1.24;
-        font-weight: 600;
-        letter-spacing: -0.01em;
-      }
-
-      .article section:first-child h2 {
-        margin-top: 0;
-      }
-
-      .article p,
-      .article li {
-        color: var(--muted);
-        font-size: 18px;
-        line-height: 1.78;
-      }
-
-      .article p {
-        margin: 0 0 12px;
-        text-align: justify;
-        hyphens: auto;
-      }
-
-      .article p:last-child {
-        margin-bottom: 0;
-      }
-
-      .article ul,
-      .article ol {
-        margin: 12px 0 14px;
-        padding-left: 24px;
-      }
-
-      footer {
-        margin-top: 14px;
-        padding: 18px;
-        border: 1px solid var(--paper-line);
-        border-radius: var(--radius);
-        background: rgba(255, 255, 255, 0.92);
-        color: var(--faint);
-        line-height: 1.6;
-      }
-
-      footer p {
-        margin: 0;
-      }
-
-      @media (max-width: 980px) {
-        .shell {
-          padding: 16px 12px 40px;
-        }
-
-        .topbar {
-          flex-wrap: wrap;
-          top: 8px;
-        }
-
-        .layout {
-          grid-template-columns: 1fr;
-        }
-
-        .toc {
-          position: relative;
-          top: 0;
-        }
-
-        .hero {
-          padding: 20px 18px 18px;
-        }
-
-        .navlist {
-          flex-direction: row;
-          overflow-x: auto;
-        }
-
-        .navlist a {
-          white-space: nowrap;
-          flex: 0 0 auto;
-        }
-
-        .article {
-          padding: 24px 20px 28px;
-        }
-
-        .article p,
-        .article li {
-          font-size: 17px;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        html {
-          scroll-behavior: auto;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="mrp-page.css" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -473,9 +38,10 @@
           <span>Meta Rational Pragmatics article</span>
         </div>
         <div class="top-links">
-          <a class="pill" href="../index.html">Home</a>
+          <a class="pill primary" href="index.html">MRP</a>
           <a class="pill" href="../research.html">Research</a>
-          <a class="pill primary" href="index.html">MRP Index</a>
+          <a class="pill" href="../ai-assisted-research.html">AI-Assisted Research</a>
+          <a class="pill" href="../index.html">Home</a>
         </div>
       </div>
 
@@ -549,10 +115,10 @@
           <article class="article">
             <section id="technical-rediscovery">
               <h2>Meta-Rational Pragmatics as a Contemporary Technical Rediscovery</h2>
-              <p>Meta-rational pragmatics may be understood not as an arbitrary synthesis of recent concepts, but as a contemporary technical rediscovery of several older philosophical intuitions that had already identified, in different vocabularies, the instability of fixed meaning, the contextual character of understanding, and the revisability of knowledge. Its novelty lies less in inventing these intuitions than in reformulating them in a language more suitable for computational systems, inductive bias, representational trade-offs, and implementation-oriented reasoning. In this sense, the framework does not present itself as a rupture with the history of philosophy, but as a translation of long-standing concerns into a form that can speak directly to modern AI and ML research [HARNAD-1990] [LUKACS-2013].</p>
+              <p>Meta-rational pragmatics may be understood not as an arbitrary synthesis of recent concepts, but as a contemporary technical rediscovery of several older philosophical intuitions that had already identified, in different vocabularies, the instability of fixed meaning, the contextual character of understanding, and the revisability of knowledge. Its novelty lies less in inventing these intuitions than in reformulating them in a language more suitable for computational systems, inductive bias, representational trade-offs, and implementation-oriented reasoning. In this sense, the framework does not present itself as a rupture with the history of philosophy, but as a translation of long-standing concerns into a form that can speak directly to modern AI and ML research [HARNAD-1990].</p>
               <p>At its core, meta-rational pragmatics begins from a simple but far-reaching claim: cognition cannot be adequately described either as the application of a fully fixed semantics or as unconstrained pragmatic drift. Meaning is neither simply given nor infinitely plastic. It is constructed, revised, and provisionally stabilized under finite conditions of access, local objectives, inherited representational schemes, inductive biases, and context-bound criteria of adequacy. This is precisely the point at which the framework becomes technically relevant. Once cognition is viewed in this way, interpretation is no longer an embarrassment to be removed by better formalization, but a constitutive feature of any system that must operate under uncertainty, partial observability, resource limits, and task-relative success conditions.</p>
               <p>From phenomenology, this view recovers the suspicion that objects of thought and evidence should not be treated as primitively given. What appears cognitively stable is often the result of constitution, selection, and framing. From hermeneutic traditions, it recovers the idea that understanding is inseparable from interpretation, and that interpretation is always situated within a broader structure of assumptions, context, and part-whole dependency. From fallibilist epistemology, it recovers the claim that knowledge is not possession of an absolute view from nowhere, but an achievement produced by finite, revisable, and interest-laden procedures of validation. Meta-rational pragmatics does not merely restate these traditions in historical vocabulary. It rearticulates their shared intuition in a form better adapted to current computational practice: cognition is best modeled as constrained interpretive stabilization under non-ideal conditions.</p>
-              <p>This shift matters because modern AI systems already operate in a space where interpretation and inductive bias are unavoidable. Learning is not access to pure truth, but the formation of regularities under architectural constraints, training distributions, optimization procedures, and task-dependent objectives. Reasoning, when stripped of reifying language, is not a mysterious essence but a family of operations through which a system reorganizes local representations, constraints, and candidate inferences under some criterion of success. In that respect, AI does not merely invite philosophical reflection from the outside. It forces a more explicit technical recognition of something earlier traditions had already seen at a more abstract level: no representation is neutral, no model is identical with the territory, and no cognitive success is independent of framing, bias, and validation regime [HARNAD-1990] [LECUN-2022].</p>
+              <p>This shift matters because modern AI systems already operate in a space where interpretation and inductive bias are unavoidable. Learning is not access to pure truth, but the formation of regularities under architectural constraints, training distributions, optimization procedures, and task-dependent objectives. Reasoning, when stripped of reifying language, is not a mysterious essence but a family of operations through which a system reorganizes local representations, constraints, and candidate inferences under some criterion of success. In that respect, AI does not merely invite philosophical reflection from the outside. It forces a more explicit technical recognition of something earlier traditions had already seen at a more abstract level: no representation is neutral, no model is identical with the territory, and no cognitive success is independent of framing, bias, and validation regime [HARNAD-1990].</p>
               <p>The importance of this position is that it resists two symmetrical simplifications. It rejects the idea that meaning can be exhausted by fixed symbolic assignment, but it also rejects the opposite idea that interpretation is an unconstrained flow without structure. Meaning emerges neither as static semantic inheritance nor as pure contextual improvisation. It emerges through disciplined acts of local stabilization under explicit and implicit constraints. This is why the framework is especially suitable as a bridge between philosophical reflection and computational design. It allows one to speak about interpretation without collapsing into vagueness, and about formalization without pretending that formal structure eliminates perspectival distortion.</p>
               <p>Seen in this way, meta-rational pragmatics is not simply another label for familiar anti-foundational intuitions. Its distinctive contribution lies in technical repositioning. It translates concerns about constitution, interpretation, and fallibility into a vocabulary that can address model design, representational bias, controlled execution, regime choice, and tractable computation. It is therefore better understood not as a speculative philosophy added on top of AI, but as an attempt to articulate, at the right level of abstraction, the practical conditions under which computational systems actually produce useful and revisable forms of understanding.</p>
             </section>
@@ -563,14 +129,14 @@
               <p>It also shares important intuitions with hermeneutics. In both cases, understanding is treated as situated, interpretive, and dependent on prior assumptions rather than as a transparent decoding of pre-given content. But there is also a significant difference. Traditional hermeneutics is primarily concerned with the situatedness of understanding in historical, linguistic, and existential horizons. Meta-rational pragmatics inherits the anti-naive lesson, but relocates it into a more technical setting. Its problem is not only that all understanding is interpretive, but that artificial systems must operationalize interpretation under finite resources, partial observability, and heterogeneous representational media. The emphasis therefore shifts from existential understanding to implementable interpretive control.</p>
               <p>The framework is likewise close to bounded rationality, insofar as it assumes finite resources, incomplete access, and local criteria of adequacy rather than omniscient optimization. However, bounded rationality often remains framed as decision-making under constraints, leaving the underlying representational scheme relatively implicit. Meta-rational pragmatics goes further by making representational choice itself part of the problem. It asks not only how an agent reasons under limits, but how a problem is first transformed into a form that can be reasoned over at all. In this respect, it is concerned not merely with restricted optimization, but with the prior act of structural stabilization that makes optimization, inference, or verification feasible in the first place.</p>
               <p>There is also an affinity with enactivist and embodied approaches, especially in the rejection of cognition as disembodied symbol manipulation. Meta-rational pragmatics agrees that meaning is shaped by action, intervention, and context-sensitive engagement rather than by detached formal correspondence alone. Yet it does not require strong biological or phenomenological commitments. It can accommodate embodied settings, but it can also address institutional, symbolic, and computational environments in which action is mediated through documents, workflows, constraints, APIs, or governance structures rather than through direct sensorimotor coupling. This makes it broader in scope and more directly usable for agentic AI systems that operate in socio-technical rather than purely physical worlds.</p>
-              <p>Relative to contemporary AI discourse, meta-rational pragmatics is also best understood as a critique of two recurring reductions. On one side stands the hope that fixed semantics, ontologies, or explicit symbolic decompositions can stabilize meaning once and for all. On the other side stands the suggestion that sufficiently large-scale statistical learning renders explicit structure mostly unnecessary. The first reduction underestimates context, revisability, and the constructive path by which symbolic objects are produced. The second underestimates the importance of explicit control, decomposition, verification, and regime-sensitive computation. Meta-rational pragmatics rejects both simplifications. It treats symbolic structure, statistical regularity, retrieval, simulation, and procedural constraints as distinct but composable regimes whose relevance depends on the structure of the local task [GARCEZ-LAMB-2020] [LECUN-2022].</p>
+              <p>Relative to contemporary AI discourse, meta-rational pragmatics is also best understood as a critique of two recurring reductions. On one side stands the hope that fixed semantics, ontologies, or explicit symbolic decompositions can stabilize meaning once and for all. On the other side stands the suggestion that sufficiently large-scale statistical learning renders explicit structure mostly unnecessary. The first reduction underestimates context, revisability, and the constructive path by which symbolic objects are produced. The second underestimates the importance of explicit control, decomposition, verification, and regime-sensitive computation. Meta-rational pragmatics rejects both simplifications. It treats symbolic structure, statistical regularity, retrieval, simulation, and procedural constraints as distinct but composable regimes whose relevance depends on the structure of the local task [GARCEZ-LAMB-2020].</p>
               <p>This leads to an important comparative claim. Meta-rational pragmatics is less a theory of one privileged cognitive medium than a framework for disciplined regime coordination. It does not say that all cognition is symbolic, statistical, embodied, interpretive, or world-model based. It says that useful cognition arises through context-sensitive acts of stabilization that may recruit different representational and computational forms depending on the demands of the situation. In this sense, the framework is pluralist without becoming relativistic. It allows multiple regimes, but it does not treat them as equally appropriate in all contexts. What matters is whether the selected regime yields a sufficiently disciplined and revisable solution under the relevant constraints.</p>
               <p>This is also why the framework is more naturally aligned with architecture than with doctrine. It is not primarily a metaphysical thesis about what mind really is. It is a methodological thesis about how finite systems can produce tractable, useful, and corrigible forms of understanding without mistaking any local representational success for a final ontology. Its comparative value lies exactly here: it inherits insights from pragmatism, hermeneutics, fallibilism, bounded rationality, and contemporary AI, but reorders them around the problem of controlled interpretive execution.</p>
             </section>
 
             <section id="reification">
               <h2>Reification and Neuro-Symbolic AI, and the Limits of Fixed Structure</h2>
-              <p>A recurrent conceptual risk in advanced AI research is reification: the treatment of abstractions, intermediate constructs, or modelling conveniences as if they were already stable and self-subsisting objects of the world. In the broad philosophical sense, reification refers to the tendency to treat historically or procedurally constituted relations and categories as things that appear natural, fixed, and independent. In AI, the same error appears when scores, classes, embeddings, latent variables, extracted rules, ontological categories, or graph entities are handled as if their operational usefulness were sufficient to establish their semantic or ontological adequacy [LUKACS-2013] [GARCEZ-LAMB-2020].</p>
+              <p>A recurrent conceptual risk in advanced AI research is reification: the treatment of abstractions, intermediate constructs, or modelling conveniences as if they were already stable and self-subsisting objects of the world. In the broad philosophical sense, reification refers to the tendency to treat historically or procedurally constituted relations and categories as things that appear natural, fixed, and independent. In AI, the same error appears when scores, classes, embeddings, latent variables, extracted rules, ontological categories, or graph entities are handled as if their operational usefulness were sufficient to establish their semantic or ontological adequacy [GARCEZ-LAMB-2020].</p>
               <p>This issue becomes especially important in neuro-symbolic AI because neuro-symbolic systems explicitly combine multiple representational regimes. Recent surveys describe the field as an effort to integrate learning and reasoning, or more specifically neural representations and symbolic structure, in order to combine adaptability, generalization from data, and perceptual robustness with logical structure, compositionality, and greater interpretability. At the same time, these same surveys stress that the central difficulty is not merely to connect two modules, but to coordinate heterogeneous forms of representation, inference, and explanation in a principled way [GARCEZ-LAMB-2020] [DELONG-2024] [BHUYAN-2024] [DESMET-DERAEDT-2025]. This is precisely where the problem of reification becomes technically important: whenever heterogeneous representational layers are aligned too quickly, there is a temptation to mistake an engineering bridge for a discovered ontology.</p>
               <p>The first major reification error is to confuse representational convenience with discovery of genuine structure. A learned embedding, a concept bottleneck, a symbolic predicate, or a node in a knowledge graph may be highly useful for prediction, retrieval, constraint checking, or reasoning. However, usefulness alone does not show that the corresponding construct captures a natural kind, a stable concept, or a privileged decomposition of the domain. In neuro-symbolic pipelines, this risk is amplified because neural regularities are often converted into explicit symbolic objects, which then become reusable across downstream reasoning steps. Once named and stabilized, these objects can easily be treated as if the system had uncovered entities already present in the world, rather than produced task-relative abstractions that remain revisable [GARCEZ-LAMB-2020] [DELONG-2024] [BHUYAN-2024].</p>
               <p>A second error is forgetting the constructive path through which symbolic objects are produced. In practical AI systems, symbols are introduced through annotation schemes, ontology design, discretization, thresholding, schema alignment, extraction procedures, or other modelling decisions. Reification begins when these constructive decisions disappear from view and the resulting symbolic layer is treated as inherently objective. In neuro-symbolic architectures this is a serious risk because explicit structure often creates an impression of clarity and stability. Yet symbolic explicitness does not by itself remove dependence on training distributions, labelling conventions, data coverage, or engineering assumptions. A symbolic layer may therefore improve traceability while still remaining contingent and locally fragile [DELONG-2024] [WAN-2024] [BHUYAN-2024].</p>
@@ -588,7 +154,7 @@
               <h2>World Models</h2>
               <p>The recent interest in world models is especially important from the standpoint of meta-rational pragmatics because it makes explicit a shift that sequence-centered views of intelligence often leave under-theorized. A world model is valuable not simply because it represents, but because it supports anticipation, counterfactual rollout, local simulation, and the evaluation of possible actions before external commitment. In that respect, it already belongs more to the domain of executable pragmatics than to that of static semantics. Its significance lies not merely in describing the world, but in making possible a controlled form of internal experimentation [HA-2018] [HAFNER-2023].</p>
               <p>This intersects directly with the broader hypothesis of meta-rational pragmatics. What matters in cognition is not only what a representation denotes, but how it participates in a staged process of interpretation, relevance selection, decomposition, constraint propagation, action, and validation. A world model is useful because it helps organize these operations under uncertainty. It provides a medium in which candidate futures can be explored, local consequences can be propagated, and action can be evaluated before costly interaction with the environment. In this sense, world models are best interpreted not as neutral mirrors of reality, but as pragmatic devices for managing uncertainty, search, and temporal consequence.</p>
-              <p>At the same time, a meta-rational pragmatic reading reveals a limitation in some standard framings of world models. There is often a tendency to speak as if the system were converging toward a single privileged internal representation of the world, or at least toward a stable latent structure sufficient to ground general intelligence. A more disciplined interpretation is needed. There is little reason to assume that one latent factorization, one predictive regime, or one internal ontology will be equally adequate across heterogeneous tasks, domains, and evaluation settings. Different practical conditions demand different abstractions, different granularities, different forms of compression, and different trade-offs between fidelity, tractability, and usefulness [LECUN-2022] [CHEN-2022].</p>
+              <p>At the same time, a meta-rational pragmatic reading reveals a limitation in some standard framings of world models. There is often a tendency to speak as if the system were converging toward a single privileged internal representation of the world, or at least toward a stable latent structure sufficient to ground general intelligence. A more disciplined interpretation is needed. There is little reason to assume that one latent factorization, one predictive regime, or one internal ontology will be equally adequate across heterogeneous tasks, domains, and evaluation settings. Different practical conditions demand different abstractions, different granularities, different forms of compression, and different trade-offs between fidelity, tractability, and usefulness [CHEN-2022].</p>
               <p>For that reason, meta-rational pragmatics does not reject world models, but relativizes them. A world model should not be treated as the final internal mirror of reality, but as a context-sensitive construction whose value depends on what it enables the system to do. Its adequacy is not exhausted by representational accuracy. It must also be judged by operational fertility: whether it enables efficient simulation, reduces search, supports decomposition into manageable subproblems, improves intervention, or stabilizes behavior under uncertainty [HA-2018] [HAFNER-2023]. The relevant criterion is therefore not only correspondence, but pragmatic adequacy within a broader architecture of staged control.</p>
               <p>This is where the idea of Structural Regime Selection becomes essential. The central architectural question is not whether the system possesses one universal representational medium, but how it identifies the structural character of a local subproblem and selects an appropriate computational regime for it. Some tasks are best handled through retrieval, others through symbolic constraint propagation, others through graph navigation, theorem proving, approximate linguistic reformulation, or latent simulation over evolving state. A world model is one such regime, especially useful when the problem requires the internal handling of temporal dynamics, action-conditioned transitions, or anticipatory evaluation. But it is one regime among several, not the sovereign core of all intelligence.</p>
               <p>The notion of Tractable Computation explains why such regime selection is not merely elegant but necessary. Practical intelligence depends not only on expressive richness but on transforming problems into forms that can actually be handled under finite computational constraints. A world model contributes to tractability when it compresses relevant dynamics into a state representation that supports manageable rollout and planning. Symbolic decomposition contributes when it replaces diffuse search with explicit constraints. Retrieval contributes when it avoids unnecessary recomputation. Controlled natural language contributes when it limits ambiguity enough to support reliable downstream processing. In each case, what matters is not the possession of the richest possible representation, but the construction of a representation adequate to the task at acceptable cost.</p>
@@ -608,8 +174,6 @@
                 <li>[HA-2018] Ha, D., & Schmidhuber, J. (2018). World Models.</li>
                 <li>[HAFNER-2023] Hafner, D., et al. (2023). Mastering Diverse Domains through World Models.</li>
                 <li>[HARNAD-1990] Harnad, S. (1990). The Symbol Grounding Problem.</li>
-                <li>[LECUN-2022] LeCun, Y. (2022). A Path Towards Autonomous Machine Intelligence.</li>
-                <li>[LUKACS-2013] Lukács, G. (2013). History and Class Consciousness.</li>
                 <li>[WAN-2024] Wan, Z., et al. (2024). Towards Cognitive AI Systems: A Survey and Prospective on Neuro-Symbolic AI.</li>
               </ul>
             </section>

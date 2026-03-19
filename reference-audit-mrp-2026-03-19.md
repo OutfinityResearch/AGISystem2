@@ -2,100 +2,121 @@
 
 Date: 2026-03-19
 
-Scope: `docs/MRP/*.html`, excluding `index.html` and `article-template.html`
+Status: latest canonical report. Older MRP audit reports were removed so this is the only audit file left in the repo.
+
+Scope:
+
+- `docs/MRP/*.html`
+- excluded: `docs/MRP/index.html`, `docs/MRP/article-template.html`
+- audited article files: `11`
 
 Method:
 
 - structural pass with `skills/check-reference/scripts/check_reference.py`
-- local semantic pass based on the cited passage, the local reference entry, and the source type or title
-- no external fetching was used in this run, so semantic judgments are conservative
-- no URL integrity pass was run because the article-local reference sections mostly do not contain URLs and no external catalog with URLs was supplied
+- live URL validation using the shared catalog in `skills/check-reference/references/mrp-reference-catalog.txt`
+- content validation with cached source artifacts in `.tmp/cache`
+- manual triage of flagged items, because the automated overlap heuristic overflags long conceptual paragraphs
 
-## Skill Installation
+Raw run artifacts:
 
-The `check-reference` skill was installed into the global Codex skills folder:
+- `.tmp/audit-mrp-current-live/*.json`
 
-- `~/.codex/skills/check-reference`
+## Executive Summary
 
-## Structural Summary
+- No article has missing local citation keys or broken local reference entries.
+- The broad citations previously identified as too wide were removed without changing prose.
+- The clearly wrong or stale source URLs that could be repaired were repaired.
+- The citation with no defensible source target, `HERSCHE-2024`, was removed from text, local bibliography, and shared catalog.
+- After the cleanup, there is no remaining active citation in `docs/MRP` that is clearly pointed at the wrong external source.
+- The citations that remained only in `blocked/unresolved` state were then removed from the active article text and from local bibliographies where they became unused.
+- There are no remaining active `blocked/unresolved` citations in `docs/MRP`.
 
-| Article | Inline citations | Unique keys | Reference entries | Missing refs | Unused refs |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `a-new-foundational-intuition-for-neuro-symbolic-ai.html` | 7 | 6 | 6 | 0 | 0 |
-| `executable-natural-language.html` | 18 | 11 | 11 | 0 | 0 |
-| `meta-rational-pragmatics-in-context.html` | 48 | 12 | 12 | 0 | 0 |
-| `meta-rational-pragmatics.html` | 10 | 8 | 8 | 0 | 0 |
-| `meta-rationality-ai-scientific-inquiry.html` | 0 | 0 | 0 | 0 | 0 |
-| `meta-rationality-difficulties-misunderstandings-risks.html` | 0 | 0 | 0 | 0 | 0 |
-| `meta-rationality-psychology-philosophy-executable-pragmatics.html` | 18 | 18 | 18 | 0 | 0 |
-| `mrp-vm-implementation-path.html` | 9 | 7 | 7 | 0 | 0 |
-| `regime-selection-tractable-computation-regime-induction.html` | 22 | 19 | 19 | 0 | 0 |
-| `related-research-meta-rational-executable-pragmatics.html` | 34 | 32 | 32 | 0 | 0 |
+## Changes Applied
 
-## Incorrect Citations
+### Removed broad citations
 
-No structurally incorrect citations were found in the audited articles.
+- `docs/MRP/meta-rational-pragmatics.html`
+  Removed `[BOMMASANI-2021]` from the hallucination/model-risk sentence and removed its local bibliography entry.
+- `docs/MRP/meta-rationality-psychology-philosophy-executable-pragmatics.html`
+  Removed `[KAHNEMAN-2011]` from the developmental/dialectical paragraph and removed its local bibliography entry.
+- `docs/MRP/related-research-meta-rational-executable-pragmatics.html`
+  Removed `[DEMOURA-2008]` from the broad framing sentence and removed its local bibliography entry.
+- `docs/MRP/executable-natural-language.html`
+  Removed `[DSPY-2023]` and `[WILLARD-LOUF-2023]` from the final hybrid-architecture sentence only. Both citations remain elsewhere in the article where the support is narrower.
 
-Important limitation:
+### Removed unsupported citation entirely
 
-- this means `no broken citation keys or local reference entries`
-- it does **not** yet mean `all external links were verified to exist`
-- it does **not** yet mean `all cited external sources were opened and checked against the title`
+- `docs/MRP/regime-selection-tractable-computation-regime-induction.html`
+  Removed `[HERSCHE-2024]` from text and from the local bibliography.
+- `skills/check-reference/references/mrp-reference-catalog.txt`
+  Removed `[HERSCHE-2024]` from the shared catalog because the cited source target could not be defended.
 
-More precisely:
+### Removed previously blocked citations from active text
 
-- no inline citation key was missing from the final reference list
-- no cited article had unused reference entries
-- no malformed reference-key pattern was detected by the extraction pass
+- `docs/MRP/meta-rationality-psychology-philosophy-executable-pragmatics.html`
+  Removed `[FLEMING-DAW-2017]` and `[BACH-2008]` from text and removed their local bibliography entries.
+- `docs/MRP/meta-rational-pragmatics-in-context.html`
+  Removed `[LUKACS-2013]` and `[LECUN-2022]` from text and removed their local bibliography entries.
+- `docs/MRP/regime-selection-tractable-computation-regime-induction.html`
+  Removed `[LECUN-2022]` and `[VERGARI-2021]` from text and removed their local bibliography entries.
 
-## Weak Citations
+### Fixed stale or wrong source URLs
 
-### 1. `KAHNEMAN-2011`
+- `[BASSECHES-1984]`
+  from broken Google Books target
+  to `https://search.worldcat.org/title/Dialectical-thinking-and-adult-development/oclc/10532903`
+- `[FLEMING-2021]`
+  from dead `metacogni.tion.org` URL
+  to `https://www.hachettebookgroup.com/titles/stephen-m-fleming/know-thyself/9781549142475/?lens=basic-books`
+- `[BRAULTBARON-2016]`
+  from wrong arXiv target
+  to `https://dblp.org/rec/journals/csur/Brault-Baron16`
+- `[KG-SURVEY]`
+  from wrong arXiv target
+  to `https://research.monash.edu/en/publications/a-survey-on-knowledge-graphs-representation-acquisition-and-appli/`
+- `[HARNAD-1990]`
+  from stale CogPrints URL
+  to `https://eprints.soton.ac.uk/250382/`
+- `[VERGARI-2021]`
+  from wrong arXiv target
+  to `https://nips.cc/virtual/2021/oral/28267`
 
-- Document: `docs/MRP/meta-rationality-psychology-philosophy-executable-pragmatics.html`
-- Location: `Psychological and Developmental Roots`
-- Passage: the paragraph argues that developmental and dialectical traditions emphasize tolerance for contradiction, perspective shifts, and structural revision, then adds Kahneman as part of the same support line.
-- Reason: `Thinking, Fast and Slow` is relevant to reflective control and error-prone fluent cognition, but it is not a strong source for dialectical development, perspectival plurality, or structural revision in the same sense as Basseches and Kegan.
-- Verdict: weak, not incorrect
+## Validated After Fix
 
-### 2. `LUKACS-2013`
+These references now resolve to real targets with the correct title or a defensible title wrapper, and the source subject is aligned with the cited use:
 
-- Document: `docs/MRP/meta-rational-pragmatics-in-context.html`
-- Location: `Meta-Rational Pragmatics as a Contemporary Technical Rediscovery`
-- Passage: the opening sentence claims that older philosophical intuitions had already identified the instability of fixed meaning, the contextual character of understanding, and the revisability of knowledge.
-- Reason: Lukács is a strong source for reification and historically constituted categories, but it is not the cleanest support for the whole package named in that sentence, especially the parts about contextual understanding and revisability of knowledge taken together.
-- Verdict: weak, not incorrect
+- `[BASSECHES-1984]`
+  `200`, title match on WorldCat, relevant to dialectical adult development.
+- `[FLEMING-2021]`
+  `200`, Hachette page with exact book and subtitle; page title contains extra author and site wrapper, so the automatic title check marks it as a mismatch, but the target is correct and topically relevant.
+- `[BRAULTBARON-2016]`
+  `200`, DBLP record, exact title match, relevant to hypergraph acyclicity.
+- `[KG-SURVEY]`
+  `200`, Monash publication page, exact title match, relevant to knowledge-graph structure.
+- `[HARNAD-1990]`
+  `200`, ePrints Soton page, exact title match, relevant to symbol grounding.
 
-### 3. `DEMOURA-2008`
+## Active Blocked or Unresolved Sources
 
-- Document: `docs/MRP/related-research-meta-rational-executable-pragmatics.html`
-- Location: `Why Related Research Matters`
-- Passage: the text says that if a trustworthy runtime must recognize structure before choosing how to reason, it becomes useful to survey representational and computational families that could support regime selection in practice.
-- Reason: the Z3 paper is a strong source for one solver family, but it is too specific to ground the broad methodological claim of that introductory paragraph by itself.
-- Verdict: weak, not incorrect
+None in active article text.
 
-## Coverage Gaps
+The blocked items identified in the previous pass were removed from the affected articles rather than left in a half-validated state.
 
-These are not incorrect citations, but they are documentation gaps for a scholarly-looking series:
+## Notes on Automated Weak Flags
 
-### 1. No inline citations or reference section
+The content-alignment heuristic still emits many `weak` warnings on long conceptual paragraphs. I did not treat those as automatic citation failures when:
 
-- `docs/MRP/meta-rationality-ai-scientific-inquiry.html`
-- `docs/MRP/meta-rationality-difficulties-misunderstandings-risks.html`
+- the URL resolved to the correct source
+- the title clearly matched or was a defensible site-wrapper variant
+- the cited work was plainly in the right topic family for the narrower claim
 
-These two articles currently cannot be audited semantically because they contain no scholarly citations at all.
+So the report above is stricter than the raw heuristic output. It records only the changes that were actually justified.
 
-### 2. Sparse support for broad claims
+## Current State
 
-Some articles are structurally clean but still rely on a relatively small number of citations for broad conceptual claims. The clearest example is:
-
-- `docs/MRP/a-new-foundational-intuition-for-neuro-symbolic-ai.html`
-
-This article did not show broken citations, but several long argumentative sections are supported by a small set of high-level references. That is a coverage issue rather than a citation-correctness issue.
-
-## Recommended Next Fixes
-
-1. Replace or narrow the use of `KAHNEMAN-2011` in the psychological-history article.
-2. Narrow the sentence supported by `LUKACS-2013`, or add a second source more directly about interpretation and revisability.
-3. Remove `DEMOURA-2008` from the broad framing sentence in the related-research article, or move it down into the solver-specific discussion.
-4. Add explicit citations to the two uncited articles so they meet the standard now used by the rest of the MRP section.
+- Structurally clean: yes
+- Previously broad citations removed: yes
+- Previously wrong URLs repaired where a defensible target existed: yes
+- Unsupported citation family removed: yes
+- Previously blocked citations removed from active text: yes
+- Remaining active blocked or unresolved citations: no

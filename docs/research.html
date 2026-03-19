@@ -1,237 +1,526 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-default-section="summary">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Exploring the frontier of efficient, reliable, and verifiable AI." />
-    <meta property="og:title" content="Research Index — AGISystem2" />
-    <meta property="og:description" content="Exploring the frontier of efficient, reliable, and verifiable AI." />
+    <meta name="description" content="Research themes that support reliable, local, verifiable AI and the construction of MRP-VM." />
+    <meta property="og:title" content="Research Themes — AGISystem2" />
+    <meta
+      property="og:description"
+      content="A research map for efficient execution, neuro-symbolic AI, verification, representation, and architectures that support MRP-VM."
+    />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://agisystem2.com/research.html" />
     <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#f7fbff" />
-    <title>Research Index — AGISystem2</title>
-    <style>
-      :root {
-        --bg0: #f7fbff; --bg1: #fff7fb; --card: rgba(255, 255, 255, 0.78);
-        --stroke: rgba(2, 6, 23, 0.16); --text: rgba(2, 6, 23, 0.92);
-        --muted: rgba(2, 6, 23, 0.72); --accent: #0a7dff;
-        --shadow: 0 20px 60px rgba(2, 6, 23, 0.12); --radius: 18px;
-        --maxw: 1120px;
-      }
-      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); }
-      .shell { max-width: var(--maxw); margin: 0 auto; padding: 22px 18px 64px; }
-      .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px; border: 1px solid var(--stroke); background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(10px); border-radius: var(--radius); position: sticky; top: 14px; z-index: 20; }
-      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--stroke); border-radius: 999px; font-size: 13px; color: var(--text); text-decoration: none; }
-      .pill.primary { background: var(--card); border-color: rgba(10, 125, 255, 0.28); }
-      .hero { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; }
-      .stack { margin-top: 18px; padding: 32px; border: 1px solid var(--stroke); border-radius: var(--radius); background: white; line-height: 1.6; }
-      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 18px; margin-top: 24px; }
-      .article-card { display: block; padding: 20px; border: 1px solid var(--stroke); border-radius: var(--radius); text-decoration: none; color: inherit; transition: border-color 0.2s; }
-      .article-card:hover { border-color: var(--accent); }
-      .article-card h3 { margin: 0 0 8px; color: var(--accent); }
-      .article-card p { margin: 0; font-size: 14px; color: var(--muted); }
-      .intro-box { padding: 20px; background: #fffbeb; border: 1px solid #fef3c7; border-radius: 12px; margin-bottom: 24px; color: #92400e; }
-      .skip-link { position: absolute; left: -999px; top: 0; padding: 10px 12px; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; z-index: 50; }
-      .skip-link:focus { left: 12px; top: 12px; }
-
-      @media (max-width: 980px) {
-        .shell { padding: 16px 12px 40px; }
-        .topbar { flex-wrap: wrap; gap: 10px; top: 8px; }
-        .top-links { display: flex; flex-wrap: wrap; gap: 8px; }
-        .hero, .stack { padding: 22px 16px; }
-        .grid, .language-grid, .stat-grid { grid-template-columns: 1fr; }
-      }
-
-    </style>
+    <title>Research Themes — AGISystem2</title>
+    <link rel="stylesheet" href="MRP/mrp-page.css" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
 
     <div class="shell">
       <div class="topbar">
-        <div class="brand"><strong>AGISystem2</strong></div>
+        <div class="brand">
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="index.html">AGISystem2</a>
+            <span class="crumb-sep">/</span>
+            <span class="crumb-current">Research</span>
+          </nav>
+          <span>Technical research map around MRP-VM</span>
+        </div>
         <div class="top-links">
-          <a class="pill" href="index.html">Home</a>
-          <a class="pill" href="ai-assisted-research.html">Principles</a>
-          <a class="pill primary" href="research.html">Research</a>
           <a class="pill" href="MRP/index.html">MRP</a>
+          <a class="pill primary" href="research.html">Research</a>
+          <a class="pill" href="ai-assisted-research.html">AI-Assisted Research</a>
+          <a class="pill" href="index.html">Home</a>
         </div>
       </div>
 
       <header class="hero">
-        <h1>Research Notes</h1>
-        <p>Exploring the frontier of efficient, reliable, and verifiable AI.</p>
+        <div class="kicker"><b>Research</b> Published Technical Notes</div>
+        <h1>Research Themes</h1>
+        <p class="subtitle">
+          This section maps the technical families that matter most for building reliable, local, and verifiable AI,
+          with special attention to the runtime-centered direction around MRP-VM.
+        </p>
+        <p class="lede">
+          The articles below are not a loose survey. They document the adjacent execution, representation, reasoning,
+          verification, and architecture layers that can strengthen MRP-VM and help move AI toward lower-cost, more
+          dependable use in enterprise and research settings.
+        </p>
+        <div class="meta-row">
+          <span class="meta-pill">Focus: MRP-VM support map</span>
+          <span class="meta-pill">38 published articles</span>
+          <span class="meta-pill">Published March 19, 2026</span>
+        </div>
       </header>
 
-      <main class="stack" id="main">
-        <div class="intro-box">
-          The research landscape in this field is diverse, with many promising ideas. However, there are limited resources for combining and scaling these directions into cohesive, production-ready systems.
-        </div>
+      <div class="layout" id="main">
+        <aside class="toc" aria-label="Page outline">
+          <header>
+            <strong>Outline</strong>
+            <span id="nav-readout">—</span>
+          </header>
+          <ul class="navlist">
+            <li>
+              <a href="#summary" data-step="01" aria-current="true">
+                <span class="toc-badge">01</span>
+                Executive Summary
+              </a>
+            </li>
+            <li>
+              <a href="#articles" data-step="02">
+                <span class="toc-badge">02</span>
+                Published Articles
+              </a>
+            </li>
+            <li>
+              <a href="#connection" data-step="03">
+                <span class="toc-badge">03</span>
+                Connection To MRP-VM
+              </a>
+            </li>
+            <li>
+              <a href="#horizon" data-step="04">
+                <span class="toc-badge">04</span>
+                Research Horizon
+              </a>
+            </li>
+          </ul>
+        </aside>
 
-        <div class="grid">
-          <a href="research/beyond-gpu-barrier.html" class="article-card">
-            <h3>Beyond the GPU Barrier: CPU-Centric Machine Learning</h3>
-            <p>Analysis of algorithmic shifts toward CPU-efficient AI architectures.</p>
-          </a>
-          <a href="research/algorithmic-revolution.html" class="article-card">
-            <h3>The Algorithmic Revolution</h3>
-            <p>Transitioning from Dense Matrix Multiplication to Probabilistic Sparsity.</p>
-          </a>
-          <a href="research/high-fidelity-runtimes.html" class="article-card">
-            <h3>High-Fidelity Runtimes</h3>
-            <p>Execution strategies for high-precision inference on commodity CPU hardware.</p>
-          </a>
-          <a href="research/quantization-democratization.html" class="article-card">
-            <h3>Democratization through Quantization</h3>
-            <p>Technical analysis of local LLM inference via the llama.cpp ecosystem.</p>
-          </a>
-          <a href="research/rust-systems-ml.html" class="article-card">
-            <h3>Systems Languages for ML</h3>
-            <p>Technical evaluation of Rust-based frameworks for high-performance inference.</p>
-          </a>
-          <a href="research/vendor-optimizations.html" class="article-card">
-            <h3>Silicon Giants: Native Optimizations</h3>
-            <p>How Intel and AMD are baking AI acceleration into the processor.</p>
-          </a>
-          <a href="research/efficient-ml-trends.html" class="article-card">
-            <h3>Efficient ML Execution Trends</h3>
-            <p>A technical survey of optimized runtimes, compilers, and libraries for CPU-centric inference.</p>
-          </a>
-          <a href="research/vsa-hdc.html" class="article-card">
-            <h3>VSA &amp; HDC: Algebraic Reasoning</h3>
-            <p>Neuro-Symbolic computing through algebraic operations in high-dimensional spaces.</p>
-          </a>
-          <a href="research/bitnet-extreme-quantization.html" class="article-card">
-            <h3>BitNet &amp; 1.58-bit LLMs</h3>
-            <p>Implementation of ternary weight systems to replace floating-point multiplication.</p>
-          </a>
-          <a href="research/cnl-formal-semantics.html" class="article-card">
-            <h3>CNL &amp; Formal Semantics</h3>
-            <p>Addressing ambiguity in human-agent interaction through structured language subsets.</p>
-          </a>
-          <a href="research/ai-native-languages.html" class="article-card">
-            <h3>Languages for the AI Era</h3>
-            <p>Evolution of programming paradigms for probabilistic and agentic systems.</p>
-          </a>
-          <a href="research/brain-inspired-computing.html" class="article-card">
-            <h3>Brain-Inspired Computing</h3>
-            <p>Theoretical frameworks for biological intelligence modeling and continuous learning.</p>
-          </a>
-          <a href="research/liquid-neural-networks.html" class="article-card">
-            <h3>Liquid Neural Networks</h3>
-            <p>Continuous-time AI systems for stable and adaptive intelligence.</p>
-          </a>
-          <a href="research/neuromorphic-computing.html" class="article-card">
-            <h3>Neuromorphic Computing</h3>
-            <p>Event-driven AI architectures for energy-efficient, real-time processing.</p>
-          </a>
-          <a href="research/active-inference.html" class="article-card">
-            <h3>Active Inference</h3>
-            <p>Theoretical foundations for purposeful behavior via the Free Energy Principle.</p>
-          </a>
-          <a href="research/energy-based-models.html" class="article-card">
-            <h3>Energy-Based Models (EBMs)</h3>
-            <p>Mathematical frameworks for dependency modeling through scalar energy minimization.</p>
-          </a>
-          <a href="research/world-models-jepa.html" class="article-card">
-            <h3>World Models &amp; JEPA</h3>
-            <p>Predictive architectures for autonomous agent planning and latent representation learning.</p>
-          </a>
-          <a href="research/kolmogorov-arnold-networks.html" class="article-card">
-            <h3>Kolmogorov-Arnold Networks (KAN)</h3>
-            <p>Mathematical foundations for interpretable neural architectures via spline-based activations.</p>
-          </a>
-          <a href="research/neuro-symbolic-ai.html" class="article-card">
-            <h3>Neuro-Symbolic AI</h3>
-            <p>Integration of connectionist pattern recognition and symbolic logical reasoning.</p>
-          </a>
-          <a href="research/conceptual-spaces.html" class="article-card">
-            <h3>Conceptual Spaces</h3>
-            <p>A geometric framework for knowledge representation and semantic reasoning.</p>
-          </a>
-          <a href="research/ontologies-knowledge-graphs.html" class="article-card">
-            <h3>Ontologies &amp; Knowledge Graphs</h3>
-            <p>Formal definitions and structured representations for machine-interpretable knowledge.</p>
-          </a>
-          <a href="research/formal-logic-solvers.html" class="article-card">
-            <h3>Formal Logic &amp; Automated Reasoning</h3>
-            <p>Deterministic frameworks for verifiable machine decision-making.</p>
-          </a>
-          <a href="research/automated-theorem-proving.html" class="article-card">
-            <h3>Automated Theorem Proving (ATP)</h3>
-            <p>Formal verification of mathematical claims and reasoning chains.</p>
-          </a>
-          <a href="research/formal-verification-languages.html" class="article-card">
-            <h3>Formal Verification Languages</h3>
-            <p>Mathematical modeling for the verification of system specifications and protocols.</p>
-          </a>
-          <a href="research/causal-inference.html" class="article-card">
-            <h3>Causal Inference</h3>
-            <p>Theoretical frameworks for modeling structural mechanisms and counterfactual reasoning.</p>
-          </a>
-          <a href="research/cognitive-architectures.html" class="article-card">
-            <h3>Cognitive Architectures</h3>
-            <p>Integration of symbolic and sub-symbolic modules into unified intelligence models.</p>
-          </a>
-          <a href="research/probabilistic-programming.html" class="article-card">
-            <h3>Probabilistic Programming</h3>
-            <p>Formal modeling of uncertainty via Bayesian inference and automated statistical computation.</p>
-          </a>
-          <a href="research/geometric-deep-learning.html" class="article-card">
-            <h3>Geometric Deep Learning</h3>
-            <p>Theoretical unification of AI architectures through symmetry and invariance.</p>
-          </a>
-          <a href="research/physics-informed-ai.html" class="article-card">
-            <h3>Physics-Informed AI</h3>
-            <p>Integration of domain-specific physical laws as hard constraints in neural network training.</p>
-          </a>
-          <a href="research/program-synthesis.html" class="article-card">
-            <h3>Program Synthesis</h3>
-            <p>Automated construction of executable code from formal high-level specifications.</p>
-          </a>
-          <a href="research/differentiable-logic.html" class="article-card">
-            <h3>Differentiable Logic</h3>
-            <p>Mathematical integration of gradient-based learning with formal logical operators.</p>
-          </a>
-          <a href="research/explainable-ai.html" class="article-card">
-            <h3>Explainable AI (XAI)</h3>
-            <p>Methodologies for transparency and auditable logic in autonomous systems.</p>
-          </a>
-          <a href="research/verifiable-computing.html" class="article-card">
-            <h3>Verifiable Computing &amp; ZKPs</h3>
-            <p>Cryptographic protocols for verifying AI computation integrity and privacy.</p>
-          </a>
-          <a href="research/small-language-models.html" class="article-card">
-            <h3>Small Language Models (SLMs)</h3>
-            <p>Analysis of high-parameter efficiency and specialized reasoning kernels.</p>
-          </a>
-          <a href="research/decentralized-ai.html" class="article-card">
-            <h3>Decentralized AI (DeAI)</h3>
-            <p>Architectures for distributed model training and inference on peer-to-peer networks.</p>
-          </a>
-          <a href="research/formal-ai-safety.html" class="article-card">
-            <h3>Formal AI Safety</h3>
-            <p>Mathematical frameworks for verifying safety and alignment properties in autonomous agents.</p>
-          </a>
-          <a href="research/multi-agent-systems.html" class="article-card">
-            <h3>Multi-Agent Systems (MAS)</h3>
-            <p>Coordination and consensus protocols for distributed intelligent agents.</p>
-          </a>
-          <a href="research/algorithmic-information-theory.html" class="article-card">
-            <h3>Algorithmic Information Theory (AIT)</h3>
-            <p>Mathematical foundations of computation, information content, and complexity.</p>
-          </a>
-          <a href="research/european-research-initiatives.html" class="article-card">
-            <h3>European Research Initiatives</h3>
-            <p>A survey of key research groups and projects in Switzerland and Europe focused on efficient and neuro-symbolic AI.</p>
-          </a>
-        </div>
-      </main>
+        <main>
+          <article class="article">
+            <section id="summary">
+              <h2>Executive Summary</h2>
+              <p>
+                The research map exists to answer a practical question: what technical capabilities are needed if AI is
+                to become more reliable, more local, and more computationally disciplined than current model-centric
+                systems usually allow? Our answer is that MRP-VM needs support from several adjacent families at once:
+                efficient execution, explicit representations, symbolic and hybrid reasoning, verification, and better
+                architectural decompositions.
+              </p>
+              <p>
+                That is why these notes are organized as a build-oriented map rather than a general literature survey.
+                Some articles matter because they improve CPU-friendly deployment. Others matter because they suggest
+                better ways to represent knowledge, select execution regimes, verify results, or reduce dependence on
+                permanently expensive large-model inference.
+              </p>
+              <p>
+                Read as a whole, the section argues that MRP-VM can become a serious runtime only if it is supported by
+                a broader ecosystem of tractable methods, symbolic fragments, compact learned modules, constrained
+                languages, and validation technologies.
+              </p>
+            </section>
+
+            <section id="articles">
+              <h2>Published Articles</h2>
+              <p class="section-lede">
+                The published notes are grouped below by their main technical contribution.
+              </p>
+
+              <h3>Execution and Deployment</h3>
+              <ol class="entry-list">
+                <li>
+                  <a href="research/beyond-gpu-barrier.html">
+                    <span class="entry-label">Execution and Hardware</span>
+                    <h3>Beyond the GPU Barrier: CPU-Centric Machine Learning</h3>
+                    <p>Analysis of algorithmic shifts toward CPU-efficient AI architectures.</p>
+                    <div class="entry-note">Execution and hardware track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/algorithmic-revolution.html">
+                    <span class="entry-label">Execution and Hardware</span>
+                    <h3>The Algorithmic Revolution</h3>
+                    <p>Transitioning from dense matrix multiplication to probabilistic sparsity.</p>
+                    <div class="entry-note">Execution and hardware track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/high-fidelity-runtimes.html">
+                    <span class="entry-label">Execution and Hardware</span>
+                    <h3>High-Fidelity Runtimes</h3>
+                    <p>Execution strategies for high-precision inference on commodity CPU hardware.</p>
+                    <div class="entry-note">Execution and hardware track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/quantization-democratization.html">
+                    <span class="entry-label">Execution and Hardware</span>
+                    <h3>Democratization through Quantization</h3>
+                    <p>Technical analysis of local LLM inference via the llama.cpp ecosystem.</p>
+                    <div class="entry-note">Execution and hardware track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/rust-systems-ml.html">
+                    <span class="entry-label">Execution and Hardware</span>
+                    <h3>Systems Languages for ML</h3>
+                    <p>Technical evaluation of Rust-based frameworks for high-performance inference.</p>
+                    <div class="entry-note">Execution and hardware track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/vendor-optimizations.html">
+                    <span class="entry-label">Execution and Hardware</span>
+                    <h3>Silicon Giants: Native Optimizations</h3>
+                    <p>How Intel and AMD are baking AI acceleration into the processor.</p>
+                    <div class="entry-note">Execution and hardware track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/efficient-ml-trends.html">
+                    <span class="entry-label">Execution and Hardware</span>
+                    <h3>Efficient ML Execution Trends</h3>
+                    <p>A technical survey of optimized runtimes, compilers, and libraries for CPU-centric inference.</p>
+                    <div class="entry-note">Execution and hardware track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/bitnet-extreme-quantization.html">
+                    <span class="entry-label">Compact Models</span>
+                    <h3>BitNet &amp; 1.58-bit LLMs</h3>
+                    <p>Implementation of ternary weight systems to replace floating-point multiplication.</p>
+                    <div class="entry-note">Compact model track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/small-language-models.html">
+                    <span class="entry-label">Compact Models</span>
+                    <h3>Small Language Models (SLMs)</h3>
+                    <p>Analysis of high-parameter efficiency and specialized reasoning kernels.</p>
+                    <div class="entry-note">Compact model track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+              </ol>
+
+              <h3>Representation and Symbolic Structure</h3>
+              <ol class="entry-list">
+                <li>
+                  <a href="research/vsa-hdc.html">
+                    <span class="entry-label">Representation and Reasoning</span>
+                    <h3>VSA &amp; HDC: Algebraic Reasoning</h3>
+                    <p>Neuro-symbolic computing through algebraic operations in high-dimensional spaces.</p>
+                    <div class="entry-note">Representation track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/cnl-formal-semantics.html">
+                    <span class="entry-label">Representation and Reasoning</span>
+                    <h3>CNL &amp; Formal Semantics</h3>
+                    <p>Addressing ambiguity in human-agent interaction through structured language subsets.</p>
+                    <div class="entry-note">Representation track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/ai-native-languages.html">
+                    <span class="entry-label">Representation and Reasoning</span>
+                    <h3>Languages for the AI Era</h3>
+                    <p>Evolution of programming paradigms for probabilistic and agentic systems.</p>
+                    <div class="entry-note">Representation track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/neuro-symbolic-ai.html">
+                    <span class="entry-label">Representation and Reasoning</span>
+                    <h3>Neuro-Symbolic AI</h3>
+                    <p>Integration of connectionist pattern recognition and symbolic logical reasoning.</p>
+                    <div class="entry-note">Representation track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/conceptual-spaces.html">
+                    <span class="entry-label">Representation and Reasoning</span>
+                    <h3>Conceptual Spaces</h3>
+                    <p>A geometric framework for knowledge representation and semantic reasoning.</p>
+                    <div class="entry-note">Representation track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/ontologies-knowledge-graphs.html">
+                    <span class="entry-label">Representation and Reasoning</span>
+                    <h3>Ontologies &amp; Knowledge Graphs</h3>
+                    <p>Formal definitions and structured representations for machine-interpretable knowledge.</p>
+                    <div class="entry-note">Representation track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/formal-logic-solvers.html">
+                    <span class="entry-label">Representation and Reasoning</span>
+                    <h3>Formal Logic &amp; Automated Reasoning</h3>
+                    <p>Deterministic frameworks for verifiable machine decision-making.</p>
+                    <div class="entry-note">Representation track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/automated-theorem-proving.html">
+                    <span class="entry-label">Representation and Reasoning</span>
+                    <h3>Automated Theorem Proving (ATP)</h3>
+                    <p>Formal verification of mathematical claims and reasoning chains.</p>
+                    <div class="entry-note">Representation track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/formal-verification-languages.html">
+                    <span class="entry-label">Representation and Reasoning</span>
+                    <h3>Formal Verification Languages</h3>
+                    <p>Mathematical modeling for the verification of system specifications and protocols.</p>
+                    <div class="entry-note">Representation track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/causal-inference.html">
+                    <span class="entry-label">Representation and Reasoning</span>
+                    <h3>Causal Inference</h3>
+                    <p>Theoretical frameworks for modeling structural mechanisms and counterfactual reasoning.</p>
+                    <div class="entry-note">Representation track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/probabilistic-programming.html">
+                    <span class="entry-label">Representation and Reasoning</span>
+                    <h3>Probabilistic Programming</h3>
+                    <p>Formal modeling of uncertainty via Bayesian inference and automated statistical computation.</p>
+                    <div class="entry-note">Representation track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/program-synthesis.html">
+                    <span class="entry-label">Representation and Reasoning</span>
+                    <h3>Program Synthesis</h3>
+                    <p>Automated construction of executable code from formal high-level specifications.</p>
+                    <div class="entry-note">Representation track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/differentiable-logic.html">
+                    <span class="entry-label">Representation and Reasoning</span>
+                    <h3>Differentiable Logic</h3>
+                    <p>Mathematical integration of gradient-based learning with formal logical operators.</p>
+                    <div class="entry-note">Representation track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/geometric-deep-learning.html">
+                    <span class="entry-label">Representation and Reasoning</span>
+                    <h3>Geometric Deep Learning</h3>
+                    <p>Theoretical unification of AI architectures through symmetry and invariance.</p>
+                    <div class="entry-note">Representation track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+              </ol>
+
+              <h3>Learning Architectures and Cognitive Models</h3>
+              <ol class="entry-list">
+                <li>
+                  <a href="research/brain-inspired-computing.html">
+                    <span class="entry-label">Architectures and Learning</span>
+                    <h3>Brain-Inspired Computing</h3>
+                    <p>Theoretical frameworks for biological intelligence modeling and continuous learning.</p>
+                    <div class="entry-note">Architecture track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/liquid-neural-networks.html">
+                    <span class="entry-label">Architectures and Learning</span>
+                    <h3>Liquid Neural Networks</h3>
+                    <p>Continuous-time AI systems for stable and adaptive intelligence.</p>
+                    <div class="entry-note">Architecture track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/neuromorphic-computing.html">
+                    <span class="entry-label">Architectures and Learning</span>
+                    <h3>Neuromorphic Computing</h3>
+                    <p>Event-driven AI architectures for energy-efficient, real-time processing.</p>
+                    <div class="entry-note">Architecture track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/active-inference.html">
+                    <span class="entry-label">Architectures and Learning</span>
+                    <h3>Active Inference</h3>
+                    <p>Theoretical foundations for purposeful behavior via the Free Energy Principle.</p>
+                    <div class="entry-note">Architecture track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/energy-based-models.html">
+                    <span class="entry-label">Architectures and Learning</span>
+                    <h3>Energy-Based Models (EBMs)</h3>
+                    <p>Mathematical frameworks for dependency modeling through scalar energy minimization.</p>
+                    <div class="entry-note">Architecture track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/world-models-jepa.html">
+                    <span class="entry-label">Architectures and Learning</span>
+                    <h3>World Models &amp; JEPA</h3>
+                    <p>Predictive architectures for autonomous agent planning and latent representation learning.</p>
+                    <div class="entry-note">Architecture track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/kolmogorov-arnold-networks.html">
+                    <span class="entry-label">Architectures and Learning</span>
+                    <h3>Kolmogorov-Arnold Networks (KAN)</h3>
+                    <p>Mathematical foundations for interpretable neural architectures via spline-based activations.</p>
+                    <div class="entry-note">Architecture track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/cognitive-architectures.html">
+                    <span class="entry-label">Architectures and Learning</span>
+                    <h3>Cognitive Architectures</h3>
+                    <p>Integration of symbolic and sub-symbolic modules into unified intelligence models.</p>
+                    <div class="entry-note">Architecture track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/physics-informed-ai.html">
+                    <span class="entry-label">Architectures and Learning</span>
+                    <h3>Physics-Informed AI</h3>
+                    <p>Integration of domain-specific physical laws as hard constraints in neural network training.</p>
+                    <div class="entry-note">Architecture track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/decentralized-ai.html">
+                    <span class="entry-label">Architectures and Learning</span>
+                    <h3>Decentralized AI (DeAI)</h3>
+                    <p>Architectures for distributed model training and inference on peer-to-peer networks.</p>
+                    <div class="entry-note">Architecture track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/multi-agent-systems.html">
+                    <span class="entry-label">Architectures and Learning</span>
+                    <h3>Multi-Agent Systems (MAS)</h3>
+                    <p>Coordination and consensus protocols for distributed intelligent agents.</p>
+                    <div class="entry-note">Architecture track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+              </ol>
+
+              <h3>Verification, Safety, and Strategic Landscape</h3>
+              <ol class="entry-list">
+                <li>
+                  <a href="research/explainable-ai.html">
+                    <span class="entry-label">Verification and Governance</span>
+                    <h3>Explainable AI (XAI)</h3>
+                    <p>Methodologies for transparency and auditable logic in autonomous systems.</p>
+                    <div class="entry-note">Verification and governance track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/verifiable-computing.html">
+                    <span class="entry-label">Verification and Governance</span>
+                    <h3>Verifiable Computing &amp; ZKPs</h3>
+                    <p>Cryptographic protocols for verifying AI computation integrity and privacy.</p>
+                    <div class="entry-note">Verification and governance track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/formal-ai-safety.html">
+                    <span class="entry-label">Verification and Governance</span>
+                    <h3>Formal AI Safety</h3>
+                    <p>Mathematical frameworks for verifying safety and alignment properties in autonomous agents.</p>
+                    <div class="entry-note">Verification and governance track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/algorithmic-information-theory.html">
+                    <span class="entry-label">Strategic Foundations</span>
+                    <h3>Algorithmic Information Theory (AIT)</h3>
+                    <p>Mathematical foundations of computation, information content, and complexity.</p>
+                    <div class="entry-note">Strategic foundations track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+                <li>
+                  <a href="research/european-research-initiatives.html">
+                    <span class="entry-label">Strategic Foundations</span>
+                    <h3>European Research Initiatives</h3>
+                    <p>
+                      A survey of key research groups and projects in Switzerland and Europe focused on efficient and
+                      neuro-symbolic AI.
+                    </p>
+                    <div class="entry-note">Strategic foundations track. Published March 19, 2026.</div>
+                  </a>
+                </li>
+              </ol>
+            </section>
+
+            <section id="connection">
+              <h2>Connection To MRP-VM</h2>
+              <p>
+                The notes in this section support MRP-VM in four distinct ways. The execution articles clarify how more
+                AI workloads can move toward ordinary hardware and lower-cost inference. The representation and symbolic
+                articles point toward stronger intermediates, constrained languages, and executable structure. The
+                architecture articles broaden the space of candidate local regimes, including world models, compact
+                modules, graph-oriented systems, and mixed symbolic-neural designs. The verification and governance
+                articles define how runtime outputs can become more auditable and trustworthy.
+              </p>
+              <table class="program-table">
+                <thead>
+                  <tr>
+                    <th>Cluster</th>
+                    <th>What it contributes</th>
+                    <th>Why it matters for MRP-VM</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Execution and Deployment</td>
+                    <td>CPU-friendly inference, quantization, runtimes, systems languages, and compact model paths.</td>
+                    <td>Supports local deployment, lower operating cost, and more realistic enterprise adoption.</td>
+                  </tr>
+                  <tr>
+                    <td>Representation and Symbolic Structure</td>
+                    <td>Constrained language, symbolic form, geometric representations, causal and logical tools.</td>
+                    <td>Strengthens typed intermediates, skill contracts, validation, and symbolic execution paths.</td>
+                  </tr>
+                  <tr>
+                    <td>Learning Architectures</td>
+                    <td>Alternative regimes for planning, memory, compact learning, coordination, and adaptation.</td>
+                    <td>Broadens the regime-selection space beyond transformer-only execution.</td>
+                  </tr>
+                  <tr>
+                    <td>Verification and Governance</td>
+                    <td>Auditing, proof-oriented methods, cryptographic verification, and safety frameworks.</td>
+                    <td>Makes runtime behavior easier to trust, inspect, and certify in serious environments.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section id="horizon">
+              <h2>Research Horizon</h2>
+              <p>
+                This research map is meant to remain open and expandable, but its center of gravity is now clear. The
+                purpose of the surrounding notes is to help turn MRP-VM into a concrete technology program: something
+                that can support new research projects, attract funding, and make AI more usable on ordinary machines
+                and in organizations that need reliable behavior.
+              </p>
+              <p>
+                In that sense, the section is both a reading path and a technical backlog. It shows where the next
+                layers of work can come from as MRP-VM moves from conceptual clarity toward runtime kernels, symbolic
+                execution, compact learned routers, and more disciplined AI systems.
+              </p>
+            </section>
+          </article>
+        </main>
+      </div>
 
       <footer>
-        <p>© 2026 Axiologic Research & AGISystem2 Team.</p>
+        <p>
+          This research map is maintained as part of AGISystem2 and complements the
+          <a href="MRP/index.html">Meta Rational Pragmatics</a> article series.
+        </p>
       </footer>
     </div>
+
+    <script src="MRP/mrp-outline.js"></script>
   </body>
 </html>
