@@ -1,0 +1,83 @@
+.citation-box {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--paper-line);
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.citation-link,
+.citation-preview,
+.lede,
+.subtitle,
+.article {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.citation-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.citation-head strong {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.citation-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.copy-button {
+  appearance: none;
+  border: 1px solid var(--stroke);
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+.copy-button:hover,
+.copy-button:focus-visible {
+  border-color: rgba(27, 79, 114, 0.28);
+  outline: none;
+}
+
+.citation-link {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--accent2);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.citation-link:hover,
+.citation-link:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+.citation-preview {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.copy-status {
+  display: block;
+  margin-top: 8px;
+  color: var(--faint);
+  font-size: 12px;
+}

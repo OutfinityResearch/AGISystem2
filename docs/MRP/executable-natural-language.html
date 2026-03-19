@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en" data-default-section="why-it-matters">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f7fbff" />
+    <meta
+      name="description"
+      content="An MRP essay on executable natural language, comparing formal-semantics-first and runtime-pragmatics-first architectures."
+    />
+    <meta property="og:title" content="Executable Natural Language — AGISystem2" />
+    <meta
+      property="og:description"
+      content="Why executable natural language matters for Meta-Rational Pragmatics and why LLM runtimes shift execution from fixed semantics toward governed pragmatics."
+    />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/MRP/executable-natural-language.html" />
+    <title>Executable Natural Language — AGISystem2</title>
+    <link rel="stylesheet" href="mrp-page.css" />
+    <link rel="stylesheet" href="mrp-citation.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="../index.html">AGISystem2</a>
+            <span class="crumb-sep">/</span>
+            <a href="index.html">MRP</a>
+            <span class="crumb-sep">/</span>
+            <span class="crumb-current">Executable Natural Language</span>
+          </nav>
+          <span>Meta Rational Pragmatics essay</span>
+        </div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Research</a>
+          <a class="pill primary" href="index.html">MRP Index</a>
+        </div>
+      </div>
+
+      <header class="hero">
+        <div class="kicker"><b>MRP Essay 04</b> Natural language as executable medium</div>
+        <h1>Executable Natural Language</h1>
+        <p class="subtitle">
+          A survey-style chapter on how natural language moves from documentation toward execution, and why Meta-Rational
+          Pragmatics cares less about syntax alone than about the runtime discipline that governs interpretation.
+        </p>
+        <div class="meta-row">
+          <span class="meta-pill">Author: Sînică Alboaie</span>
+          <span class="meta-pill">Series: Meta Rational Pragmatics</span>
+          <span class="meta-pill">Focus: Executable pragmatics</span>
+        </div>
+        <div class="citation-box" data-citation-box data-citation-key="Alboaie-2026">
+          <div class="citation-head">
+            <strong>Permalink & citation</strong>
+            <div class="citation-actions">
+              <button class="copy-button" type="button" data-copy-target="link">Copy link</button>
+              <button class="copy-button" type="button" data-copy-target="citation">Copy citation</button>
+            </div>
+          </div>
+          <a class="citation-link" data-doc-link href="#"></a>
+          <p class="citation-preview" data-citation-preview></p>
+          <span class="copy-status" data-copy-status aria-live="polite"></span>
+        </div>
+      </header>
+
+      <div class="layout" id="main">
+        <aside class="toc" aria-label="Article outline">
+          <header>
+            <strong>Outline</strong>
+            <span id="nav-readout">—</span>
+          </header>
+          <ul class="navlist">
+            <li>
+              <a href="#why-it-matters" data-step="01" aria-current="true">
+                <span class="toc-badge">01</span>
+                Why It Matters
+              </a>
+            </li>
+            <li>
+              <a href="#two-families" data-step="02">
+                <span class="toc-badge">02</span>
+                Two Execution Families
+              </a>
+            </li>
+            <li>
+              <a href="#runtime-systems" data-step="03">
+                <span class="toc-badge">03</span>
+                Runtime-Centered Systems
+              </a>
+            </li>
+            <li>
+              <a href="#constraints" data-step="04">
+                <span class="toc-badge">04</span>
+                Constraints and Hardening
+              </a>
+            </li>
+            <li>
+              <a href="#mrp-role" data-step="05">
+                <span class="toc-badge">05</span>
+                Role for MRP
+              </a>
+            </li>
+            <li>
+              <a href="#references" data-step="06">
+                <span class="toc-badge">06</span>
+                References
+              </a>
+            </li>
+          </ul>
+        </aside>
+
+        <main>
+          <article class="article">
+            <section id="why-it-matters">
+              <h2>Why Executable Natural Language Matters</h2>
+              <p>
+                The ambition to treat natural language as something closer to a programming language is not new. What
+                has changed is the execution model. Earlier systems typically demanded a controlled language with a
+                deterministic mapping into logic or code. Current systems increasingly rely on language models as
+                interpreters that execute partially structured textual specifications through iterative prompting,
+                retrieval, tool invocation, and local replanning [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008] [XU-2024].
+              </p>
+              <p>
+                This shift matters because it relocates operational meaning. In older systems, meaning had to be fixed
+                before execution. In contemporary agent systems, part of meaning is decided during execution by the
+                interaction among text, context, memory, tools, and control policy. That is exactly why executable
+                natural language is central for Meta-Rational Pragmatics: the hard problem is no longer only semantic
+                representation, but governance of interpretation under runtime conditions.
+              </p>
+            </section>
+
+            <section id="two-families">
+              <h2>Two Main Families of Execution</h2>
+              <p>
+                A useful distinction separates <em>formal-semantics-first</em> systems from
+                <em>runtime-pragmatics-first</em> systems. In the first family, text becomes executable because it is
+                translated into a stable formal target. Attempto Controlled English is the clearest example. ACE keeps a
+                readable English-like surface but constrains the language tightly enough to support unambiguous mapping
+                into discourse representation structures and logic-like forms [FUCHS-SCHWITTER-1996]
+                [FUCHS-ET-AL-2008].
+              </p>
+              <p>
+                Gherkin shows a weaker but industrially successful model. Its steps are operational only because they
+                are attached to external code. That is still valuable, but it is not a full semantics of natural
+                language; it is a disciplined bridge between scenario text and host-language implementations
+                [CUCUMBER-2025].
+              </p>
+              <p>
+                The second family leaves more underdetermined until runtime. Here a language model or agentic runtime
+                decides how to interpret a textual step in context, which tools to invoke, what information to retrieve,
+                and what branch to follow. The gain is flexibility. The cost is that guarantees become harder to state
+                and audit.
+              </p>
+            </section>
+
+            <section id="runtime-systems">
+              <h2>Runtime-Centered Systems</h2>
+              <p>
+                LMQL occupies an important middle position. It does not translate English into logic in the ACE sense,
+                but it does provide a programming model for language-model interaction with variables, constraints, and
+                control flow, and it can compile some of those constraints into token-level restrictions
+                [BEURER-KELLNER-2022].
+              </p>
+              <p>
+                CoRE makes the runtime turn even more explicit. It proposes a structured natural-language program whose
+                steps are executed by an LLM-centered runtime with memory, tool use, and explicit branch control. This
+                is one of the clearest examples of executable pragmatics: the text is not enough on its own; execution
+                depends on the surrounding interpretive machine [XU-2024].
+              </p>
+              <p>
+                ReAct shows the same tendency in a looser form. Intermediate text becomes part of control rather than
+                mere explanation, because reasoning traces and actions are interleaved in an iterative loop [YAO-2023].
+                PAL moves in the opposite direction by asking the language model to synthesize code and then delegating
+                actual execution to a deterministic interpreter, which remains one of the strongest compromises when one
+                wants flexible understanding but stricter execution [GAO-2022].
+              </p>
+              <p>
+                Toolformer, DSPy, and AutoGen extend this landscape further. Toolformer internalizes part of the
+                decision about when and how tools should be used [SCHICK-2023]. DSPy treats LM pipelines as declarative
+                programs open to compilation and optimization [DSPY-2023]. AutoGen turns multi-agent conversation
+                patterns into programmable orchestration structures [WU-2023].
+              </p>
+            </section>
+
+            <section id="constraints">
+              <h2>Constraints, Schemas, and Hardening Layers</h2>
+              <p>
+                Constraint-oriented systems matter because free-form runtime interpretation is not enough in serious
+                deployments. Guided generation methods restrict output so that only strings compatible with a grammar,
+                schema, or automaton remain admissible. They do not solve the full semantic problem, but they provide a
+                hardening layer between flexible model behavior and reproducible executable artefacts [WILLARD-LOUF-2023]
+                [BEURER-KELLNER-2022].
+              </p>
+              <p>
+                Once the field is viewed this way, three architectural patterns become visible: translation-based
+                execution, interpreter-based execution, and constraint-shaped execution. None of them is sufficient on
+                its own. The likely future is hybrid: a light controlled language for authoring, an explicit
+                intermediate representation for replay and validation, an agentic runtime for local micro-planning, and
+                boundary constraints that keep execution within declared contracts [XU-2024] [DSPY-2023]
+                [WILLARD-LOUF-2023].
+              </p>
+            </section>
+
+            <section id="mrp-role">
+              <h2>The Role for Meta-Rational and Executable Pragmatics</h2>
+              <p>
+                For Meta-Rational Pragmatics, the decisive lesson is not that natural language has suddenly become a
+                perfectly formal language. The lesson is that execution increasingly depends on a governed runtime that
+                must decide what reading is active, what evidence is admissible, when ambiguity may be tolerated, and
+                when a softer interpretation must be escalated into a stricter regime.
+              </p>
+              <p>
+                That is why executable natural language belongs directly inside executable pragmatics. It forces us to
+                model not only statements and outputs, but the policies by which statements become operational. In this
+                sense, the central challenge is no longer just “how to prompt a model,” but how to expose, constrain,
+                and audit the transition from text to controlled action.
+              </p>
+            </section>
+
+            <section id="references">
+              <h2>References</h2>
+              <ul class="refs">
+                <li>[BEURER-KELLNER-2022] Beurer-Kellner, L., et al. (2022). Prompting Is Programming: A Query Language for Large Language Models.</li>
+                <li>[CUCUMBER-2025] Cucumber. (2025). Gherkin Language Reference.</li>
+                <li>[DSPY-2023] Khattab, O., et al. (2023). DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines.</li>
+                <li>[FUCHS-SCHWITTER-1996] Fuchs, N. E., & Schwitter, R. (1996). Attempto Controlled English (ACE).</li>
+                <li>[FUCHS-ET-AL-2008] Fuchs, N. E., Kaljurand, K., & Kuhn, T. (2008). Attempto Controlled English for Knowledge Representation.</li>
+                <li>[GAO-2022] Gao, L., et al. (2022). PAL: Program-aided Language Models.</li>
+                <li>[SCHICK-2023] Schick, T., et al. (2023). Toolformer: Language Models Can Teach Themselves to Use Tools.</li>
+                <li>[WILLARD-LOUF-2023] Willard, B., & Louf, R. (2023). Efficient Guided Generation for Large Language Models.</li>
+                <li>[WU-2023] Wu, Q., et al. (2023). AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation.</li>
+                <li>[XU-2024] Xu, S., et al. (2024). AIOS Compiler: LLM as Interpreter for Natural Language Programming.</li>
+                <li>[YAO-2023] Yao, S., et al. (2023). ReAct: Synergizing Reasoning and Acting in Language Models.</li>
+              </ul>
+            </section>
+          </article>
+        </main>
+      </div>
+
+      <footer>
+        <p>This essay is published in the Meta Rational Pragmatics track of the AGISystem2 documentation site.</p>
+      </footer>
+    </div>
+
+    <script src="mrp-outline.js"></script>
+    <script src="mrp-citation.js"></script>
+  </body>
+</html>

@@ -19,6 +19,7 @@
     <meta property="og:url" content="https://agisystem2.com/MRP/" />
 
     <title>Meta Rational Pragmatics (MRP) — AGISystem2</title>
+    <link rel="stylesheet" href="mrp-citation.css" />
 
     <style>
       :root {
@@ -116,6 +117,32 @@
         line-height: 1.15;
       }
 
+      .crumbs {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+        font-weight: 720;
+        letter-spacing: 0.2px;
+        line-height: 1.15;
+      }
+
+      .crumbs a {
+        color: var(--text);
+        text-decoration: none;
+      }
+
+      .crumbs a:hover,
+      .crumbs a:focus-visible {
+        text-decoration: underline;
+        text-underline-offset: 0.16em;
+      }
+
+      .crumb-sep,
+      .crumb-current {
+        color: var(--muted);
+      }
+
       .brand span {
         color: var(--muted);
         font-size: 12.5px;
@@ -171,7 +198,6 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 8px 10px;
         padding: 0;
         border: none;
         background: transparent;
@@ -383,7 +409,11 @@
     <div class="shell">
       <div class="topbar">
         <div class="brand">
-          <strong>AGISystem2 / MRP</strong>
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="../index.html">AGISystem2</a>
+            <span class="crumb-sep">/</span>
+            <span class="crumb-current">MRP</span>
+          </nav>
           <span>Meta Rational Pragmatics documentation track</span>
         </div>
         <div class="top-links">
@@ -402,9 +432,21 @@
           realism without drifting into collapse.
         </p>
         <div class="chip-row" aria-label="MRP overview">
-          <span class="chip"><i></i>2 published essays</span>
+          <span class="chip"><i></i>5 published essays</span>
           <span class="chip"><i></i>Essay track</span>
           <span class="chip"><i></i>Author: Sînică Alboaie</span>
+        </div>
+        <div class="citation-box" data-citation-box data-citation-key="Alboaie-2026" data-doc-title="Meta Rational Pragmatics (MRP)">
+          <div class="citation-head">
+            <strong>Permalink & citation</strong>
+            <div class="citation-actions">
+              <button class="copy-button" type="button" data-copy-target="link">Copy link</button>
+              <button class="copy-button" type="button" data-copy-target="citation">Copy citation</button>
+            </div>
+          </div>
+          <a class="citation-link" data-doc-link href="#"></a>
+          <p class="citation-preview" data-citation-preview></p>
+          <span class="copy-status" data-copy-status aria-live="polite"></span>
         </div>
       </header>
 
@@ -421,8 +463,50 @@
         </div>
 
         <div class="article-grid">
-          <a href="meta-rationality-difficulties-misunderstandings-risks.html" class="article-card">
+          <a href="meta-rational-pragmatics.html" class="article-card">
             <strong>Essay 01</strong>
+            <h3>Meta-Rational Pragmatics</h3>
+            <p>
+              Introductory chapter on why advanced AI needs a missing middle layer between natural-language fluidity and
+              formally disciplined execution, and why MRP-VM is framed as a runtime for policy-governed interpretation.
+            </p>
+            <div class="card-meta">
+              <span>Sînică Alboaie</span>
+              <span>Foundational introduction</span>
+              <span>MRP-VM</span>
+            </div>
+          </a>
+
+          <a href="meta-rational-pragmatics-in-context.html" class="article-card">
+            <strong>Essay 02</strong>
+            <h3>Meta-Rational Pragmatics in Context</h3>
+            <p>
+              Places meta-rational pragmatics in relation to older philosophical intuitions, neighboring approaches,
+              neuro-symbolic reification risks, and the pragmatic role of world models.
+            </p>
+            <div class="card-meta">
+              <span>Sînică Alboaie</span>
+              <span>Comparative context</span>
+              <span>World models</span>
+            </div>
+          </a>
+
+          <a href="regime-selection-tractable-computation-regime-induction.html" class="article-card">
+            <strong>Essay 03</strong>
+            <h3>Regime Selection and Tractable Computation as Regime Induction</h3>
+            <p>
+              A staged architecture for structural regime induction, active theory frames, explicit skills, compilation,
+              and the reduction of local subproblems to tractable interpreters.
+            </p>
+            <div class="card-meta">
+              <span>Sînică Alboaie</span>
+              <span>Regime induction</span>
+              <span>Tractable interpreters</span>
+            </div>
+          </a>
+
+          <a href="meta-rationality-difficulties-misunderstandings-risks.html" class="article-card">
+            <strong>Essay 04</strong>
             <h3>Meta-Rationality: Difficulties, Misunderstandings, and Internal Risks</h3>
             <p>
               Why meta-rationality is necessary when inquiry becomes trapped, why it is so often misunderstood, and how
@@ -436,7 +520,7 @@
           </a>
 
           <a href="meta-rationality-ai-scientific-inquiry.html" class="article-card">
-            <strong>Essay 02</strong>
+            <strong>Essay 05</strong>
             <h3>Meta-Rationality, AI, and the Health of Scientific Inquiry</h3>
             <p>
               A restrained account of how meta-rationality relates to science, where scientism begins, how AI may
@@ -456,5 +540,6 @@
         <p>MRP is part of the AGISystem2 documentation site and is maintained as a dedicated essay track.</p>
       </footer>
     </div>
+    <script src="mrp-citation.js"></script>
   </body>
 </html>

@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f7fbff" />
+    <meta
+      name="description"
+      content="Regime Selection and Tractable Computation as Regime Induction: a staged architecture for bounded active theory frames, skills, compilation, and tractable interpreters."
+    />
+
+    <meta property="og:title" content="Regime Selection and Tractable Computation as Regime Induction — AGISystem2" />
+    <meta
+      property="og:description"
+      content="A technical essay on structural regime induction, tractable interpreters, agentic skills, compilation, and staged AI architectures."
+    />
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:url"
+      content="https://agisystem2.com/MRP/regime-selection-tractable-computation-regime-induction.html"
+    />
+
+    <title>Regime Selection and Tractable Computation as Regime Induction — AGISystem2</title>
+    <link rel="stylesheet" href="mrp-citation.css" />
+
+    <style>
+      :root {
+        --bg0: #ece7dd;
+        --bg1: #f5f1e8;
+        --paper: #fffdf8;
+        --paper-line: rgba(64, 46, 24, 0.16);
+        --stroke: rgba(64, 46, 24, 0.18);
+        --stroke2: rgba(64, 46, 24, 0.1);
+        --text: rgba(28, 21, 14, 0.94);
+        --muted: rgba(55, 43, 31, 0.78);
+        --faint: rgba(79, 62, 44, 0.58);
+        --accent: #1b4f72;
+        --accent2: #7a5c2e;
+        --shadow: 0 18px 32px rgba(47, 36, 20, 0.08);
+        --shadow2: 0 10px 18px rgba(47, 36, 20, 0.06);
+        --radius: 12px;
+        --maxw: 1120px;
+        --navw: 280px;
+        --ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: var(--ui);
+        color: var(--text);
+        background: linear-gradient(180deg, var(--bg0), var(--bg1));
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      a:focus-visible {
+        outline: 2px solid rgba(10, 125, 255, 0.55);
+        outline-offset: 2px;
+      }
+
+      .skip-link {
+        position: absolute;
+        left: -999px;
+        top: 0;
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid var(--stroke);
+        border-radius: 12px;
+        z-index: 50;
+      }
+
+      .skip-link:focus {
+        left: 12px;
+        top: 12px;
+      }
+
+      .shell {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 22px 18px 64px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px;
+        border: 1px solid var(--stroke);
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow2);
+        position: sticky;
+        top: 14px;
+        z-index: 20;
+      }
+
+      .brand {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .brand strong {
+        font-weight: 720;
+      }
+
+      .crumbs {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+        font-weight: 720;
+        line-height: 1.15;
+      }
+
+      .crumbs a {
+        color: var(--text);
+        text-decoration: none;
+      }
+
+      .crumbs a:hover,
+      .crumbs a:focus-visible {
+        text-decoration: underline;
+        text-underline-offset: 0.16em;
+      }
+
+      .crumb-sep,
+      .crumb-current {
+        color: var(--muted);
+      }
+
+      .brand span {
+        color: var(--muted);
+        font-size: 12.5px;
+      }
+
+      .top-links {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 11px;
+        border: 1px solid var(--stroke);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.92);
+        color: var(--text);
+        font-size: 12.5px;
+      }
+
+      .pill.primary {
+        border-color: rgba(27, 79, 114, 0.2);
+        background: rgba(255, 255, 255, 0.96);
+      }
+
+      .hero {
+        margin-top: 18px;
+        padding: 24px 28px 20px;
+        border: 1px solid var(--paper-line);
+        border-radius: var(--radius);
+        background: var(--paper);
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        display: none;
+      }
+
+      .hero > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: var(--faint);
+        font-size: 11.5px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .kicker b {
+        color: var(--accent2);
+      }
+
+      h1 {
+        margin: 12px 0 10px;
+        font-family: var(--serif);
+        font-size: clamp(34px, 3.8vw, 48px);
+        line-height: 1.08;
+        letter-spacing: -0.01em;
+        font-weight: 600;
+      }
+
+      .subtitle {
+        margin: 0;
+        color: var(--muted);
+        font-family: var(--serif);
+        font-size: 18px;
+        line-height: 1.68;
+        max-width: 72ch;
+      }
+
+      .meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 16px;
+        padding-top: 12px;
+        border-top: 1px solid var(--paper-line);
+      }
+
+      .meta-pill {
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: var(--faint);
+        font-size: 11.5px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: var(--navw) 1fr;
+        gap: 22px;
+        align-items: start;
+        margin-top: 18px;
+      }
+
+      .toc {
+        position: sticky;
+        top: 88px;
+        border: 1px solid var(--paper-line);
+        border-radius: var(--radius);
+        background: rgba(255, 253, 248, 0.96);
+        box-shadow: none;
+        overflow: hidden;
+      }
+
+      .toc header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px;
+        border-bottom: 1px solid var(--stroke2);
+      }
+
+      .toc header strong {
+        font-size: 13px;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: rgba(2, 6, 23, 0.62);
+      }
+
+      .toc header span {
+        color: rgba(2, 6, 23, 0.5);
+        font-size: 12.5px;
+      }
+
+      .navlist {
+        list-style: none;
+        margin: 0;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .navlist a {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid transparent;
+        color: rgba(2, 6, 23, 0.78);
+        font-size: 13px;
+        line-height: 1.35;
+      }
+
+      .navlist a:hover {
+        text-decoration: none;
+        background: rgba(2, 6, 23, 0.04);
+        border-color: var(--stroke2);
+      }
+
+      .navlist a[aria-current="true"] {
+        background: rgba(27, 79, 114, 0.06);
+        border-color: rgba(27, 79, 114, 0.16);
+        color: rgba(2, 6, 23, 0.92);
+      }
+
+      .toc-badge {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--stroke2);
+        background: rgba(255, 255, 255, 0.92);
+        color: var(--faint);
+        font-weight: 600;
+        font-size: 12px;
+        flex: 0 0 auto;
+      }
+
+      .stack {
+        border: 1px solid var(--paper-line);
+        border-radius: var(--radius);
+        background: var(--paper);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .article {
+        padding: 34px 42px 38px;
+        font-family: var(--serif);
+      }
+
+      .article section {
+        scroll-margin-top: 100px;
+        padding: 0;
+        border: none;
+        border-radius: 0;
+        background: transparent;
+      }
+
+      .article section + section {
+        margin-top: 0;
+      }
+
+      .article h2 {
+        margin: 28px 0 12px;
+        font-family: var(--serif);
+        font-size: 26px;
+        line-height: 1.24;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+
+      .article section:first-child h2 {
+        margin-top: 0;
+      }
+
+      .article p,
+      .article li {
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.78;
+      }
+
+      .article p {
+        margin: 0 0 12px;
+        text-align: justify;
+        hyphens: auto;
+      }
+
+      .article p:last-child {
+        margin-bottom: 0;
+      }
+
+      .article ul,
+      .article ol {
+        margin: 12px 0 14px;
+        padding-left: 24px;
+      }
+
+      footer {
+        margin-top: 14px;
+        padding: 18px;
+        border: 1px solid var(--paper-line);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.92);
+        color: var(--faint);
+        line-height: 1.6;
+      }
+
+      footer p {
+        margin: 0;
+      }
+
+      @media (max-width: 980px) {
+        .shell {
+          padding: 16px 12px 40px;
+        }
+
+        .topbar {
+          flex-wrap: wrap;
+          top: 8px;
+        }
+
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .toc {
+          position: relative;
+          top: 0;
+        }
+
+        .hero {
+          padding: 20px 18px 18px;
+        }
+
+        .navlist {
+          flex-direction: row;
+          overflow-x: auto;
+        }
+
+        .navlist a {
+          white-space: nowrap;
+          flex: 0 0 auto;
+        }
+
+        .article {
+          padding: 24px 20px 28px;
+        }
+
+        .article p,
+        .article li {
+          font-size: 17px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="../index.html">AGISystem2</a>
+            <span class="crumb-sep">/</span>
+            <a href="index.html">MRP</a>
+            <span class="crumb-sep">/</span>
+            <span class="crumb-current">Regime Selection and Tractable Computation as Regime Induction</span>
+          </nav>
+          <span>Meta Rational Pragmatics essay</span>
+        </div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Research</a>
+          <a class="pill primary" href="index.html">MRP Index</a>
+        </div>
+      </div>
+
+      <header class="hero">
+        <div class="kicker"><b>MRP Essay 03</b> Regime induction and tractable interpreters</div>
+        <h1>Regime Selection and Tractable Computation as Regime Induction</h1>
+        <p class="subtitle">
+          A technical essay on structural regime induction, bounded active theory frames, explicit skills, staged
+          compilation, and the reduction of local subproblems to tractable interpreters.
+        </p>
+        <div class="meta-row">
+          <span class="meta-pill">Author: Sînică Alboaie</span>
+          <span class="meta-pill">Series: Meta Rational Pragmatics</span>
+          <span class="meta-pill">Focus: Structural regime induction</span>
+        </div>
+        <div class="citation-box" data-citation-box data-citation-key="Alboaie-2026">
+          <div class="citation-head">
+            <strong>Permalink & citation</strong>
+            <div class="citation-actions">
+              <button class="copy-button" type="button" data-copy-target="link">Copy link</button>
+              <button class="copy-button" type="button" data-copy-target="citation">Copy citation</button>
+            </div>
+          </div>
+          <a class="citation-link" data-doc-link href="#"></a>
+          <p class="citation-preview" data-citation-preview></p>
+          <span class="copy-status" data-copy-status aria-live="polite"></span>
+        </div>
+      </header>
+
+      <div class="layout" id="main">
+        <aside class="toc" aria-label="Article outline">
+          <header>
+            <strong>Outline</strong>
+            <span id="nav-readout">—</span>
+          </header>
+          <ul class="navlist">
+            <li>
+              <a href="#regime-induction" data-step="01" aria-current="true">
+                <span class="toc-badge">01</span>
+                Regime Induction
+              </a>
+            </li>
+            <li>
+              <a href="#tractability" data-step="02">
+                <span class="toc-badge">02</span>
+                Structural Regimes and Tractability
+              </a>
+            </li>
+            <li>
+              <a href="#skills-compilation" data-step="03">
+                <span class="toc-badge">03</span>
+                Skills and Compilation
+              </a>
+            </li>
+            <li>
+              <a href="#staged-ecology" data-step="04">
+                <span class="toc-badge">04</span>
+                Staged Ecology of Methods
+              </a>
+            </li>
+            <li>
+              <a href="#implementation-risks" data-step="05">
+                <span class="toc-badge">05</span>
+                Implementation and Risks
+              </a>
+            </li>
+          </ul>
+        </aside>
+
+        <main class="stack">
+          <article class="article">
+            <section id="regime-induction">
+              <h2>From Judgment Regimes to Regime Induction</h2>
+              <p>Meta-rational pragmatics starts from the observation that, in many practically relevant artefacts, operational meaning is not exhausted by abstract denotation. A document, policy, specification, workflow, or knowledge source becomes actionable only relative to a judgment regime: what must be checked, what evidence is admissible, which uncertainties are acceptable, and what counts as acceptance, rejection, or deferred judgment in context [WITTGENSTEIN-1953] [BILETZKI-2023]. From this perspective, semantics is often better understood as a stabilized special case of constrained pragmatics rather than as its universal foundation. The architectural consequence is that an intelligent system should not assume that every task can be handled by one uniform reasoning style, one representational substrate, or one monolithic model. It should first determine the structural character of the local subproblem and only then decide how that subproblem is to be made computable.</p>
+              <p>This is the intended meaning of Structural Regime Selection and Tractable Computation. In its stronger form, however, the concept should be read not merely as runtime method selection, but as regime induction. The system must learn how to recognize what kind of subproblem it is facing, how to stabilize that subproblem into a bounded working object, and how to reduce it to an interpreter whose behavior is locally adequate, computationally feasible, and sufficiently auditable. Under this formulation, the target of learning changes. The system is not primarily trying to internalize one universal semantics of the world or compress all competence into one predictive engine. It is trying to acquire two higher-order capacities: the ability to detect structural regimes and the ability to map them to tractable interpreters.</p>
+            </section>
+
+            <section id="tractability">
+              <h2>Structural Regimes and the Meaning of Tractable Computation</h2>
+              <p>A structural regime is not just a topic label. It is a hypothesis about the computational shape of the subproblem. Some subproblems are constraint-dominated and justify exact symbolic verification. Others are graph-structured and call for relational decomposition. Others are driven by graded similarity and are better handled geometrically or associatively. Others involve explicit uncertainty, local dependence, or latent state evolution and are better expressed probabilistically or through predictive models. Others are synthesis problems, where the relevant output is an executable procedure rather than a descriptive answer. This is why regime induction is more fundamental than simple tool choice. Before one can call a solver, a retrieval engine, a world model, or a compiler-like transform, one must first isolate the relevant entities, scopes, dependencies, invariants, and success criteria. Intelligence begins when the system succeeds in producing a bounded active theory frame within which solving has become meaningful.</p>
+              <p>Tractable computation, in this setting, does not mean only lower runtime. It means that the problem has been transformed into a form for which a reliable local interpreter exists at acceptable cost. Sometimes this happens through exact formalization, as when a fragment becomes explicit enough for satisfiability checking or symbolic verification. Sometimes it happens through approximation, pruning, or narrowing before exact reasoning is attempted. Sometimes it happens through change of representation, where an apparently hard problem becomes manageable because its structure has been recast in graph form, factorized into local dependencies, or encoded compositionally. This is why classical ideas such as SMT solving, abstract interpretation, symbolic execution, bounded graph structure, submodularity, and tractable circuit structure remain relevant. Their value is not nostalgic. Their value is that they instantiate different ways in which local tractability can be obtained once the right regime has been identified [DEMOURA-2008] [COUSOT-1977] [KING-1976] [CADAR-2013] [BODLAENDER-1998] [KRAUSE-2012] [VERGARI-2021].</p>
+            </section>
+
+            <section id="skills-compilation">
+              <h2>Skills, Compilation, and the Agentic Virtual Machine</h2>
+              <p>The notion of agentic skills makes this architecture implementable in a realistic way. A skill should not be understood merely as a wrapper around a tool call. It is better defined as a bounded computational unit with explicit inputs, explicit outputs, declared assumptions, and limited side effects. In heavier execution modes, skills can behave like dependency-aware build steps. In more dynamic modes, the same skills can be assembled into short-lived plans and revised locally without forcing a global restart of the reasoning history. This design matters because regime induction needs stable local units on which structural decisions can act. Without explicit skills, the system remains a loose conversational flow. With explicit skills, it becomes possible to isolate subproblems, track dependencies, cache intermediate results, validate local behavior, and optimize recurring execution paths. This is also consistent with recent engineering guidance from major labs, which emphasizes simple composable agent patterns, explicit tools, reusable skills, and context engineering rather than unconstrained conversational autonomy [ANTHROPIC-2024] [ANTHROPIC-2025] [OPENAI-2026].</p>
+              <p>Once skills are treated this way, a well-structured agentic system becomes more than a prompt plus tools. It becomes a high-level source language. Its skills, prompts, dependency graph, routing logic, validation hooks, and fallback policies together define an executable program that can in principle be analyzed, optimized, and partially compiled. This gives regime induction a concrete computational interpretation. Over repeated executions, the system can discover that some skill chains correspond to stable structural regimes, that some prompt-mediated steps can be replaced by deterministic code, that some routing decisions can be delegated to smaller trained classifiers, and that some recurrent subproblems deserve specialized interpreters. In that sense, compilation is not merely low-level optimization. It is the progressive conversion of expensive, prompt-heavy, weakly structured agent behavior into stronger and more reliable local competence. The long-term target is therefore not a single giant reasoning engine, but an agentic virtual machine that preserves the common execution grammar of the original skill system while replacing fragile runtime choices with more efficient and more auditable interpreters.</p>
+            </section>
+
+            <section id="staged-ecology">
+              <h2>The Staged Ecology of LLMs, ML, Software, and Local Substrates</h2>
+              <p>This perspective also clarifies the respective roles of LLMs, classical ML, and classical software. LLMs remain useful, but mainly as high-level orchestrators for decomposition, schema induction, regime suggestion, interface translation, and partial synthesis. They are especially valuable when the artefact is messy and the first task is to move from informal structure to an explicit intermediate representation. At the same time, they remain weak as universal interpreters for exact reasoning, long-horizon consistency, and tractability-aware decomposition, which is one reason why current practical agent design emphasizes tools, context engineering, and structured interfaces [ANTHROPIC-2024] [LECUN-2022]. Classical ML has a more targeted role: learned routers, detectors, boundary estimators, regime classifiers, confidence models, and specialized predictors for recurring local tasks. Classical software remains central whenever a subproblem has already been sufficiently stabilized to justify exact or near-exact procedures, such as solvers, planners, validators, graph algorithms, or domain-specific code. The emerging architecture is therefore not “LLMs versus classical methods.” It is a staged ecology in which LLMs help expose structure, ML helps detect and specialize regimes, and classical software executes where explicit structure justifies stronger guarantees.</p>
+              <p>Within this architecture, world models, neuro-symbolic systems, probabilistic circuits, and vector-symbolic representations should be treated as candidate local substrates, not universal foundations. World models are appropriate when the subproblem genuinely involves latent state evolution, internal rollout, or action-conditioned consequence [HA-SCHMIDHUBER-2018] [HAFNER-2023]. Neuro-symbolic methods are appropriate when explicit compositional structure, local proof traces, or symbolic constraints materially improve performance, traceability, or governance [GARCEZ-LAMB-2020]. Probabilistic circuits are relevant when exact and tractable probabilistic inference is achievable under known structural restrictions [VERGARI-2021]. Vector-symbolic or hyperdimensional representations are important because they offer a possible middle layer between dense neural approximation and rigid symbolic data structures: they support role-filler binding, compositional manipulation, and compact structured representations with relatively simple algebraic operations [KLEYKO-2021] [HERSCHE-2024]. Their significance here is not that they replace deep learning, but that they may offer better local substrates for regimes where compositional structure must remain manipulable and computationally light.</p>
+            </section>
+
+            <section id="implementation-risks">
+              <h2>Implementation Path, Risks, and the Central Claim</h2>
+              <p>A realistic implementation path is therefore staged. A first generation can use current LLM-based agents mainly for decomposition, schema induction, and provisional regime suggestion, while delegating execution to symbolic, probabilistic, graph-based, simulation-based, or classical modules. A second generation can begin compiling stable skill chains into cached transforms, validators, graph routines, smaller routers, or domain-specific code. A third generation can allow the system to synthesize or train new local interpreters for recurring structural motifs. At that point, regime induction starts to converge with partial program synthesis and with learned specialization of execution paths. The important point is that this remains a pragmatic and controllable agenda. It does not require an immediate replacement of LLMs by one universal world model, nor does it assume that one representational family will dominate all regimes.</p>
+              <p>The main risks should also be stated explicitly. The first is premature compilation: transient workflow regularities may be frozen too early into rigid procedures. The second is level confusion: useful skill boundaries are not automatically the right semantic boundaries. The third is hidden fragility: some skills may appear explicit while still depending on ambiguous prompts or undocumented context conventions. The fourth is local optimization at the expense of global reliability or auditability. For this reason, compilation should be incremental, evidence-driven, versioned, reversible, and tied to tests, provenance, and rollback paths. The objective is not unconstrained self-modification. The objective is disciplined specialization under explicit control.</p>
+              <p>The central claim can therefore be stated in a concise form. A mature meta-rational system does not primarily learn one universal semantics of the world. It learns how to induce structural regimes and how to reduce local subproblems to tractable interpreters. Agentic skills provide the practical substrate for this transition because they supply bounded computational units, explicit operational contracts, and a common execution grammar. Structural Regime Selection and Tractable Computation should therefore be understood not as a peripheral heuristic, but as one of the main computational consequences of meta-rational pragmatics.</p>
+            </section>
+          </article>
+        </main>
+      </div>
+
+      <footer>
+        <p>This essay is published in the Meta Rational Pragmatics track of the AGISystem2 documentation site.</p>
+      </footer>
+    </div>
+
+    <script>
+      (() => {
+        const navLinks = Array.from(document.querySelectorAll(".navlist a"));
+        const navReadout = document.getElementById("nav-readout");
+        const sections = navLinks
+          .map((a) => document.querySelector(a.getAttribute("href")))
+          .filter(Boolean);
+
+        const setActive = (sectionId) => {
+          for (const a of navLinks) {
+            const isActive = a.getAttribute("href") === `#${sectionId}`;
+            a.setAttribute("aria-current", isActive ? "true" : "false");
+            if (isActive && navReadout) {
+              navReadout.textContent = `Active: ${a.dataset.step}`;
+            }
+          }
+        };
+
+        setActive((location.hash ? location.hash.slice(1) : "regime-induction") || "regime-induction");
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const visible = entries
+              .filter((entry) => entry.isIntersecting)
+              .sort((a, b) => (b.intersectionRatio || 0) - (a.intersectionRatio || 0))[0];
+            if (!visible) return;
+            setActive(visible.target.id);
+          },
+          { rootMargin: "-15% 0px -68% 0px", threshold: [0.08, 0.18, 0.32] }
+        );
+
+        for (const section of sections) observer.observe(section);
+      })();
+    </script>
+    <script src="mrp-citation.js"></script>
+  </body>
+</html>

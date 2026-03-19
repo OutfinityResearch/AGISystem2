@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en" data-default-section="why-runtime">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f7fbff" />
+    <meta
+      name="description"
+      content="An implementation-oriented MRP essay on the staged runtime model behind MRP-VM."
+    />
+    <meta property="og:title" content="MRP-VM: An Implementation Path — AGISystem2" />
+    <meta
+      property="og:description"
+      content="A practical implementation path for MRP-VM as a staged runtime for policy-governed interpretation, bounded theory frames, and regime-sensitive execution."
+    />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/MRP/mrp-vm-implementation-path.html" />
+    <title>MRP-VM: An Implementation Path — AGISystem2</title>
+    <link rel="stylesheet" href="mrp-page.css" />
+    <link rel="stylesheet" href="mrp-citation.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="../index.html">AGISystem2</a>
+            <span class="crumb-sep">/</span>
+            <a href="index.html">MRP</a>
+            <span class="crumb-sep">/</span>
+            <span class="crumb-current">MRP-VM: An Implementation Path</span>
+          </nav>
+          <span>Meta Rational Pragmatics essay</span>
+        </div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Research</a>
+          <a class="pill primary" href="index.html">MRP Index</a>
+        </div>
+      </div>
+
+      <header class="hero">
+        <div class="kicker"><b>MRP Essay 05</b> Runtime architecture</div>
+        <h1>MRP-VM: An Implementation Path</h1>
+        <p class="subtitle">
+          A simplified implementation-oriented chapter that treats MRP-VM not as an abstract manifesto, but as a staged
+          runtime for bounded theory construction, regime selection, and auditable execution.
+        </p>
+        <div class="meta-row">
+          <span class="meta-pill">Author: Sînică Alboaie</span>
+          <span class="meta-pill">Series: Meta Rational Pragmatics</span>
+          <span class="meta-pill">Focus: Architecture and execution</span>
+        </div>
+        <div class="citation-box" data-citation-box data-citation-key="Alboaie-2026">
+          <div class="citation-head">
+            <strong>Permalink & citation</strong>
+            <div class="citation-actions">
+              <button class="copy-button" type="button" data-copy-target="link">Copy link</button>
+              <button class="copy-button" type="button" data-copy-target="citation">Copy citation</button>
+            </div>
+          </div>
+          <a class="citation-link" data-doc-link href="#"></a>
+          <p class="citation-preview" data-citation-preview></p>
+          <span class="copy-status" data-copy-status aria-live="polite"></span>
+        </div>
+      </header>
+
+      <div class="layout" id="main">
+        <aside class="toc" aria-label="Article outline">
+          <header>
+            <strong>Outline</strong>
+            <span id="nav-readout">—</span>
+          </header>
+          <ul class="navlist">
+            <li>
+              <a href="#why-runtime" data-step="01" aria-current="true">
+                <span class="toc-badge">01</span>
+                Why a Runtime
+              </a>
+            </li>
+            <li>
+              <a href="#core-objects" data-step="02">
+                <span class="toc-badge">02</span>
+                Core Objects
+              </a>
+            </li>
+            <li>
+              <a href="#shared-ir" data-step="03">
+                <span class="toc-badge">03</span>
+                Shared IR
+              </a>
+            </li>
+            <li>
+              <a href="#plugins" data-step="04">
+                <span class="toc-badge">04</span>
+                Plugins and Regimes
+              </a>
+            </li>
+            <li>
+              <a href="#execution" data-step="05">
+                <span class="toc-badge">05</span>
+                Epoch Execution
+              </a>
+            </li>
+            <li>
+              <a href="#path" data-step="06">
+                <span class="toc-badge">06</span>
+                Implementation Path
+              </a>
+            </li>
+            <li>
+              <a href="#references" data-step="07">
+                <span class="toc-badge">07</span>
+                References
+              </a>
+            </li>
+          </ul>
+        </aside>
+
+        <main>
+          <article class="article">
+            <section id="why-runtime">
+              <h2>Why MRP-VM Should Be Built as a Runtime</h2>
+              <p>
+                MRP-VM should be understood less as a virtual machine in the narrow classical sense and more as a staged
+                control environment for interpretation. Its purpose is not to run one universal reasoning engine, but to
+                make it possible for an agent to reduce a large request into bounded local subproblems, select the right
+                computational regime for each one, and reintegrate results in an auditable way.
+              </p>
+              <p>
+                This matters because serious AI systems fail less often from total lack of capability than from poor
+                control: too much context, wrong assumptions activated together, weak boundaries between tentative and
+                verified structure, or no explicit discipline for moving from flexible language to stronger validation.
+                A runtime is needed precisely because interpretation itself has become an operational concern
+                [ANT-BEA-2024] [OAI-PRACTICAL-AGENTS-2025].
+              </p>
+            </section>
+
+            <section id="core-objects">
+              <h2>Core Operational Objects</h2>
+              <p>
+                A practical implementation can stay simple at first if it preserves a few stable objects. A
+                <em>goal</em> condenses the request into a small control nucleus. A <em>seed</em> proposes a local line
+                of attack. A <em>focus</em> records the bounded support currently activated around that seed. A
+                <em>frame</em> is the first delegable object: a local problem explicit enough to be sent to a plugin. A
+                <em>route</em> expresses candidate execution regimes, and a <em>result</em> returns a locally justified
+                effect.
+              </p>
+              <p>
+                This is enough to give the runtime clear thresholds. Not every idea should become a frame. Not every
+                frame deserves exact reasoning. Not every local conclusion should immediately enter persistent memory.
+                The value of these objects is not metaphysical elegance but operational discipline.
+              </p>
+            </section>
+
+            <section id="shared-ir">
+              <h2>A Shared Intermediate Representation</h2>
+              <p>
+                The architecture needs one common reintegration language so that symbolic, structural, probabilistic,
+                and LLM-assisted backends do not fragment into isolated silos. In practical terms, this means a compact
+                IR expressive enough to encode facts, constraints, procedures, justifications, routes, and results in a
+                single operational space.
+              </p>
+              <p>
+                The IR should remain close to disciplined natural language, because natural language is already the most
+                flexible medium available for cross-domain authoring. But it also has to be structured enough for typing,
+                filtering, provenance tracking, validation, and bounded execution. That combination is what makes it
+                possible to treat prompts, knowledge, instructions, and runtime effects as parts of one programmable
+                process rather than unrelated artefacts.
+              </p>
+            </section>
+
+            <section id="plugins">
+              <h2>Plugins and Regime Selection</h2>
+              <p>
+                MRP-VM becomes useful once frames can be routed to distinct execution regimes. A symbolic plugin can
+                handle satisfiability and constraint checking [DEMOURA-2008]. Structural plugins can navigate relations,
+                clusters, graph neighborhoods, or rule-like patterns. LLM-assisted plugins can still be used, but mainly
+                for decomposition, clarification, fallback interpretation, and local synthesis rather than for universal
+                certification [ANT-CTX-2025].
+              </p>
+              <p>
+                The key design decision is that plugins are characterized by what kind of reduction they apply to a
+                frame, not by one preferred technology. A plugin may internally use solvers, abstract interpretation,
+                symbolic execution, graph procedures, or model calls [COUSOT-1977] [CADAR-2013]. What matters is that it
+                returns reintegrable results with explicit justification.
+              </p>
+            </section>
+
+            <section id="execution">
+              <h2>Epoch-Based Execution and Controlled Deltas</h2>
+              <p>
+                The runtime should evolve in epochs. Each epoch evaluates a stable snapshot of active context. New
+                frames, results, suspensions, invalidations, and replans are collected as deltas and integrated only at
+                the boundary of the next epoch. This prevents live self-modification from collapsing evaluation into an
+                uncontrolled loop.
+              </p>
+              <p>
+                The same mechanism makes concurrency manageable. Different frames can be delegated in parallel as long
+                as they all work against the same committed snapshot. Reintegration then happens atomically. This design
+                is closer to disciplined build systems than to unconstrained conversational drift, which is why ideas
+                from dependency-aware execution remain relevant here [MOKHOV-2020].
+              </p>
+            </section>
+
+            <section id="path">
+              <h2>A Realistic Implementation Path</h2>
+              <p>
+                A first implementation should stay modest. Start with a small kernel that can condense requests, emit a
+                few seeds, maintain bounded focus objects, and route frames to a handful of plugins: symbolic,
+                structural, composition, and LLM-assisted fallback. Keep persistence narrow. Track provenance from the
+                beginning.
+              </p>
+              <p>
+                The second step is not “make the model bigger,” but compile recurring patterns. Stable skill chains can
+                be rewritten into deterministic transforms, validators, cached retrieval paths, or smaller learned
+                routers. This gradually shifts the system from prompt-heavy orchestration toward stronger local
+                interpreters without changing the overall control model [ANT-BEA-2024] [OAI-PRACTICAL-AGENTS-2025].
+              </p>
+              <p>
+                The third step is governance. Budgets, rollback, promotion-to-KB policy, and explicit distinction
+                between tentative and certified results are not secondary add-ons. They are the conditions under which a
+                meta-rational runtime remains scientifically serious instead of becoming an elaborate generator of
+                uncontrolled intermediate text.
+              </p>
+            </section>
+
+            <section id="references">
+              <h2>References</h2>
+              <ul class="refs">
+                <li>[ANT-BEA-2024] Anthropic. (2024). Building Effective AI Agents.</li>
+                <li>[ANT-CTX-2025] Anthropic. (2025). Effective Context Engineering for AI Agents.</li>
+                <li>[CADAR-2013] Cadar, C., & Sen, K. (2013). Symbolic Execution for Software Testing: Three Decades Later.</li>
+                <li>[COUSOT-1977] Cousot, P., & Cousot, R. (1977). Abstract Interpretation: A Unified Lattice Model for Static Analysis of Programs.</li>
+                <li>[DEMOURA-2008] de Moura, L., & Bjørner, N. (2008). Z3: An Efficient SMT Solver.</li>
+                <li>[MOKHOV-2020] Mokhov, A., Mitchell, N., & Peyton Jones, S. (2020). Build Systems à la Carte: Theory and Practice.</li>
+                <li>[OAI-PRACTICAL-AGENTS-2025] OpenAI. (2025). A Practical Guide to Building AI Agents.</li>
+              </ul>
+            </section>
+          </article>
+        </main>
+      </div>
+
+      <footer>
+        <p>This essay is published in the Meta Rational Pragmatics track of the AGISystem2 documentation site.</p>
+      </footer>
+    </div>
+
+    <script src="mrp-outline.js"></script>
+    <script src="mrp-citation.js"></script>
+  </body>
+</html>
