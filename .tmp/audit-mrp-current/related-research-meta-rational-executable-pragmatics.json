@@ -1,0 +1,2481 @@
+{
+  "document": "docs/MRP/related-research-meta-rational-executable-pragmatics.html",
+  "occurrence_count": 33,
+  "unique_inline_citation_keys": [
+    "AGISYSTEM2",
+    "BECHBERGER-2017",
+    "BECHBERGER-2018",
+    "BENDER-2021",
+    "BEURER-KELLNER-2022",
+    "COUSOT-1977",
+    "DSPY-2023",
+    "FUCHS-ET-AL-2008",
+    "FUCHS-SCHWITTER-1996",
+    "GAO-2022",
+    "GAO-2023",
+    "HDC-SURVEY-I",
+    "HDC-SURVEY-II",
+    "KANERVA-2009",
+    "KG-SURVEY",
+    "KING-1976",
+    "LEWIS-2020",
+    "PEARL-2009",
+    "PGMPY",
+    "PYKEEN",
+    "PYRO",
+    "PYSHEAF",
+    "SHEAF-SURVEY-2025",
+    "TENPY",
+    "TENSOR-NET-SURVEY",
+    "TENSORNETWORK-LIB",
+    "TORCHHD-2023",
+    "WILLARD-LOUF-2023",
+    "WU-2023",
+    "XU-2024",
+    "YAO-2023"
+  ],
+  "reference_keys": [
+    "AGISYSTEM2",
+    "ANT-BEA-2024",
+    "ANT-CTX-2025",
+    "ANT-SKILLS-2025",
+    "BACH-2008",
+    "BASSECHES-1984",
+    "BECHBERGER-2017",
+    "BECHBERGER-2018",
+    "BENDER-2021",
+    "BEURER-KELLNER-2022",
+    "BHUYAN-2024",
+    "BILETZKI-2023",
+    "BOMMASANI-2021",
+    "BRAULTBARON-2016",
+    "BROOKS-1991",
+    "CADAR-2013",
+    "CHAPMAN-2018",
+    "CHAPMAN-2026",
+    "CHEN-2022",
+    "COLELOUGH-2025",
+    "COUSOT-1977",
+    "CUCUMBER-2025",
+    "DELONG-2024",
+    "DEMOURA-2008",
+    "DESMET-DERAEDT-2025",
+    "DSPY-2023",
+    "FLAVELL-1979",
+    "FLEMING-2021",
+    "FLEMING-DAW-2017",
+    "FUCHS-ET-AL-2008",
+    "FUCHS-SCHWITTER-1996",
+    "GAO-2022",
+    "GAO-2023",
+    "GARCEZ-LAMB-2020",
+    "GOTTLOB-2001",
+    "HA-2018",
+    "HAFNER-2023",
+    "HARNAD-1990",
+    "HDC-SURVEY-I",
+    "HDC-SURVEY-II",
+    "INTUITIONISM-SEP",
+    "KAHNEMAN-2011",
+    "KANERVA-2009",
+    "KEGAN-1994",
+    "KG-SURVEY",
+    "KING-1976",
+    "LECUN-2022",
+    "LEWIS-2020",
+    "LUKACS-2013",
+    "MEANING-SEP",
+    "MOKHOV-2020",
+    "OAI-PRACTICAL-AGENTS-2025",
+    "OAI-SKILLS-2026",
+    "PEARL-2009",
+    "PGMPY",
+    "POPPER-SEP",
+    "PRAGMATICS-SEP",
+    "PYKEEN",
+    "PYRO",
+    "PYSHEAF",
+    "SCHICK-2023",
+    "SHEAF-SURVEY-2025",
+    "TENPY",
+    "TENSOR-NET-SURVEY",
+    "TENSORNETWORK-LIB",
+    "TORCHHD-2023",
+    "VERGARI-2021",
+    "WAN-2024",
+    "WILLARD-LOUF-2023",
+    "WITTGENSTEIN-1953",
+    "WOLFRAM-2002",
+    "WOLPERT-1997",
+    "WU-2023",
+    "XU-2024",
+    "YAO-2023"
+  ],
+  "occurrences": [
+    {
+      "key": "AGISYSTEM2",
+      "section_id": "why-related-research",
+      "section_title": "Why Related Research Matters",
+      "block_index": 0,
+      "context": "This chapter is not a list of immediate commitments. It is a map of adjacent technical directions that matter once Meta-Rational Pragmatics is taken seriously as an engineering program. If a trustworthy runtime must recognize structure before choosing how to reason, then it becomes valuable to survey the representational and computational families that might eventually support such regime selection in practice [AGISYSTEM2]."
+    },
+    {
+      "key": "FUCHS-SCHWITTER-1996",
+      "section_id": "executable-languages",
+      "section_title": "Executable Language Systems as a First Neighbor",
+      "block_index": 0,
+      "context": "Executable natural language is one of the clearest neighboring areas because it makes visible the shift from fixed semantic compilation toward governed runtime interpretation. ACE and related controlled languages represent the formal-semantics-first tradition [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008]. LMQL, CoRE, ReAct, PAL, DSPy, AutoGen, and guided generation systems show different ways in which language-model runtimes can turn text into controlled behavior [BEURER-KELLNER-2022] [XU-2024] [YAO-2023] [GAO-2022] [DSPY-2023] [WU-2023] [WILLARD-LOUF-2023]."
+    },
+    {
+      "key": "FUCHS-ET-AL-2008",
+      "section_id": "executable-languages",
+      "section_title": "Executable Language Systems as a First Neighbor",
+      "block_index": 0,
+      "context": "Executable natural language is one of the clearest neighboring areas because it makes visible the shift from fixed semantic compilation toward governed runtime interpretation. ACE and related controlled languages represent the formal-semantics-first tradition [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008]. LMQL, CoRE, ReAct, PAL, DSPy, AutoGen, and guided generation systems show different ways in which language-model runtimes can turn text into controlled behavior [BEURER-KELLNER-2022] [XU-2024] [YAO-2023] [GAO-2022] [DSPY-2023] [WU-2023] [WILLARD-LOUF-2023]."
+    },
+    {
+      "key": "BEURER-KELLNER-2022",
+      "section_id": "executable-languages",
+      "section_title": "Executable Language Systems as a First Neighbor",
+      "block_index": 0,
+      "context": "Executable natural language is one of the clearest neighboring areas because it makes visible the shift from fixed semantic compilation toward governed runtime interpretation. ACE and related controlled languages represent the formal-semantics-first tradition [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008]. LMQL, CoRE, ReAct, PAL, DSPy, AutoGen, and guided generation systems show different ways in which language-model runtimes can turn text into controlled behavior [BEURER-KELLNER-2022] [XU-2024] [YAO-2023] [GAO-2022] [DSPY-2023] [WU-2023] [WILLARD-LOUF-2023]."
+    },
+    {
+      "key": "XU-2024",
+      "section_id": "executable-languages",
+      "section_title": "Executable Language Systems as a First Neighbor",
+      "block_index": 0,
+      "context": "Executable natural language is one of the clearest neighboring areas because it makes visible the shift from fixed semantic compilation toward governed runtime interpretation. ACE and related controlled languages represent the formal-semantics-first tradition [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008]. LMQL, CoRE, ReAct, PAL, DSPy, AutoGen, and guided generation systems show different ways in which language-model runtimes can turn text into controlled behavior [BEURER-KELLNER-2022] [XU-2024] [YAO-2023] [GAO-2022] [DSPY-2023] [WU-2023] [WILLARD-LOUF-2023]."
+    },
+    {
+      "key": "YAO-2023",
+      "section_id": "executable-languages",
+      "section_title": "Executable Language Systems as a First Neighbor",
+      "block_index": 0,
+      "context": "Executable natural language is one of the clearest neighboring areas because it makes visible the shift from fixed semantic compilation toward governed runtime interpretation. ACE and related controlled languages represent the formal-semantics-first tradition [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008]. LMQL, CoRE, ReAct, PAL, DSPy, AutoGen, and guided generation systems show different ways in which language-model runtimes can turn text into controlled behavior [BEURER-KELLNER-2022] [XU-2024] [YAO-2023] [GAO-2022] [DSPY-2023] [WU-2023] [WILLARD-LOUF-2023]."
+    },
+    {
+      "key": "GAO-2022",
+      "section_id": "executable-languages",
+      "section_title": "Executable Language Systems as a First Neighbor",
+      "block_index": 0,
+      "context": "Executable natural language is one of the clearest neighboring areas because it makes visible the shift from fixed semantic compilation toward governed runtime interpretation. ACE and related controlled languages represent the formal-semantics-first tradition [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008]. LMQL, CoRE, ReAct, PAL, DSPy, AutoGen, and guided generation systems show different ways in which language-model runtimes can turn text into controlled behavior [BEURER-KELLNER-2022] [XU-2024] [YAO-2023] [GAO-2022] [DSPY-2023] [WU-2023] [WILLARD-LOUF-2023]."
+    },
+    {
+      "key": "DSPY-2023",
+      "section_id": "executable-languages",
+      "section_title": "Executable Language Systems as a First Neighbor",
+      "block_index": 0,
+      "context": "Executable natural language is one of the clearest neighboring areas because it makes visible the shift from fixed semantic compilation toward governed runtime interpretation. ACE and related controlled languages represent the formal-semantics-first tradition [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008]. LMQL, CoRE, ReAct, PAL, DSPy, AutoGen, and guided generation systems show different ways in which language-model runtimes can turn text into controlled behavior [BEURER-KELLNER-2022] [XU-2024] [YAO-2023] [GAO-2022] [DSPY-2023] [WU-2023] [WILLARD-LOUF-2023]."
+    },
+    {
+      "key": "WU-2023",
+      "section_id": "executable-languages",
+      "section_title": "Executable Language Systems as a First Neighbor",
+      "block_index": 0,
+      "context": "Executable natural language is one of the clearest neighboring areas because it makes visible the shift from fixed semantic compilation toward governed runtime interpretation. ACE and related controlled languages represent the formal-semantics-first tradition [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008]. LMQL, CoRE, ReAct, PAL, DSPy, AutoGen, and guided generation systems show different ways in which language-model runtimes can turn text into controlled behavior [BEURER-KELLNER-2022] [XU-2024] [YAO-2023] [GAO-2022] [DSPY-2023] [WU-2023] [WILLARD-LOUF-2023]."
+    },
+    {
+      "key": "WILLARD-LOUF-2023",
+      "section_id": "executable-languages",
+      "section_title": "Executable Language Systems as a First Neighbor",
+      "block_index": 0,
+      "context": "Executable natural language is one of the clearest neighboring areas because it makes visible the shift from fixed semantic compilation toward governed runtime interpretation. ACE and related controlled languages represent the formal-semantics-first tradition [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008]. LMQL, CoRE, ReAct, PAL, DSPy, AutoGen, and guided generation systems show different ways in which language-model runtimes can turn text into controlled behavior [BEURER-KELLNER-2022] [XU-2024] [YAO-2023] [GAO-2022] [DSPY-2023] [WU-2023] [WILLARD-LOUF-2023]."
+    },
+    {
+      "key": "BENDER-2021",
+      "section_id": "engineered-intuition",
+      "section_title": "Engineered Intuition, RAG, and Thinking Databases",
+      "block_index": 0,
+      "context": "Large language models are the default practical analogue of fast intuition for current AI agents because they can synthesize heterogeneous cues immediately. But fluent output is not equivalent to epistemically controlled reasoning, and the literature on hallucination and framing bias makes that limitation hard to ignore [BENDER-2021]. Retrieval-augmented generation helps, but standard RAG remains a retrieve-then- compress pattern rather than a full account of governed intuition [LEWIS-2020] [GAO-2023]."
+    },
+    {
+      "key": "LEWIS-2020",
+      "section_id": "engineered-intuition",
+      "section_title": "Engineered Intuition, RAG, and Thinking Databases",
+      "block_index": 0,
+      "context": "Large language models are the default practical analogue of fast intuition for current AI agents because they can synthesize heterogeneous cues immediately. But fluent output is not equivalent to epistemically controlled reasoning, and the literature on hallucination and framing bias makes that limitation hard to ignore [BENDER-2021]. Retrieval-augmented generation helps, but standard RAG remains a retrieve-then- compress pattern rather than a full account of governed intuition [LEWIS-2020] [GAO-2023]."
+    },
+    {
+      "key": "GAO-2023",
+      "section_id": "engineered-intuition",
+      "section_title": "Engineered Intuition, RAG, and Thinking Databases",
+      "block_index": 0,
+      "context": "Large language models are the default practical analogue of fast intuition for current AI agents because they can synthesize heterogeneous cues immediately. But fluent output is not equivalent to epistemically controlled reasoning, and the literature on hallucination and framing bias makes that limitation hard to ignore [BENDER-2021]. Retrieval-augmented generation helps, but standard RAG remains a retrieve-then- compress pattern rather than a full account of governed intuition [LEWIS-2020] [GAO-2023]."
+    },
+    {
+      "key": "HDC-SURVEY-I",
+      "section_id": "engineered-intuition",
+      "section_title": "Engineered Intuition, RAG, and Thinking Databases",
+      "block_index": 1,
+      "context": "Once an explicit IR exists, the knowledge base can support multiple specialized intuition engines rather than one generic retrieval pipeline. Some may be retrieval-like, some abstraction-oriented, some simulation-like, some case-based, some structurally constrained. HDC/VSA-style associative computation, abstract interpretation, symbolic execution, heuristic search, and analogical recall all become candidates for fast first-pass services as long as their outputs disclose coverage, epistemic status, and residual uncertainty [HDC-SURVEY-I] [HDC-SURVEY-II] [KANERVA-2009] [COUSOT-1977] [KING-1976]."
+    },
+    {
+      "key": "HDC-SURVEY-II",
+      "section_id": "engineered-intuition",
+      "section_title": "Engineered Intuition, RAG, and Thinking Databases",
+      "block_index": 1,
+      "context": "Once an explicit IR exists, the knowledge base can support multiple specialized intuition engines rather than one generic retrieval pipeline. Some may be retrieval-like, some abstraction-oriented, some simulation-like, some case-based, some structurally constrained. HDC/VSA-style associative computation, abstract interpretation, symbolic execution, heuristic search, and analogical recall all become candidates for fast first-pass services as long as their outputs disclose coverage, epistemic status, and residual uncertainty [HDC-SURVEY-I] [HDC-SURVEY-II] [KANERVA-2009] [COUSOT-1977] [KING-1976]."
+    },
+    {
+      "key": "KANERVA-2009",
+      "section_id": "engineered-intuition",
+      "section_title": "Engineered Intuition, RAG, and Thinking Databases",
+      "block_index": 1,
+      "context": "Once an explicit IR exists, the knowledge base can support multiple specialized intuition engines rather than one generic retrieval pipeline. Some may be retrieval-like, some abstraction-oriented, some simulation-like, some case-based, some structurally constrained. HDC/VSA-style associative computation, abstract interpretation, symbolic execution, heuristic search, and analogical recall all become candidates for fast first-pass services as long as their outputs disclose coverage, epistemic status, and residual uncertainty [HDC-SURVEY-I] [HDC-SURVEY-II] [KANERVA-2009] [COUSOT-1977] [KING-1976]."
+    },
+    {
+      "key": "COUSOT-1977",
+      "section_id": "engineered-intuition",
+      "section_title": "Engineered Intuition, RAG, and Thinking Databases",
+      "block_index": 1,
+      "context": "Once an explicit IR exists, the knowledge base can support multiple specialized intuition engines rather than one generic retrieval pipeline. Some may be retrieval-like, some abstraction-oriented, some simulation-like, some case-based, some structurally constrained. HDC/VSA-style associative computation, abstract interpretation, symbolic execution, heuristic search, and analogical recall all become candidates for fast first-pass services as long as their outputs disclose coverage, epistemic status, and residual uncertainty [HDC-SURVEY-I] [HDC-SURVEY-II] [KANERVA-2009] [COUSOT-1977] [KING-1976]."
+    },
+    {
+      "key": "KING-1976",
+      "section_id": "engineered-intuition",
+      "section_title": "Engineered Intuition, RAG, and Thinking Databases",
+      "block_index": 1,
+      "context": "Once an explicit IR exists, the knowledge base can support multiple specialized intuition engines rather than one generic retrieval pipeline. Some may be retrieval-like, some abstraction-oriented, some simulation-like, some case-based, some structurally constrained. HDC/VSA-style associative computation, abstract interpretation, symbolic execution, heuristic search, and analogical recall all become candidates for fast first-pass services as long as their outputs disclose coverage, epistemic status, and residual uncertainty [HDC-SURVEY-I] [HDC-SURVEY-II] [KANERVA-2009] [COUSOT-1977] [KING-1976]."
+    },
+    {
+      "key": "BECHBERGER-2017",
+      "section_id": "representation-families",
+      "section_title": "Representation Families Worth Tracking",
+      "block_index": 0,
+      "context": "Several other research families matter because they offer different intermediate structures for future regime selection. Conceptual spaces provide geometric representations of concepts and relations, useful as a graded layer between raw language and rigid symbols [BECHBERGER-2017] [BECHBERGER-2018]. HDC and vector symbolic architectures offer algebraic, compositional, and scalable structured encodings that may support fast theory signatures or analogical recall [HDC-SURVEY-I] [HDC-SURVEY-II] [TORCHHD-2023]."
+    },
+    {
+      "key": "BECHBERGER-2018",
+      "section_id": "representation-families",
+      "section_title": "Representation Families Worth Tracking",
+      "block_index": 0,
+      "context": "Several other research families matter because they offer different intermediate structures for future regime selection. Conceptual spaces provide geometric representations of concepts and relations, useful as a graded layer between raw language and rigid symbols [BECHBERGER-2017] [BECHBERGER-2018]. HDC and vector symbolic architectures offer algebraic, compositional, and scalable structured encodings that may support fast theory signatures or analogical recall [HDC-SURVEY-I] [HDC-SURVEY-II] [TORCHHD-2023]."
+    },
+    {
+      "key": "HDC-SURVEY-I",
+      "section_id": "representation-families",
+      "section_title": "Representation Families Worth Tracking",
+      "block_index": 0,
+      "context": "Several other research families matter because they offer different intermediate structures for future regime selection. Conceptual spaces provide geometric representations of concepts and relations, useful as a graded layer between raw language and rigid symbols [BECHBERGER-2017] [BECHBERGER-2018]. HDC and vector symbolic architectures offer algebraic, compositional, and scalable structured encodings that may support fast theory signatures or analogical recall [HDC-SURVEY-I] [HDC-SURVEY-II] [TORCHHD-2023]."
+    },
+    {
+      "key": "HDC-SURVEY-II",
+      "section_id": "representation-families",
+      "section_title": "Representation Families Worth Tracking",
+      "block_index": 0,
+      "context": "Several other research families matter because they offer different intermediate structures for future regime selection. Conceptual spaces provide geometric representations of concepts and relations, useful as a graded layer between raw language and rigid symbols [BECHBERGER-2017] [BECHBERGER-2018]. HDC and vector symbolic architectures offer algebraic, compositional, and scalable structured encodings that may support fast theory signatures or analogical recall [HDC-SURVEY-I] [HDC-SURVEY-II] [TORCHHD-2023]."
+    },
+    {
+      "key": "TORCHHD-2023",
+      "section_id": "representation-families",
+      "section_title": "Representation Families Worth Tracking",
+      "block_index": 0,
+      "context": "Several other research families matter because they offer different intermediate structures for future regime selection. Conceptual spaces provide geometric representations of concepts and relations, useful as a graded layer between raw language and rigid symbols [BECHBERGER-2017] [BECHBERGER-2018]. HDC and vector symbolic architectures offer algebraic, compositional, and scalable structured encodings that may support fast theory signatures or analogical recall [HDC-SURVEY-I] [HDC-SURVEY-II] [TORCHHD-2023]."
+    },
+    {
+      "key": "PGMPY",
+      "section_id": "representation-families",
+      "section_title": "Representation Families Worth Tracking",
+      "block_index": 1,
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    },
+    {
+      "key": "PYRO",
+      "section_id": "representation-families",
+      "section_title": "Representation Families Worth Tracking",
+      "block_index": 1,
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    },
+    {
+      "key": "PEARL-2009",
+      "section_id": "representation-families",
+      "section_title": "Representation Families Worth Tracking",
+      "block_index": 1,
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    },
+    {
+      "key": "KG-SURVEY",
+      "section_id": "representation-families",
+      "section_title": "Representation Families Worth Tracking",
+      "block_index": 1,
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    },
+    {
+      "key": "PYKEEN",
+      "section_id": "representation-families",
+      "section_title": "Representation Families Worth Tracking",
+      "block_index": 1,
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    },
+    {
+      "key": "TENSOR-NET-SURVEY",
+      "section_id": "representation-families",
+      "section_title": "Representation Families Worth Tracking",
+      "block_index": 1,
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    },
+    {
+      "key": "TENSORNETWORK-LIB",
+      "section_id": "representation-families",
+      "section_title": "Representation Families Worth Tracking",
+      "block_index": 1,
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    },
+    {
+      "key": "TENPY",
+      "section_id": "representation-families",
+      "section_title": "Representation Families Worth Tracking",
+      "block_index": 1,
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    },
+    {
+      "key": "SHEAF-SURVEY-2025",
+      "section_id": "representation-families",
+      "section_title": "Representation Families Worth Tracking",
+      "block_index": 1,
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    },
+    {
+      "key": "PYSHEAF",
+      "section_id": "representation-families",
+      "section_title": "Representation Families Worth Tracking",
+      "block_index": 1,
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    }
+  ],
+  "references": {
+    "AGISYSTEM2": {
+      "key": "AGISYSTEM2",
+      "entry": "[AGISYSTEM2] AGISystem2. (2026). Research Index: CPU-centric ML, VSA/HDC, Conceptual Spaces, and Formal Reasoning.",
+      "url": "https://agisystem2.com/research.html",
+      "title_guess": "Research Index: CPU-centric ML, VSA/HDC, Conceptual Spaces, and Formal Reasoning",
+      "source": "document"
+    },
+    "BECHBERGER-2017": {
+      "key": "BECHBERGER-2017",
+      "entry": "[BECHBERGER-2017] Bechberger, L., & Kühnberger, K.-U. (2017). A Thorough Formalization of Conceptual Spaces.",
+      "url": "https://arxiv.org/abs/1706.06366",
+      "title_guess": "A Thorough Formalization of Conceptual Spaces",
+      "source": "document"
+    },
+    "BECHBERGER-2018": {
+      "key": "BECHBERGER-2018",
+      "entry": "[BECHBERGER-2018] Bechberger, L., & Kühnberger, K.-U. (2018). Formal Ways for Measuring Relations between Concepts in Conceptual Spaces.",
+      "url": "https://arxiv.org/abs/1804.02393",
+      "title_guess": "Formal Ways for Measuring Relations between Concepts in Conceptual Spaces",
+      "source": "document"
+    },
+    "BENDER-2021": {
+      "key": "BENDER-2021",
+      "entry": "[BENDER-2021] Bender, E. M., et al. (2021). On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?",
+      "url": "https://s10251.pcdn.co/pdf/2021-bender-parrots.pdf",
+      "title_guess": "On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?",
+      "source": "document"
+    },
+    "BEURER-KELLNER-2022": {
+      "key": "BEURER-KELLNER-2022",
+      "entry": "[BEURER-KELLNER-2022] Beurer-Kellner, L., et al. (2022). Prompting Is Programming: A Query Language for Large Language Models.",
+      "url": "https://arxiv.org/abs/2212.06094",
+      "title_guess": "Prompting Is Programming: A Query Language for Large Language Models",
+      "source": "document"
+    },
+    "COUSOT-1977": {
+      "key": "COUSOT-1977",
+      "entry": "[COUSOT-1977] Cousot, P., & Cousot, R. (1977). Abstract Interpretation.",
+      "url": "https://www.di.ens.fr/~cousot/publications.www/CousotCousot-POPL-77-ACM-p238--252-1977.pdf",
+      "title_guess": "Abstract Interpretation",
+      "source": "document"
+    },
+    "DSPY-2023": {
+      "key": "DSPY-2023",
+      "entry": "[DSPY-2023] Khattab, O., et al. (2023). DSPy.",
+      "url": "https://arxiv.org/abs/2310.03714",
+      "title_guess": "DSPy",
+      "source": "document"
+    },
+    "FUCHS-SCHWITTER-1996": {
+      "key": "FUCHS-SCHWITTER-1996",
+      "entry": "[FUCHS-SCHWITTER-1996] Fuchs, N. E., & Schwitter, R. (1996). Attempto Controlled English.",
+      "url": "https://arxiv.org/abs/cmp-lg/9603003",
+      "title_guess": "Attempto Controlled English",
+      "source": "document"
+    },
+    "FUCHS-ET-AL-2008": {
+      "key": "FUCHS-ET-AL-2008",
+      "entry": "[FUCHS-ET-AL-2008] Fuchs, N. E., Kaljurand, K., & Kuhn, T. (2008). Attempto Controlled English for Knowledge Representation.",
+      "url": "https://attempto.ifi.uzh.ch/site/pubs/papers/reasoningweb2008_fuchs.pdf",
+      "title_guess": "Attempto Controlled English for Knowledge Representation",
+      "source": "document"
+    },
+    "GAO-2022": {
+      "key": "GAO-2022",
+      "entry": "[GAO-2022] Gao, L., et al. (2022). PAL: Program-aided Language Models.",
+      "url": "https://arxiv.org/abs/2211.10435",
+      "title_guess": "PAL: Program-aided Language Models",
+      "source": "document"
+    },
+    "GAO-2023": {
+      "key": "GAO-2023",
+      "entry": "[GAO-2023] Gao, Y., et al. (2023). Retrieval-Augmented Generation for Large Language Models: A Survey.",
+      "url": "https://arxiv.org/abs/2312.10997",
+      "title_guess": "Retrieval-Augmented Generation for Large Language Models: A Survey",
+      "source": "document"
+    },
+    "HDC-SURVEY-I": {
+      "key": "HDC-SURVEY-I",
+      "entry": "[HDC-SURVEY-I] Kleyko, D., et al. (2021). A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I.",
+      "url": "https://arxiv.org/abs/2111.06077",
+      "title_guess": "A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I",
+      "source": "document"
+    },
+    "HDC-SURVEY-II": {
+      "key": "HDC-SURVEY-II",
+      "entry": "[HDC-SURVEY-II] Kleyko, D., et al. (2021). A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part II.",
+      "url": "https://arxiv.org/abs/2112.15424",
+      "title_guess": "A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part II",
+      "source": "document"
+    },
+    "KANERVA-2009": {
+      "key": "KANERVA-2009",
+      "entry": "[KANERVA-2009] Kanerva, P. (2009). Hyperdimensional Computing.",
+      "url": "https://redwood.berkeley.edu/wp-content/uploads/2018/01/kanerva2009hyperdimensional.pdf",
+      "title_guess": "Hyperdimensional Computing",
+      "source": "document"
+    },
+    "KG-SURVEY": {
+      "key": "KG-SURVEY",
+      "entry": "[KG-SURVEY] Ji, S., et al. (2020). A Survey on Knowledge Graphs.",
+      "url": "https://research.monash.edu/en/publications/a-survey-on-knowledge-graphs-representation-acquisition-and-appli/",
+      "title_guess": "A Survey on Knowledge Graphs",
+      "source": "document"
+    },
+    "KING-1976": {
+      "key": "KING-1976",
+      "entry": "[KING-1976] King, J. C. (1976). Symbolic Execution and Program Testing.",
+      "url": "https://madhu.cs.illinois.edu/cs598-fall10/king76symbolicexecution.pdf",
+      "title_guess": "Symbolic Execution and Program Testing",
+      "source": "document"
+    },
+    "LEWIS-2020": {
+      "key": "LEWIS-2020",
+      "entry": "[LEWIS-2020] Lewis, P., et al. (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks.",
+      "url": "https://arxiv.org/abs/2005.11401",
+      "title_guess": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+      "source": "document"
+    },
+    "PEARL-2009": {
+      "key": "PEARL-2009",
+      "entry": "[PEARL-2009] Pearl, J. (2009). Causality.",
+      "url": "https://archive.illc.uva.nl/cil/uploaded_files/inlineitem/Pearl_2009_Causality.pdf",
+      "title_guess": "Causality",
+      "source": "document"
+    },
+    "PGMPY": {
+      "key": "PGMPY",
+      "entry": "[PGMPY] pgmpy project. (2025). Probabilistic Graphical Models in Python.",
+      "url": "https://pgmpy.org/",
+      "title_guess": "Probabilistic Graphical Models in Python",
+      "source": "document"
+    },
+    "PYSHEAF": {
+      "key": "PYSHEAF",
+      "entry": "[PYSHEAF] PySheaf Repository. (2025). Sheaf Theoretical Data Analysis.",
+      "url": "https://github.com/kb1dds/pysheaf",
+      "title_guess": "Sheaf Theoretical Data Analysis",
+      "source": "document"
+    },
+    "PYKEEN": {
+      "key": "PYKEEN",
+      "entry": "[PYKEEN] PyKEEN Documentation. (2025). Knowledge Graph Embeddings Pipeline.",
+      "url": "https://pykeen.readthedocs.io/",
+      "title_guess": "Knowledge Graph Embeddings Pipeline",
+      "source": "document"
+    },
+    "PYRO": {
+      "key": "PYRO",
+      "entry": "[PYRO] Pyro Documentation. (2025). Deep Probabilistic Programming with PyTorch.",
+      "url": "https://pyro.ai/",
+      "title_guess": "Deep Probabilistic Programming with PyTorch",
+      "source": "document"
+    },
+    "SHEAF-SURVEY-2025": {
+      "key": "SHEAF-SURVEY-2025",
+      "entry": "[SHEAF-SURVEY-2025] Ayzenberg, A., et al. (2025). Sheaf Theory: From Deep Geometry to Deep Learning.",
+      "url": "https://arxiv.org/abs/2502.15476",
+      "title_guess": "Sheaf Theory: From Deep Geometry to Deep Learning",
+      "source": "document"
+    },
+    "TENPY": {
+      "key": "TENPY",
+      "entry": "[TENPY] TeNPy Project. (2025). TeNPy Documentation and Repository.",
+      "url": "https://tenpy.readthedocs.io/",
+      "title_guess": "TeNPy Documentation and Repository",
+      "source": "document"
+    },
+    "TENSOR-NET-SURVEY": {
+      "key": "TENSOR-NET-SURVEY",
+      "entry": "[TENSOR-NET-SURVEY] Wang, M., et al. (2023). Tensor Networks Meet Neural Networks: A Survey.",
+      "url": "https://arxiv.org/abs/2302.09019",
+      "title_guess": "Tensor Networks Meet Neural Networks: A Survey",
+      "source": "document"
+    },
+    "TENSORNETWORK-LIB": {
+      "key": "TENSORNETWORK-LIB",
+      "entry": "[TENSORNETWORK-LIB] Google. (2025). TensorNetwork: A Library for Tensor Network Manipulations.",
+      "url": "https://github.com/google/TensorNetwork",
+      "title_guess": "TensorNetwork: A Library for Tensor Network Manipulations",
+      "source": "document"
+    },
+    "TORCHHD-2023": {
+      "key": "TORCHHD-2023",
+      "entry": "[TORCHHD-2023] Heddes, M., et al. (2023). Torchhd.",
+      "url": "https://arxiv.org/abs/2205.09208",
+      "title_guess": "Torchhd",
+      "source": "document"
+    },
+    "WILLARD-LOUF-2023": {
+      "key": "WILLARD-LOUF-2023",
+      "entry": "[WILLARD-LOUF-2023] Willard, B., & Louf, R. (2023). Efficient Guided Generation for Large Language Models.",
+      "url": "https://arxiv.org/abs/2307.09702",
+      "title_guess": "Efficient Guided Generation for Large Language Models",
+      "source": "document"
+    },
+    "WU-2023": {
+      "key": "WU-2023",
+      "entry": "[WU-2023] Wu, Q., et al. (2023). AutoGen.",
+      "url": "https://arxiv.org/abs/2308.08155",
+      "title_guess": "AutoGen",
+      "source": "document"
+    },
+    "XU-2024": {
+      "key": "XU-2024",
+      "entry": "[XU-2024] Xu, S., et al. (2024). AIOS Compiler.",
+      "url": "https://arxiv.org/abs/2405.06907",
+      "title_guess": "AIOS Compiler",
+      "source": "document"
+    },
+    "YAO-2023": {
+      "key": "YAO-2023",
+      "entry": "[YAO-2023] Yao, S., et al. (2023). ReAct.",
+      "url": "https://arxiv.org/abs/2210.03629",
+      "title_guess": "ReAct",
+      "source": "document"
+    },
+    "ANT-BEA-2024": {
+      "key": "ANT-BEA-2024",
+      "entry": "[ANT-BEA-2024] Anthropic. (2024). Building Effective AI Agents. URL: https://www.anthropic.com/research/building-effective-agents",
+      "url": "https://www.anthropic.com/research/building-effective-agents",
+      "title_guess": "Building Effective AI Agents",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "ANT-CTX-2025": {
+      "key": "ANT-CTX-2025",
+      "entry": "[ANT-CTX-2025] Anthropic. (2025). Effective Context Engineering for AI Agents. URL: https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+      "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+      "title_guess": "Effective Context Engineering for AI Agents",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "ANT-SKILLS-2025": {
+      "key": "ANT-SKILLS-2025",
+      "entry": "[ANT-SKILLS-2025] Anthropic. (2025). Equipping Agents for the Real World with Agent Skills. URL: https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
+      "url": "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
+      "title_guess": "Equipping Agents for the Real World with Agent Skills",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BACH-2008": {
+      "key": "BACH-2008",
+      "entry": "[BACH-2008] Bach, K. (2008). Speech Acts and Pragmatics. URL: https://philpapers.org/rec/BACSAA-6",
+      "url": "https://philpapers.org/rec/BACSAA-6",
+      "title_guess": "Speech Acts and Pragmatics",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BASSECHES-1984": {
+      "key": "BASSECHES-1984",
+      "entry": "[BASSECHES-1984] Basseches, M. (1984). Dialectical Thinking and Adult Development. URL: https://www.bloomsbury.com/us/dialectical-thinking-and-adult-development-9780893910174/",
+      "url": "https://www.bloomsbury.com/us/dialectical-thinking-and-adult-development-9780893910174/",
+      "title_guess": "Dialectical Thinking and Adult Development",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BHUYAN-2024": {
+      "key": "BHUYAN-2024",
+      "entry": "[BHUYAN-2024] Bhuyan, B. P., et al. (2024). Neuro-symbolic Artificial Intelligence: A Survey. URL: https://link.springer.com/article/10.1007/s00521-024-09960-z",
+      "url": "https://link.springer.com/article/10.1007/s00521-024-09960-z",
+      "title_guess": "Neuro-symbolic Artificial Intelligence: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BILETZKI-2023": {
+      "key": "BILETZKI-2023",
+      "entry": "[BILETZKI-2023] Biletzki, A., & Matar, A. (2023). Ludwig Wittgenstein. URL: https://plato.stanford.edu/entries/wittgenstein/",
+      "url": "https://plato.stanford.edu/entries/wittgenstein/",
+      "title_guess": "Ludwig Wittgenstein",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BOMMASANI-2021": {
+      "key": "BOMMASANI-2021",
+      "entry": "[BOMMASANI-2021] Bommasani, R., et al. (2021). On the Opportunities and Risks of Foundation Models. URL: https://arxiv.org/abs/2108.07258",
+      "url": "https://arxiv.org/abs/2108.07258",
+      "title_guess": "On the Opportunities and Risks of Foundation Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BRAULTBARON-2016": {
+      "key": "BRAULTBARON-2016",
+      "entry": "[BRAULTBARON-2016] Brault-Baron, J. (2016). Hypergraph Acyclicity Revisited. URL: https://dblp.org/rec/journals/csur/Brault-Baron16",
+      "url": "https://dblp.org/rec/journals/csur/Brault-Baron16",
+      "title_guess": "Hypergraph Acyclicity Revisited",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BROOKS-1991": {
+      "key": "BROOKS-1991",
+      "entry": "[BROOKS-1991] Brooks, R. A. (1991). Intelligence without Representation. URL: https://people.csail.mit.edu/brooks/papers/representation.pdf",
+      "url": "https://people.csail.mit.edu/brooks/papers/representation.pdf",
+      "title_guess": "Intelligence without Representation",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "CADAR-2013": {
+      "key": "CADAR-2013",
+      "entry": "[CADAR-2013] Cadar, C., & Sen, K. (2013). Symbolic Execution for Software Testing: Three Decades Later. URL: https://people.eecs.berkeley.edu/~ksen/papers/cacm13.pdf",
+      "url": "https://people.eecs.berkeley.edu/~ksen/papers/cacm13.pdf",
+      "title_guess": "Symbolic Execution for Software Testing: Three Decades Later",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "CHAPMAN-2018": {
+      "key": "CHAPMAN-2018",
+      "entry": "[CHAPMAN-2018] Chapman, D. (2018). In the Cells of the Eggplant: Meta-rationality. URL: https://meaningness.com/eggplant",
+      "url": "https://meaningness.com/eggplant",
+      "title_guess": "In the Cells of the Eggplant: Meta-rationality",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "CHAPMAN-2026": {
+      "key": "CHAPMAN-2026",
+      "entry": "[CHAPMAN-2026] Chapman, D. (2026). Meta-rationality Website. URL: https://metarationality.com/",
+      "url": "https://metarationality.com/",
+      "title_guess": "Meta-rationality Website",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "CHEN-2022": {
+      "key": "CHEN-2022",
+      "entry": "[CHEN-2022] Chen, C., et al. (2022). Reinforcement Learning with Transformer World Models. URL: https://arxiv.org/abs/2202.09481",
+      "url": "https://arxiv.org/abs/2202.09481",
+      "title_guess": "Reinforcement Learning with Transformer World Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "COLELOUGH-2025": {
+      "key": "COLELOUGH-2025",
+      "entry": "[COLELOUGH-2025] Colelough, B. C., & Regli, W. (2025). Neuro-Symbolic AI in 2024: A Systematic Review. URL: https://arxiv.org/abs/2501.05435",
+      "url": "https://arxiv.org/abs/2501.05435",
+      "title_guess": "Neuro-Symbolic AI in 2024: A Systematic Review",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "CUCUMBER-2025": {
+      "key": "CUCUMBER-2025",
+      "entry": "[CUCUMBER-2025] Cucumber. (2025). Gherkin Language Reference. URL: https://cucumber.io/docs/gherkin/reference/",
+      "url": "https://cucumber.io/docs/gherkin/reference/",
+      "title_guess": "Gherkin Language Reference",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "DELONG-2024": {
+      "key": "DELONG-2024",
+      "entry": "[DELONG-2024] DeLong, L. N., et al. (2024). Neurosymbolic AI for Reasoning over Knowledge Graphs: A Survey. URL: https://arxiv.org/abs/2302.07200",
+      "url": "https://arxiv.org/abs/2302.07200",
+      "title_guess": "Neurosymbolic AI for Reasoning over Knowledge Graphs: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "DEMOURA-2008": {
+      "key": "DEMOURA-2008",
+      "entry": "[DEMOURA-2008] de Moura, L., & Bjørner, N. (2008). Z3: An Efficient SMT Solver. URL: https://link.springer.com/content/pdf/10.1007/978-3-540-78800-3_24.pdf",
+      "url": "https://link.springer.com/content/pdf/10.1007/978-3-540-78800-3_24.pdf",
+      "title_guess": "Z3: An Efficient SMT Solver",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "DESMET-DERAEDT-2025": {
+      "key": "DESMET-DERAEDT-2025",
+      "entry": "[DESMET-DERAEDT-2025] De Smet, L., & De Raedt, L. (2025). Defining Neurosymbolic AI. URL: https://arxiv.org/abs/2507.11127",
+      "url": "https://arxiv.org/abs/2507.11127",
+      "title_guess": "Defining Neurosymbolic AI",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "FLAVELL-1979": {
+      "key": "FLAVELL-1979",
+      "entry": "[FLAVELL-1979] Flavell, J. H. (1979). Metacognition and Cognitive Monitoring. URL: https://jgregorymcverry.com/readings/flavell1979MetacognitionAndCogntiveMonitoring.pdf",
+      "url": "https://jgregorymcverry.com/readings/flavell1979MetacognitionAndCogntiveMonitoring.pdf",
+      "title_guess": "Metacognition and Cognitive Monitoring",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "FLEMING-2021": {
+      "key": "FLEMING-2021",
+      "entry": "[FLEMING-2021] Fleming, S. M. (2021). Know Thyself: The Science of Self-Awareness. URL: https://www.hachettebookgroup.com/titles/stephen-m-fleming/know-thyself/9781549142475/?lens=basic-books",
+      "url": "https://www.hachettebookgroup.com/titles/stephen-m-fleming/know-thyself/9781549142475/?lens=basic-books",
+      "title_guess": "Know Thyself: The Science of Self-Awareness",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "FLEMING-DAW-2017": {
+      "key": "FLEMING-DAW-2017",
+      "entry": "[FLEMING-DAW-2017] Fleming, S. M., & Daw, N. D. (2017). Self-Evaluation of Decision-Making: A General Bayesian Framework for Metacognitive Computation. URL: https://doi.org/10.1037/rev0000045",
+      "url": "https://doi.org/10.1037/rev0000045",
+      "title_guess": "Self-Evaluation of Decision-Making: A General Bayesian Framework for Metacognitive Computation",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "GARCEZ-LAMB-2020": {
+      "key": "GARCEZ-LAMB-2020",
+      "entry": "[GARCEZ-LAMB-2020] d'Avila Garcez, A., & Lamb, L. C. (2020). Neurosymbolic AI: The 3rd Wave. URL: https://arxiv.org/abs/2012.05876",
+      "url": "https://arxiv.org/abs/2012.05876",
+      "title_guess": "Neurosymbolic AI: The 3rd Wave",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "GOTTLOB-2001": {
+      "key": "GOTTLOB-2001",
+      "entry": "[GOTTLOB-2001] Gottlob, G., et al. (2001). The Complexity of Acyclic Conjunctive Queries. URL: http://www.dbai.tuwien.ac.at/proj/hypertree/",
+      "url": "http://www.dbai.tuwien.ac.at/proj/hypertree/",
+      "title_guess": "The Complexity of Acyclic Conjunctive Queries",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "HA-2018": {
+      "key": "HA-2018",
+      "entry": "[HA-2018] Ha, D., & Schmidhuber, J. (2018). World Models. URL: https://arxiv.org/abs/1803.10122",
+      "url": "https://arxiv.org/abs/1803.10122",
+      "title_guess": "World Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "HAFNER-2023": {
+      "key": "HAFNER-2023",
+      "entry": "[HAFNER-2023] Hafner, D., et al. (2023). Mastering Diverse Domains through World Models. URL: https://arxiv.org/abs/2301.04104",
+      "url": "https://arxiv.org/abs/2301.04104",
+      "title_guess": "Mastering Diverse Domains through World Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "HARNAD-1990": {
+      "key": "HARNAD-1990",
+      "entry": "[HARNAD-1990] Harnad, S. (1990). The Symbol Grounding Problem. URL: https://cogprints.org/2133/1/harnad90.sgproblem.html",
+      "url": "https://cogprints.org/2133/1/harnad90.sgproblem.html",
+      "title_guess": "The Symbol Grounding Problem",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "INTUITIONISM-SEP": {
+      "key": "INTUITIONISM-SEP",
+      "entry": "[INTUITIONISM-SEP] Iemhoff, R. (2024). Intuitionism in the Philosophy of Mathematics. URL: https://plato.stanford.edu/entries/intuitionism",
+      "url": "https://plato.stanford.edu/entries/intuitionism",
+      "title_guess": "Intuitionism in the Philosophy of Mathematics",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "KAHNEMAN-2011": {
+      "key": "KAHNEMAN-2011",
+      "entry": "[KAHNEMAN-2011] Kahneman, D. (2011). Thinking, Fast and Slow. URL: https://cdn.penguin.co.uk/dam-assets/books/9780141033570/9780141033570-sample.pdf",
+      "url": "https://cdn.penguin.co.uk/dam-assets/books/9780141033570/9780141033570-sample.pdf",
+      "title_guess": "Thinking, Fast and Slow",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "KEGAN-1994": {
+      "key": "KEGAN-1994",
+      "entry": "[KEGAN-1994] Kegan, R. (1994). In Over Our Heads: The Mental Demands of Modern Life. URL: https://www.hup.harvard.edu/catalog.php?isbn=9780674445888",
+      "url": "https://www.hup.harvard.edu/catalog.php?isbn=9780674445888",
+      "title_guess": "In Over Our Heads: The Mental Demands of Modern Life",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "LECUN-2022": {
+      "key": "LECUN-2022",
+      "entry": "[LECUN-2022] LeCun, Y. (2022). A Path Towards Autonomous Machine Intelligence. URL: https://openreview.net/pdf?id=BZ5a1r-kVsf",
+      "url": "https://openreview.net/pdf?id=BZ5a1r-kVsf",
+      "title_guess": "A Path Towards Autonomous Machine Intelligence",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "LUKACS-2013": {
+      "key": "LUKACS-2013",
+      "entry": "[LUKACS-2013] Lukács, G. (2013). History and Class Consciousness. URL: https://mitpress.mit.edu/9780262525670/history-and-class-consciousness/",
+      "url": "https://mitpress.mit.edu/9780262525670/history-and-class-consciousness/",
+      "title_guess": "History and Class Consciousness",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "MEANING-SEP": {
+      "key": "MEANING-SEP",
+      "entry": "[MEANING-SEP] Speaks, J. (2024). Theories of Meaning. URL: https://plato.stanford.edu/entries/meaning/",
+      "url": "https://plato.stanford.edu/entries/meaning/",
+      "title_guess": "Theories of Meaning",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "MOKHOV-2020": {
+      "key": "MOKHOV-2020",
+      "entry": "[MOKHOV-2020] Mokhov, A., Mitchell, N., & Peyton Jones, S. (2020). Build Systems à la Carte: Theory and Practice. URL: https://simon.peytonjones.org/assets/pdfs/build-systems-jfp.pdf",
+      "url": "https://simon.peytonjones.org/assets/pdfs/build-systems-jfp.pdf",
+      "title_guess": "Build Systems à la Carte: Theory and Practice",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "OAI-PRACTICAL-AGENTS-2025": {
+      "key": "OAI-PRACTICAL-AGENTS-2025",
+      "entry": "[OAI-PRACTICAL-AGENTS-2025] OpenAI. (2025). A Practical Guide to Building AI Agents. URL: https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf",
+      "url": "https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf",
+      "title_guess": "A Practical Guide to Building AI Agents",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "OAI-SKILLS-2026": {
+      "key": "OAI-SKILLS-2026",
+      "entry": "[OAI-SKILLS-2026] OpenAI. (2026). Skills in Agents SDK. URL: https://developers.openai.com/api/docs/guides/tools-skills/",
+      "url": "https://developers.openai.com/api/docs/guides/tools-skills/",
+      "title_guess": "Skills in Agents SDK",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "POPPER-SEP": {
+      "key": "POPPER-SEP",
+      "entry": "[POPPER-SEP] Thornton, S. (2024). Karl Popper. URL: https://plato.stanford.edu/entries/popper/",
+      "url": "https://plato.stanford.edu/entries/popper/",
+      "title_guess": "Karl Popper",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "PRAGMATICS-SEP": {
+      "key": "PRAGMATICS-SEP",
+      "entry": "[PRAGMATICS-SEP] Bach, K. (2024). Pragmatics. URL: https://plato.stanford.edu/entries/pragmatics/",
+      "url": "https://plato.stanford.edu/entries/pragmatics/",
+      "title_guess": "Pragmatics",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "SCHICK-2023": {
+      "key": "SCHICK-2023",
+      "entry": "[SCHICK-2023] Schick, T., et al. (2023). Toolformer: Language Models Can Teach Themselves to Use Tools. URL: https://arxiv.org/abs/2302.04761",
+      "url": "https://arxiv.org/abs/2302.04761",
+      "title_guess": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "VERGARI-2021": {
+      "key": "VERGARI-2021",
+      "entry": "[VERGARI-2021] Vergari, A., et al. (2021). A Compositional Atlas of Tractable Circuit Operations for Probabilistic Inference. URL: https://proceedings.neurips.cc/paper/2021/hash/6e01383fd96a17ae51cc3e15447e7533-Abstract.html",
+      "url": "https://proceedings.neurips.cc/paper/2021/hash/6e01383fd96a17ae51cc3e15447e7533-Abstract.html",
+      "title_guess": "A Compositional Atlas of Tractable Circuit Operations for Probabilistic Inference",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "WAN-2024": {
+      "key": "WAN-2024",
+      "entry": "[WAN-2024] Wan, Z., et al. (2024). Towards Cognitive AI Systems: A Survey and Prospective on Neuro-Symbolic AI. URL: https://arxiv.org/abs/2401.01040",
+      "url": "https://arxiv.org/abs/2401.01040",
+      "title_guess": "Towards Cognitive AI Systems: A Survey and Prospective on Neuro-Symbolic AI",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "WITTGENSTEIN-1953": {
+      "key": "WITTGENSTEIN-1953",
+      "entry": "[WITTGENSTEIN-1953] Wittgenstein, L. (1953/2009). Philosophical Investigations. URL: https://danielwharris.com/teaching/38080/readings/WittgensteinPI.pdf",
+      "url": "https://danielwharris.com/teaching/38080/readings/WittgensteinPI.pdf",
+      "title_guess": "Philosophical Investigations",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "WOLFRAM-2002": {
+      "key": "WOLFRAM-2002",
+      "entry": "[WOLFRAM-2002] Wolfram, S. (2002). A New Kind of Science: Computational Irreducibility. URL: https://www.wolframscience.com/nks/p737--computational-irreducibility/",
+      "url": "https://www.wolframscience.com/nks/p737--computational-irreducibility/",
+      "title_guess": "A New Kind of Science: Computational Irreducibility",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "WOLPERT-1997": {
+      "key": "WOLPERT-1997",
+      "entry": "[WOLPERT-1997] Wolpert, D. H., & Macready, W. G. (1997). No Free Lunch Theorems for Optimization. URL: https://www.cs.ubc.ca/~hutter/earg/papers07/00585893.pdf",
+      "url": "https://www.cs.ubc.ca/~hutter/earg/papers07/00585893.pdf",
+      "title_guess": "No Free Lunch Theorems for Optimization",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    }
+  },
+  "missing_reference_entries": [],
+  "unused_reference_entries": [
+    {
+      "key": "ANT-BEA-2024",
+      "entry": "[ANT-BEA-2024] Anthropic. (2024). Building Effective AI Agents. URL: https://www.anthropic.com/research/building-effective-agents",
+      "url": "https://www.anthropic.com/research/building-effective-agents",
+      "title_guess": "Building Effective AI Agents",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "ANT-CTX-2025",
+      "entry": "[ANT-CTX-2025] Anthropic. (2025). Effective Context Engineering for AI Agents. URL: https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+      "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+      "title_guess": "Effective Context Engineering for AI Agents",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "ANT-SKILLS-2025",
+      "entry": "[ANT-SKILLS-2025] Anthropic. (2025). Equipping Agents for the Real World with Agent Skills. URL: https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
+      "url": "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
+      "title_guess": "Equipping Agents for the Real World with Agent Skills",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BACH-2008",
+      "entry": "[BACH-2008] Bach, K. (2008). Speech Acts and Pragmatics. URL: https://philpapers.org/rec/BACSAA-6",
+      "url": "https://philpapers.org/rec/BACSAA-6",
+      "title_guess": "Speech Acts and Pragmatics",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BASSECHES-1984",
+      "entry": "[BASSECHES-1984] Basseches, M. (1984). Dialectical Thinking and Adult Development. URL: https://www.bloomsbury.com/us/dialectical-thinking-and-adult-development-9780893910174/",
+      "url": "https://www.bloomsbury.com/us/dialectical-thinking-and-adult-development-9780893910174/",
+      "title_guess": "Dialectical Thinking and Adult Development",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BHUYAN-2024",
+      "entry": "[BHUYAN-2024] Bhuyan, B. P., et al. (2024). Neuro-symbolic Artificial Intelligence: A Survey. URL: https://link.springer.com/article/10.1007/s00521-024-09960-z",
+      "url": "https://link.springer.com/article/10.1007/s00521-024-09960-z",
+      "title_guess": "Neuro-symbolic Artificial Intelligence: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BILETZKI-2023",
+      "entry": "[BILETZKI-2023] Biletzki, A., & Matar, A. (2023). Ludwig Wittgenstein. URL: https://plato.stanford.edu/entries/wittgenstein/",
+      "url": "https://plato.stanford.edu/entries/wittgenstein/",
+      "title_guess": "Ludwig Wittgenstein",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BOMMASANI-2021",
+      "entry": "[BOMMASANI-2021] Bommasani, R., et al. (2021). On the Opportunities and Risks of Foundation Models. URL: https://arxiv.org/abs/2108.07258",
+      "url": "https://arxiv.org/abs/2108.07258",
+      "title_guess": "On the Opportunities and Risks of Foundation Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BRAULTBARON-2016",
+      "entry": "[BRAULTBARON-2016] Brault-Baron, J. (2016). Hypergraph Acyclicity Revisited. URL: https://dblp.org/rec/journals/csur/Brault-Baron16",
+      "url": "https://dblp.org/rec/journals/csur/Brault-Baron16",
+      "title_guess": "Hypergraph Acyclicity Revisited",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BROOKS-1991",
+      "entry": "[BROOKS-1991] Brooks, R. A. (1991). Intelligence without Representation. URL: https://people.csail.mit.edu/brooks/papers/representation.pdf",
+      "url": "https://people.csail.mit.edu/brooks/papers/representation.pdf",
+      "title_guess": "Intelligence without Representation",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "CADAR-2013",
+      "entry": "[CADAR-2013] Cadar, C., & Sen, K. (2013). Symbolic Execution for Software Testing: Three Decades Later. URL: https://people.eecs.berkeley.edu/~ksen/papers/cacm13.pdf",
+      "url": "https://people.eecs.berkeley.edu/~ksen/papers/cacm13.pdf",
+      "title_guess": "Symbolic Execution for Software Testing: Three Decades Later",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "CHAPMAN-2018",
+      "entry": "[CHAPMAN-2018] Chapman, D. (2018). In the Cells of the Eggplant: Meta-rationality. URL: https://meaningness.com/eggplant",
+      "url": "https://meaningness.com/eggplant",
+      "title_guess": "In the Cells of the Eggplant: Meta-rationality",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "CHAPMAN-2026",
+      "entry": "[CHAPMAN-2026] Chapman, D. (2026). Meta-rationality Website. URL: https://metarationality.com/",
+      "url": "https://metarationality.com/",
+      "title_guess": "Meta-rationality Website",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "CHEN-2022",
+      "entry": "[CHEN-2022] Chen, C., et al. (2022). Reinforcement Learning with Transformer World Models. URL: https://arxiv.org/abs/2202.09481",
+      "url": "https://arxiv.org/abs/2202.09481",
+      "title_guess": "Reinforcement Learning with Transformer World Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "COLELOUGH-2025",
+      "entry": "[COLELOUGH-2025] Colelough, B. C., & Regli, W. (2025). Neuro-Symbolic AI in 2024: A Systematic Review. URL: https://arxiv.org/abs/2501.05435",
+      "url": "https://arxiv.org/abs/2501.05435",
+      "title_guess": "Neuro-Symbolic AI in 2024: A Systematic Review",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "CUCUMBER-2025",
+      "entry": "[CUCUMBER-2025] Cucumber. (2025). Gherkin Language Reference. URL: https://cucumber.io/docs/gherkin/reference/",
+      "url": "https://cucumber.io/docs/gherkin/reference/",
+      "title_guess": "Gherkin Language Reference",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "DELONG-2024",
+      "entry": "[DELONG-2024] DeLong, L. N., et al. (2024). Neurosymbolic AI for Reasoning over Knowledge Graphs: A Survey. URL: https://arxiv.org/abs/2302.07200",
+      "url": "https://arxiv.org/abs/2302.07200",
+      "title_guess": "Neurosymbolic AI for Reasoning over Knowledge Graphs: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "DEMOURA-2008",
+      "entry": "[DEMOURA-2008] de Moura, L., & Bjørner, N. (2008). Z3: An Efficient SMT Solver. URL: https://link.springer.com/content/pdf/10.1007/978-3-540-78800-3_24.pdf",
+      "url": "https://link.springer.com/content/pdf/10.1007/978-3-540-78800-3_24.pdf",
+      "title_guess": "Z3: An Efficient SMT Solver",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "DESMET-DERAEDT-2025",
+      "entry": "[DESMET-DERAEDT-2025] De Smet, L., & De Raedt, L. (2025). Defining Neurosymbolic AI. URL: https://arxiv.org/abs/2507.11127",
+      "url": "https://arxiv.org/abs/2507.11127",
+      "title_guess": "Defining Neurosymbolic AI",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "FLAVELL-1979",
+      "entry": "[FLAVELL-1979] Flavell, J. H. (1979). Metacognition and Cognitive Monitoring. URL: https://jgregorymcverry.com/readings/flavell1979MetacognitionAndCogntiveMonitoring.pdf",
+      "url": "https://jgregorymcverry.com/readings/flavell1979MetacognitionAndCogntiveMonitoring.pdf",
+      "title_guess": "Metacognition and Cognitive Monitoring",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "FLEMING-2021",
+      "entry": "[FLEMING-2021] Fleming, S. M. (2021). Know Thyself: The Science of Self-Awareness. URL: https://www.hachettebookgroup.com/titles/stephen-m-fleming/know-thyself/9781549142475/?lens=basic-books",
+      "url": "https://www.hachettebookgroup.com/titles/stephen-m-fleming/know-thyself/9781549142475/?lens=basic-books",
+      "title_guess": "Know Thyself: The Science of Self-Awareness",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "FLEMING-DAW-2017",
+      "entry": "[FLEMING-DAW-2017] Fleming, S. M., & Daw, N. D. (2017). Self-Evaluation of Decision-Making: A General Bayesian Framework for Metacognitive Computation. URL: https://doi.org/10.1037/rev0000045",
+      "url": "https://doi.org/10.1037/rev0000045",
+      "title_guess": "Self-Evaluation of Decision-Making: A General Bayesian Framework for Metacognitive Computation",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "GARCEZ-LAMB-2020",
+      "entry": "[GARCEZ-LAMB-2020] d'Avila Garcez, A., & Lamb, L. C. (2020). Neurosymbolic AI: The 3rd Wave. URL: https://arxiv.org/abs/2012.05876",
+      "url": "https://arxiv.org/abs/2012.05876",
+      "title_guess": "Neurosymbolic AI: The 3rd Wave",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "GOTTLOB-2001",
+      "entry": "[GOTTLOB-2001] Gottlob, G., et al. (2001). The Complexity of Acyclic Conjunctive Queries. URL: http://www.dbai.tuwien.ac.at/proj/hypertree/",
+      "url": "http://www.dbai.tuwien.ac.at/proj/hypertree/",
+      "title_guess": "The Complexity of Acyclic Conjunctive Queries",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "HA-2018",
+      "entry": "[HA-2018] Ha, D., & Schmidhuber, J. (2018). World Models. URL: https://arxiv.org/abs/1803.10122",
+      "url": "https://arxiv.org/abs/1803.10122",
+      "title_guess": "World Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "HAFNER-2023",
+      "entry": "[HAFNER-2023] Hafner, D., et al. (2023). Mastering Diverse Domains through World Models. URL: https://arxiv.org/abs/2301.04104",
+      "url": "https://arxiv.org/abs/2301.04104",
+      "title_guess": "Mastering Diverse Domains through World Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "HARNAD-1990",
+      "entry": "[HARNAD-1990] Harnad, S. (1990). The Symbol Grounding Problem. URL: https://cogprints.org/2133/1/harnad90.sgproblem.html",
+      "url": "https://cogprints.org/2133/1/harnad90.sgproblem.html",
+      "title_guess": "The Symbol Grounding Problem",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "INTUITIONISM-SEP",
+      "entry": "[INTUITIONISM-SEP] Iemhoff, R. (2024). Intuitionism in the Philosophy of Mathematics. URL: https://plato.stanford.edu/entries/intuitionism",
+      "url": "https://plato.stanford.edu/entries/intuitionism",
+      "title_guess": "Intuitionism in the Philosophy of Mathematics",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "KAHNEMAN-2011",
+      "entry": "[KAHNEMAN-2011] Kahneman, D. (2011). Thinking, Fast and Slow. URL: https://cdn.penguin.co.uk/dam-assets/books/9780141033570/9780141033570-sample.pdf",
+      "url": "https://cdn.penguin.co.uk/dam-assets/books/9780141033570/9780141033570-sample.pdf",
+      "title_guess": "Thinking, Fast and Slow",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "KEGAN-1994",
+      "entry": "[KEGAN-1994] Kegan, R. (1994). In Over Our Heads: The Mental Demands of Modern Life. URL: https://www.hup.harvard.edu/catalog.php?isbn=9780674445888",
+      "url": "https://www.hup.harvard.edu/catalog.php?isbn=9780674445888",
+      "title_guess": "In Over Our Heads: The Mental Demands of Modern Life",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "LECUN-2022",
+      "entry": "[LECUN-2022] LeCun, Y. (2022). A Path Towards Autonomous Machine Intelligence. URL: https://openreview.net/pdf?id=BZ5a1r-kVsf",
+      "url": "https://openreview.net/pdf?id=BZ5a1r-kVsf",
+      "title_guess": "A Path Towards Autonomous Machine Intelligence",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "LUKACS-2013",
+      "entry": "[LUKACS-2013] Lukács, G. (2013). History and Class Consciousness. URL: https://mitpress.mit.edu/9780262525670/history-and-class-consciousness/",
+      "url": "https://mitpress.mit.edu/9780262525670/history-and-class-consciousness/",
+      "title_guess": "History and Class Consciousness",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "MEANING-SEP",
+      "entry": "[MEANING-SEP] Speaks, J. (2024). Theories of Meaning. URL: https://plato.stanford.edu/entries/meaning/",
+      "url": "https://plato.stanford.edu/entries/meaning/",
+      "title_guess": "Theories of Meaning",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "MOKHOV-2020",
+      "entry": "[MOKHOV-2020] Mokhov, A., Mitchell, N., & Peyton Jones, S. (2020). Build Systems à la Carte: Theory and Practice. URL: https://simon.peytonjones.org/assets/pdfs/build-systems-jfp.pdf",
+      "url": "https://simon.peytonjones.org/assets/pdfs/build-systems-jfp.pdf",
+      "title_guess": "Build Systems à la Carte: Theory and Practice",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "OAI-PRACTICAL-AGENTS-2025",
+      "entry": "[OAI-PRACTICAL-AGENTS-2025] OpenAI. (2025). A Practical Guide to Building AI Agents. URL: https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf",
+      "url": "https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf",
+      "title_guess": "A Practical Guide to Building AI Agents",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "OAI-SKILLS-2026",
+      "entry": "[OAI-SKILLS-2026] OpenAI. (2026). Skills in Agents SDK. URL: https://developers.openai.com/api/docs/guides/tools-skills/",
+      "url": "https://developers.openai.com/api/docs/guides/tools-skills/",
+      "title_guess": "Skills in Agents SDK",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "POPPER-SEP",
+      "entry": "[POPPER-SEP] Thornton, S. (2024). Karl Popper. URL: https://plato.stanford.edu/entries/popper/",
+      "url": "https://plato.stanford.edu/entries/popper/",
+      "title_guess": "Karl Popper",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "PRAGMATICS-SEP",
+      "entry": "[PRAGMATICS-SEP] Bach, K. (2024). Pragmatics. URL: https://plato.stanford.edu/entries/pragmatics/",
+      "url": "https://plato.stanford.edu/entries/pragmatics/",
+      "title_guess": "Pragmatics",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "SCHICK-2023",
+      "entry": "[SCHICK-2023] Schick, T., et al. (2023). Toolformer: Language Models Can Teach Themselves to Use Tools. URL: https://arxiv.org/abs/2302.04761",
+      "url": "https://arxiv.org/abs/2302.04761",
+      "title_guess": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "VERGARI-2021",
+      "entry": "[VERGARI-2021] Vergari, A., et al. (2021). A Compositional Atlas of Tractable Circuit Operations for Probabilistic Inference. URL: https://proceedings.neurips.cc/paper/2021/hash/6e01383fd96a17ae51cc3e15447e7533-Abstract.html",
+      "url": "https://proceedings.neurips.cc/paper/2021/hash/6e01383fd96a17ae51cc3e15447e7533-Abstract.html",
+      "title_guess": "A Compositional Atlas of Tractable Circuit Operations for Probabilistic Inference",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "WAN-2024",
+      "entry": "[WAN-2024] Wan, Z., et al. (2024). Towards Cognitive AI Systems: A Survey and Prospective on Neuro-Symbolic AI. URL: https://arxiv.org/abs/2401.01040",
+      "url": "https://arxiv.org/abs/2401.01040",
+      "title_guess": "Towards Cognitive AI Systems: A Survey and Prospective on Neuro-Symbolic AI",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "WITTGENSTEIN-1953",
+      "entry": "[WITTGENSTEIN-1953] Wittgenstein, L. (1953/2009). Philosophical Investigations. URL: https://danielwharris.com/teaching/38080/readings/WittgensteinPI.pdf",
+      "url": "https://danielwharris.com/teaching/38080/readings/WittgensteinPI.pdf",
+      "title_guess": "Philosophical Investigations",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "WOLFRAM-2002",
+      "entry": "[WOLFRAM-2002] Wolfram, S. (2002). A New Kind of Science: Computational Irreducibility. URL: https://www.wolframscience.com/nks/p737--computational-irreducibility/",
+      "url": "https://www.wolframscience.com/nks/p737--computational-irreducibility/",
+      "title_guess": "A New Kind of Science: Computational Irreducibility",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "WOLPERT-1997",
+      "entry": "[WOLPERT-1997] Wolpert, D. H., & Macready, W. G. (1997). No Free Lunch Theorems for Optimization. URL: https://www.cs.ubc.ca/~hutter/earg/papers07/00585893.pdf",
+      "url": "https://www.cs.ubc.ca/~hutter/earg/papers07/00585893.pdf",
+      "title_guess": "No Free Lunch Theorems for Optimization",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    }
+  ],
+  "url_checks": [
+    {
+      "key": "AGISYSTEM2",
+      "url": "https://agisystem2.com/research.html",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://agisystem2.com/research.html",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "Research Index — AGISystem2",
+      "title_match": "mismatch",
+      "error": null,
+      "cache_dir": ".tmp/cache/a779b5d2b3e136f3"
+    },
+    {
+      "key": "BECHBERGER-2017",
+      "url": "https://arxiv.org/abs/1706.06366",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/1706.06366",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[1706.06366] A Thorough Formalization of Conceptual Spaces",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/eadc37c35b5bf049"
+    },
+    {
+      "key": "BECHBERGER-2018",
+      "url": "https://arxiv.org/abs/1804.02393",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/1804.02393",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[1804.02393] Formal Ways for Measuring Relations between Concepts in Conceptual Spaces",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/aa8344ecc6a0749a"
+    },
+    {
+      "key": "BENDER-2021",
+      "url": "https://s10251.pcdn.co/pdf/2021-bender-parrots.pdf",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://s10251.pcdn.co/pdf/2021-bender-parrots.pdf",
+      "content_type": "application/pdf",
+      "page_title": null,
+      "title_match": null,
+      "error": null,
+      "cache_dir": ".tmp/cache/34a9cc14e086ecd8"
+    },
+    {
+      "key": "BEURER-KELLNER-2022",
+      "url": "https://arxiv.org/abs/2212.06094",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2212.06094",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[2212.06094] Prompting Is Programming: A Query Language for Large Language Models",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/cbe0efa6ae4cc1c7"
+    },
+    {
+      "key": "COUSOT-1977",
+      "url": "https://www.di.ens.fr/~cousot/publications.www/CousotCousot-POPL-77-ACM-p238--252-1977.pdf",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://www.di.ens.fr/~cousot/publications.www/CousotCousot-POPL-77-ACM-p238--252-1977.pdf",
+      "content_type": "application/pdf",
+      "page_title": null,
+      "title_match": null,
+      "error": null,
+      "cache_dir": ".tmp/cache/197f7fc8872f2f26"
+    },
+    {
+      "key": "DSPY-2023",
+      "url": "https://arxiv.org/abs/2310.03714",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2310.03714",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[2310.03714] DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/23021c8a5f6cfb3d"
+    },
+    {
+      "key": "FUCHS-SCHWITTER-1996",
+      "url": "https://arxiv.org/abs/cmp-lg/9603003",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/cmp-lg/9603003",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[cmp-lg/9603003] Attempto Controlled English (ACE)",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/a58527d03f24e6de"
+    },
+    {
+      "key": "FUCHS-ET-AL-2008",
+      "url": "https://attempto.ifi.uzh.ch/site/pubs/papers/reasoningweb2008_fuchs.pdf",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://attempto.ifi.uzh.ch/site/pubs/papers/reasoningweb2008_fuchs.pdf",
+      "content_type": "application/pdf",
+      "page_title": null,
+      "title_match": null,
+      "error": null,
+      "cache_dir": ".tmp/cache/c01284f555ce29ad"
+    },
+    {
+      "key": "GAO-2022",
+      "url": "https://arxiv.org/abs/2211.10435",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2211.10435",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[2211.10435] PAL: Program-aided Language Models",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/b7887b2b5ae21c8e"
+    },
+    {
+      "key": "GAO-2023",
+      "url": "https://arxiv.org/abs/2312.10997",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2312.10997",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[2312.10997] Retrieval-Augmented Generation for Large Language Models: A Survey",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/bfdd1c0c060669c5"
+    },
+    {
+      "key": "HDC-SURVEY-I",
+      "url": "https://arxiv.org/abs/2111.06077",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2111.06077",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[2111.06077] A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I: Models and Data Transformations",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/259c4924c4edd2e7"
+    },
+    {
+      "key": "HDC-SURVEY-II",
+      "url": "https://arxiv.org/abs/2112.15424",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2112.15424",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[2112.15424] A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part II: Applications, Cognitive Models, and Challenges",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/7a620d4e9a07ed2d"
+    },
+    {
+      "key": "KANERVA-2009",
+      "url": "https://redwood.berkeley.edu/wp-content/uploads/2018/01/kanerva2009hyperdimensional.pdf",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://redwood.berkeley.edu/wp-content/uploads/2018/01/kanerva2009hyperdimensional.pdf",
+      "content_type": "application/pdf",
+      "page_title": null,
+      "title_match": null,
+      "error": null,
+      "cache_dir": ".tmp/cache/c1d707108a56625e"
+    },
+    {
+      "key": "KG-SURVEY",
+      "url": "https://research.monash.edu/en/publications/a-survey-on-knowledge-graphs-representation-acquisition-and-appli/",
+      "ok": false,
+      "status": null,
+      "final_url": null,
+      "content_type": null,
+      "page_title": null,
+      "title_match": null,
+      "error": "HTTPSConnectionPool(host='research.monash.edu', port=443): Max retries exceeded with url: /en/publications/a-survey-on-knowledge-graphs-representation-acquisition-and-appli/ (Caused by NameResolutionError(\"HTTPSConnection(host='research.monash.edu', port=443): Failed to resolve 'research.monash.edu' ([Errno -2] Name or service not known)\"))",
+      "cache_dir": ".tmp/cache/8927360b25dbd4bf"
+    },
+    {
+      "key": "KING-1976",
+      "url": "https://madhu.cs.illinois.edu/cs598-fall10/king76symbolicexecution.pdf",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://madhu.cs.illinois.edu/cs598-fall10/king76symbolicexecution.pdf",
+      "content_type": "application/pdf",
+      "page_title": null,
+      "title_match": null,
+      "error": null,
+      "cache_dir": ".tmp/cache/b83776f361c32705"
+    },
+    {
+      "key": "LEWIS-2020",
+      "url": "https://arxiv.org/abs/2005.11401",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2005.11401",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[2005.11401] Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/c817fe61f10eeecb"
+    },
+    {
+      "key": "PEARL-2009",
+      "url": "https://archive.illc.uva.nl/cil/uploaded_files/inlineitem/Pearl_2009_Causality.pdf",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://archive.illc.uva.nl/cil/uploaded_files/inlineitem/Pearl_2009_Causality.pdf",
+      "content_type": "application/pdf",
+      "page_title": null,
+      "title_match": null,
+      "error": null,
+      "cache_dir": ".tmp/cache/4f231b924b776cde"
+    },
+    {
+      "key": "PGMPY",
+      "url": "https://pgmpy.org/",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://pgmpy.org/",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "Supported Data Types - 1.0.0 | pgmpy docs",
+      "title_match": "mismatch",
+      "error": null,
+      "cache_dir": ".tmp/cache/a3097e891805ead5"
+    },
+    {
+      "key": "PYSHEAF",
+      "url": "https://github.com/kb1dds/pysheaf",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://github.com/kb1dds/pysheaf",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "GitHub - kb1dds/pysheaf: Python Cellular Sheaf Library · GitHub",
+      "title_match": "mismatch",
+      "error": null,
+      "cache_dir": ".tmp/cache/a4703e6fd3903c40"
+    },
+    {
+      "key": "PYKEEN",
+      "url": "https://pykeen.readthedocs.io/",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://pykeen.readthedocs.io/en/stable/",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "PyKEEN - pykeen 1.11.1 documentation",
+      "title_match": "mismatch",
+      "error": null,
+      "cache_dir": ".tmp/cache/e9fb04addf59ec8f"
+    },
+    {
+      "key": "PYRO",
+      "url": "https://pyro.ai/",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://pyro.ai/",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "Pyro",
+      "title_match": "mismatch",
+      "error": null,
+      "cache_dir": ".tmp/cache/2128068b84f525bf"
+    },
+    {
+      "key": "SHEAF-SURVEY-2025",
+      "url": "https://arxiv.org/abs/2502.15476",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2502.15476",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[2502.15476] Sheaf theory: from deep geometry to deep learning",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/4e2abe49c3ca2364"
+    },
+    {
+      "key": "TENPY",
+      "url": "https://tenpy.readthedocs.io/",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://tenpy.readthedocs.io/en/latest/",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "Contents - TeNPy 1.1.0.dev46+003ceb2 documentation",
+      "title_match": "mismatch",
+      "error": null,
+      "cache_dir": ".tmp/cache/fe49ae3dd90efd5d"
+    },
+    {
+      "key": "TENSOR-NET-SURVEY",
+      "url": "https://arxiv.org/abs/2302.09019",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2302.09019",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[2302.09019] Tensor Networks Meet Neural Networks: A Survey and Future Perspectives",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/7bcdc46cdf10c24b"
+    },
+    {
+      "key": "TENSORNETWORK-LIB",
+      "url": "https://github.com/google/TensorNetwork",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://github.com/google/TensorNetwork",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "GitHub - google/TensorNetwork: A library for easy and efficient manipulation of tensor networks. · GitHub",
+      "title_match": "partial",
+      "error": null,
+      "cache_dir": ".tmp/cache/c276370a1de6203c"
+    },
+    {
+      "key": "TORCHHD-2023",
+      "url": "https://arxiv.org/abs/2205.09208",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2205.09208",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[2205.09208] Torchhd: An Open Source Python Library to Support Research on Hyperdimensional Computing and Vector Symbolic Architectures",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/a3b901df32d863da"
+    },
+    {
+      "key": "WILLARD-LOUF-2023",
+      "url": "https://arxiv.org/abs/2307.09702",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2307.09702",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[2307.09702] Efficient Guided Generation for Large Language Models",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/4e281c5e2ce229a2"
+    },
+    {
+      "key": "WU-2023",
+      "url": "https://arxiv.org/abs/2308.08155",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2308.08155",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[2308.08155] AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/7be0501cb1dc7719"
+    },
+    {
+      "key": "XU-2024",
+      "url": "https://arxiv.org/abs/2405.06907",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2405.06907",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[2405.06907] AIOS Compiler: LLM as Interpreter for Natural Language Programming and Flow Programming of AI Agents",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/06bedfef4b2e19e1"
+    },
+    {
+      "key": "YAO-2023",
+      "url": "https://arxiv.org/abs/2210.03629",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2210.03629",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[2210.03629] ReAct: Synergizing Reasoning and Acting in Language Models",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/0baffed4a75c14bf"
+    }
+  ],
+  "content_checks": [
+    {
+      "key": "AGISYSTEM2",
+      "has_text": true,
+      "source_title": "Research Index — AGISystem2",
+      "title_match": "mismatch",
+      "selected_terms": [
+        "chapter",
+        "list",
+        "immediate",
+        "commitments",
+        "adjacent",
+        "technical",
+        "directions",
+        "matter",
+        "once",
+        "meta-rational"
+      ],
+      "matched_terms": [
+        "technical",
+        "directions"
+      ],
+      "overlap_ratio": 0.2,
+      "best_snippet": "Research Index — AGISystem2 :root { --bg0: #f7fbff; --bg1: #fff7fb; --card: rgba(255, 255, 255, 0.78); --stroke: rgba(2, 6, 23, 0.16); --text: rgba(2, 6, 23, 0.92); --muted: rgba(2, 6, 23, 0.72); --accent: #0a7dff; --shadow: 0 20px 60px rgba(2, 6, 23, 0.12); --radius: 18px; --maxw: 1120px; } body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg0), var(--bg1)); } .shell { max-width: var(--maxw); margin: 0 auto; paddi…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/a779b5d2b3e136f3",
+      "section_title": "Why Related Research Matters",
+      "context": "This chapter is not a list of immediate commitments. It is a map of adjacent technical directions that matter once Meta-Rational Pragmatics is taken seriously as an engineering program. If a trustworthy runtime must recognize structure before choosing how to reason, then it becomes valuable to survey the representational and computational families that might eventually support such regime selection in practice [AGISYSTEM2]."
+    },
+    {
+      "key": "FUCHS-SCHWITTER-1996",
+      "has_text": true,
+      "source_title": "[cmp-lg/9603003] Attempto Controlled English (ACE)",
+      "title_match": "match",
+      "selected_terms": [
+        "executable",
+        "natural",
+        "language",
+        "clearest",
+        "neighboring",
+        "areas",
+        "makes",
+        "visible",
+        "shift",
+        "fixed"
+      ],
+      "matched_terms": [
+        "natural",
+        "language"
+      ],
+      "overlap_ratio": 0.2,
+      "best_snippet": "[cmp-lg/9603003] Attempto Controlled English (ACE) Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cmp-lg > arXiv:cmp-lg/9603003 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Search open search GO open nav…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/a58527d03f24e6de",
+      "section_title": "Executable Language Systems as a First Neighbor",
+      "context": "Executable natural language is one of the clearest neighboring areas because it makes visible the shift from fixed semantic compilation toward governed runtime interpretation. ACE and related controlled languages represent the formal-semantics-first tradition [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008]. LMQL, CoRE, ReAct, PAL, DSPy, AutoGen, and guided generation systems show different ways in which language-model runtimes can turn text into controlled behavior [BEURER-KELLNER-2022] [XU-2024] [YAO-2023] [GAO-2022] [DSPY-2023] [WU-2023] [WILLARD-LOUF-2023]."
+    },
+    {
+      "key": "FUCHS-ET-AL-2008",
+      "has_text": true,
+      "source_title": null,
+      "title_match": null,
+      "selected_terms": [
+        "executable",
+        "natural",
+        "language",
+        "clearest",
+        "neighboring",
+        "areas",
+        "makes",
+        "visible",
+        "shift",
+        "fixed"
+      ],
+      "matched_terms": [
+        "natural",
+        "language",
+        "makes"
+      ],
+      "overlap_ratio": 0.3,
+      "best_snippet": "Abstract. Attempto Controlled English (ACE) is a controlled natural language, i.e. a precisely deﬁned subset of English that can automatically and unambiguously be translated into ﬁrst-order logic. ACE may seem to be completely natural, but is actually a formal language, concretely it is a ﬁrst-order logic language with an English syntax. Thus ACE is human and machine understandable. ACE was originally intended to specify software, but has since been used as a general knowledge representation l…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/c01284f555ce29ad",
+      "section_title": "Executable Language Systems as a First Neighbor",
+      "context": "Executable natural language is one of the clearest neighboring areas because it makes visible the shift from fixed semantic compilation toward governed runtime interpretation. ACE and related controlled languages represent the formal-semantics-first tradition [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008]. LMQL, CoRE, ReAct, PAL, DSPy, AutoGen, and guided generation systems show different ways in which language-model runtimes can turn text into controlled behavior [BEURER-KELLNER-2022] [XU-2024] [YAO-2023] [GAO-2022] [DSPY-2023] [WU-2023] [WILLARD-LOUF-2023]."
+    },
+    {
+      "key": "BEURER-KELLNER-2022",
+      "has_text": true,
+      "source_title": "[2212.06094] Prompting Is Programming: A Query Language for Large Language Models",
+      "title_match": "match",
+      "selected_terms": [
+        "executable",
+        "natural",
+        "language",
+        "clearest",
+        "neighboring",
+        "areas",
+        "makes",
+        "visible",
+        "shift",
+        "fixed"
+      ],
+      "matched_terms": [
+        "language"
+      ],
+      "overlap_ratio": 0.1,
+      "best_snippet": "[2212.06094] Prompting Is Programming: A Query Language for Large Language Models Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2212.06094 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Search…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/cbe0efa6ae4cc1c7",
+      "section_title": "Executable Language Systems as a First Neighbor",
+      "context": "Executable natural language is one of the clearest neighboring areas because it makes visible the shift from fixed semantic compilation toward governed runtime interpretation. ACE and related controlled languages represent the formal-semantics-first tradition [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008]. LMQL, CoRE, ReAct, PAL, DSPy, AutoGen, and guided generation systems show different ways in which language-model runtimes can turn text into controlled behavior [BEURER-KELLNER-2022] [XU-2024] [YAO-2023] [GAO-2022] [DSPY-2023] [WU-2023] [WILLARD-LOUF-2023]."
+    },
+    {
+      "key": "XU-2024",
+      "has_text": true,
+      "source_title": "[2405.06907] AIOS Compiler: LLM as Interpreter for Natural Language Programming and Flow Programming of AI Agents",
+      "title_match": "match",
+      "selected_terms": [
+        "executable",
+        "natural",
+        "language",
+        "clearest",
+        "neighboring",
+        "areas",
+        "makes",
+        "visible",
+        "shift",
+        "fixed"
+      ],
+      "matched_terms": [
+        "natural",
+        "language"
+      ],
+      "overlap_ratio": 0.2,
+      "best_snippet": "[2405.06907] AIOS Compiler: LLM as Interpreter for Natural Language Programming and Flow Programming of AI Agents Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2405.06907 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/06bedfef4b2e19e1",
+      "section_title": "Executable Language Systems as a First Neighbor",
+      "context": "Executable natural language is one of the clearest neighboring areas because it makes visible the shift from fixed semantic compilation toward governed runtime interpretation. ACE and related controlled languages represent the formal-semantics-first tradition [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008]. LMQL, CoRE, ReAct, PAL, DSPy, AutoGen, and guided generation systems show different ways in which language-model runtimes can turn text into controlled behavior [BEURER-KELLNER-2022] [XU-2024] [YAO-2023] [GAO-2022] [DSPY-2023] [WU-2023] [WILLARD-LOUF-2023]."
+    },
+    {
+      "key": "YAO-2023",
+      "has_text": true,
+      "source_title": "[2210.03629] ReAct: Synergizing Reasoning and Acting in Language Models",
+      "title_match": "match",
+      "selected_terms": [
+        "executable",
+        "natural",
+        "language",
+        "clearest",
+        "neighboring",
+        "areas",
+        "makes",
+        "visible",
+        "shift",
+        "fixed"
+      ],
+      "matched_terms": [
+        "language",
+        "fixed"
+      ],
+      "overlap_ratio": 0.2,
+      "best_snippet": "[2210.03629] ReAct: Synergizing Reasoning and Acting in Language Models Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2210.03629 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Search open searc…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/0baffed4a75c14bf",
+      "section_title": "Executable Language Systems as a First Neighbor",
+      "context": "Executable natural language is one of the clearest neighboring areas because it makes visible the shift from fixed semantic compilation toward governed runtime interpretation. ACE and related controlled languages represent the formal-semantics-first tradition [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008]. LMQL, CoRE, ReAct, PAL, DSPy, AutoGen, and guided generation systems show different ways in which language-model runtimes can turn text into controlled behavior [BEURER-KELLNER-2022] [XU-2024] [YAO-2023] [GAO-2022] [DSPY-2023] [WU-2023] [WILLARD-LOUF-2023]."
+    },
+    {
+      "key": "GAO-2022",
+      "has_text": true,
+      "source_title": "[2211.10435] PAL: Program-aided Language Models",
+      "title_match": "match",
+      "selected_terms": [
+        "executable",
+        "natural",
+        "language",
+        "clearest",
+        "neighboring",
+        "areas",
+        "makes",
+        "visible",
+        "shift",
+        "fixed"
+      ],
+      "matched_terms": [
+        "natural",
+        "language"
+      ],
+      "overlap_ratio": 0.2,
+      "best_snippet": "[2211.10435] PAL: Program-aided Language Models Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2211.10435 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Search open search GO open navigation men…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/b7887b2b5ae21c8e",
+      "section_title": "Executable Language Systems as a First Neighbor",
+      "context": "Executable natural language is one of the clearest neighboring areas because it makes visible the shift from fixed semantic compilation toward governed runtime interpretation. ACE and related controlled languages represent the formal-semantics-first tradition [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008]. LMQL, CoRE, ReAct, PAL, DSPy, AutoGen, and guided generation systems show different ways in which language-model runtimes can turn text into controlled behavior [BEURER-KELLNER-2022] [XU-2024] [YAO-2023] [GAO-2022] [DSPY-2023] [WU-2023] [WILLARD-LOUF-2023]."
+    },
+    {
+      "key": "DSPY-2023",
+      "has_text": true,
+      "source_title": "[2310.03714] DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines",
+      "title_match": "match",
+      "selected_terms": [
+        "executable",
+        "natural",
+        "language",
+        "clearest",
+        "neighboring",
+        "areas",
+        "makes",
+        "visible",
+        "shift",
+        "fixed"
+      ],
+      "matched_terms": [
+        "language"
+      ],
+      "overlap_ratio": 0.1,
+      "best_snippet": "[2310.03714] DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2310.03714 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full te…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/23021c8a5f6cfb3d",
+      "section_title": "Executable Language Systems as a First Neighbor",
+      "context": "Executable natural language is one of the clearest neighboring areas because it makes visible the shift from fixed semantic compilation toward governed runtime interpretation. ACE and related controlled languages represent the formal-semantics-first tradition [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008]. LMQL, CoRE, ReAct, PAL, DSPy, AutoGen, and guided generation systems show different ways in which language-model runtimes can turn text into controlled behavior [BEURER-KELLNER-2022] [XU-2024] [YAO-2023] [GAO-2022] [DSPY-2023] [WU-2023] [WILLARD-LOUF-2023]."
+    },
+    {
+      "key": "WU-2023",
+      "has_text": true,
+      "source_title": "[2308.08155] AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation",
+      "title_match": "match",
+      "selected_terms": [
+        "executable",
+        "natural",
+        "language",
+        "clearest",
+        "neighboring",
+        "areas",
+        "makes",
+        "visible",
+        "shift",
+        "fixed"
+      ],
+      "matched_terms": [
+        "natural",
+        "language"
+      ],
+      "overlap_ratio": 0.2,
+      "best_snippet": "[2308.08155] AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2308.08155 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Sea…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/7be0501cb1dc7719",
+      "section_title": "Executable Language Systems as a First Neighbor",
+      "context": "Executable natural language is one of the clearest neighboring areas because it makes visible the shift from fixed semantic compilation toward governed runtime interpretation. ACE and related controlled languages represent the formal-semantics-first tradition [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008]. LMQL, CoRE, ReAct, PAL, DSPy, AutoGen, and guided generation systems show different ways in which language-model runtimes can turn text into controlled behavior [BEURER-KELLNER-2022] [XU-2024] [YAO-2023] [GAO-2022] [DSPY-2023] [WU-2023] [WILLARD-LOUF-2023]."
+    },
+    {
+      "key": "WILLARD-LOUF-2023",
+      "has_text": true,
+      "source_title": "[2307.09702] Efficient Guided Generation for Large Language Models",
+      "title_match": "match",
+      "selected_terms": [
+        "executable",
+        "natural",
+        "language",
+        "clearest",
+        "neighboring",
+        "areas",
+        "makes",
+        "visible",
+        "shift",
+        "fixed"
+      ],
+      "matched_terms": [
+        "language"
+      ],
+      "overlap_ratio": 0.1,
+      "best_snippet": "[2307.09702] Efficient Guided Generation for Large Language Models Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2307.09702 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Search open search GO…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/4e281c5e2ce229a2",
+      "section_title": "Executable Language Systems as a First Neighbor",
+      "context": "Executable natural language is one of the clearest neighboring areas because it makes visible the shift from fixed semantic compilation toward governed runtime interpretation. ACE and related controlled languages represent the formal-semantics-first tradition [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008]. LMQL, CoRE, ReAct, PAL, DSPy, AutoGen, and guided generation systems show different ways in which language-model runtimes can turn text into controlled behavior [BEURER-KELLNER-2022] [XU-2024] [YAO-2023] [GAO-2022] [DSPY-2023] [WU-2023] [WILLARD-LOUF-2023]."
+    },
+    {
+      "key": "BENDER-2021",
+      "has_text": true,
+      "source_title": null,
+      "title_match": null,
+      "selected_terms": [
+        "large",
+        "language",
+        "models",
+        "default",
+        "practical",
+        "analogue",
+        "fast",
+        "intuition",
+        "agents",
+        "synthesize"
+      ],
+      "matched_terms": [
+        "large",
+        "language",
+        "models",
+        "default",
+        "fast"
+      ],
+      "overlap_ratio": 0.5,
+      "best_snippet": "Cognition 22, 6 (1996), 1482. [24] Robin Brewer and Anne Marie Piper. 2016. “Tell It Like It Really Is” A Case of Online Content Creation and Sharing Among Older Adult Bloggers. In Proceedings of the 2016 CHI Conference on Human Factors in Computing Systems. 5529–5542. [25] Tom B. Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared Kaplan, Prafulla Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell, Sandhini Agarwal, Ariel Herbert-Voss, Gretchen Krueger, Tom Henighan,…",
+      "verdict_hint": "aligned",
+      "cache_dir": ".tmp/cache/34a9cc14e086ecd8",
+      "section_title": "Engineered Intuition, RAG, and Thinking Databases",
+      "context": "Large language models are the default practical analogue of fast intuition for current AI agents because they can synthesize heterogeneous cues immediately. But fluent output is not equivalent to epistemically controlled reasoning, and the literature on hallucination and framing bias makes that limitation hard to ignore [BENDER-2021]. Retrieval-augmented generation helps, but standard RAG remains a retrieve-then- compress pattern rather than a full account of governed intuition [LEWIS-2020] [GAO-2023]."
+    },
+    {
+      "key": "LEWIS-2020",
+      "has_text": true,
+      "source_title": "[2005.11401] Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+      "title_match": "match",
+      "selected_terms": [
+        "large",
+        "language",
+        "models",
+        "default",
+        "practical",
+        "analogue",
+        "fast",
+        "intuition",
+        "agents",
+        "synthesize"
+      ],
+      "matched_terms": [
+        "large",
+        "language",
+        "models"
+      ],
+      "overlap_ratio": 0.3,
+      "best_snippet": "[2005.11401] Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2005.11401 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Search open…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/c817fe61f10eeecb",
+      "section_title": "Engineered Intuition, RAG, and Thinking Databases",
+      "context": "Large language models are the default practical analogue of fast intuition for current AI agents because they can synthesize heterogeneous cues immediately. But fluent output is not equivalent to epistemically controlled reasoning, and the literature on hallucination and framing bias makes that limitation hard to ignore [BENDER-2021]. Retrieval-augmented generation helps, but standard RAG remains a retrieve-then- compress pattern rather than a full account of governed intuition [LEWIS-2020] [GAO-2023]."
+    },
+    {
+      "key": "GAO-2023",
+      "has_text": true,
+      "source_title": "[2312.10997] Retrieval-Augmented Generation for Large Language Models: A Survey",
+      "title_match": "match",
+      "selected_terms": [
+        "large",
+        "language",
+        "models",
+        "default",
+        "practical",
+        "analogue",
+        "fast",
+        "intuition",
+        "agents",
+        "synthesize"
+      ],
+      "matched_terms": [
+        "large",
+        "language",
+        "models"
+      ],
+      "overlap_ratio": 0.3,
+      "best_snippet": "[2312.10997] Retrieval-Augmented Generation for Large Language Models: A Survey Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2312.10997 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Search op…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/bfdd1c0c060669c5",
+      "section_title": "Engineered Intuition, RAG, and Thinking Databases",
+      "context": "Large language models are the default practical analogue of fast intuition for current AI agents because they can synthesize heterogeneous cues immediately. But fluent output is not equivalent to epistemically controlled reasoning, and the literature on hallucination and framing bias makes that limitation hard to ignore [BENDER-2021]. Retrieval-augmented generation helps, but standard RAG remains a retrieve-then- compress pattern rather than a full account of governed intuition [LEWIS-2020] [GAO-2023]."
+    },
+    {
+      "key": "HDC-SURVEY-I",
+      "has_text": true,
+      "source_title": "[2111.06077] A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I: Models and Data Transformations",
+      "title_match": "match",
+      "selected_terms": [
+        "once",
+        "explicit",
+        "exists",
+        "knowledge",
+        "base",
+        "support",
+        "multiple",
+        "specialized",
+        "intuition",
+        "engines"
+      ],
+      "matched_terms": [
+        "support"
+      ],
+      "overlap_ratio": 0.1,
+      "best_snippet": "[2111.06077] A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I: Models and Data Transformations Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2111.06077 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/259c4924c4edd2e7",
+      "section_title": "Engineered Intuition, RAG, and Thinking Databases",
+      "context": "Once an explicit IR exists, the knowledge base can support multiple specialized intuition engines rather than one generic retrieval pipeline. Some may be retrieval-like, some abstraction-oriented, some simulation-like, some case-based, some structurally constrained. HDC/VSA-style associative computation, abstract interpretation, symbolic execution, heuristic search, and analogical recall all become candidates for fast first-pass services as long as their outputs disclose coverage, epistemic status, and residual uncertainty [HDC-SURVEY-I] [HDC-SURVEY-II] [KANERVA-2009] [COUSOT-1977] [KING-1976]."
+    },
+    {
+      "key": "HDC-SURVEY-II",
+      "has_text": true,
+      "source_title": "[2112.15424] A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part II: Applications, Cognitive Models, and Challenges",
+      "title_match": "match",
+      "selected_terms": [
+        "once",
+        "explicit",
+        "exists",
+        "knowledge",
+        "base",
+        "support",
+        "multiple",
+        "specialized",
+        "intuition",
+        "engines"
+      ],
+      "matched_terms": [
+        "support"
+      ],
+      "overlap_ratio": 0.1,
+      "best_snippet": "[2112.15424] A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part II: Applications, Cognitive Models, and Challenges Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2112.15424 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv iden…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/7a620d4e9a07ed2d",
+      "section_title": "Engineered Intuition, RAG, and Thinking Databases",
+      "context": "Once an explicit IR exists, the knowledge base can support multiple specialized intuition engines rather than one generic retrieval pipeline. Some may be retrieval-like, some abstraction-oriented, some simulation-like, some case-based, some structurally constrained. HDC/VSA-style associative computation, abstract interpretation, symbolic execution, heuristic search, and analogical recall all become candidates for fast first-pass services as long as their outputs disclose coverage, epistemic status, and residual uncertainty [HDC-SURVEY-I] [HDC-SURVEY-II] [KANERVA-2009] [COUSOT-1977] [KING-1976]."
+    },
+    {
+      "key": "KANERVA-2009",
+      "has_text": true,
+      "source_title": null,
+      "title_match": null,
+      "selected_terms": [
+        "once",
+        "explicit",
+        "exists",
+        "knowledge",
+        "base",
+        "support",
+        "multiple",
+        "specialized",
+        "intuition",
+        "engines"
+      ],
+      "matched_terms": [
+        "once",
+        "explicit",
+        "knowledge",
+        "base",
+        "support",
+        "multiple",
+        "specialized"
+      ],
+      "overlap_ratio": 0.7,
+      "best_snippet": "3.1 An Engineering View of Representation Representation is crucial to traditional computing as illustrated by the following example, and apparently it is equally important to the brain’s computing. Computers use binary representation almost exclusively, which means that an individual circuit component has two possible states, usually denoted by 0 and 1. The reason for restricting to only two states has to do with physics: electronic components are most reliable when they are bistable. Richer a…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/c1d707108a56625e",
+      "section_title": "Engineered Intuition, RAG, and Thinking Databases",
+      "context": "Once an explicit IR exists, the knowledge base can support multiple specialized intuition engines rather than one generic retrieval pipeline. Some may be retrieval-like, some abstraction-oriented, some simulation-like, some case-based, some structurally constrained. HDC/VSA-style associative computation, abstract interpretation, symbolic execution, heuristic search, and analogical recall all become candidates for fast first-pass services as long as their outputs disclose coverage, epistemic status, and residual uncertainty [HDC-SURVEY-I] [HDC-SURVEY-II] [KANERVA-2009] [COUSOT-1977] [KING-1976]."
+    },
+    {
+      "key": "COUSOT-1977",
+      "has_text": true,
+      "source_title": null,
+      "title_match": null,
+      "selected_terms": [
+        "once",
+        "explicit",
+        "exists",
+        "knowledge",
+        "base",
+        "support",
+        "multiple",
+        "specialized",
+        "intuition",
+        "engines"
+      ],
+      "matched_terms": [],
+      "overlap_ratio": 0.0,
+      "best_snippet": null,
+      "verdict_hint": "mismatch",
+      "cache_dir": ".tmp/cache/197f7fc8872f2f26",
+      "section_title": "Engineered Intuition, RAG, and Thinking Databases",
+      "context": "Once an explicit IR exists, the knowledge base can support multiple specialized intuition engines rather than one generic retrieval pipeline. Some may be retrieval-like, some abstraction-oriented, some simulation-like, some case-based, some structurally constrained. HDC/VSA-style associative computation, abstract interpretation, symbolic execution, heuristic search, and analogical recall all become candidates for fast first-pass services as long as their outputs disclose coverage, epistemic status, and residual uncertainty [HDC-SURVEY-I] [HDC-SURVEY-II] [KANERVA-2009] [COUSOT-1977] [KING-1976]."
+    },
+    {
+      "key": "KING-1976",
+      "has_text": true,
+      "source_title": null,
+      "title_match": null,
+      "selected_terms": [
+        "once",
+        "explicit",
+        "exists",
+        "knowledge",
+        "base",
+        "support",
+        "multiple",
+        "specialized",
+        "intuition",
+        "engines"
+      ],
+      "matched_terms": [
+        "explicit",
+        "exists",
+        "support"
+      ],
+      "overlap_ratio": 0.3,
+      "best_snippet": "ginning predicate was satisfied and we followed this path (recorded in pc), do the current (path end) values of the program variables \"satisfy the predicate at the end?\" Given a symbolic execution system such as EFFIGY, it is conceptually straightforward to also have it attempt correctness proofs by the addition of a PROVE statement and managerial controller to enumerate paths and force path choices at unresolved IF statement executions. We have done this and are using it as a tool for p/arsuin…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/b83776f361c32705",
+      "section_title": "Engineered Intuition, RAG, and Thinking Databases",
+      "context": "Once an explicit IR exists, the knowledge base can support multiple specialized intuition engines rather than one generic retrieval pipeline. Some may be retrieval-like, some abstraction-oriented, some simulation-like, some case-based, some structurally constrained. HDC/VSA-style associative computation, abstract interpretation, symbolic execution, heuristic search, and analogical recall all become candidates for fast first-pass services as long as their outputs disclose coverage, epistemic status, and residual uncertainty [HDC-SURVEY-I] [HDC-SURVEY-II] [KANERVA-2009] [COUSOT-1977] [KING-1976]."
+    },
+    {
+      "key": "BECHBERGER-2017",
+      "has_text": true,
+      "source_title": "[1706.06366] A Thorough Formalization of Conceptual Spaces",
+      "title_match": "match",
+      "selected_terms": [
+        "several",
+        "research",
+        "families",
+        "matter",
+        "offer",
+        "intermediate",
+        "structures",
+        "future",
+        "regime",
+        "selection"
+      ],
+      "matched_terms": [],
+      "overlap_ratio": 0.0,
+      "best_snippet": "[1706.06366] A Thorough Formalization of Conceptual Spaces Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:1706.06366 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Search open search GO open nav…",
+      "verdict_hint": "mismatch",
+      "cache_dir": ".tmp/cache/eadc37c35b5bf049",
+      "section_title": "Representation Families Worth Tracking",
+      "context": "Several other research families matter because they offer different intermediate structures for future regime selection. Conceptual spaces provide geometric representations of concepts and relations, useful as a graded layer between raw language and rigid symbols [BECHBERGER-2017] [BECHBERGER-2018]. HDC and vector symbolic architectures offer algebraic, compositional, and scalable structured encodings that may support fast theory signatures or analogical recall [HDC-SURVEY-I] [HDC-SURVEY-II] [TORCHHD-2023]."
+    },
+    {
+      "key": "BECHBERGER-2018",
+      "has_text": true,
+      "source_title": "[1804.02393] Formal Ways for Measuring Relations between Concepts in Conceptual Spaces",
+      "title_match": "match",
+      "selected_terms": [
+        "several",
+        "research",
+        "families",
+        "matter",
+        "offer",
+        "intermediate",
+        "structures",
+        "future",
+        "regime",
+        "selection"
+      ],
+      "matched_terms": [],
+      "overlap_ratio": 0.0,
+      "best_snippet": "[1804.02393] Formal Ways for Measuring Relations between Concepts in Conceptual Spaces Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:1804.02393 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Se…",
+      "verdict_hint": "mismatch",
+      "cache_dir": ".tmp/cache/aa8344ecc6a0749a",
+      "section_title": "Representation Families Worth Tracking",
+      "context": "Several other research families matter because they offer different intermediate structures for future regime selection. Conceptual spaces provide geometric representations of concepts and relations, useful as a graded layer between raw language and rigid symbols [BECHBERGER-2017] [BECHBERGER-2018]. HDC and vector symbolic architectures offer algebraic, compositional, and scalable structured encodings that may support fast theory signatures or analogical recall [HDC-SURVEY-I] [HDC-SURVEY-II] [TORCHHD-2023]."
+    },
+    {
+      "key": "HDC-SURVEY-I",
+      "has_text": true,
+      "source_title": "[2111.06077] A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I: Models and Data Transformations",
+      "title_match": "match",
+      "selected_terms": [
+        "several",
+        "research",
+        "families",
+        "matter",
+        "offer",
+        "intermediate",
+        "structures",
+        "future",
+        "regime",
+        "selection"
+      ],
+      "matched_terms": [
+        "future"
+      ],
+      "overlap_ratio": 0.1,
+      "best_snippet": "[2111.06077] A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I: Models and Data Transformations Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2111.06077 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/259c4924c4edd2e7",
+      "section_title": "Representation Families Worth Tracking",
+      "context": "Several other research families matter because they offer different intermediate structures for future regime selection. Conceptual spaces provide geometric representations of concepts and relations, useful as a graded layer between raw language and rigid symbols [BECHBERGER-2017] [BECHBERGER-2018]. HDC and vector symbolic architectures offer algebraic, compositional, and scalable structured encodings that may support fast theory signatures or analogical recall [HDC-SURVEY-I] [HDC-SURVEY-II] [TORCHHD-2023]."
+    },
+    {
+      "key": "HDC-SURVEY-II",
+      "has_text": true,
+      "source_title": "[2112.15424] A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part II: Applications, Cognitive Models, and Challenges",
+      "title_match": "match",
+      "selected_terms": [
+        "several",
+        "research",
+        "families",
+        "matter",
+        "offer",
+        "intermediate",
+        "structures",
+        "future",
+        "regime",
+        "selection"
+      ],
+      "matched_terms": [
+        "future"
+      ],
+      "overlap_ratio": 0.1,
+      "best_snippet": "[2112.15424] A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part II: Applications, Cognitive Models, and Challenges Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2112.15424 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv iden…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/7a620d4e9a07ed2d",
+      "section_title": "Representation Families Worth Tracking",
+      "context": "Several other research families matter because they offer different intermediate structures for future regime selection. Conceptual spaces provide geometric representations of concepts and relations, useful as a graded layer between raw language and rigid symbols [BECHBERGER-2017] [BECHBERGER-2018]. HDC and vector symbolic architectures offer algebraic, compositional, and scalable structured encodings that may support fast theory signatures or analogical recall [HDC-SURVEY-I] [HDC-SURVEY-II] [TORCHHD-2023]."
+    },
+    {
+      "key": "TORCHHD-2023",
+      "has_text": true,
+      "source_title": "[2205.09208] Torchhd: An Open Source Python Library to Support Research on Hyperdimensional Computing and Vector Symbolic Architectures",
+      "title_match": "match",
+      "selected_terms": [
+        "several",
+        "research",
+        "families",
+        "matter",
+        "offer",
+        "intermediate",
+        "structures",
+        "future",
+        "regime",
+        "selection"
+      ],
+      "matched_terms": [
+        "research"
+      ],
+      "overlap_ratio": 0.1,
+      "best_snippet": "[2205.09208] Torchhd: An Open Source Python Library to Support Research on Hyperdimensional Computing and Vector Symbolic Architectures Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2205.09208 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/a3b901df32d863da",
+      "section_title": "Representation Families Worth Tracking",
+      "context": "Several other research families matter because they offer different intermediate structures for future regime selection. Conceptual spaces provide geometric representations of concepts and relations, useful as a graded layer between raw language and rigid symbols [BECHBERGER-2017] [BECHBERGER-2018]. HDC and vector symbolic architectures offer algebraic, compositional, and scalable structured encodings that may support fast theory signatures or analogical recall [HDC-SURVEY-I] [HDC-SURVEY-II] [TORCHHD-2023]."
+    },
+    {
+      "key": "PGMPY",
+      "has_text": true,
+      "source_title": "Supported Data Types - 1.0.0 | pgmpy docs",
+      "title_match": "mismatch",
+      "selected_terms": [
+        "probabilistic",
+        "graphical",
+        "models",
+        "programming",
+        "remain",
+        "relevant",
+        "wherever",
+        "uncertainty",
+        "partial",
+        "dependence"
+      ],
+      "matched_terms": [
+        "probabilistic",
+        "graphical",
+        "models",
+        "partial"
+      ],
+      "overlap_ratio": 0.4,
+      "best_snippet": "Supported Data Types - 1.0.0 | pgmpy docs pgmpy is a Python package for causal inference and probabilistic inference using Directed Acyclic Graphs (DAGs) and Bayesian Networks with a focus on modularity and extensibility. Implementations of various algorithms for Causal Discovery (a.k.a, Structure Learning), Parameter Estimation, Approximate (Sampling Based) and Exact inference, and Causal Inference are available. Possible Workflows in pgmpy for Directed Acyclic Graphs (DAGs) and Bayesian Netwo…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/a3097e891805ead5",
+      "section_title": "Representation Families Worth Tracking",
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    },
+    {
+      "key": "PYRO",
+      "has_text": true,
+      "source_title": "Pyro",
+      "title_match": "mismatch",
+      "selected_terms": [
+        "probabilistic",
+        "graphical",
+        "models",
+        "programming",
+        "remain",
+        "relevant",
+        "wherever",
+        "uncertainty",
+        "partial",
+        "dependence"
+      ],
+      "matched_terms": [
+        "probabilistic",
+        "programming"
+      ],
+      "overlap_ratio": 0.2,
+      "best_snippet": "Pyro Navigation About Install Docs Examples Forum GitHub NumPyro (Beta) Funsor (Beta) Pyro Deep Universal Probabilistic Programming Install Docs Forum Examples About Pyro NumPyro Release We’re excited to announce the release of NumPyro , a NumPy-backed Pyro using JAX for automatic differentiation and JIT compilation, with over 100x speedup for HMC and NUTS! See the examples and documentation for more details. Pyro is a universal probabilistic programming language (PPL) written in Python and sup…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/2128068b84f525bf",
+      "section_title": "Representation Families Worth Tracking",
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    },
+    {
+      "key": "PEARL-2009",
+      "has_text": true,
+      "source_title": null,
+      "title_match": null,
+      "selected_terms": [
+        "probabilistic",
+        "graphical",
+        "models",
+        "programming",
+        "remain",
+        "relevant",
+        "wherever",
+        "uncertainty",
+        "partial",
+        "dependence"
+      ],
+      "matched_terms": [
+        "probabilistic",
+        "graphical",
+        "models",
+        "programming",
+        "remain",
+        "relevant",
+        "uncertainty",
+        "partial",
+        "dependence"
+      ],
+      "overlap_ratio": 0.9,
+      "best_snippet": "Balke and Pearl, 1994a A. Balke and J. Pearl. Counterfactual probabilities: Computational methods, bounds, and applications. In R. Lopez de Mantaras and D. Poole, editors, Uncertainty in Artificial Intelligence 10, pages 46–54. Morgan Kaufmann, San Mateo, CA, 1994. Balke and Pearl, 1994b A. Balke and J. Pearl. Probabilistic evaluation of counterfactual queries. In Proceedings of the Twelfth National Conference on Artificial Intelligence, volume I, pages 230–237. MIT Press, Menlo Park, CA, 1994.…",
+      "verdict_hint": "aligned",
+      "cache_dir": ".tmp/cache/4f231b924b776cde",
+      "section_title": "Representation Families Worth Tracking",
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    },
+    {
+      "key": "KG-SURVEY",
+      "has_text": false,
+      "source_title": null,
+      "title_match": null,
+      "selected_terms": [
+        "probabilistic",
+        "graphical",
+        "models",
+        "programming",
+        "remain",
+        "relevant",
+        "wherever",
+        "uncertainty",
+        "partial",
+        "dependence"
+      ],
+      "matched_terms": [],
+      "overlap_ratio": null,
+      "best_snippet": null,
+      "verdict_hint": "unresolved",
+      "cache_dir": ".tmp/cache/8927360b25dbd4bf",
+      "section_title": "Representation Families Worth Tracking",
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    },
+    {
+      "key": "PYKEEN",
+      "has_text": true,
+      "source_title": "PyKEEN - pykeen 1.11.1 documentation",
+      "title_match": "mismatch",
+      "selected_terms": [
+        "probabilistic",
+        "graphical",
+        "models",
+        "programming",
+        "remain",
+        "relevant",
+        "wherever",
+        "uncertainty",
+        "partial",
+        "dependence"
+      ],
+      "matched_terms": [
+        "models",
+        "relevant",
+        "uncertainty"
+      ],
+      "overlap_ratio": 0.3,
+      "best_snippet": "PyKEEN - pykeen 1.11.1 documentation pykeen Getting Started Installation First Steps Knowledge Graph Embedding Models Representations Interaction Functions Tracking Results during Training Saving Checkpoints during Training A Toy Example with Translational Distance Models Understanding the Evaluation Optimizing a Model’s Hyper-parameters Running an Ablation Study Performance Tricks Getting Started with NodePiece Inductive Link Prediction Splitting PyTorch Lightning Integration Using Resolvers N…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/e9fb04addf59ec8f",
+      "section_title": "Representation Families Worth Tracking",
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    },
+    {
+      "key": "TENSOR-NET-SURVEY",
+      "has_text": true,
+      "source_title": "[2302.09019] Tensor Networks Meet Neural Networks: A Survey and Future Perspectives",
+      "title_match": "match",
+      "selected_terms": [
+        "probabilistic",
+        "graphical",
+        "models",
+        "programming",
+        "remain",
+        "relevant",
+        "wherever",
+        "uncertainty",
+        "partial",
+        "dependence"
+      ],
+      "matched_terms": [
+        "models"
+      ],
+      "overlap_ratio": 0.1,
+      "best_snippet": "[2302.09019] Tensor Networks Meet Neural Networks: A Survey and Future Perspectives Skip to main content We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2302.09019 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Search open search GO open navigation menu quick links Log…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/7bcdc46cdf10c24b",
+      "section_title": "Representation Families Worth Tracking",
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    },
+    {
+      "key": "TENSORNETWORK-LIB",
+      "has_text": true,
+      "source_title": "GitHub - google/TensorNetwork: A library for easy and efficient manipulation of tensor networks. · GitHub",
+      "title_match": "partial",
+      "selected_terms": [
+        "probabilistic",
+        "graphical",
+        "models",
+        "programming",
+        "remain",
+        "relevant",
+        "wherever",
+        "uncertainty",
+        "partial",
+        "dependence"
+      ],
+      "matched_terms": [
+        "models"
+      ],
+      "overlap_ratio": 0.1,
+      "best_snippet": ":root { --tab-size-preference: 4; } pre, code { tab-size: var(--tab-size-preference); } {\"locale\":\"en\",\"featureFlags\":[\"a11y_status_checks_ruleset\",\"actions_custom_images_public_preview_visibility\",\"actions_custom_images_storage_billing_ui_visibility\",\"actions_image_version_event\",\"alternate_user_config_repo\",\"arianotify_comprehensive_migration\",\"batch_suggested_changes\",\"codespaces_prebuild_region_target_update\",\"coding_agent_model_selection\",\"coding_agent_model_selection_all_skus\",\"contentful…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/c276370a1de6203c",
+      "section_title": "Representation Families Worth Tracking",
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    },
+    {
+      "key": "TENPY",
+      "has_text": true,
+      "source_title": "Contents - TeNPy 1.1.0.dev46+003ceb2 documentation",
+      "title_match": "mismatch",
+      "selected_terms": [
+        "probabilistic",
+        "graphical",
+        "models",
+        "programming",
+        "remain",
+        "relevant",
+        "wherever",
+        "uncertainty",
+        "partial",
+        "dependence"
+      ],
+      "matched_terms": [
+        "models",
+        "dependence"
+      ],
+      "overlap_ratio": 0.2,
+      "best_snippet": "Contents - TeNPy 1.1.0.dev46+003ceb2 documentation TeNPy User guide README TeNPy: Tensor Network Python How do I get set up? How to read the documentation Help - I looked at the documentation, but I don’t understand how …? I found a bug Citing TeNPy Acknowledgment License Installation instructions Installation with conda from conda-forge Installation from PyPi with pip Preparation: install requirements Installing the latest stable TeNPy package Installation of the latest version from Github Ins…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/fe49ae3dd90efd5d",
+      "section_title": "Representation Families Worth Tracking",
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    },
+    {
+      "key": "SHEAF-SURVEY-2025",
+      "has_text": true,
+      "source_title": "[2502.15476] Sheaf theory: from deep geometry to deep learning",
+      "title_match": "match",
+      "selected_terms": [
+        "probabilistic",
+        "graphical",
+        "models",
+        "programming",
+        "remain",
+        "relevant",
+        "wherever",
+        "uncertainty",
+        "partial",
+        "dependence"
+      ],
+      "matched_terms": [],
+      "overlap_ratio": 0.0,
+      "best_snippet": "[2502.15476] Sheaf theory: from deep geometry to deep learning Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > math > arXiv:2502.15476 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Search open search GO op…",
+      "verdict_hint": "mismatch",
+      "cache_dir": ".tmp/cache/4e2abe49c3ca2364",
+      "section_title": "Representation Families Worth Tracking",
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    },
+    {
+      "key": "PYSHEAF",
+      "has_text": true,
+      "source_title": "GitHub - kb1dds/pysheaf: Python Cellular Sheaf Library · GitHub",
+      "title_match": "mismatch",
+      "selected_terms": [
+        "probabilistic",
+        "graphical",
+        "models",
+        "programming",
+        "remain",
+        "relevant",
+        "wherever",
+        "uncertainty",
+        "partial",
+        "dependence"
+      ],
+      "matched_terms": [
+        "models"
+      ],
+      "overlap_ratio": 0.1,
+      "best_snippet": ":root { --tab-size-preference: 4; } pre, code { tab-size: var(--tab-size-preference); } {\"locale\":\"en\",\"featureFlags\":[\"a11y_status_checks_ruleset\",\"actions_custom_images_public_preview_visibility\",\"actions_custom_images_storage_billing_ui_visibility\",\"actions_image_version_event\",\"alternate_user_config_repo\",\"arianotify_comprehensive_migration\",\"batch_suggested_changes\",\"codespaces_prebuild_region_target_update\",\"coding_agent_model_selection\",\"coding_agent_model_selection_all_skus\",\"contentful…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/a4703e6fd3903c40",
+      "section_title": "Representation Families Worth Tracking",
+      "context": "Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty, partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs, tensor methods, and sheaf-like approaches matter because local/global structure is often itself the reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN] [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF]."
+    }
+  ]
+}

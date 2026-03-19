@@ -1,0 +1,1432 @@
+{
+  "document": "docs/MRP/a-new-foundational-intuition-for-neuro-symbolic-ai.html",
+  "occurrence_count": 7,
+  "unique_inline_citation_keys": [
+    "BROOKS-1991",
+    "DESMET-DERAEDT-2025",
+    "GARCEZ-LAMB-2020",
+    "HARNAD-1990",
+    "INTUITIONISM-SEP",
+    "WOLFRAM-2002"
+  ],
+  "reference_keys": [
+    "AGISYSTEM2",
+    "ANT-BEA-2024",
+    "ANT-CTX-2025",
+    "ANT-SKILLS-2025",
+    "BACH-2008",
+    "BASSECHES-1984",
+    "BECHBERGER-2017",
+    "BECHBERGER-2018",
+    "BENDER-2021",
+    "BEURER-KELLNER-2022",
+    "BHUYAN-2024",
+    "BILETZKI-2023",
+    "BOMMASANI-2021",
+    "BRAULTBARON-2016",
+    "BROOKS-1991",
+    "CADAR-2013",
+    "CHAPMAN-2018",
+    "CHAPMAN-2026",
+    "CHEN-2022",
+    "COLELOUGH-2025",
+    "COUSOT-1977",
+    "CUCUMBER-2025",
+    "DELONG-2024",
+    "DEMOURA-2008",
+    "DESMET-DERAEDT-2025",
+    "DSPY-2023",
+    "FLAVELL-1979",
+    "FLEMING-2021",
+    "FLEMING-DAW-2017",
+    "FUCHS-ET-AL-2008",
+    "FUCHS-SCHWITTER-1996",
+    "GAO-2022",
+    "GAO-2023",
+    "GARCEZ-LAMB-2020",
+    "GOTTLOB-2001",
+    "HA-2018",
+    "HAFNER-2023",
+    "HARNAD-1990",
+    "HDC-SURVEY-I",
+    "HDC-SURVEY-II",
+    "INTUITIONISM-SEP",
+    "KAHNEMAN-2011",
+    "KANERVA-2009",
+    "KEGAN-1994",
+    "KG-SURVEY",
+    "KING-1976",
+    "LECUN-2022",
+    "LEWIS-2020",
+    "LUKACS-2013",
+    "MEANING-SEP",
+    "MOKHOV-2020",
+    "OAI-PRACTICAL-AGENTS-2025",
+    "OAI-SKILLS-2026",
+    "PEARL-2009",
+    "PGMPY",
+    "POPPER-SEP",
+    "PRAGMATICS-SEP",
+    "PYKEEN",
+    "PYRO",
+    "PYSHEAF",
+    "SCHICK-2023",
+    "SHEAF-SURVEY-2025",
+    "TENPY",
+    "TENSOR-NET-SURVEY",
+    "TENSORNETWORK-LIB",
+    "TORCHHD-2023",
+    "VERGARI-2021",
+    "WAN-2024",
+    "WILLARD-LOUF-2023",
+    "WITTGENSTEIN-1953",
+    "WOLFRAM-2002",
+    "WOLPERT-1997",
+    "WU-2023",
+    "XU-2024",
+    "YAO-2023"
+  ],
+  "occurrences": [
+    {
+      "key": "HARNAD-1990",
+      "section_id": "misordered-priorities",
+      "section_title": "Classical Symbolic AI and the Misordering of Priorities",
+      "block_index": 0,
+      "context": "A substantial part of the historical difficulty of symbolic AI can be understood not as a failure of formalization itself, but as a misordering of explanatory priorities. Classical symbolic systems tended to grant foundational status to formal semantics, explicit representation, and correctness-preserving transformation, while treating pragmatics, situated use, institutional context, and action-sensitive interpretation as secondary layers. This produced important achievements in domains with stable ontologies, but it also produced a recurring brittleness in open, evolving, and socially embedded environments [HARNAD-1990] [BROOKS-1991]."
+    },
+    {
+      "key": "BROOKS-1991",
+      "section_id": "misordered-priorities",
+      "section_title": "Classical Symbolic AI and the Misordering of Priorities",
+      "block_index": 0,
+      "context": "A substantial part of the historical difficulty of symbolic AI can be understood not as a failure of formalization itself, but as a misordering of explanatory priorities. Classical symbolic systems tended to grant foundational status to formal semantics, explicit representation, and correctness-preserving transformation, while treating pragmatics, situated use, institutional context, and action-sensitive interpretation as secondary layers. This produced important achievements in domains with stable ontologies, but it also produced a recurring brittleness in open, evolving, and socially embedded environments [HARNAD-1990] [BROOKS-1991]."
+    },
+    {
+      "key": "HARNAD-1990",
+      "section_id": "misordered-priorities",
+      "section_title": "Classical Symbolic AI and the Misordering of Priorities",
+      "block_index": 1,
+      "context": "The point is not that semantics was a mistake. The point is that semantics was often asked to carry too much. The symbol grounding problem exposed one side of this limitation: purely formal manipulation does not explain how symbols become significant for the system rather than merely for an external interpreter [HARNAD-1990]. More broadly, intelligent behavior depends on disciplined coupling among representation, action, environment, and task. What becomes questionable is therefore not symbolism as such, but semantic foundationalism."
+    },
+    {
+      "key": "GARCEZ-LAMB-2020",
+      "section_id": "plural-theories",
+      "section_title": "Why Neuro-Symbolic AI Needs Plural Theory Management",
+      "block_index": 0,
+      "context": "This shift has direct consequences for neuro-symbolic AI. Hybrid systems often preserve the older hierarchy in subtler form: neural components are allowed to perceive or approximate, while symbolic layers are still expected to supply the final structure of meaning and correctness. A meta-rational view suggests a different goal. The aim is not necessarily one uniquely correct symbolic image of the world, but a system able to operate across multiple partially adequate representational regimes, each with its own inductive bias, evidentiary profile, practical task, and tolerance for error [GARCEZ-LAMB-2020] [DESMET-DERAEDT-2025]."
+    },
+    {
+      "key": "DESMET-DERAEDT-2025",
+      "section_id": "plural-theories",
+      "section_title": "Why Neuro-Symbolic AI Needs Plural Theory Management",
+      "block_index": 0,
+      "context": "This shift has direct consequences for neuro-symbolic AI. Hybrid systems often preserve the older hierarchy in subtler form: neural components are allowed to perceive or approximate, while symbolic layers are still expected to supply the final structure of meaning and correctness. A meta-rational view suggests a different goal. The aim is not necessarily one uniquely correct symbolic image of the world, but a system able to operate across multiple partially adequate representational regimes, each with its own inductive bias, evidentiary profile, practical task, and tolerance for error [GARCEZ-LAMB-2020] [DESMET-DERAEDT-2025]."
+    },
+    {
+      "key": "WOLFRAM-2002",
+      "section_id": "plural-theories",
+      "section_title": "Why Neuro-Symbolic AI Needs Plural Theory Management",
+      "block_index": 1,
+      "context": "Once theory learning is considered, plurality becomes even harder to dismiss. Distinct symbolic theory families may remain viable under overlapping evidence when they differ in abstraction level, ontology, granularity, intervention target, or operational objective. This is not automatically a defect. In many settings it is an expected consequence of underdetermination, model-class dependence, bounded resources, and computational irreducibility [WOLFRAM-2002]. Under such conditions, representational multiplicity is often the computational price of tractable intelligence."
+    },
+    {
+      "key": "INTUITIONISM-SEP",
+      "section_id": "intuitionism",
+      "section_title": "Intuitionism and the Discipline of Non-Finality",
+      "block_index": 0,
+      "context": "Intuitionism is relevant here not because AI should simply adopt intuitionistic logic as its entire operational foundation, but because it exposes a weakness in the uncritical assumption that every proposition already has a determinate truth value inside a fixed completed frame [INTUITIONISM-SEP]. In many open-ended learning settings, that assumption is too strong. The ontology may still be unstable, the warrants may be insufficient, and the relevant vocabulary may still be under construction."
+    }
+  ],
+  "references": {
+    "BROOKS-1991": {
+      "key": "BROOKS-1991",
+      "entry": "[BROOKS-1991] Brooks, R. A. (1991). Intelligence without Representation.",
+      "url": "https://people.csail.mit.edu/brooks/papers/representation.pdf",
+      "title_guess": "Intelligence without Representation",
+      "source": "document"
+    },
+    "DESMET-DERAEDT-2025": {
+      "key": "DESMET-DERAEDT-2025",
+      "entry": "[DESMET-DERAEDT-2025] De Smet, L., & De Raedt, L. (2025). Defining Neurosymbolic AI.",
+      "url": "https://arxiv.org/abs/2507.11127",
+      "title_guess": "Defining Neurosymbolic AI",
+      "source": "document"
+    },
+    "GARCEZ-LAMB-2020": {
+      "key": "GARCEZ-LAMB-2020",
+      "entry": "[GARCEZ-LAMB-2020] d'Avila Garcez, A., & Lamb, L. C. (2020). Neurosymbolic AI: The 3rd Wave.",
+      "url": "https://arxiv.org/abs/2012.05876",
+      "title_guess": "Neurosymbolic AI: The 3rd Wave",
+      "source": "document"
+    },
+    "HARNAD-1990": {
+      "key": "HARNAD-1990",
+      "entry": "[HARNAD-1990] Harnad, S. (1990). The Symbol Grounding Problem.",
+      "url": "https://eprints.soton.ac.uk/250382/",
+      "title_guess": "The Symbol Grounding Problem",
+      "source": "document"
+    },
+    "INTUITIONISM-SEP": {
+      "key": "INTUITIONISM-SEP",
+      "entry": "[INTUITIONISM-SEP] Iemhoff, R. (2024). Intuitionism in the Philosophy of Mathematics.",
+      "url": "https://plato.stanford.edu/entries/intuitionism",
+      "title_guess": "Intuitionism in the Philosophy of Mathematics",
+      "source": "document"
+    },
+    "WOLFRAM-2002": {
+      "key": "WOLFRAM-2002",
+      "entry": "[WOLFRAM-2002] Wolfram, S. (2002). A New Kind of Science: Computational Irreducibility.",
+      "url": "https://www.wolframscience.com/nks/p737--computational-irreducibility/",
+      "title_guess": "A New Kind of Science: Computational Irreducibility",
+      "source": "document"
+    },
+    "AGISYSTEM2": {
+      "key": "AGISYSTEM2",
+      "entry": "[AGISYSTEM2] AGISystem2. (2026). Research Index: CPU-centric ML, VSA/HDC, Conceptual Spaces, and Formal Reasoning. URL: https://agisystem2.com/research.html",
+      "url": "https://agisystem2.com/research.html",
+      "title_guess": "Research Index: CPU-centric ML, VSA/HDC, Conceptual Spaces, and Formal Reasoning",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "ANT-BEA-2024": {
+      "key": "ANT-BEA-2024",
+      "entry": "[ANT-BEA-2024] Anthropic. (2024). Building Effective AI Agents. URL: https://www.anthropic.com/research/building-effective-agents",
+      "url": "https://www.anthropic.com/research/building-effective-agents",
+      "title_guess": "Building Effective AI Agents",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "ANT-CTX-2025": {
+      "key": "ANT-CTX-2025",
+      "entry": "[ANT-CTX-2025] Anthropic. (2025). Effective Context Engineering for AI Agents. URL: https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+      "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+      "title_guess": "Effective Context Engineering for AI Agents",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "ANT-SKILLS-2025": {
+      "key": "ANT-SKILLS-2025",
+      "entry": "[ANT-SKILLS-2025] Anthropic. (2025). Equipping Agents for the Real World with Agent Skills. URL: https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
+      "url": "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
+      "title_guess": "Equipping Agents for the Real World with Agent Skills",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BACH-2008": {
+      "key": "BACH-2008",
+      "entry": "[BACH-2008] Bach, K. (2008). Speech Acts and Pragmatics. URL: https://philpapers.org/rec/BACSAA-6",
+      "url": "https://philpapers.org/rec/BACSAA-6",
+      "title_guess": "Speech Acts and Pragmatics",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BASSECHES-1984": {
+      "key": "BASSECHES-1984",
+      "entry": "[BASSECHES-1984] Basseches, M. (1984). Dialectical Thinking and Adult Development. URL: https://search.worldcat.org/title/Dialectical-thinking-and-adult-development/oclc/10532903",
+      "url": "https://search.worldcat.org/title/Dialectical-thinking-and-adult-development/oclc/10532903",
+      "title_guess": "Dialectical Thinking and Adult Development",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BECHBERGER-2017": {
+      "key": "BECHBERGER-2017",
+      "entry": "[BECHBERGER-2017] Bechberger, L., & Kühnberger, K.-U. (2017). A Thorough Formalization of Conceptual Spaces. URL: https://arxiv.org/abs/1706.06366",
+      "url": "https://arxiv.org/abs/1706.06366",
+      "title_guess": "A Thorough Formalization of Conceptual Spaces",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BECHBERGER-2018": {
+      "key": "BECHBERGER-2018",
+      "entry": "[BECHBERGER-2018] Bechberger, L., & Kühnberger, K.-U. (2018). Formal Ways for Measuring Relations between Concepts in Conceptual Spaces. URL: https://arxiv.org/abs/1804.02393",
+      "url": "https://arxiv.org/abs/1804.02393",
+      "title_guess": "Formal Ways for Measuring Relations between Concepts in Conceptual Spaces",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BENDER-2021": {
+      "key": "BENDER-2021",
+      "entry": "[BENDER-2021] Bender, E. M., et al. (2021). On the Dangers of Stochastic Parrots: Can Language Models Be Too Big? URL: https://s10251.pcdn.co/pdf/2021-bender-parrots.pdf",
+      "url": "https://s10251.pcdn.co/pdf/2021-bender-parrots.pdf",
+      "title_guess": "On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BEURER-KELLNER-2022": {
+      "key": "BEURER-KELLNER-2022",
+      "entry": "[BEURER-KELLNER-2022] Beurer-Kellner, L., et al. (2022). Prompting Is Programming: A Query Language for Large Language Models. URL: https://arxiv.org/abs/2212.06094",
+      "url": "https://arxiv.org/abs/2212.06094",
+      "title_guess": "Prompting Is Programming: A Query Language for Large Language Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BHUYAN-2024": {
+      "key": "BHUYAN-2024",
+      "entry": "[BHUYAN-2024] Bhuyan, B. P., et al. (2024). Neuro-symbolic Artificial Intelligence: A Survey. URL: https://link.springer.com/article/10.1007/s00521-024-09960-z",
+      "url": "https://link.springer.com/article/10.1007/s00521-024-09960-z",
+      "title_guess": "Neuro-symbolic Artificial Intelligence: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BILETZKI-2023": {
+      "key": "BILETZKI-2023",
+      "entry": "[BILETZKI-2023] Biletzki, A., & Matar, A. (2023). Ludwig Wittgenstein. URL: https://plato.stanford.edu/entries/wittgenstein/",
+      "url": "https://plato.stanford.edu/entries/wittgenstein/",
+      "title_guess": "Ludwig Wittgenstein",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BOMMASANI-2021": {
+      "key": "BOMMASANI-2021",
+      "entry": "[BOMMASANI-2021] Bommasani, R., et al. (2021). On the Opportunities and Risks of Foundation Models. URL: https://arxiv.org/abs/2108.07258",
+      "url": "https://arxiv.org/abs/2108.07258",
+      "title_guess": "On the Opportunities and Risks of Foundation Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BRAULTBARON-2016": {
+      "key": "BRAULTBARON-2016",
+      "entry": "[BRAULTBARON-2016] Brault-Baron, J. (2016). Hypergraph Acyclicity Revisited. URL: https://dblp.org/rec/journals/csur/Brault-Baron16",
+      "url": "https://dblp.org/rec/journals/csur/Brault-Baron16",
+      "title_guess": "Hypergraph Acyclicity Revisited",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "CADAR-2013": {
+      "key": "CADAR-2013",
+      "entry": "[CADAR-2013] Cadar, C., & Sen, K. (2013). Symbolic Execution for Software Testing: Three Decades Later. URL: https://people.eecs.berkeley.edu/~ksen/papers/cacm13.pdf",
+      "url": "https://people.eecs.berkeley.edu/~ksen/papers/cacm13.pdf",
+      "title_guess": "Symbolic Execution for Software Testing: Three Decades Later",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "CHAPMAN-2018": {
+      "key": "CHAPMAN-2018",
+      "entry": "[CHAPMAN-2018] Chapman, D. (2018). In the Cells of the Eggplant: Meta-rationality. URL: https://meaningness.com/eggplant",
+      "url": "https://meaningness.com/eggplant",
+      "title_guess": "In the Cells of the Eggplant: Meta-rationality",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "CHAPMAN-2026": {
+      "key": "CHAPMAN-2026",
+      "entry": "[CHAPMAN-2026] Chapman, D. (2026). Meta-rationality Website. URL: https://metarationality.com/",
+      "url": "https://metarationality.com/",
+      "title_guess": "Meta-rationality Website",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "CHEN-2022": {
+      "key": "CHEN-2022",
+      "entry": "[CHEN-2022] Chen, C., et al. (2022). Reinforcement Learning with Transformer World Models. URL: https://arxiv.org/abs/2202.09481",
+      "url": "https://arxiv.org/abs/2202.09481",
+      "title_guess": "Reinforcement Learning with Transformer World Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "COLELOUGH-2025": {
+      "key": "COLELOUGH-2025",
+      "entry": "[COLELOUGH-2025] Colelough, B. C., & Regli, W. (2025). Neuro-Symbolic AI in 2024: A Systematic Review. URL: https://arxiv.org/abs/2501.05435",
+      "url": "https://arxiv.org/abs/2501.05435",
+      "title_guess": "Neuro-Symbolic AI in 2024: A Systematic Review",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "COUSOT-1977": {
+      "key": "COUSOT-1977",
+      "entry": "[COUSOT-1977] Cousot, P., & Cousot, R. (1977). Abstract Interpretation: A Unified Lattice Model for Static Analysis of Programs. URL: https://www.di.ens.fr/~cousot/publications.www/CousotCousot-POPL-77-ACM-p238--252-1977.pdf",
+      "url": "https://www.di.ens.fr/~cousot/publications.www/CousotCousot-POPL-77-ACM-p238--252-1977.pdf",
+      "title_guess": "Abstract Interpretation: A Unified Lattice Model for Static Analysis of Programs",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "CUCUMBER-2025": {
+      "key": "CUCUMBER-2025",
+      "entry": "[CUCUMBER-2025] Cucumber. (2025). Gherkin Language Reference. URL: https://cucumber.io/docs/gherkin/reference/",
+      "url": "https://cucumber.io/docs/gherkin/reference/",
+      "title_guess": "Gherkin Language Reference",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "DELONG-2024": {
+      "key": "DELONG-2024",
+      "entry": "[DELONG-2024] DeLong, L. N., et al. (2024). Neurosymbolic AI for Reasoning over Knowledge Graphs: A Survey. URL: https://arxiv.org/abs/2302.07200",
+      "url": "https://arxiv.org/abs/2302.07200",
+      "title_guess": "Neurosymbolic AI for Reasoning over Knowledge Graphs: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "DEMOURA-2008": {
+      "key": "DEMOURA-2008",
+      "entry": "[DEMOURA-2008] de Moura, L., & Bjørner, N. (2008). Z3: An Efficient SMT Solver. URL: https://link.springer.com/content/pdf/10.1007/978-3-540-78800-3_24.pdf",
+      "url": "https://link.springer.com/content/pdf/10.1007/978-3-540-78800-3_24.pdf",
+      "title_guess": "Z3: An Efficient SMT Solver",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "DSPY-2023": {
+      "key": "DSPY-2023",
+      "entry": "[DSPY-2023] Khattab, O., et al. (2023). DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines. URL: https://arxiv.org/abs/2310.03714",
+      "url": "https://arxiv.org/abs/2310.03714",
+      "title_guess": "DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "FLAVELL-1979": {
+      "key": "FLAVELL-1979",
+      "entry": "[FLAVELL-1979] Flavell, J. H. (1979). Metacognition and Cognitive Monitoring. URL: https://jgregorymcverry.com/readings/flavell1979MetacognitionAndCogntiveMonitoring.pdf",
+      "url": "https://jgregorymcverry.com/readings/flavell1979MetacognitionAndCogntiveMonitoring.pdf",
+      "title_guess": "Metacognition and Cognitive Monitoring",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "FLEMING-2021": {
+      "key": "FLEMING-2021",
+      "entry": "[FLEMING-2021] Fleming, S. M. (2021). Know Thyself: The Science of Self-Awareness. URL: https://www.hachettebookgroup.com/titles/stephen-m-fleming/know-thyself/9781549142475/?lens=basic-books",
+      "url": "https://www.hachettebookgroup.com/titles/stephen-m-fleming/know-thyself/9781549142475/?lens=basic-books",
+      "title_guess": "Know Thyself: The Science of Self-Awareness",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "FLEMING-DAW-2017": {
+      "key": "FLEMING-DAW-2017",
+      "entry": "[FLEMING-DAW-2017] Fleming, S. M., & Daw, N. D. (2017). Self-Evaluation of Decision-Making: A General Bayesian Framework for Metacognitive Computation. URL: https://doi.org/10.1037/rev0000045",
+      "url": "https://doi.org/10.1037/rev0000045",
+      "title_guess": "Self-Evaluation of Decision-Making: A General Bayesian Framework for Metacognitive Computation",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "FUCHS-ET-AL-2008": {
+      "key": "FUCHS-ET-AL-2008",
+      "entry": "[FUCHS-ET-AL-2008] Fuchs, N. E., Kaljurand, K., & Kuhn, T. (2008). Attempto Controlled English for Knowledge Representation. URL: https://attempto.ifi.uzh.ch/site/pubs/papers/reasoningweb2008_fuchs.pdf",
+      "url": "https://attempto.ifi.uzh.ch/site/pubs/papers/reasoningweb2008_fuchs.pdf",
+      "title_guess": "Attempto Controlled English for Knowledge Representation",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "FUCHS-SCHWITTER-1996": {
+      "key": "FUCHS-SCHWITTER-1996",
+      "entry": "[FUCHS-SCHWITTER-1996] Fuchs, N. E., & Schwitter, R. (1996). Attempto Controlled English (ACE). URL: https://arxiv.org/abs/cmp-lg/9603003",
+      "url": "https://arxiv.org/abs/cmp-lg/9603003",
+      "title_guess": "Attempto Controlled English (ACE)",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "GAO-2022": {
+      "key": "GAO-2022",
+      "entry": "[GAO-2022] Gao, L., et al. (2022). PAL: Program-aided Language Models. URL: https://arxiv.org/abs/2211.10435",
+      "url": "https://arxiv.org/abs/2211.10435",
+      "title_guess": "PAL: Program-aided Language Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "GAO-2023": {
+      "key": "GAO-2023",
+      "entry": "[GAO-2023] Gao, Y., et al. (2023). Retrieval-Augmented Generation for Large Language Models: A Survey. URL: https://arxiv.org/abs/2312.10997",
+      "url": "https://arxiv.org/abs/2312.10997",
+      "title_guess": "Retrieval-Augmented Generation for Large Language Models: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "GOTTLOB-2001": {
+      "key": "GOTTLOB-2001",
+      "entry": "[GOTTLOB-2001] Gottlob, G., et al. (2001). The Complexity of Acyclic Conjunctive Queries. URL: http://www.dbai.tuwien.ac.at/proj/hypertree/",
+      "url": "http://www.dbai.tuwien.ac.at/proj/hypertree/",
+      "title_guess": "The Complexity of Acyclic Conjunctive Queries",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "HA-2018": {
+      "key": "HA-2018",
+      "entry": "[HA-2018] Ha, D., & Schmidhuber, J. (2018). World Models. URL: https://arxiv.org/abs/1803.10122",
+      "url": "https://arxiv.org/abs/1803.10122",
+      "title_guess": "World Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "HAFNER-2023": {
+      "key": "HAFNER-2023",
+      "entry": "[HAFNER-2023] Hafner, D., et al. (2023). Mastering Diverse Domains through World Models. URL: https://arxiv.org/abs/2301.04104",
+      "url": "https://arxiv.org/abs/2301.04104",
+      "title_guess": "Mastering Diverse Domains through World Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "HDC-SURVEY-I": {
+      "key": "HDC-SURVEY-I",
+      "entry": "[HDC-SURVEY-I] Kleyko, D., et al. (2021). A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I. URL: https://arxiv.org/abs/2111.06077",
+      "url": "https://arxiv.org/abs/2111.06077",
+      "title_guess": "A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "HDC-SURVEY-II": {
+      "key": "HDC-SURVEY-II",
+      "entry": "[HDC-SURVEY-II] Kleyko, D., et al. (2021). A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part II. URL: https://arxiv.org/abs/2112.15424",
+      "url": "https://arxiv.org/abs/2112.15424",
+      "title_guess": "A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part II",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "KAHNEMAN-2011": {
+      "key": "KAHNEMAN-2011",
+      "entry": "[KAHNEMAN-2011] Kahneman, D. (2011). Thinking, Fast and Slow. URL: https://cdn.penguin.co.uk/dam-assets/books/9780141033570/9780141033570-sample.pdf",
+      "url": "https://cdn.penguin.co.uk/dam-assets/books/9780141033570/9780141033570-sample.pdf",
+      "title_guess": "Thinking, Fast and Slow",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "KANERVA-2009": {
+      "key": "KANERVA-2009",
+      "entry": "[KANERVA-2009] Kanerva, P. (2009). Hyperdimensional Computing: An Introduction to Computing in Distributed Representation with High-Dimensional Random Vectors. URL: https://redwood.berkeley.edu/wp-content/uploads/2018/01/kanerva2009hyperdimensional.pdf",
+      "url": "https://redwood.berkeley.edu/wp-content/uploads/2018/01/kanerva2009hyperdimensional.pdf",
+      "title_guess": "Hyperdimensional Computing: An Introduction to Computing in Distributed Representation with High-Dimensional Random Vectors",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "KEGAN-1994": {
+      "key": "KEGAN-1994",
+      "entry": "[KEGAN-1994] Kegan, R. (1994). In Over Our Heads: The Mental Demands of Modern Life. URL: https://www.hup.harvard.edu/catalog.php?isbn=9780674445888",
+      "url": "https://www.hup.harvard.edu/catalog.php?isbn=9780674445888",
+      "title_guess": "In Over Our Heads: The Mental Demands of Modern Life",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "KG-SURVEY": {
+      "key": "KG-SURVEY",
+      "entry": "[KG-SURVEY] Ji, S., et al. (2020). A Survey on Knowledge Graphs: Representation, Acquisition and Applications. URL: https://research.monash.edu/en/publications/a-survey-on-knowledge-graphs-representation-acquisition-and-appli/",
+      "url": "https://research.monash.edu/en/publications/a-survey-on-knowledge-graphs-representation-acquisition-and-appli/",
+      "title_guess": "A Survey on Knowledge Graphs: Representation, Acquisition and Applications",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "KING-1976": {
+      "key": "KING-1976",
+      "entry": "[KING-1976] King, J. C. (1976). Symbolic Execution and Program Testing. URL: https://madhu.cs.illinois.edu/cs598-fall10/king76symbolicexecution.pdf",
+      "url": "https://madhu.cs.illinois.edu/cs598-fall10/king76symbolicexecution.pdf",
+      "title_guess": "Symbolic Execution and Program Testing",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "LECUN-2022": {
+      "key": "LECUN-2022",
+      "entry": "[LECUN-2022] LeCun, Y. (2022). A Path Towards Autonomous Machine Intelligence. URL: https://openreview.net/pdf?id=BZ5a1r-kVsf",
+      "url": "https://openreview.net/pdf?id=BZ5a1r-kVsf",
+      "title_guess": "A Path Towards Autonomous Machine Intelligence",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "LEWIS-2020": {
+      "key": "LEWIS-2020",
+      "entry": "[LEWIS-2020] Lewis, P., et al. (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks. URL: https://arxiv.org/abs/2005.11401",
+      "url": "https://arxiv.org/abs/2005.11401",
+      "title_guess": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "LUKACS-2013": {
+      "key": "LUKACS-2013",
+      "entry": "[LUKACS-2013] Lukács, G. (2013). History and Class Consciousness. URL: https://mitpress.mit.edu/9780262525670/history-and-class-consciousness/",
+      "url": "https://mitpress.mit.edu/9780262525670/history-and-class-consciousness/",
+      "title_guess": "History and Class Consciousness",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "MEANING-SEP": {
+      "key": "MEANING-SEP",
+      "entry": "[MEANING-SEP] Speaks, J. (2024). Theories of Meaning. URL: https://plato.stanford.edu/entries/meaning/",
+      "url": "https://plato.stanford.edu/entries/meaning/",
+      "title_guess": "Theories of Meaning",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "MOKHOV-2020": {
+      "key": "MOKHOV-2020",
+      "entry": "[MOKHOV-2020] Mokhov, A., Mitchell, N., & Peyton Jones, S. (2020). Build Systems à la Carte: Theory and Practice. URL: https://simon.peytonjones.org/assets/pdfs/build-systems-jfp.pdf",
+      "url": "https://simon.peytonjones.org/assets/pdfs/build-systems-jfp.pdf",
+      "title_guess": "Build Systems à la Carte: Theory and Practice",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "OAI-PRACTICAL-AGENTS-2025": {
+      "key": "OAI-PRACTICAL-AGENTS-2025",
+      "entry": "[OAI-PRACTICAL-AGENTS-2025] OpenAI. (2025). A Practical Guide to Building AI Agents. URL: https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf",
+      "url": "https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf",
+      "title_guess": "A Practical Guide to Building AI Agents",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "OAI-SKILLS-2026": {
+      "key": "OAI-SKILLS-2026",
+      "entry": "[OAI-SKILLS-2026] OpenAI. (2026). Skills in Agents SDK. URL: https://developers.openai.com/api/docs/guides/tools-skills/",
+      "url": "https://developers.openai.com/api/docs/guides/tools-skills/",
+      "title_guess": "Skills in Agents SDK",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "PEARL-2009": {
+      "key": "PEARL-2009",
+      "entry": "[PEARL-2009] Pearl, J. (2009). Causality: Models, Reasoning, and Inference. URL: https://archive.illc.uva.nl/cil/uploaded_files/inlineitem/Pearl_2009_Causality.pdf",
+      "url": "https://archive.illc.uva.nl/cil/uploaded_files/inlineitem/Pearl_2009_Causality.pdf",
+      "title_guess": "Causality: Models, Reasoning, and Inference",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "PGMPY": {
+      "key": "PGMPY",
+      "entry": "[PGMPY] pgmpy project. (2025). Probabilistic Graphical Models in Python. URL: https://pgmpy.org/",
+      "url": "https://pgmpy.org/",
+      "title_guess": "Probabilistic Graphical Models in Python",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "POPPER-SEP": {
+      "key": "POPPER-SEP",
+      "entry": "[POPPER-SEP] Thornton, S. (2024). Karl Popper. URL: https://plato.stanford.edu/entries/popper/",
+      "url": "https://plato.stanford.edu/entries/popper/",
+      "title_guess": "Karl Popper",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "PRAGMATICS-SEP": {
+      "key": "PRAGMATICS-SEP",
+      "entry": "[PRAGMATICS-SEP] Bach, K. (2024). Pragmatics. URL: https://plato.stanford.edu/entries/pragmatics/",
+      "url": "https://plato.stanford.edu/entries/pragmatics/",
+      "title_guess": "Pragmatics",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "PYKEEN": {
+      "key": "PYKEEN",
+      "entry": "[PYKEEN] PyKEEN Documentation. (2025). Knowledge Graph Embeddings Pipeline. URL: https://pykeen.readthedocs.io/",
+      "url": "https://pykeen.readthedocs.io/",
+      "title_guess": "Knowledge Graph Embeddings Pipeline",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "PYRO": {
+      "key": "PYRO",
+      "entry": "[PYRO] Pyro Documentation. (2025). Deep Probabilistic Programming with PyTorch. URL: https://pyro.ai/",
+      "url": "https://pyro.ai/",
+      "title_guess": "Deep Probabilistic Programming with PyTorch",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "PYSHEAF": {
+      "key": "PYSHEAF",
+      "entry": "[PYSHEAF] PySheaf Repository. (2025). Sheaf Theoretical Data Analysis. URL: https://github.com/kb1dds/pysheaf",
+      "url": "https://github.com/kb1dds/pysheaf",
+      "title_guess": "Sheaf Theoretical Data Analysis",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "SCHICK-2023": {
+      "key": "SCHICK-2023",
+      "entry": "[SCHICK-2023] Schick, T., et al. (2023). Toolformer: Language Models Can Teach Themselves to Use Tools. URL: https://arxiv.org/abs/2302.04761",
+      "url": "https://arxiv.org/abs/2302.04761",
+      "title_guess": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "SHEAF-SURVEY-2025": {
+      "key": "SHEAF-SURVEY-2025",
+      "entry": "[SHEAF-SURVEY-2025] Ayzenberg, A., et al. (2025). Sheaf Theory: From Deep Geometry to Deep Learning. URL: https://arxiv.org/abs/2502.15476",
+      "url": "https://arxiv.org/abs/2502.15476",
+      "title_guess": "Sheaf Theory: From Deep Geometry to Deep Learning",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "TENPY": {
+      "key": "TENPY",
+      "entry": "[TENPY] TeNPy Project. (2025). TeNPy Documentation and Repository. URL: https://tenpy.readthedocs.io/",
+      "url": "https://tenpy.readthedocs.io/",
+      "title_guess": "TeNPy Documentation and Repository",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "TENSOR-NET-SURVEY": {
+      "key": "TENSOR-NET-SURVEY",
+      "entry": "[TENSOR-NET-SURVEY] Wang, M., et al. (2023). Tensor Networks Meet Neural Networks: A Survey. URL: https://arxiv.org/abs/2302.09019",
+      "url": "https://arxiv.org/abs/2302.09019",
+      "title_guess": "Tensor Networks Meet Neural Networks: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "TENSORNETWORK-LIB": {
+      "key": "TENSORNETWORK-LIB",
+      "entry": "[TENSORNETWORK-LIB] Google. (2025). TensorNetwork: A Library for Tensor Network Manipulations. URL: https://github.com/google/TensorNetwork",
+      "url": "https://github.com/google/TensorNetwork",
+      "title_guess": "TensorNetwork: A Library for Tensor Network Manipulations",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "TORCHHD-2023": {
+      "key": "TORCHHD-2023",
+      "entry": "[TORCHHD-2023] Heddes, M., et al. (2023). Torchhd: An Open Source Python Library to Support Research on Hyperdimensional Computing and Vector Symbolic Architectures. URL: https://arxiv.org/abs/2205.09208",
+      "url": "https://arxiv.org/abs/2205.09208",
+      "title_guess": "Torchhd: An Open Source Python Library to Support Research on Hyperdimensional Computing and Vector Symbolic Architectures",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "VERGARI-2021": {
+      "key": "VERGARI-2021",
+      "entry": "[VERGARI-2021] Vergari, A., et al. (2021). A Compositional Atlas of Tractable Circuit Operations for Probabilistic Inference. URL: https://nips.cc/virtual/2021/oral/28267",
+      "url": "https://nips.cc/virtual/2021/oral/28267",
+      "title_guess": "A Compositional Atlas of Tractable Circuit Operations for Probabilistic Inference",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "WAN-2024": {
+      "key": "WAN-2024",
+      "entry": "[WAN-2024] Wan, Z., et al. (2024). Towards Cognitive AI Systems: A Survey and Prospective on Neuro-Symbolic AI. URL: https://arxiv.org/abs/2401.01040",
+      "url": "https://arxiv.org/abs/2401.01040",
+      "title_guess": "Towards Cognitive AI Systems: A Survey and Prospective on Neuro-Symbolic AI",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "WILLARD-LOUF-2023": {
+      "key": "WILLARD-LOUF-2023",
+      "entry": "[WILLARD-LOUF-2023] Willard, B., & Louf, R. (2023). Efficient Guided Generation for Large Language Models. URL: https://arxiv.org/abs/2307.09702",
+      "url": "https://arxiv.org/abs/2307.09702",
+      "title_guess": "Efficient Guided Generation for Large Language Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "WITTGENSTEIN-1953": {
+      "key": "WITTGENSTEIN-1953",
+      "entry": "[WITTGENSTEIN-1953] Wittgenstein, L. (1953/2009). Philosophical Investigations. URL: https://danielwharris.com/teaching/38080/readings/WittgensteinPI.pdf",
+      "url": "https://danielwharris.com/teaching/38080/readings/WittgensteinPI.pdf",
+      "title_guess": "Philosophical Investigations",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "WOLPERT-1997": {
+      "key": "WOLPERT-1997",
+      "entry": "[WOLPERT-1997] Wolpert, D. H., & Macready, W. G. (1997). No Free Lunch Theorems for Optimization. URL: https://www.cs.ubc.ca/~hutter/earg/papers07/00585893.pdf",
+      "url": "https://www.cs.ubc.ca/~hutter/earg/papers07/00585893.pdf",
+      "title_guess": "No Free Lunch Theorems for Optimization",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "WU-2023": {
+      "key": "WU-2023",
+      "entry": "[WU-2023] Wu, Q., et al. (2023). AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation. URL: https://arxiv.org/abs/2308.08155",
+      "url": "https://arxiv.org/abs/2308.08155",
+      "title_guess": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "XU-2024": {
+      "key": "XU-2024",
+      "entry": "[XU-2024] Xu, S., et al. (2024). AIOS Compiler: LLM as Interpreter for Natural Language Programming. URL: https://arxiv.org/abs/2405.06907",
+      "url": "https://arxiv.org/abs/2405.06907",
+      "title_guess": "AIOS Compiler: LLM as Interpreter for Natural Language Programming",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "YAO-2023": {
+      "key": "YAO-2023",
+      "entry": "[YAO-2023] Yao, S., et al. (2023). ReAct: Synergizing Reasoning and Acting in Language Models. URL: https://arxiv.org/abs/2210.03629",
+      "url": "https://arxiv.org/abs/2210.03629",
+      "title_guess": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    }
+  },
+  "missing_reference_entries": [],
+  "unused_reference_entries": [
+    {
+      "key": "AGISYSTEM2",
+      "entry": "[AGISYSTEM2] AGISystem2. (2026). Research Index: CPU-centric ML, VSA/HDC, Conceptual Spaces, and Formal Reasoning. URL: https://agisystem2.com/research.html",
+      "url": "https://agisystem2.com/research.html",
+      "title_guess": "Research Index: CPU-centric ML, VSA/HDC, Conceptual Spaces, and Formal Reasoning",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "ANT-BEA-2024",
+      "entry": "[ANT-BEA-2024] Anthropic. (2024). Building Effective AI Agents. URL: https://www.anthropic.com/research/building-effective-agents",
+      "url": "https://www.anthropic.com/research/building-effective-agents",
+      "title_guess": "Building Effective AI Agents",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "ANT-CTX-2025",
+      "entry": "[ANT-CTX-2025] Anthropic. (2025). Effective Context Engineering for AI Agents. URL: https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+      "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+      "title_guess": "Effective Context Engineering for AI Agents",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "ANT-SKILLS-2025",
+      "entry": "[ANT-SKILLS-2025] Anthropic. (2025). Equipping Agents for the Real World with Agent Skills. URL: https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
+      "url": "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
+      "title_guess": "Equipping Agents for the Real World with Agent Skills",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BACH-2008",
+      "entry": "[BACH-2008] Bach, K. (2008). Speech Acts and Pragmatics. URL: https://philpapers.org/rec/BACSAA-6",
+      "url": "https://philpapers.org/rec/BACSAA-6",
+      "title_guess": "Speech Acts and Pragmatics",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BASSECHES-1984",
+      "entry": "[BASSECHES-1984] Basseches, M. (1984). Dialectical Thinking and Adult Development. URL: https://search.worldcat.org/title/Dialectical-thinking-and-adult-development/oclc/10532903",
+      "url": "https://search.worldcat.org/title/Dialectical-thinking-and-adult-development/oclc/10532903",
+      "title_guess": "Dialectical Thinking and Adult Development",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BECHBERGER-2017",
+      "entry": "[BECHBERGER-2017] Bechberger, L., & Kühnberger, K.-U. (2017). A Thorough Formalization of Conceptual Spaces. URL: https://arxiv.org/abs/1706.06366",
+      "url": "https://arxiv.org/abs/1706.06366",
+      "title_guess": "A Thorough Formalization of Conceptual Spaces",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BECHBERGER-2018",
+      "entry": "[BECHBERGER-2018] Bechberger, L., & Kühnberger, K.-U. (2018). Formal Ways for Measuring Relations between Concepts in Conceptual Spaces. URL: https://arxiv.org/abs/1804.02393",
+      "url": "https://arxiv.org/abs/1804.02393",
+      "title_guess": "Formal Ways for Measuring Relations between Concepts in Conceptual Spaces",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BENDER-2021",
+      "entry": "[BENDER-2021] Bender, E. M., et al. (2021). On the Dangers of Stochastic Parrots: Can Language Models Be Too Big? URL: https://s10251.pcdn.co/pdf/2021-bender-parrots.pdf",
+      "url": "https://s10251.pcdn.co/pdf/2021-bender-parrots.pdf",
+      "title_guess": "On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BEURER-KELLNER-2022",
+      "entry": "[BEURER-KELLNER-2022] Beurer-Kellner, L., et al. (2022). Prompting Is Programming: A Query Language for Large Language Models. URL: https://arxiv.org/abs/2212.06094",
+      "url": "https://arxiv.org/abs/2212.06094",
+      "title_guess": "Prompting Is Programming: A Query Language for Large Language Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BHUYAN-2024",
+      "entry": "[BHUYAN-2024] Bhuyan, B. P., et al. (2024). Neuro-symbolic Artificial Intelligence: A Survey. URL: https://link.springer.com/article/10.1007/s00521-024-09960-z",
+      "url": "https://link.springer.com/article/10.1007/s00521-024-09960-z",
+      "title_guess": "Neuro-symbolic Artificial Intelligence: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BILETZKI-2023",
+      "entry": "[BILETZKI-2023] Biletzki, A., & Matar, A. (2023). Ludwig Wittgenstein. URL: https://plato.stanford.edu/entries/wittgenstein/",
+      "url": "https://plato.stanford.edu/entries/wittgenstein/",
+      "title_guess": "Ludwig Wittgenstein",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BOMMASANI-2021",
+      "entry": "[BOMMASANI-2021] Bommasani, R., et al. (2021). On the Opportunities and Risks of Foundation Models. URL: https://arxiv.org/abs/2108.07258",
+      "url": "https://arxiv.org/abs/2108.07258",
+      "title_guess": "On the Opportunities and Risks of Foundation Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BRAULTBARON-2016",
+      "entry": "[BRAULTBARON-2016] Brault-Baron, J. (2016). Hypergraph Acyclicity Revisited. URL: https://dblp.org/rec/journals/csur/Brault-Baron16",
+      "url": "https://dblp.org/rec/journals/csur/Brault-Baron16",
+      "title_guess": "Hypergraph Acyclicity Revisited",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "CADAR-2013",
+      "entry": "[CADAR-2013] Cadar, C., & Sen, K. (2013). Symbolic Execution for Software Testing: Three Decades Later. URL: https://people.eecs.berkeley.edu/~ksen/papers/cacm13.pdf",
+      "url": "https://people.eecs.berkeley.edu/~ksen/papers/cacm13.pdf",
+      "title_guess": "Symbolic Execution for Software Testing: Three Decades Later",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "CHAPMAN-2018",
+      "entry": "[CHAPMAN-2018] Chapman, D. (2018). In the Cells of the Eggplant: Meta-rationality. URL: https://meaningness.com/eggplant",
+      "url": "https://meaningness.com/eggplant",
+      "title_guess": "In the Cells of the Eggplant: Meta-rationality",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "CHAPMAN-2026",
+      "entry": "[CHAPMAN-2026] Chapman, D. (2026). Meta-rationality Website. URL: https://metarationality.com/",
+      "url": "https://metarationality.com/",
+      "title_guess": "Meta-rationality Website",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "CHEN-2022",
+      "entry": "[CHEN-2022] Chen, C., et al. (2022). Reinforcement Learning with Transformer World Models. URL: https://arxiv.org/abs/2202.09481",
+      "url": "https://arxiv.org/abs/2202.09481",
+      "title_guess": "Reinforcement Learning with Transformer World Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "COLELOUGH-2025",
+      "entry": "[COLELOUGH-2025] Colelough, B. C., & Regli, W. (2025). Neuro-Symbolic AI in 2024: A Systematic Review. URL: https://arxiv.org/abs/2501.05435",
+      "url": "https://arxiv.org/abs/2501.05435",
+      "title_guess": "Neuro-Symbolic AI in 2024: A Systematic Review",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "COUSOT-1977",
+      "entry": "[COUSOT-1977] Cousot, P., & Cousot, R. (1977). Abstract Interpretation: A Unified Lattice Model for Static Analysis of Programs. URL: https://www.di.ens.fr/~cousot/publications.www/CousotCousot-POPL-77-ACM-p238--252-1977.pdf",
+      "url": "https://www.di.ens.fr/~cousot/publications.www/CousotCousot-POPL-77-ACM-p238--252-1977.pdf",
+      "title_guess": "Abstract Interpretation: A Unified Lattice Model for Static Analysis of Programs",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "CUCUMBER-2025",
+      "entry": "[CUCUMBER-2025] Cucumber. (2025). Gherkin Language Reference. URL: https://cucumber.io/docs/gherkin/reference/",
+      "url": "https://cucumber.io/docs/gherkin/reference/",
+      "title_guess": "Gherkin Language Reference",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "DELONG-2024",
+      "entry": "[DELONG-2024] DeLong, L. N., et al. (2024). Neurosymbolic AI for Reasoning over Knowledge Graphs: A Survey. URL: https://arxiv.org/abs/2302.07200",
+      "url": "https://arxiv.org/abs/2302.07200",
+      "title_guess": "Neurosymbolic AI for Reasoning over Knowledge Graphs: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "DEMOURA-2008",
+      "entry": "[DEMOURA-2008] de Moura, L., & Bjørner, N. (2008). Z3: An Efficient SMT Solver. URL: https://link.springer.com/content/pdf/10.1007/978-3-540-78800-3_24.pdf",
+      "url": "https://link.springer.com/content/pdf/10.1007/978-3-540-78800-3_24.pdf",
+      "title_guess": "Z3: An Efficient SMT Solver",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "DSPY-2023",
+      "entry": "[DSPY-2023] Khattab, O., et al. (2023). DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines. URL: https://arxiv.org/abs/2310.03714",
+      "url": "https://arxiv.org/abs/2310.03714",
+      "title_guess": "DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "FLAVELL-1979",
+      "entry": "[FLAVELL-1979] Flavell, J. H. (1979). Metacognition and Cognitive Monitoring. URL: https://jgregorymcverry.com/readings/flavell1979MetacognitionAndCogntiveMonitoring.pdf",
+      "url": "https://jgregorymcverry.com/readings/flavell1979MetacognitionAndCogntiveMonitoring.pdf",
+      "title_guess": "Metacognition and Cognitive Monitoring",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "FLEMING-2021",
+      "entry": "[FLEMING-2021] Fleming, S. M. (2021). Know Thyself: The Science of Self-Awareness. URL: https://www.hachettebookgroup.com/titles/stephen-m-fleming/know-thyself/9781549142475/?lens=basic-books",
+      "url": "https://www.hachettebookgroup.com/titles/stephen-m-fleming/know-thyself/9781549142475/?lens=basic-books",
+      "title_guess": "Know Thyself: The Science of Self-Awareness",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "FLEMING-DAW-2017",
+      "entry": "[FLEMING-DAW-2017] Fleming, S. M., & Daw, N. D. (2017). Self-Evaluation of Decision-Making: A General Bayesian Framework for Metacognitive Computation. URL: https://doi.org/10.1037/rev0000045",
+      "url": "https://doi.org/10.1037/rev0000045",
+      "title_guess": "Self-Evaluation of Decision-Making: A General Bayesian Framework for Metacognitive Computation",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "FUCHS-ET-AL-2008",
+      "entry": "[FUCHS-ET-AL-2008] Fuchs, N. E., Kaljurand, K., & Kuhn, T. (2008). Attempto Controlled English for Knowledge Representation. URL: https://attempto.ifi.uzh.ch/site/pubs/papers/reasoningweb2008_fuchs.pdf",
+      "url": "https://attempto.ifi.uzh.ch/site/pubs/papers/reasoningweb2008_fuchs.pdf",
+      "title_guess": "Attempto Controlled English for Knowledge Representation",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "FUCHS-SCHWITTER-1996",
+      "entry": "[FUCHS-SCHWITTER-1996] Fuchs, N. E., & Schwitter, R. (1996). Attempto Controlled English (ACE). URL: https://arxiv.org/abs/cmp-lg/9603003",
+      "url": "https://arxiv.org/abs/cmp-lg/9603003",
+      "title_guess": "Attempto Controlled English (ACE)",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "GAO-2022",
+      "entry": "[GAO-2022] Gao, L., et al. (2022). PAL: Program-aided Language Models. URL: https://arxiv.org/abs/2211.10435",
+      "url": "https://arxiv.org/abs/2211.10435",
+      "title_guess": "PAL: Program-aided Language Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "GAO-2023",
+      "entry": "[GAO-2023] Gao, Y., et al. (2023). Retrieval-Augmented Generation for Large Language Models: A Survey. URL: https://arxiv.org/abs/2312.10997",
+      "url": "https://arxiv.org/abs/2312.10997",
+      "title_guess": "Retrieval-Augmented Generation for Large Language Models: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "GOTTLOB-2001",
+      "entry": "[GOTTLOB-2001] Gottlob, G., et al. (2001). The Complexity of Acyclic Conjunctive Queries. URL: http://www.dbai.tuwien.ac.at/proj/hypertree/",
+      "url": "http://www.dbai.tuwien.ac.at/proj/hypertree/",
+      "title_guess": "The Complexity of Acyclic Conjunctive Queries",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "HA-2018",
+      "entry": "[HA-2018] Ha, D., & Schmidhuber, J. (2018). World Models. URL: https://arxiv.org/abs/1803.10122",
+      "url": "https://arxiv.org/abs/1803.10122",
+      "title_guess": "World Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "HAFNER-2023",
+      "entry": "[HAFNER-2023] Hafner, D., et al. (2023). Mastering Diverse Domains through World Models. URL: https://arxiv.org/abs/2301.04104",
+      "url": "https://arxiv.org/abs/2301.04104",
+      "title_guess": "Mastering Diverse Domains through World Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "HDC-SURVEY-I",
+      "entry": "[HDC-SURVEY-I] Kleyko, D., et al. (2021). A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I. URL: https://arxiv.org/abs/2111.06077",
+      "url": "https://arxiv.org/abs/2111.06077",
+      "title_guess": "A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "HDC-SURVEY-II",
+      "entry": "[HDC-SURVEY-II] Kleyko, D., et al. (2021). A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part II. URL: https://arxiv.org/abs/2112.15424",
+      "url": "https://arxiv.org/abs/2112.15424",
+      "title_guess": "A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part II",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "KAHNEMAN-2011",
+      "entry": "[KAHNEMAN-2011] Kahneman, D. (2011). Thinking, Fast and Slow. URL: https://cdn.penguin.co.uk/dam-assets/books/9780141033570/9780141033570-sample.pdf",
+      "url": "https://cdn.penguin.co.uk/dam-assets/books/9780141033570/9780141033570-sample.pdf",
+      "title_guess": "Thinking, Fast and Slow",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "KANERVA-2009",
+      "entry": "[KANERVA-2009] Kanerva, P. (2009). Hyperdimensional Computing: An Introduction to Computing in Distributed Representation with High-Dimensional Random Vectors. URL: https://redwood.berkeley.edu/wp-content/uploads/2018/01/kanerva2009hyperdimensional.pdf",
+      "url": "https://redwood.berkeley.edu/wp-content/uploads/2018/01/kanerva2009hyperdimensional.pdf",
+      "title_guess": "Hyperdimensional Computing: An Introduction to Computing in Distributed Representation with High-Dimensional Random Vectors",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "KEGAN-1994",
+      "entry": "[KEGAN-1994] Kegan, R. (1994). In Over Our Heads: The Mental Demands of Modern Life. URL: https://www.hup.harvard.edu/catalog.php?isbn=9780674445888",
+      "url": "https://www.hup.harvard.edu/catalog.php?isbn=9780674445888",
+      "title_guess": "In Over Our Heads: The Mental Demands of Modern Life",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "KG-SURVEY",
+      "entry": "[KG-SURVEY] Ji, S., et al. (2020). A Survey on Knowledge Graphs: Representation, Acquisition and Applications. URL: https://research.monash.edu/en/publications/a-survey-on-knowledge-graphs-representation-acquisition-and-appli/",
+      "url": "https://research.monash.edu/en/publications/a-survey-on-knowledge-graphs-representation-acquisition-and-appli/",
+      "title_guess": "A Survey on Knowledge Graphs: Representation, Acquisition and Applications",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "KING-1976",
+      "entry": "[KING-1976] King, J. C. (1976). Symbolic Execution and Program Testing. URL: https://madhu.cs.illinois.edu/cs598-fall10/king76symbolicexecution.pdf",
+      "url": "https://madhu.cs.illinois.edu/cs598-fall10/king76symbolicexecution.pdf",
+      "title_guess": "Symbolic Execution and Program Testing",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "LECUN-2022",
+      "entry": "[LECUN-2022] LeCun, Y. (2022). A Path Towards Autonomous Machine Intelligence. URL: https://openreview.net/pdf?id=BZ5a1r-kVsf",
+      "url": "https://openreview.net/pdf?id=BZ5a1r-kVsf",
+      "title_guess": "A Path Towards Autonomous Machine Intelligence",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "LEWIS-2020",
+      "entry": "[LEWIS-2020] Lewis, P., et al. (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks. URL: https://arxiv.org/abs/2005.11401",
+      "url": "https://arxiv.org/abs/2005.11401",
+      "title_guess": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "LUKACS-2013",
+      "entry": "[LUKACS-2013] Lukács, G. (2013). History and Class Consciousness. URL: https://mitpress.mit.edu/9780262525670/history-and-class-consciousness/",
+      "url": "https://mitpress.mit.edu/9780262525670/history-and-class-consciousness/",
+      "title_guess": "History and Class Consciousness",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "MEANING-SEP",
+      "entry": "[MEANING-SEP] Speaks, J. (2024). Theories of Meaning. URL: https://plato.stanford.edu/entries/meaning/",
+      "url": "https://plato.stanford.edu/entries/meaning/",
+      "title_guess": "Theories of Meaning",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "MOKHOV-2020",
+      "entry": "[MOKHOV-2020] Mokhov, A., Mitchell, N., & Peyton Jones, S. (2020). Build Systems à la Carte: Theory and Practice. URL: https://simon.peytonjones.org/assets/pdfs/build-systems-jfp.pdf",
+      "url": "https://simon.peytonjones.org/assets/pdfs/build-systems-jfp.pdf",
+      "title_guess": "Build Systems à la Carte: Theory and Practice",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "OAI-PRACTICAL-AGENTS-2025",
+      "entry": "[OAI-PRACTICAL-AGENTS-2025] OpenAI. (2025). A Practical Guide to Building AI Agents. URL: https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf",
+      "url": "https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf",
+      "title_guess": "A Practical Guide to Building AI Agents",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "OAI-SKILLS-2026",
+      "entry": "[OAI-SKILLS-2026] OpenAI. (2026). Skills in Agents SDK. URL: https://developers.openai.com/api/docs/guides/tools-skills/",
+      "url": "https://developers.openai.com/api/docs/guides/tools-skills/",
+      "title_guess": "Skills in Agents SDK",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "PEARL-2009",
+      "entry": "[PEARL-2009] Pearl, J. (2009). Causality: Models, Reasoning, and Inference. URL: https://archive.illc.uva.nl/cil/uploaded_files/inlineitem/Pearl_2009_Causality.pdf",
+      "url": "https://archive.illc.uva.nl/cil/uploaded_files/inlineitem/Pearl_2009_Causality.pdf",
+      "title_guess": "Causality: Models, Reasoning, and Inference",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "PGMPY",
+      "entry": "[PGMPY] pgmpy project. (2025). Probabilistic Graphical Models in Python. URL: https://pgmpy.org/",
+      "url": "https://pgmpy.org/",
+      "title_guess": "Probabilistic Graphical Models in Python",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "POPPER-SEP",
+      "entry": "[POPPER-SEP] Thornton, S. (2024). Karl Popper. URL: https://plato.stanford.edu/entries/popper/",
+      "url": "https://plato.stanford.edu/entries/popper/",
+      "title_guess": "Karl Popper",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "PRAGMATICS-SEP",
+      "entry": "[PRAGMATICS-SEP] Bach, K. (2024). Pragmatics. URL: https://plato.stanford.edu/entries/pragmatics/",
+      "url": "https://plato.stanford.edu/entries/pragmatics/",
+      "title_guess": "Pragmatics",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "PYKEEN",
+      "entry": "[PYKEEN] PyKEEN Documentation. (2025). Knowledge Graph Embeddings Pipeline. URL: https://pykeen.readthedocs.io/",
+      "url": "https://pykeen.readthedocs.io/",
+      "title_guess": "Knowledge Graph Embeddings Pipeline",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "PYRO",
+      "entry": "[PYRO] Pyro Documentation. (2025). Deep Probabilistic Programming with PyTorch. URL: https://pyro.ai/",
+      "url": "https://pyro.ai/",
+      "title_guess": "Deep Probabilistic Programming with PyTorch",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "PYSHEAF",
+      "entry": "[PYSHEAF] PySheaf Repository. (2025). Sheaf Theoretical Data Analysis. URL: https://github.com/kb1dds/pysheaf",
+      "url": "https://github.com/kb1dds/pysheaf",
+      "title_guess": "Sheaf Theoretical Data Analysis",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "SCHICK-2023",
+      "entry": "[SCHICK-2023] Schick, T., et al. (2023). Toolformer: Language Models Can Teach Themselves to Use Tools. URL: https://arxiv.org/abs/2302.04761",
+      "url": "https://arxiv.org/abs/2302.04761",
+      "title_guess": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "SHEAF-SURVEY-2025",
+      "entry": "[SHEAF-SURVEY-2025] Ayzenberg, A., et al. (2025). Sheaf Theory: From Deep Geometry to Deep Learning. URL: https://arxiv.org/abs/2502.15476",
+      "url": "https://arxiv.org/abs/2502.15476",
+      "title_guess": "Sheaf Theory: From Deep Geometry to Deep Learning",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "TENPY",
+      "entry": "[TENPY] TeNPy Project. (2025). TeNPy Documentation and Repository. URL: https://tenpy.readthedocs.io/",
+      "url": "https://tenpy.readthedocs.io/",
+      "title_guess": "TeNPy Documentation and Repository",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "TENSOR-NET-SURVEY",
+      "entry": "[TENSOR-NET-SURVEY] Wang, M., et al. (2023). Tensor Networks Meet Neural Networks: A Survey. URL: https://arxiv.org/abs/2302.09019",
+      "url": "https://arxiv.org/abs/2302.09019",
+      "title_guess": "Tensor Networks Meet Neural Networks: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "TENSORNETWORK-LIB",
+      "entry": "[TENSORNETWORK-LIB] Google. (2025). TensorNetwork: A Library for Tensor Network Manipulations. URL: https://github.com/google/TensorNetwork",
+      "url": "https://github.com/google/TensorNetwork",
+      "title_guess": "TensorNetwork: A Library for Tensor Network Manipulations",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "TORCHHD-2023",
+      "entry": "[TORCHHD-2023] Heddes, M., et al. (2023). Torchhd: An Open Source Python Library to Support Research on Hyperdimensional Computing and Vector Symbolic Architectures. URL: https://arxiv.org/abs/2205.09208",
+      "url": "https://arxiv.org/abs/2205.09208",
+      "title_guess": "Torchhd: An Open Source Python Library to Support Research on Hyperdimensional Computing and Vector Symbolic Architectures",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "VERGARI-2021",
+      "entry": "[VERGARI-2021] Vergari, A., et al. (2021). A Compositional Atlas of Tractable Circuit Operations for Probabilistic Inference. URL: https://nips.cc/virtual/2021/oral/28267",
+      "url": "https://nips.cc/virtual/2021/oral/28267",
+      "title_guess": "A Compositional Atlas of Tractable Circuit Operations for Probabilistic Inference",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "WAN-2024",
+      "entry": "[WAN-2024] Wan, Z., et al. (2024). Towards Cognitive AI Systems: A Survey and Prospective on Neuro-Symbolic AI. URL: https://arxiv.org/abs/2401.01040",
+      "url": "https://arxiv.org/abs/2401.01040",
+      "title_guess": "Towards Cognitive AI Systems: A Survey and Prospective on Neuro-Symbolic AI",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "WILLARD-LOUF-2023",
+      "entry": "[WILLARD-LOUF-2023] Willard, B., & Louf, R. (2023). Efficient Guided Generation for Large Language Models. URL: https://arxiv.org/abs/2307.09702",
+      "url": "https://arxiv.org/abs/2307.09702",
+      "title_guess": "Efficient Guided Generation for Large Language Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "WITTGENSTEIN-1953",
+      "entry": "[WITTGENSTEIN-1953] Wittgenstein, L. (1953/2009). Philosophical Investigations. URL: https://danielwharris.com/teaching/38080/readings/WittgensteinPI.pdf",
+      "url": "https://danielwharris.com/teaching/38080/readings/WittgensteinPI.pdf",
+      "title_guess": "Philosophical Investigations",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "WOLPERT-1997",
+      "entry": "[WOLPERT-1997] Wolpert, D. H., & Macready, W. G. (1997). No Free Lunch Theorems for Optimization. URL: https://www.cs.ubc.ca/~hutter/earg/papers07/00585893.pdf",
+      "url": "https://www.cs.ubc.ca/~hutter/earg/papers07/00585893.pdf",
+      "title_guess": "No Free Lunch Theorems for Optimization",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "WU-2023",
+      "entry": "[WU-2023] Wu, Q., et al. (2023). AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation. URL: https://arxiv.org/abs/2308.08155",
+      "url": "https://arxiv.org/abs/2308.08155",
+      "title_guess": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "XU-2024",
+      "entry": "[XU-2024] Xu, S., et al. (2024). AIOS Compiler: LLM as Interpreter for Natural Language Programming. URL: https://arxiv.org/abs/2405.06907",
+      "url": "https://arxiv.org/abs/2405.06907",
+      "title_guess": "AIOS Compiler: LLM as Interpreter for Natural Language Programming",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "YAO-2023",
+      "entry": "[YAO-2023] Yao, S., et al. (2023). ReAct: Synergizing Reasoning and Acting in Language Models. URL: https://arxiv.org/abs/2210.03629",
+      "url": "https://arxiv.org/abs/2210.03629",
+      "title_guess": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    }
+  ],
+  "url_checks": [
+    {
+      "key": "BROOKS-1991",
+      "url": "https://people.csail.mit.edu/brooks/papers/representation.pdf",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://people.csail.mit.edu/brooks/papers/representation.pdf",
+      "content_type": "application/pdf",
+      "page_title": null,
+      "title_match": null,
+      "error": null,
+      "cache_dir": ".tmp/cache/01d4889a6764924d"
+    },
+    {
+      "key": "DESMET-DERAEDT-2025",
+      "url": "https://arxiv.org/abs/2507.11127",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2507.11127",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[2507.11127] Defining neurosymbolic AI",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/14aff8c87326fbce"
+    },
+    {
+      "key": "GARCEZ-LAMB-2020",
+      "url": "https://arxiv.org/abs/2012.05876",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2012.05876",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[2012.05876] Neurosymbolic AI: The 3rd Wave",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/5c25b2c315c48849"
+    },
+    {
+      "key": "HARNAD-1990",
+      "url": "https://eprints.soton.ac.uk/250382/",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://eprints.soton.ac.uk/250382/",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "The symbol grounding problem - ePrints Soton",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/6e4e124e1189b30a"
+    },
+    {
+      "key": "INTUITIONISM-SEP",
+      "url": "https://plato.stanford.edu/entries/intuitionism",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://plato.stanford.edu/entries/intuitionism/",
+      "content_type": "text/html",
+      "page_title": "Intuitionism in the Philosophy of Mathematics (Stanford Encyclopedia of Philosophy)",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/fd9ed81f7f33711d"
+    },
+    {
+      "key": "WOLFRAM-2002",
+      "url": "https://www.wolframscience.com/nks/p737--computational-irreducibility/",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://www.wolframscience.com/nks/p737--computational-irreducibility/",
+      "content_type": "text/html; charset=UTF-8",
+      "page_title": "Computational Irreducibility: A New Kind of Science | Online by Stephen Wolfram [Page 737]",
+      "title_match": "partial",
+      "error": null,
+      "cache_dir": ".tmp/cache/717deb6bb8ae1bc3"
+    }
+  ],
+  "content_checks": [
+    {
+      "key": "HARNAD-1990",
+      "has_text": true,
+      "source_title": "The symbol grounding problem - ePrints Soton",
+      "title_match": "match",
+      "selected_terms": [
+        "substantial",
+        "part",
+        "historical",
+        "difficulty",
+        "symbolic",
+        "understood",
+        "failure",
+        "formalization",
+        "misordering",
+        "explanatory"
+      ],
+      "matched_terms": [
+        "symbolic"
+      ],
+      "overlap_ratio": 0.1,
+      "best_snippet": "The symbol grounding problem - ePrints Soton // $.noConflict(); // // .ep_logged_in { display: none } MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}}); The University of Southampton Courses University life Research Business Global About Visit Alumni Departments News Events Contact × Search the Site Search Filter your search: All Courses Projects Staff University of Southampton Institutional Repository Search Advanced Search Policies & Help Latest Download Statistics Brows…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/6e4e124e1189b30a",
+      "section_title": "Classical Symbolic AI and the Misordering of Priorities",
+      "context": "A substantial part of the historical difficulty of symbolic AI can be understood not as a failure of formalization itself, but as a misordering of explanatory priorities. Classical symbolic systems tended to grant foundational status to formal semantics, explicit representation, and correctness-preserving transformation, while treating pragmatics, situated use, institutional context, and action-sensitive interpretation as secondary layers. This produced important achievements in domains with stable ontologies, but it also produced a recurring brittleness in open, evolving, and socially embedded environments [HARNAD-1990] [BROOKS-1991]."
+    },
+    {
+      "key": "BROOKS-1991",
+      "has_text": true,
+      "source_title": null,
+      "title_match": null,
+      "selected_terms": [
+        "substantial",
+        "part",
+        "historical",
+        "difficulty",
+        "symbolic",
+        "understood",
+        "failure",
+        "formalization",
+        "misordering",
+        "explanatory"
+      ],
+      "matched_terms": [
+        "part",
+        "difficulty",
+        "symbolic",
+        "understood",
+        "failure"
+      ],
+      "overlap_ratio": 0.5,
+      "best_snippet": "have their grail within their grasp. (A few connectionists amongst them caught a glimpse of an engine with its cover off and they are preoccupied with inspirations from that experience.) 3. Abstraction as a dangerous weapon Artificial intelligence researchers are fond of pointing out that AI is often denied its rightful successes. The popular story goes that when nobody has any good idea of how to solve a particular sort of problem (e.g. playing chess) it is known as an AI problem. When an algo…",
+      "verdict_hint": "aligned",
+      "cache_dir": ".tmp/cache/01d4889a6764924d",
+      "section_title": "Classical Symbolic AI and the Misordering of Priorities",
+      "context": "A substantial part of the historical difficulty of symbolic AI can be understood not as a failure of formalization itself, but as a misordering of explanatory priorities. Classical symbolic systems tended to grant foundational status to formal semantics, explicit representation, and correctness-preserving transformation, while treating pragmatics, situated use, institutional context, and action-sensitive interpretation as secondary layers. This produced important achievements in domains with stable ontologies, but it also produced a recurring brittleness in open, evolving, and socially embedded environments [HARNAD-1990] [BROOKS-1991]."
+    },
+    {
+      "key": "HARNAD-1990",
+      "has_text": true,
+      "source_title": "The symbol grounding problem - ePrints Soton",
+      "title_match": "match",
+      "selected_terms": [
+        "point",
+        "semantics",
+        "mistake",
+        "often",
+        "asked",
+        "carry",
+        "much",
+        "symbol",
+        "grounding",
+        "problem"
+      ],
+      "matched_terms": [
+        "much",
+        "symbol",
+        "grounding",
+        "problem"
+      ],
+      "overlap_ratio": 0.4,
+      "best_snippet": "The symbol grounding problem - ePrints Soton // $.noConflict(); // // .ep_logged_in { display: none } MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}}); The University of Southampton Courses University life Research Business Global About Visit Alumni Departments News Events Contact × Search the Site Search Filter your search: All Courses Projects Staff University of Southampton Institutional Repository Search Advanced Search Policies & Help Latest Download Statistics Brows…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/6e4e124e1189b30a",
+      "section_title": "Classical Symbolic AI and the Misordering of Priorities",
+      "context": "The point is not that semantics was a mistake. The point is that semantics was often asked to carry too much. The symbol grounding problem exposed one side of this limitation: purely formal manipulation does not explain how symbols become significant for the system rather than merely for an external interpreter [HARNAD-1990]. More broadly, intelligent behavior depends on disciplined coupling among representation, action, environment, and task. What becomes questionable is therefore not symbolism as such, but semantic foundationalism."
+    },
+    {
+      "key": "GARCEZ-LAMB-2020",
+      "has_text": true,
+      "source_title": "[2012.05876] Neurosymbolic AI: The 3rd Wave",
+      "title_match": "match",
+      "selected_terms": [
+        "shift",
+        "direct",
+        "consequences",
+        "neuro-symbolic",
+        "hybrid",
+        "systems",
+        "often",
+        "preserve",
+        "older",
+        "hierarchy"
+      ],
+      "matched_terms": [
+        "systems"
+      ],
+      "overlap_ratio": 0.1,
+      "best_snippet": "[2012.05876] Neurosymbolic AI: The 3rd Wave Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2012.05876 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Search open search GO open navigation menu qu…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/5c25b2c315c48849",
+      "section_title": "Why Neuro-Symbolic AI Needs Plural Theory Management",
+      "context": "This shift has direct consequences for neuro-symbolic AI. Hybrid systems often preserve the older hierarchy in subtler form: neural components are allowed to perceive or approximate, while symbolic layers are still expected to supply the final structure of meaning and correctness. A meta-rational view suggests a different goal. The aim is not necessarily one uniquely correct symbolic image of the world, but a system able to operate across multiple partially adequate representational regimes, each with its own inductive bias, evidentiary profile, practical task, and tolerance for error [GARCEZ-LAMB-2020] [DESMET-DERAEDT-2025]."
+    },
+    {
+      "key": "DESMET-DERAEDT-2025",
+      "has_text": true,
+      "source_title": "[2507.11127] Defining neurosymbolic AI",
+      "title_match": "match",
+      "selected_terms": [
+        "shift",
+        "direct",
+        "consequences",
+        "neuro-symbolic",
+        "hybrid",
+        "systems",
+        "often",
+        "preserve",
+        "older",
+        "hierarchy"
+      ],
+      "matched_terms": [
+        "systems"
+      ],
+      "overlap_ratio": 0.1,
+      "best_snippet": "[2507.11127] Defining neurosymbolic AI Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2507.11127 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Search open search GO open navigation menu quick l…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/14aff8c87326fbce",
+      "section_title": "Why Neuro-Symbolic AI Needs Plural Theory Management",
+      "context": "This shift has direct consequences for neuro-symbolic AI. Hybrid systems often preserve the older hierarchy in subtler form: neural components are allowed to perceive or approximate, while symbolic layers are still expected to supply the final structure of meaning and correctness. A meta-rational view suggests a different goal. The aim is not necessarily one uniquely correct symbolic image of the world, but a system able to operate across multiple partially adequate representational regimes, each with its own inductive bias, evidentiary profile, practical task, and tolerance for error [GARCEZ-LAMB-2020] [DESMET-DERAEDT-2025]."
+    },
+    {
+      "key": "WOLFRAM-2002",
+      "has_text": true,
+      "source_title": "Computational Irreducibility: A New Kind of Science | Online by Stephen Wolfram [Page 737]",
+      "title_match": "partial",
+      "selected_terms": [
+        "once",
+        "theory",
+        "learning",
+        "considered",
+        "plurality",
+        "becomes",
+        "even",
+        "harder",
+        "dismiss",
+        "distinct"
+      ],
+      "matched_terms": [
+        "once",
+        "theory"
+      ],
+      "overlap_ratio": 0.2,
+      "best_snippet": "Computational Irreducibility: A New Kind of Science | Online by Stephen Wolfram [Page 737] auto small medium large x-large Chapter 12 Section 6 Page 737 auto small medium large x-large Preface 1 The Foundations for a New Kind of Science 1 An Outline of Basic Ideas 2 Relations to Other Areas 3 Some Past Initiatives 4 The Personal Story of the Science in This Book 2 The Crucial Experiment 1 How Do Simple Programs Behave? 2 The Need for a New Intuition 3 Why These Discoveries Were Not Made Before…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/717deb6bb8ae1bc3",
+      "section_title": "Why Neuro-Symbolic AI Needs Plural Theory Management",
+      "context": "Once theory learning is considered, plurality becomes even harder to dismiss. Distinct symbolic theory families may remain viable under overlapping evidence when they differ in abstraction level, ontology, granularity, intervention target, or operational objective. This is not automatically a defect. In many settings it is an expected consequence of underdetermination, model-class dependence, bounded resources, and computational irreducibility [WOLFRAM-2002]. Under such conditions, representational multiplicity is often the computational price of tractable intelligence."
+    },
+    {
+      "key": "INTUITIONISM-SEP",
+      "has_text": true,
+      "source_title": "Intuitionism in the Philosophy of Mathematics (Stanford Encyclopedia of Philosophy)",
+      "title_match": "match",
+      "selected_terms": [
+        "intuitionism",
+        "relevant",
+        "here",
+        "simply",
+        "adopt",
+        "intuitionistic",
+        "logic",
+        "entire",
+        "operational",
+        "foundation"
+      ],
+      "matched_terms": [
+        "intuitionism",
+        "relevant",
+        "here",
+        "simply",
+        "intuitionistic",
+        "logic",
+        "foundation"
+      ],
+      "overlap_ratio": 0.7,
+      "best_snippet": "--> Intuitionism in the Philosophy of Mathematics (Stanford Encyclopedia of Philosophy) Stanford Encyclopedia of Philosophy Menu Browse Table of Contents What's New Random Entry Chronological Archives About Editorial Information About the SEP Editorial Board How to Cite the SEP Special Characters Advanced Tools Contact Support SEP Support the SEP PDFs for SEP Friends Make a Donation SEPIA for Libraries Entry Navigation Entry Contents Bibliography Academic Tools Friends PDF Preview Author and Ci…",
+      "verdict_hint": "aligned",
+      "cache_dir": ".tmp/cache/fd9ed81f7f33711d",
+      "section_title": "Intuitionism and the Discipline of Non-Finality",
+      "context": "Intuitionism is relevant here not because AI should simply adopt intuitionistic logic as its entire operational foundation, but because it exposes a weakness in the uncritical assumption that every proposition already has a determinate truth value inside a fixed completed frame [INTUITIONISM-SEP]. In many open-ended learning settings, that assumption is too strong. The ontology may still be unstable, the warrants may be insufficient, and the relevant vocabulary may still be under construction."
+    }
+  ]
+}

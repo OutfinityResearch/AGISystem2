@@ -1,0 +1,1991 @@
+{
+  "document": "docs/MRP/regime-selection-tractable-computation-regime-induction.html",
+  "occurrence_count": 21,
+  "unique_inline_citation_keys": [
+    "ANT-BEA-2024",
+    "ANT-CTX-2025",
+    "ANT-SKILLS-2025",
+    "BILETZKI-2023",
+    "BRAULTBARON-2016",
+    "CADAR-2013",
+    "COUSOT-1977",
+    "DEMOURA-2008",
+    "GARCEZ-LAMB-2020",
+    "GOTTLOB-2001",
+    "HA-2018",
+    "HAFNER-2023",
+    "HDC-SURVEY-I",
+    "KING-1976",
+    "LECUN-2022",
+    "OAI-SKILLS-2026",
+    "VERGARI-2021",
+    "WITTGENSTEIN-1953"
+  ],
+  "reference_keys": [
+    "AGISYSTEM2",
+    "ANT-BEA-2024",
+    "ANT-CTX-2025",
+    "ANT-SKILLS-2025",
+    "BACH-2008",
+    "BASSECHES-1984",
+    "BECHBERGER-2017",
+    "BECHBERGER-2018",
+    "BENDER-2021",
+    "BEURER-KELLNER-2022",
+    "BHUYAN-2024",
+    "BILETZKI-2023",
+    "BOMMASANI-2021",
+    "BRAULTBARON-2016",
+    "BROOKS-1991",
+    "CADAR-2013",
+    "CHAPMAN-2018",
+    "CHAPMAN-2026",
+    "CHEN-2022",
+    "COLELOUGH-2025",
+    "COUSOT-1977",
+    "CUCUMBER-2025",
+    "DELONG-2024",
+    "DEMOURA-2008",
+    "DESMET-DERAEDT-2025",
+    "DSPY-2023",
+    "FLAVELL-1979",
+    "FLEMING-2021",
+    "FLEMING-DAW-2017",
+    "FUCHS-ET-AL-2008",
+    "FUCHS-SCHWITTER-1996",
+    "GAO-2022",
+    "GAO-2023",
+    "GARCEZ-LAMB-2020",
+    "GOTTLOB-2001",
+    "HA-2018",
+    "HAFNER-2023",
+    "HARNAD-1990",
+    "HDC-SURVEY-I",
+    "HDC-SURVEY-II",
+    "INTUITIONISM-SEP",
+    "KAHNEMAN-2011",
+    "KANERVA-2009",
+    "KEGAN-1994",
+    "KG-SURVEY",
+    "KING-1976",
+    "LECUN-2022",
+    "LEWIS-2020",
+    "LUKACS-2013",
+    "MEANING-SEP",
+    "MOKHOV-2020",
+    "OAI-PRACTICAL-AGENTS-2025",
+    "OAI-SKILLS-2026",
+    "PEARL-2009",
+    "PGMPY",
+    "POPPER-SEP",
+    "PRAGMATICS-SEP",
+    "PYKEEN",
+    "PYRO",
+    "PYSHEAF",
+    "SCHICK-2023",
+    "SHEAF-SURVEY-2025",
+    "TENPY",
+    "TENSOR-NET-SURVEY",
+    "TENSORNETWORK-LIB",
+    "TORCHHD-2023",
+    "VERGARI-2021",
+    "WAN-2024",
+    "WILLARD-LOUF-2023",
+    "WITTGENSTEIN-1953",
+    "WOLFRAM-2002",
+    "WOLPERT-1997",
+    "WU-2023",
+    "XU-2024",
+    "YAO-2023"
+  ],
+  "occurrences": [
+    {
+      "key": "WITTGENSTEIN-1953",
+      "section_id": "regime-induction",
+      "section_title": "From Judgment Regimes to Regime Induction",
+      "block_index": 0,
+      "context": "Meta-rational pragmatics starts from the observation that, in many practically relevant artefacts, operational meaning is not exhausted by abstract denotation. A document, policy, specification, workflow, or knowledge source becomes actionable only relative to a judgment regime: what must be checked, what evidence is admissible, which uncertainties are acceptable, and what counts as acceptance, rejection, or deferred judgment in context [WITTGENSTEIN-1953] [BILETZKI-2023]. From this perspective, semantics is often better understood as a stabilized special case of constrained pragmatics rather than as its universal foundation. The architectural consequence is that an intelligent system should not assume that every task can be handled by one uniform reasoning style, one representational substrate, or one monolithic model. It should first determine the structural character of the local subproblem and only then decide how that subproblem is to be made computable."
+    },
+    {
+      "key": "BILETZKI-2023",
+      "section_id": "regime-induction",
+      "section_title": "From Judgment Regimes to Regime Induction",
+      "block_index": 0,
+      "context": "Meta-rational pragmatics starts from the observation that, in many practically relevant artefacts, operational meaning is not exhausted by abstract denotation. A document, policy, specification, workflow, or knowledge source becomes actionable only relative to a judgment regime: what must be checked, what evidence is admissible, which uncertainties are acceptable, and what counts as acceptance, rejection, or deferred judgment in context [WITTGENSTEIN-1953] [BILETZKI-2023]. From this perspective, semantics is often better understood as a stabilized special case of constrained pragmatics rather than as its universal foundation. The architectural consequence is that an intelligent system should not assume that every task can be handled by one uniform reasoning style, one representational substrate, or one monolithic model. It should first determine the structural character of the local subproblem and only then decide how that subproblem is to be made computable."
+    },
+    {
+      "key": "DEMOURA-2008",
+      "section_id": "tractability",
+      "section_title": "Structural Regimes and the Meaning of Tractable Computation",
+      "block_index": 1,
+      "context": "Tractable computation, in this setting, does not mean only lower runtime. It means that the problem has been transformed into a form for which a reliable local interpreter exists at acceptable cost. Sometimes this happens through exact formalization, as when a fragment becomes explicit enough for satisfiability checking or symbolic verification. Sometimes it happens through approximation, pruning, or narrowing before exact reasoning is attempted. Sometimes it happens through change of representation, where an apparently hard problem becomes manageable because its structure has been recast in graph form, factorized into local dependencies, or encoded compositionally. This is why classical ideas such as SMT solving, abstract interpretation, symbolic execution, bounded graph and hypergraph structure, and tractable circuit structure remain relevant. Their value is not nostalgic. Their value is that they instantiate different ways in which local tractability can be obtained once the right regime has been identified [DEMOURA-2008] [COUSOT-1977] [KING-1976] [CADAR-2013] [GOTTLOB-2001] [BRAULTBARON-2016] [VERGARI-2021]."
+    },
+    {
+      "key": "COUSOT-1977",
+      "section_id": "tractability",
+      "section_title": "Structural Regimes and the Meaning of Tractable Computation",
+      "block_index": 1,
+      "context": "Tractable computation, in this setting, does not mean only lower runtime. It means that the problem has been transformed into a form for which a reliable local interpreter exists at acceptable cost. Sometimes this happens through exact formalization, as when a fragment becomes explicit enough for satisfiability checking or symbolic verification. Sometimes it happens through approximation, pruning, or narrowing before exact reasoning is attempted. Sometimes it happens through change of representation, where an apparently hard problem becomes manageable because its structure has been recast in graph form, factorized into local dependencies, or encoded compositionally. This is why classical ideas such as SMT solving, abstract interpretation, symbolic execution, bounded graph and hypergraph structure, and tractable circuit structure remain relevant. Their value is not nostalgic. Their value is that they instantiate different ways in which local tractability can be obtained once the right regime has been identified [DEMOURA-2008] [COUSOT-1977] [KING-1976] [CADAR-2013] [GOTTLOB-2001] [BRAULTBARON-2016] [VERGARI-2021]."
+    },
+    {
+      "key": "KING-1976",
+      "section_id": "tractability",
+      "section_title": "Structural Regimes and the Meaning of Tractable Computation",
+      "block_index": 1,
+      "context": "Tractable computation, in this setting, does not mean only lower runtime. It means that the problem has been transformed into a form for which a reliable local interpreter exists at acceptable cost. Sometimes this happens through exact formalization, as when a fragment becomes explicit enough for satisfiability checking or symbolic verification. Sometimes it happens through approximation, pruning, or narrowing before exact reasoning is attempted. Sometimes it happens through change of representation, where an apparently hard problem becomes manageable because its structure has been recast in graph form, factorized into local dependencies, or encoded compositionally. This is why classical ideas such as SMT solving, abstract interpretation, symbolic execution, bounded graph and hypergraph structure, and tractable circuit structure remain relevant. Their value is not nostalgic. Their value is that they instantiate different ways in which local tractability can be obtained once the right regime has been identified [DEMOURA-2008] [COUSOT-1977] [KING-1976] [CADAR-2013] [GOTTLOB-2001] [BRAULTBARON-2016] [VERGARI-2021]."
+    },
+    {
+      "key": "CADAR-2013",
+      "section_id": "tractability",
+      "section_title": "Structural Regimes and the Meaning of Tractable Computation",
+      "block_index": 1,
+      "context": "Tractable computation, in this setting, does not mean only lower runtime. It means that the problem has been transformed into a form for which a reliable local interpreter exists at acceptable cost. Sometimes this happens through exact formalization, as when a fragment becomes explicit enough for satisfiability checking or symbolic verification. Sometimes it happens through approximation, pruning, or narrowing before exact reasoning is attempted. Sometimes it happens through change of representation, where an apparently hard problem becomes manageable because its structure has been recast in graph form, factorized into local dependencies, or encoded compositionally. This is why classical ideas such as SMT solving, abstract interpretation, symbolic execution, bounded graph and hypergraph structure, and tractable circuit structure remain relevant. Their value is not nostalgic. Their value is that they instantiate different ways in which local tractability can be obtained once the right regime has been identified [DEMOURA-2008] [COUSOT-1977] [KING-1976] [CADAR-2013] [GOTTLOB-2001] [BRAULTBARON-2016] [VERGARI-2021]."
+    },
+    {
+      "key": "GOTTLOB-2001",
+      "section_id": "tractability",
+      "section_title": "Structural Regimes and the Meaning of Tractable Computation",
+      "block_index": 1,
+      "context": "Tractable computation, in this setting, does not mean only lower runtime. It means that the problem has been transformed into a form for which a reliable local interpreter exists at acceptable cost. Sometimes this happens through exact formalization, as when a fragment becomes explicit enough for satisfiability checking or symbolic verification. Sometimes it happens through approximation, pruning, or narrowing before exact reasoning is attempted. Sometimes it happens through change of representation, where an apparently hard problem becomes manageable because its structure has been recast in graph form, factorized into local dependencies, or encoded compositionally. This is why classical ideas such as SMT solving, abstract interpretation, symbolic execution, bounded graph and hypergraph structure, and tractable circuit structure remain relevant. Their value is not nostalgic. Their value is that they instantiate different ways in which local tractability can be obtained once the right regime has been identified [DEMOURA-2008] [COUSOT-1977] [KING-1976] [CADAR-2013] [GOTTLOB-2001] [BRAULTBARON-2016] [VERGARI-2021]."
+    },
+    {
+      "key": "BRAULTBARON-2016",
+      "section_id": "tractability",
+      "section_title": "Structural Regimes and the Meaning of Tractable Computation",
+      "block_index": 1,
+      "context": "Tractable computation, in this setting, does not mean only lower runtime. It means that the problem has been transformed into a form for which a reliable local interpreter exists at acceptable cost. Sometimes this happens through exact formalization, as when a fragment becomes explicit enough for satisfiability checking or symbolic verification. Sometimes it happens through approximation, pruning, or narrowing before exact reasoning is attempted. Sometimes it happens through change of representation, where an apparently hard problem becomes manageable because its structure has been recast in graph form, factorized into local dependencies, or encoded compositionally. This is why classical ideas such as SMT solving, abstract interpretation, symbolic execution, bounded graph and hypergraph structure, and tractable circuit structure remain relevant. Their value is not nostalgic. Their value is that they instantiate different ways in which local tractability can be obtained once the right regime has been identified [DEMOURA-2008] [COUSOT-1977] [KING-1976] [CADAR-2013] [GOTTLOB-2001] [BRAULTBARON-2016] [VERGARI-2021]."
+    },
+    {
+      "key": "VERGARI-2021",
+      "section_id": "tractability",
+      "section_title": "Structural Regimes and the Meaning of Tractable Computation",
+      "block_index": 1,
+      "context": "Tractable computation, in this setting, does not mean only lower runtime. It means that the problem has been transformed into a form for which a reliable local interpreter exists at acceptable cost. Sometimes this happens through exact formalization, as when a fragment becomes explicit enough for satisfiability checking or symbolic verification. Sometimes it happens through approximation, pruning, or narrowing before exact reasoning is attempted. Sometimes it happens through change of representation, where an apparently hard problem becomes manageable because its structure has been recast in graph form, factorized into local dependencies, or encoded compositionally. This is why classical ideas such as SMT solving, abstract interpretation, symbolic execution, bounded graph and hypergraph structure, and tractable circuit structure remain relevant. Their value is not nostalgic. Their value is that they instantiate different ways in which local tractability can be obtained once the right regime has been identified [DEMOURA-2008] [COUSOT-1977] [KING-1976] [CADAR-2013] [GOTTLOB-2001] [BRAULTBARON-2016] [VERGARI-2021]."
+    },
+    {
+      "key": "ANT-BEA-2024",
+      "section_id": "skills-compilation",
+      "section_title": "Skills, Compilation, and the Agentic Virtual Machine",
+      "block_index": 0,
+      "context": "The notion of agentic skills makes this architecture implementable in a realistic way. A skill should not be understood merely as a wrapper around a tool call. It is better defined as a bounded computational unit with explicit inputs, explicit outputs, declared assumptions, and limited side effects. In heavier execution modes, skills can behave like dependency-aware build steps. In more dynamic modes, the same skills can be assembled into short-lived plans and revised locally without forcing a global restart of the reasoning history. This design matters because regime induction needs stable local units on which structural decisions can act. Without explicit skills, the system remains a loose conversational flow. With explicit skills, it becomes possible to isolate subproblems, track dependencies, cache intermediate results, validate local behavior, and optimize recurring execution paths. This is also consistent with recent engineering guidance from major labs, which emphasizes simple composable agent patterns, explicit tools, reusable skills, and context engineering rather than unconstrained conversational autonomy [ANT-BEA-2024] [ANT-SKILLS-2025] [ANT-CTX-2025] [OAI-SKILLS-2026]."
+    },
+    {
+      "key": "ANT-SKILLS-2025",
+      "section_id": "skills-compilation",
+      "section_title": "Skills, Compilation, and the Agentic Virtual Machine",
+      "block_index": 0,
+      "context": "The notion of agentic skills makes this architecture implementable in a realistic way. A skill should not be understood merely as a wrapper around a tool call. It is better defined as a bounded computational unit with explicit inputs, explicit outputs, declared assumptions, and limited side effects. In heavier execution modes, skills can behave like dependency-aware build steps. In more dynamic modes, the same skills can be assembled into short-lived plans and revised locally without forcing a global restart of the reasoning history. This design matters because regime induction needs stable local units on which structural decisions can act. Without explicit skills, the system remains a loose conversational flow. With explicit skills, it becomes possible to isolate subproblems, track dependencies, cache intermediate results, validate local behavior, and optimize recurring execution paths. This is also consistent with recent engineering guidance from major labs, which emphasizes simple composable agent patterns, explicit tools, reusable skills, and context engineering rather than unconstrained conversational autonomy [ANT-BEA-2024] [ANT-SKILLS-2025] [ANT-CTX-2025] [OAI-SKILLS-2026]."
+    },
+    {
+      "key": "ANT-CTX-2025",
+      "section_id": "skills-compilation",
+      "section_title": "Skills, Compilation, and the Agentic Virtual Machine",
+      "block_index": 0,
+      "context": "The notion of agentic skills makes this architecture implementable in a realistic way. A skill should not be understood merely as a wrapper around a tool call. It is better defined as a bounded computational unit with explicit inputs, explicit outputs, declared assumptions, and limited side effects. In heavier execution modes, skills can behave like dependency-aware build steps. In more dynamic modes, the same skills can be assembled into short-lived plans and revised locally without forcing a global restart of the reasoning history. This design matters because regime induction needs stable local units on which structural decisions can act. Without explicit skills, the system remains a loose conversational flow. With explicit skills, it becomes possible to isolate subproblems, track dependencies, cache intermediate results, validate local behavior, and optimize recurring execution paths. This is also consistent with recent engineering guidance from major labs, which emphasizes simple composable agent patterns, explicit tools, reusable skills, and context engineering rather than unconstrained conversational autonomy [ANT-BEA-2024] [ANT-SKILLS-2025] [ANT-CTX-2025] [OAI-SKILLS-2026]."
+    },
+    {
+      "key": "OAI-SKILLS-2026",
+      "section_id": "skills-compilation",
+      "section_title": "Skills, Compilation, and the Agentic Virtual Machine",
+      "block_index": 0,
+      "context": "The notion of agentic skills makes this architecture implementable in a realistic way. A skill should not be understood merely as a wrapper around a tool call. It is better defined as a bounded computational unit with explicit inputs, explicit outputs, declared assumptions, and limited side effects. In heavier execution modes, skills can behave like dependency-aware build steps. In more dynamic modes, the same skills can be assembled into short-lived plans and revised locally without forcing a global restart of the reasoning history. This design matters because regime induction needs stable local units on which structural decisions can act. Without explicit skills, the system remains a loose conversational flow. With explicit skills, it becomes possible to isolate subproblems, track dependencies, cache intermediate results, validate local behavior, and optimize recurring execution paths. This is also consistent with recent engineering guidance from major labs, which emphasizes simple composable agent patterns, explicit tools, reusable skills, and context engineering rather than unconstrained conversational autonomy [ANT-BEA-2024] [ANT-SKILLS-2025] [ANT-CTX-2025] [OAI-SKILLS-2026]."
+    },
+    {
+      "key": "ANT-BEA-2024",
+      "section_id": "staged-ecology",
+      "section_title": "The Staged Ecology of LLMs, ML, Software, and Local Substrates",
+      "block_index": 0,
+      "context": "This perspective also clarifies the respective roles of LLMs, classical ML, and classical software. LLMs remain useful, but mainly as high-level orchestrators for decomposition, schema induction, regime suggestion, interface translation, and partial synthesis. They are especially valuable when the artefact is messy and the first task is to move from informal structure to an explicit intermediate representation. At the same time, they remain weak as universal interpreters for exact reasoning, long-horizon consistency, and tractability-aware decomposition, which is one reason why current practical agent design emphasizes tools, context engineering, and structured interfaces [ANT-BEA-2024] [ANT-CTX-2025] [LECUN-2022]. Classical ML has a more targeted role: learned routers, detectors, boundary estimators, regime classifiers, confidence models, and specialized predictors for recurring local tasks. Classical software remains central whenever a subproblem has already been sufficiently stabilized to justify exact or near-exact procedures, such as solvers, planners, validators, graph algorithms, or domain-specific code. The emerging architecture is therefore not “LLMs versus classical methods.” It is a staged ecology in which LLMs help expose structure, ML helps detect and specialize regimes, and classical software executes where explicit structure justifies stronger guarantees."
+    },
+    {
+      "key": "ANT-CTX-2025",
+      "section_id": "staged-ecology",
+      "section_title": "The Staged Ecology of LLMs, ML, Software, and Local Substrates",
+      "block_index": 0,
+      "context": "This perspective also clarifies the respective roles of LLMs, classical ML, and classical software. LLMs remain useful, but mainly as high-level orchestrators for decomposition, schema induction, regime suggestion, interface translation, and partial synthesis. They are especially valuable when the artefact is messy and the first task is to move from informal structure to an explicit intermediate representation. At the same time, they remain weak as universal interpreters for exact reasoning, long-horizon consistency, and tractability-aware decomposition, which is one reason why current practical agent design emphasizes tools, context engineering, and structured interfaces [ANT-BEA-2024] [ANT-CTX-2025] [LECUN-2022]. Classical ML has a more targeted role: learned routers, detectors, boundary estimators, regime classifiers, confidence models, and specialized predictors for recurring local tasks. Classical software remains central whenever a subproblem has already been sufficiently stabilized to justify exact or near-exact procedures, such as solvers, planners, validators, graph algorithms, or domain-specific code. The emerging architecture is therefore not “LLMs versus classical methods.” It is a staged ecology in which LLMs help expose structure, ML helps detect and specialize regimes, and classical software executes where explicit structure justifies stronger guarantees."
+    },
+    {
+      "key": "LECUN-2022",
+      "section_id": "staged-ecology",
+      "section_title": "The Staged Ecology of LLMs, ML, Software, and Local Substrates",
+      "block_index": 0,
+      "context": "This perspective also clarifies the respective roles of LLMs, classical ML, and classical software. LLMs remain useful, but mainly as high-level orchestrators for decomposition, schema induction, regime suggestion, interface translation, and partial synthesis. They are especially valuable when the artefact is messy and the first task is to move from informal structure to an explicit intermediate representation. At the same time, they remain weak as universal interpreters for exact reasoning, long-horizon consistency, and tractability-aware decomposition, which is one reason why current practical agent design emphasizes tools, context engineering, and structured interfaces [ANT-BEA-2024] [ANT-CTX-2025] [LECUN-2022]. Classical ML has a more targeted role: learned routers, detectors, boundary estimators, regime classifiers, confidence models, and specialized predictors for recurring local tasks. Classical software remains central whenever a subproblem has already been sufficiently stabilized to justify exact or near-exact procedures, such as solvers, planners, validators, graph algorithms, or domain-specific code. The emerging architecture is therefore not “LLMs versus classical methods.” It is a staged ecology in which LLMs help expose structure, ML helps detect and specialize regimes, and classical software executes where explicit structure justifies stronger guarantees."
+    },
+    {
+      "key": "HA-2018",
+      "section_id": "staged-ecology",
+      "section_title": "The Staged Ecology of LLMs, ML, Software, and Local Substrates",
+      "block_index": 1,
+      "context": "Within this architecture, world models, neuro-symbolic systems, probabilistic circuits, and vector-symbolic representations should be treated as candidate local substrates, not universal foundations. World models are appropriate when the subproblem genuinely involves latent state evolution, internal rollout, or action-conditioned consequence [HA-2018] [HAFNER-2023]. Neuro-symbolic methods are appropriate when explicit compositional structure, local proof traces, or symbolic constraints materially improve performance, traceability, or governance [GARCEZ-LAMB-2020]. Probabilistic circuits are relevant when exact and tractable probabilistic inference is achievable under known structural restrictions [VERGARI-2021]. Vector-symbolic or hyperdimensional representations are important because they offer a possible middle layer between dense neural approximation and rigid symbolic data structures: they support role-filler binding, compositional manipulation, and compact structured representations with relatively simple algebraic operations [HDC-SURVEY-I]. Their significance here is not that they replace deep learning, but that they may offer better local substrates for regimes where compositional structure must remain manipulable and computationally light."
+    },
+    {
+      "key": "HAFNER-2023",
+      "section_id": "staged-ecology",
+      "section_title": "The Staged Ecology of LLMs, ML, Software, and Local Substrates",
+      "block_index": 1,
+      "context": "Within this architecture, world models, neuro-symbolic systems, probabilistic circuits, and vector-symbolic representations should be treated as candidate local substrates, not universal foundations. World models are appropriate when the subproblem genuinely involves latent state evolution, internal rollout, or action-conditioned consequence [HA-2018] [HAFNER-2023]. Neuro-symbolic methods are appropriate when explicit compositional structure, local proof traces, or symbolic constraints materially improve performance, traceability, or governance [GARCEZ-LAMB-2020]. Probabilistic circuits are relevant when exact and tractable probabilistic inference is achievable under known structural restrictions [VERGARI-2021]. Vector-symbolic or hyperdimensional representations are important because they offer a possible middle layer between dense neural approximation and rigid symbolic data structures: they support role-filler binding, compositional manipulation, and compact structured representations with relatively simple algebraic operations [HDC-SURVEY-I]. Their significance here is not that they replace deep learning, but that they may offer better local substrates for regimes where compositional structure must remain manipulable and computationally light."
+    },
+    {
+      "key": "GARCEZ-LAMB-2020",
+      "section_id": "staged-ecology",
+      "section_title": "The Staged Ecology of LLMs, ML, Software, and Local Substrates",
+      "block_index": 1,
+      "context": "Within this architecture, world models, neuro-symbolic systems, probabilistic circuits, and vector-symbolic representations should be treated as candidate local substrates, not universal foundations. World models are appropriate when the subproblem genuinely involves latent state evolution, internal rollout, or action-conditioned consequence [HA-2018] [HAFNER-2023]. Neuro-symbolic methods are appropriate when explicit compositional structure, local proof traces, or symbolic constraints materially improve performance, traceability, or governance [GARCEZ-LAMB-2020]. Probabilistic circuits are relevant when exact and tractable probabilistic inference is achievable under known structural restrictions [VERGARI-2021]. Vector-symbolic or hyperdimensional representations are important because they offer a possible middle layer between dense neural approximation and rigid symbolic data structures: they support role-filler binding, compositional manipulation, and compact structured representations with relatively simple algebraic operations [HDC-SURVEY-I]. Their significance here is not that they replace deep learning, but that they may offer better local substrates for regimes where compositional structure must remain manipulable and computationally light."
+    },
+    {
+      "key": "VERGARI-2021",
+      "section_id": "staged-ecology",
+      "section_title": "The Staged Ecology of LLMs, ML, Software, and Local Substrates",
+      "block_index": 1,
+      "context": "Within this architecture, world models, neuro-symbolic systems, probabilistic circuits, and vector-symbolic representations should be treated as candidate local substrates, not universal foundations. World models are appropriate when the subproblem genuinely involves latent state evolution, internal rollout, or action-conditioned consequence [HA-2018] [HAFNER-2023]. Neuro-symbolic methods are appropriate when explicit compositional structure, local proof traces, or symbolic constraints materially improve performance, traceability, or governance [GARCEZ-LAMB-2020]. Probabilistic circuits are relevant when exact and tractable probabilistic inference is achievable under known structural restrictions [VERGARI-2021]. Vector-symbolic or hyperdimensional representations are important because they offer a possible middle layer between dense neural approximation and rigid symbolic data structures: they support role-filler binding, compositional manipulation, and compact structured representations with relatively simple algebraic operations [HDC-SURVEY-I]. Their significance here is not that they replace deep learning, but that they may offer better local substrates for regimes where compositional structure must remain manipulable and computationally light."
+    },
+    {
+      "key": "HDC-SURVEY-I",
+      "section_id": "staged-ecology",
+      "section_title": "The Staged Ecology of LLMs, ML, Software, and Local Substrates",
+      "block_index": 1,
+      "context": "Within this architecture, world models, neuro-symbolic systems, probabilistic circuits, and vector-symbolic representations should be treated as candidate local substrates, not universal foundations. World models are appropriate when the subproblem genuinely involves latent state evolution, internal rollout, or action-conditioned consequence [HA-2018] [HAFNER-2023]. Neuro-symbolic methods are appropriate when explicit compositional structure, local proof traces, or symbolic constraints materially improve performance, traceability, or governance [GARCEZ-LAMB-2020]. Probabilistic circuits are relevant when exact and tractable probabilistic inference is achievable under known structural restrictions [VERGARI-2021]. Vector-symbolic or hyperdimensional representations are important because they offer a possible middle layer between dense neural approximation and rigid symbolic data structures: they support role-filler binding, compositional manipulation, and compact structured representations with relatively simple algebraic operations [HDC-SURVEY-I]. Their significance here is not that they replace deep learning, but that they may offer better local substrates for regimes where compositional structure must remain manipulable and computationally light."
+    }
+  ],
+  "references": {
+    "ANT-BEA-2024": {
+      "key": "ANT-BEA-2024",
+      "entry": "[ANT-BEA-2024] Anthropic. (2024). Building Effective AI Agents.",
+      "url": "https://www.anthropic.com/research/building-effective-agents",
+      "title_guess": "Building Effective AI Agents",
+      "source": "document"
+    },
+    "ANT-CTX-2025": {
+      "key": "ANT-CTX-2025",
+      "entry": "[ANT-CTX-2025] Anthropic. (2025). Effective Context Engineering for AI Agents.",
+      "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+      "title_guess": "Effective Context Engineering for AI Agents",
+      "source": "document"
+    },
+    "ANT-SKILLS-2025": {
+      "key": "ANT-SKILLS-2025",
+      "entry": "[ANT-SKILLS-2025] Anthropic. (2025). Equipping Agents for the Real World with Agent Skills.",
+      "url": "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
+      "title_guess": "Equipping Agents for the Real World with Agent Skills",
+      "source": "document"
+    },
+    "BILETZKI-2023": {
+      "key": "BILETZKI-2023",
+      "entry": "[BILETZKI-2023] Biletzki, A., & Matar, A. (2023). Ludwig Wittgenstein.",
+      "url": "https://plato.stanford.edu/entries/wittgenstein/",
+      "title_guess": "Ludwig Wittgenstein",
+      "source": "document"
+    },
+    "BRAULTBARON-2016": {
+      "key": "BRAULTBARON-2016",
+      "entry": "[BRAULTBARON-2016] Brault-Baron, J. (2016). Hypergraph Acyclicity Revisited.",
+      "url": "https://dblp.org/rec/journals/csur/Brault-Baron16",
+      "title_guess": "Hypergraph Acyclicity Revisited",
+      "source": "document"
+    },
+    "CADAR-2013": {
+      "key": "CADAR-2013",
+      "entry": "[CADAR-2013] Cadar, C., & Sen, K. (2013). Symbolic Execution for Software Testing: Three Decades Later.",
+      "url": "https://people.eecs.berkeley.edu/~ksen/papers/cacm13.pdf",
+      "title_guess": "Symbolic Execution for Software Testing: Three Decades Later",
+      "source": "document"
+    },
+    "COUSOT-1977": {
+      "key": "COUSOT-1977",
+      "entry": "[COUSOT-1977] Cousot, P., & Cousot, R. (1977). Abstract Interpretation.",
+      "url": "https://www.di.ens.fr/~cousot/publications.www/CousotCousot-POPL-77-ACM-p238--252-1977.pdf",
+      "title_guess": "Abstract Interpretation",
+      "source": "document"
+    },
+    "DEMOURA-2008": {
+      "key": "DEMOURA-2008",
+      "entry": "[DEMOURA-2008] de Moura, L., & Bjørner, N. (2008). Z3: An Efficient SMT Solver.",
+      "url": "https://link.springer.com/content/pdf/10.1007/978-3-540-78800-3_24.pdf",
+      "title_guess": "Z3: An Efficient SMT Solver",
+      "source": "document"
+    },
+    "GARCEZ-LAMB-2020": {
+      "key": "GARCEZ-LAMB-2020",
+      "entry": "[GARCEZ-LAMB-2020] d'Avila Garcez, A., & Lamb, L. C. (2020). Neurosymbolic AI: The 3rd Wave.",
+      "url": "https://arxiv.org/abs/2012.05876",
+      "title_guess": "Neurosymbolic AI: The 3rd Wave",
+      "source": "document"
+    },
+    "GOTTLOB-2001": {
+      "key": "GOTTLOB-2001",
+      "entry": "[GOTTLOB-2001] Gottlob, G., et al. (2001). The Complexity of Acyclic Conjunctive Queries.",
+      "url": "http://www.dbai.tuwien.ac.at/proj/hypertree/",
+      "title_guess": "The Complexity of Acyclic Conjunctive Queries",
+      "source": "document"
+    },
+    "HA-2018": {
+      "key": "HA-2018",
+      "entry": "[HA-2018] Ha, D., & Schmidhuber, J. (2018). World Models.",
+      "url": "https://arxiv.org/abs/1803.10122",
+      "title_guess": "World Models",
+      "source": "document"
+    },
+    "HAFNER-2023": {
+      "key": "HAFNER-2023",
+      "entry": "[HAFNER-2023] Hafner, D., et al. (2023). Mastering Diverse Domains through World Models.",
+      "url": "https://arxiv.org/abs/2301.04104",
+      "title_guess": "Mastering Diverse Domains through World Models",
+      "source": "document"
+    },
+    "HDC-SURVEY-I": {
+      "key": "HDC-SURVEY-I",
+      "entry": "[HDC-SURVEY-I] Kleyko, D., et al. (2021). A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I.",
+      "url": "https://arxiv.org/abs/2111.06077",
+      "title_guess": "A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I",
+      "source": "document"
+    },
+    "KING-1976": {
+      "key": "KING-1976",
+      "entry": "[KING-1976] King, J. C. (1976). Symbolic Execution and Program Testing.",
+      "url": "https://madhu.cs.illinois.edu/cs598-fall10/king76symbolicexecution.pdf",
+      "title_guess": "Symbolic Execution and Program Testing",
+      "source": "document"
+    },
+    "LECUN-2022": {
+      "key": "LECUN-2022",
+      "entry": "[LECUN-2022] LeCun, Y. (2022). A Path Towards Autonomous Machine Intelligence.",
+      "url": "https://openreview.net/pdf?id=BZ5a1r-kVsf",
+      "title_guess": "A Path Towards Autonomous Machine Intelligence",
+      "source": "document"
+    },
+    "OAI-SKILLS-2026": {
+      "key": "OAI-SKILLS-2026",
+      "entry": "[OAI-SKILLS-2026] OpenAI. (2026). Skills in Agents SDK.",
+      "url": "https://developers.openai.com/api/docs/guides/tools-skills/",
+      "title_guess": "Skills in Agents SDK",
+      "source": "document"
+    },
+    "VERGARI-2021": {
+      "key": "VERGARI-2021",
+      "entry": "[VERGARI-2021] Vergari, A., et al. (2021). A Compositional Atlas of Tractable Circuit Operations for Probabilistic Inference.",
+      "url": "https://proceedings.neurips.cc/paper/2021/hash/6e01383fd96a17ae51cc3e15447e7533-Abstract.html",
+      "title_guess": "A Compositional Atlas of Tractable Circuit Operations for Probabilistic Inference",
+      "source": "document"
+    },
+    "WITTGENSTEIN-1953": {
+      "key": "WITTGENSTEIN-1953",
+      "entry": "[WITTGENSTEIN-1953] Wittgenstein, L. (1953/2009). Philosophical Investigations.",
+      "url": "https://danielwharris.com/teaching/38080/readings/WittgensteinPI.pdf",
+      "title_guess": "Philosophical Investigations",
+      "source": "document"
+    },
+    "AGISYSTEM2": {
+      "key": "AGISYSTEM2",
+      "entry": "[AGISYSTEM2] AGISystem2. (2026). Research Index: CPU-centric ML, VSA/HDC, Conceptual Spaces, and Formal Reasoning. URL: https://agisystem2.com/research.html",
+      "url": "https://agisystem2.com/research.html",
+      "title_guess": "Research Index: CPU-centric ML, VSA/HDC, Conceptual Spaces, and Formal Reasoning",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BACH-2008": {
+      "key": "BACH-2008",
+      "entry": "[BACH-2008] Bach, K. (2008). Speech Acts and Pragmatics. URL: https://philpapers.org/rec/BACSAA-6",
+      "url": "https://philpapers.org/rec/BACSAA-6",
+      "title_guess": "Speech Acts and Pragmatics",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BASSECHES-1984": {
+      "key": "BASSECHES-1984",
+      "entry": "[BASSECHES-1984] Basseches, M. (1984). Dialectical Thinking and Adult Development. URL: https://www.bloomsbury.com/us/dialectical-thinking-and-adult-development-9780893910174/",
+      "url": "https://www.bloomsbury.com/us/dialectical-thinking-and-adult-development-9780893910174/",
+      "title_guess": "Dialectical Thinking and Adult Development",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BECHBERGER-2017": {
+      "key": "BECHBERGER-2017",
+      "entry": "[BECHBERGER-2017] Bechberger, L., & Kühnberger, K.-U. (2017). A Thorough Formalization of Conceptual Spaces. URL: https://arxiv.org/abs/1706.06366",
+      "url": "https://arxiv.org/abs/1706.06366",
+      "title_guess": "A Thorough Formalization of Conceptual Spaces",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BECHBERGER-2018": {
+      "key": "BECHBERGER-2018",
+      "entry": "[BECHBERGER-2018] Bechberger, L., & Kühnberger, K.-U. (2018). Formal Ways for Measuring Relations between Concepts in Conceptual Spaces. URL: https://arxiv.org/abs/1804.02393",
+      "url": "https://arxiv.org/abs/1804.02393",
+      "title_guess": "Formal Ways for Measuring Relations between Concepts in Conceptual Spaces",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BENDER-2021": {
+      "key": "BENDER-2021",
+      "entry": "[BENDER-2021] Bender, E. M., et al. (2021). On the Dangers of Stochastic Parrots: Can Language Models Be Too Big? URL: https://s10251.pcdn.co/pdf/2021-bender-parrots.pdf",
+      "url": "https://s10251.pcdn.co/pdf/2021-bender-parrots.pdf",
+      "title_guess": "On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BEURER-KELLNER-2022": {
+      "key": "BEURER-KELLNER-2022",
+      "entry": "[BEURER-KELLNER-2022] Beurer-Kellner, L., et al. (2022). Prompting Is Programming: A Query Language for Large Language Models. URL: https://arxiv.org/abs/2212.06094",
+      "url": "https://arxiv.org/abs/2212.06094",
+      "title_guess": "Prompting Is Programming: A Query Language for Large Language Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BHUYAN-2024": {
+      "key": "BHUYAN-2024",
+      "entry": "[BHUYAN-2024] Bhuyan, B. P., et al. (2024). Neuro-symbolic Artificial Intelligence: A Survey. URL: https://link.springer.com/article/10.1007/s00521-024-09960-z",
+      "url": "https://link.springer.com/article/10.1007/s00521-024-09960-z",
+      "title_guess": "Neuro-symbolic Artificial Intelligence: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BOMMASANI-2021": {
+      "key": "BOMMASANI-2021",
+      "entry": "[BOMMASANI-2021] Bommasani, R., et al. (2021). On the Opportunities and Risks of Foundation Models. URL: https://arxiv.org/abs/2108.07258",
+      "url": "https://arxiv.org/abs/2108.07258",
+      "title_guess": "On the Opportunities and Risks of Foundation Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "BROOKS-1991": {
+      "key": "BROOKS-1991",
+      "entry": "[BROOKS-1991] Brooks, R. A. (1991). Intelligence without Representation. URL: https://people.csail.mit.edu/brooks/papers/representation.pdf",
+      "url": "https://people.csail.mit.edu/brooks/papers/representation.pdf",
+      "title_guess": "Intelligence without Representation",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "CHAPMAN-2018": {
+      "key": "CHAPMAN-2018",
+      "entry": "[CHAPMAN-2018] Chapman, D. (2018). In the Cells of the Eggplant: Meta-rationality. URL: https://meaningness.com/eggplant",
+      "url": "https://meaningness.com/eggplant",
+      "title_guess": "In the Cells of the Eggplant: Meta-rationality",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "CHAPMAN-2026": {
+      "key": "CHAPMAN-2026",
+      "entry": "[CHAPMAN-2026] Chapman, D. (2026). Meta-rationality Website. URL: https://metarationality.com/",
+      "url": "https://metarationality.com/",
+      "title_guess": "Meta-rationality Website",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "CHEN-2022": {
+      "key": "CHEN-2022",
+      "entry": "[CHEN-2022] Chen, C., et al. (2022). Reinforcement Learning with Transformer World Models. URL: https://arxiv.org/abs/2202.09481",
+      "url": "https://arxiv.org/abs/2202.09481",
+      "title_guess": "Reinforcement Learning with Transformer World Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "COLELOUGH-2025": {
+      "key": "COLELOUGH-2025",
+      "entry": "[COLELOUGH-2025] Colelough, B. C., & Regli, W. (2025). Neuro-Symbolic AI in 2024: A Systematic Review. URL: https://arxiv.org/abs/2501.05435",
+      "url": "https://arxiv.org/abs/2501.05435",
+      "title_guess": "Neuro-Symbolic AI in 2024: A Systematic Review",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "CUCUMBER-2025": {
+      "key": "CUCUMBER-2025",
+      "entry": "[CUCUMBER-2025] Cucumber. (2025). Gherkin Language Reference. URL: https://cucumber.io/docs/gherkin/reference/",
+      "url": "https://cucumber.io/docs/gherkin/reference/",
+      "title_guess": "Gherkin Language Reference",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "DELONG-2024": {
+      "key": "DELONG-2024",
+      "entry": "[DELONG-2024] DeLong, L. N., et al. (2024). Neurosymbolic AI for Reasoning over Knowledge Graphs: A Survey. URL: https://arxiv.org/abs/2302.07200",
+      "url": "https://arxiv.org/abs/2302.07200",
+      "title_guess": "Neurosymbolic AI for Reasoning over Knowledge Graphs: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "DESMET-DERAEDT-2025": {
+      "key": "DESMET-DERAEDT-2025",
+      "entry": "[DESMET-DERAEDT-2025] De Smet, L., & De Raedt, L. (2025). Defining Neurosymbolic AI. URL: https://arxiv.org/abs/2507.11127",
+      "url": "https://arxiv.org/abs/2507.11127",
+      "title_guess": "Defining Neurosymbolic AI",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "DSPY-2023": {
+      "key": "DSPY-2023",
+      "entry": "[DSPY-2023] Khattab, O., et al. (2023). DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines. URL: https://arxiv.org/abs/2310.03714",
+      "url": "https://arxiv.org/abs/2310.03714",
+      "title_guess": "DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "FLAVELL-1979": {
+      "key": "FLAVELL-1979",
+      "entry": "[FLAVELL-1979] Flavell, J. H. (1979). Metacognition and Cognitive Monitoring. URL: https://jgregorymcverry.com/readings/flavell1979MetacognitionAndCogntiveMonitoring.pdf",
+      "url": "https://jgregorymcverry.com/readings/flavell1979MetacognitionAndCogntiveMonitoring.pdf",
+      "title_guess": "Metacognition and Cognitive Monitoring",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "FLEMING-2021": {
+      "key": "FLEMING-2021",
+      "entry": "[FLEMING-2021] Fleming, S. M. (2021). Know Thyself: The Science of Self-Awareness. URL: https://www.hachettebookgroup.com/titles/stephen-m-fleming/know-thyself/9781549142475/?lens=basic-books",
+      "url": "https://www.hachettebookgroup.com/titles/stephen-m-fleming/know-thyself/9781549142475/?lens=basic-books",
+      "title_guess": "Know Thyself: The Science of Self-Awareness",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "FLEMING-DAW-2017": {
+      "key": "FLEMING-DAW-2017",
+      "entry": "[FLEMING-DAW-2017] Fleming, S. M., & Daw, N. D. (2017). Self-Evaluation of Decision-Making: A General Bayesian Framework for Metacognitive Computation. URL: https://doi.org/10.1037/rev0000045",
+      "url": "https://doi.org/10.1037/rev0000045",
+      "title_guess": "Self-Evaluation of Decision-Making: A General Bayesian Framework for Metacognitive Computation",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "FUCHS-ET-AL-2008": {
+      "key": "FUCHS-ET-AL-2008",
+      "entry": "[FUCHS-ET-AL-2008] Fuchs, N. E., Kaljurand, K., & Kuhn, T. (2008). Attempto Controlled English for Knowledge Representation. URL: https://attempto.ifi.uzh.ch/site/pubs/papers/reasoningweb2008_fuchs.pdf",
+      "url": "https://attempto.ifi.uzh.ch/site/pubs/papers/reasoningweb2008_fuchs.pdf",
+      "title_guess": "Attempto Controlled English for Knowledge Representation",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "FUCHS-SCHWITTER-1996": {
+      "key": "FUCHS-SCHWITTER-1996",
+      "entry": "[FUCHS-SCHWITTER-1996] Fuchs, N. E., & Schwitter, R. (1996). Attempto Controlled English (ACE). URL: https://arxiv.org/abs/cmp-lg/9603003",
+      "url": "https://arxiv.org/abs/cmp-lg/9603003",
+      "title_guess": "Attempto Controlled English (ACE)",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "GAO-2022": {
+      "key": "GAO-2022",
+      "entry": "[GAO-2022] Gao, L., et al. (2022). PAL: Program-aided Language Models. URL: https://arxiv.org/abs/2211.10435",
+      "url": "https://arxiv.org/abs/2211.10435",
+      "title_guess": "PAL: Program-aided Language Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "GAO-2023": {
+      "key": "GAO-2023",
+      "entry": "[GAO-2023] Gao, Y., et al. (2023). Retrieval-Augmented Generation for Large Language Models: A Survey. URL: https://arxiv.org/abs/2312.10997",
+      "url": "https://arxiv.org/abs/2312.10997",
+      "title_guess": "Retrieval-Augmented Generation for Large Language Models: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "HARNAD-1990": {
+      "key": "HARNAD-1990",
+      "entry": "[HARNAD-1990] Harnad, S. (1990). The Symbol Grounding Problem. URL: https://cogprints.org/2133/1/harnad90.sgproblem.html",
+      "url": "https://cogprints.org/2133/1/harnad90.sgproblem.html",
+      "title_guess": "The Symbol Grounding Problem",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "HDC-SURVEY-II": {
+      "key": "HDC-SURVEY-II",
+      "entry": "[HDC-SURVEY-II] Kleyko, D., et al. (2021). A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part II. URL: https://arxiv.org/abs/2112.15424",
+      "url": "https://arxiv.org/abs/2112.15424",
+      "title_guess": "A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part II",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "INTUITIONISM-SEP": {
+      "key": "INTUITIONISM-SEP",
+      "entry": "[INTUITIONISM-SEP] Iemhoff, R. (2024). Intuitionism in the Philosophy of Mathematics. URL: https://plato.stanford.edu/entries/intuitionism",
+      "url": "https://plato.stanford.edu/entries/intuitionism",
+      "title_guess": "Intuitionism in the Philosophy of Mathematics",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "KAHNEMAN-2011": {
+      "key": "KAHNEMAN-2011",
+      "entry": "[KAHNEMAN-2011] Kahneman, D. (2011). Thinking, Fast and Slow. URL: https://cdn.penguin.co.uk/dam-assets/books/9780141033570/9780141033570-sample.pdf",
+      "url": "https://cdn.penguin.co.uk/dam-assets/books/9780141033570/9780141033570-sample.pdf",
+      "title_guess": "Thinking, Fast and Slow",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "KANERVA-2009": {
+      "key": "KANERVA-2009",
+      "entry": "[KANERVA-2009] Kanerva, P. (2009). Hyperdimensional Computing: An Introduction to Computing in Distributed Representation with High-Dimensional Random Vectors. URL: https://redwood.berkeley.edu/wp-content/uploads/2018/01/kanerva2009hyperdimensional.pdf",
+      "url": "https://redwood.berkeley.edu/wp-content/uploads/2018/01/kanerva2009hyperdimensional.pdf",
+      "title_guess": "Hyperdimensional Computing: An Introduction to Computing in Distributed Representation with High-Dimensional Random Vectors",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "KEGAN-1994": {
+      "key": "KEGAN-1994",
+      "entry": "[KEGAN-1994] Kegan, R. (1994). In Over Our Heads: The Mental Demands of Modern Life. URL: https://www.hup.harvard.edu/catalog.php?isbn=9780674445888",
+      "url": "https://www.hup.harvard.edu/catalog.php?isbn=9780674445888",
+      "title_guess": "In Over Our Heads: The Mental Demands of Modern Life",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "KG-SURVEY": {
+      "key": "KG-SURVEY",
+      "entry": "[KG-SURVEY] Ji, S., et al. (2020). A Survey on Knowledge Graphs: Representation, Acquisition and Applications. URL: https://research.monash.edu/en/publications/a-survey-on-knowledge-graphs-representation-acquisition-and-appli/",
+      "url": "https://research.monash.edu/en/publications/a-survey-on-knowledge-graphs-representation-acquisition-and-appli/",
+      "title_guess": "A Survey on Knowledge Graphs: Representation, Acquisition and Applications",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "LEWIS-2020": {
+      "key": "LEWIS-2020",
+      "entry": "[LEWIS-2020] Lewis, P., et al. (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks. URL: https://arxiv.org/abs/2005.11401",
+      "url": "https://arxiv.org/abs/2005.11401",
+      "title_guess": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "LUKACS-2013": {
+      "key": "LUKACS-2013",
+      "entry": "[LUKACS-2013] Lukács, G. (2013). History and Class Consciousness. URL: https://mitpress.mit.edu/9780262525670/history-and-class-consciousness/",
+      "url": "https://mitpress.mit.edu/9780262525670/history-and-class-consciousness/",
+      "title_guess": "History and Class Consciousness",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "MEANING-SEP": {
+      "key": "MEANING-SEP",
+      "entry": "[MEANING-SEP] Speaks, J. (2024). Theories of Meaning. URL: https://plato.stanford.edu/entries/meaning/",
+      "url": "https://plato.stanford.edu/entries/meaning/",
+      "title_guess": "Theories of Meaning",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "MOKHOV-2020": {
+      "key": "MOKHOV-2020",
+      "entry": "[MOKHOV-2020] Mokhov, A., Mitchell, N., & Peyton Jones, S. (2020). Build Systems à la Carte: Theory and Practice. URL: https://simon.peytonjones.org/assets/pdfs/build-systems-jfp.pdf",
+      "url": "https://simon.peytonjones.org/assets/pdfs/build-systems-jfp.pdf",
+      "title_guess": "Build Systems à la Carte: Theory and Practice",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "OAI-PRACTICAL-AGENTS-2025": {
+      "key": "OAI-PRACTICAL-AGENTS-2025",
+      "entry": "[OAI-PRACTICAL-AGENTS-2025] OpenAI. (2025). A Practical Guide to Building AI Agents. URL: https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf",
+      "url": "https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf",
+      "title_guess": "A Practical Guide to Building AI Agents",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "PEARL-2009": {
+      "key": "PEARL-2009",
+      "entry": "[PEARL-2009] Pearl, J. (2009). Causality: Models, Reasoning, and Inference. URL: https://archive.illc.uva.nl/cil/uploaded_files/inlineitem/Pearl_2009_Causality.pdf",
+      "url": "https://archive.illc.uva.nl/cil/uploaded_files/inlineitem/Pearl_2009_Causality.pdf",
+      "title_guess": "Causality: Models, Reasoning, and Inference",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "PGMPY": {
+      "key": "PGMPY",
+      "entry": "[PGMPY] pgmpy project. (2025). Probabilistic Graphical Models in Python. URL: https://pgmpy.org/",
+      "url": "https://pgmpy.org/",
+      "title_guess": "Probabilistic Graphical Models in Python",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "POPPER-SEP": {
+      "key": "POPPER-SEP",
+      "entry": "[POPPER-SEP] Thornton, S. (2024). Karl Popper. URL: https://plato.stanford.edu/entries/popper/",
+      "url": "https://plato.stanford.edu/entries/popper/",
+      "title_guess": "Karl Popper",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "PRAGMATICS-SEP": {
+      "key": "PRAGMATICS-SEP",
+      "entry": "[PRAGMATICS-SEP] Bach, K. (2024). Pragmatics. URL: https://plato.stanford.edu/entries/pragmatics/",
+      "url": "https://plato.stanford.edu/entries/pragmatics/",
+      "title_guess": "Pragmatics",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "PYKEEN": {
+      "key": "PYKEEN",
+      "entry": "[PYKEEN] PyKEEN Documentation. (2025). Knowledge Graph Embeddings Pipeline. URL: https://pykeen.readthedocs.io/",
+      "url": "https://pykeen.readthedocs.io/",
+      "title_guess": "Knowledge Graph Embeddings Pipeline",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "PYRO": {
+      "key": "PYRO",
+      "entry": "[PYRO] Pyro Documentation. (2025). Deep Probabilistic Programming with PyTorch. URL: https://pyro.ai/",
+      "url": "https://pyro.ai/",
+      "title_guess": "Deep Probabilistic Programming with PyTorch",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "PYSHEAF": {
+      "key": "PYSHEAF",
+      "entry": "[PYSHEAF] PySheaf Repository. (2025). Sheaf Theoretical Data Analysis. URL: https://github.com/kb1dds/pysheaf",
+      "url": "https://github.com/kb1dds/pysheaf",
+      "title_guess": "Sheaf Theoretical Data Analysis",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "SCHICK-2023": {
+      "key": "SCHICK-2023",
+      "entry": "[SCHICK-2023] Schick, T., et al. (2023). Toolformer: Language Models Can Teach Themselves to Use Tools. URL: https://arxiv.org/abs/2302.04761",
+      "url": "https://arxiv.org/abs/2302.04761",
+      "title_guess": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "SHEAF-SURVEY-2025": {
+      "key": "SHEAF-SURVEY-2025",
+      "entry": "[SHEAF-SURVEY-2025] Ayzenberg, A., et al. (2025). Sheaf Theory: From Deep Geometry to Deep Learning. URL: https://arxiv.org/abs/2502.15476",
+      "url": "https://arxiv.org/abs/2502.15476",
+      "title_guess": "Sheaf Theory: From Deep Geometry to Deep Learning",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "TENPY": {
+      "key": "TENPY",
+      "entry": "[TENPY] TeNPy Project. (2025). TeNPy Documentation and Repository. URL: https://tenpy.readthedocs.io/",
+      "url": "https://tenpy.readthedocs.io/",
+      "title_guess": "TeNPy Documentation and Repository",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "TENSOR-NET-SURVEY": {
+      "key": "TENSOR-NET-SURVEY",
+      "entry": "[TENSOR-NET-SURVEY] Wang, M., et al. (2023). Tensor Networks Meet Neural Networks: A Survey. URL: https://arxiv.org/abs/2302.09019",
+      "url": "https://arxiv.org/abs/2302.09019",
+      "title_guess": "Tensor Networks Meet Neural Networks: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "TENSORNETWORK-LIB": {
+      "key": "TENSORNETWORK-LIB",
+      "entry": "[TENSORNETWORK-LIB] Google. (2025). TensorNetwork: A Library for Tensor Network Manipulations. URL: https://github.com/google/TensorNetwork",
+      "url": "https://github.com/google/TensorNetwork",
+      "title_guess": "TensorNetwork: A Library for Tensor Network Manipulations",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "TORCHHD-2023": {
+      "key": "TORCHHD-2023",
+      "entry": "[TORCHHD-2023] Heddes, M., et al. (2023). Torchhd: An Open Source Python Library to Support Research on Hyperdimensional Computing and Vector Symbolic Architectures. URL: https://arxiv.org/abs/2205.09208",
+      "url": "https://arxiv.org/abs/2205.09208",
+      "title_guess": "Torchhd: An Open Source Python Library to Support Research on Hyperdimensional Computing and Vector Symbolic Architectures",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "WAN-2024": {
+      "key": "WAN-2024",
+      "entry": "[WAN-2024] Wan, Z., et al. (2024). Towards Cognitive AI Systems: A Survey and Prospective on Neuro-Symbolic AI. URL: https://arxiv.org/abs/2401.01040",
+      "url": "https://arxiv.org/abs/2401.01040",
+      "title_guess": "Towards Cognitive AI Systems: A Survey and Prospective on Neuro-Symbolic AI",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "WILLARD-LOUF-2023": {
+      "key": "WILLARD-LOUF-2023",
+      "entry": "[WILLARD-LOUF-2023] Willard, B., & Louf, R. (2023). Efficient Guided Generation for Large Language Models. URL: https://arxiv.org/abs/2307.09702",
+      "url": "https://arxiv.org/abs/2307.09702",
+      "title_guess": "Efficient Guided Generation for Large Language Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "WOLFRAM-2002": {
+      "key": "WOLFRAM-2002",
+      "entry": "[WOLFRAM-2002] Wolfram, S. (2002). A New Kind of Science: Computational Irreducibility. URL: https://www.wolframscience.com/nks/p737--computational-irreducibility/",
+      "url": "https://www.wolframscience.com/nks/p737--computational-irreducibility/",
+      "title_guess": "A New Kind of Science: Computational Irreducibility",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "WOLPERT-1997": {
+      "key": "WOLPERT-1997",
+      "entry": "[WOLPERT-1997] Wolpert, D. H., & Macready, W. G. (1997). No Free Lunch Theorems for Optimization. URL: https://www.cs.ubc.ca/~hutter/earg/papers07/00585893.pdf",
+      "url": "https://www.cs.ubc.ca/~hutter/earg/papers07/00585893.pdf",
+      "title_guess": "No Free Lunch Theorems for Optimization",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "WU-2023": {
+      "key": "WU-2023",
+      "entry": "[WU-2023] Wu, Q., et al. (2023). AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation. URL: https://arxiv.org/abs/2308.08155",
+      "url": "https://arxiv.org/abs/2308.08155",
+      "title_guess": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "XU-2024": {
+      "key": "XU-2024",
+      "entry": "[XU-2024] Xu, S., et al. (2024). AIOS Compiler: LLM as Interpreter for Natural Language Programming. URL: https://arxiv.org/abs/2405.06907",
+      "url": "https://arxiv.org/abs/2405.06907",
+      "title_guess": "AIOS Compiler: LLM as Interpreter for Natural Language Programming",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    "YAO-2023": {
+      "key": "YAO-2023",
+      "entry": "[YAO-2023] Yao, S., et al. (2023). ReAct: Synergizing Reasoning and Acting in Language Models. URL: https://arxiv.org/abs/2210.03629",
+      "url": "https://arxiv.org/abs/2210.03629",
+      "title_guess": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    }
+  },
+  "missing_reference_entries": [],
+  "unused_reference_entries": [
+    {
+      "key": "AGISYSTEM2",
+      "entry": "[AGISYSTEM2] AGISystem2. (2026). Research Index: CPU-centric ML, VSA/HDC, Conceptual Spaces, and Formal Reasoning. URL: https://agisystem2.com/research.html",
+      "url": "https://agisystem2.com/research.html",
+      "title_guess": "Research Index: CPU-centric ML, VSA/HDC, Conceptual Spaces, and Formal Reasoning",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BACH-2008",
+      "entry": "[BACH-2008] Bach, K. (2008). Speech Acts and Pragmatics. URL: https://philpapers.org/rec/BACSAA-6",
+      "url": "https://philpapers.org/rec/BACSAA-6",
+      "title_guess": "Speech Acts and Pragmatics",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BASSECHES-1984",
+      "entry": "[BASSECHES-1984] Basseches, M. (1984). Dialectical Thinking and Adult Development. URL: https://www.bloomsbury.com/us/dialectical-thinking-and-adult-development-9780893910174/",
+      "url": "https://www.bloomsbury.com/us/dialectical-thinking-and-adult-development-9780893910174/",
+      "title_guess": "Dialectical Thinking and Adult Development",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BECHBERGER-2017",
+      "entry": "[BECHBERGER-2017] Bechberger, L., & Kühnberger, K.-U. (2017). A Thorough Formalization of Conceptual Spaces. URL: https://arxiv.org/abs/1706.06366",
+      "url": "https://arxiv.org/abs/1706.06366",
+      "title_guess": "A Thorough Formalization of Conceptual Spaces",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BECHBERGER-2018",
+      "entry": "[BECHBERGER-2018] Bechberger, L., & Kühnberger, K.-U. (2018). Formal Ways for Measuring Relations between Concepts in Conceptual Spaces. URL: https://arxiv.org/abs/1804.02393",
+      "url": "https://arxiv.org/abs/1804.02393",
+      "title_guess": "Formal Ways for Measuring Relations between Concepts in Conceptual Spaces",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BENDER-2021",
+      "entry": "[BENDER-2021] Bender, E. M., et al. (2021). On the Dangers of Stochastic Parrots: Can Language Models Be Too Big? URL: https://s10251.pcdn.co/pdf/2021-bender-parrots.pdf",
+      "url": "https://s10251.pcdn.co/pdf/2021-bender-parrots.pdf",
+      "title_guess": "On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BEURER-KELLNER-2022",
+      "entry": "[BEURER-KELLNER-2022] Beurer-Kellner, L., et al. (2022). Prompting Is Programming: A Query Language for Large Language Models. URL: https://arxiv.org/abs/2212.06094",
+      "url": "https://arxiv.org/abs/2212.06094",
+      "title_guess": "Prompting Is Programming: A Query Language for Large Language Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BHUYAN-2024",
+      "entry": "[BHUYAN-2024] Bhuyan, B. P., et al. (2024). Neuro-symbolic Artificial Intelligence: A Survey. URL: https://link.springer.com/article/10.1007/s00521-024-09960-z",
+      "url": "https://link.springer.com/article/10.1007/s00521-024-09960-z",
+      "title_guess": "Neuro-symbolic Artificial Intelligence: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BOMMASANI-2021",
+      "entry": "[BOMMASANI-2021] Bommasani, R., et al. (2021). On the Opportunities and Risks of Foundation Models. URL: https://arxiv.org/abs/2108.07258",
+      "url": "https://arxiv.org/abs/2108.07258",
+      "title_guess": "On the Opportunities and Risks of Foundation Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "BROOKS-1991",
+      "entry": "[BROOKS-1991] Brooks, R. A. (1991). Intelligence without Representation. URL: https://people.csail.mit.edu/brooks/papers/representation.pdf",
+      "url": "https://people.csail.mit.edu/brooks/papers/representation.pdf",
+      "title_guess": "Intelligence without Representation",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "CHAPMAN-2018",
+      "entry": "[CHAPMAN-2018] Chapman, D. (2018). In the Cells of the Eggplant: Meta-rationality. URL: https://meaningness.com/eggplant",
+      "url": "https://meaningness.com/eggplant",
+      "title_guess": "In the Cells of the Eggplant: Meta-rationality",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "CHAPMAN-2026",
+      "entry": "[CHAPMAN-2026] Chapman, D. (2026). Meta-rationality Website. URL: https://metarationality.com/",
+      "url": "https://metarationality.com/",
+      "title_guess": "Meta-rationality Website",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "CHEN-2022",
+      "entry": "[CHEN-2022] Chen, C., et al. (2022). Reinforcement Learning with Transformer World Models. URL: https://arxiv.org/abs/2202.09481",
+      "url": "https://arxiv.org/abs/2202.09481",
+      "title_guess": "Reinforcement Learning with Transformer World Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "COLELOUGH-2025",
+      "entry": "[COLELOUGH-2025] Colelough, B. C., & Regli, W. (2025). Neuro-Symbolic AI in 2024: A Systematic Review. URL: https://arxiv.org/abs/2501.05435",
+      "url": "https://arxiv.org/abs/2501.05435",
+      "title_guess": "Neuro-Symbolic AI in 2024: A Systematic Review",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "CUCUMBER-2025",
+      "entry": "[CUCUMBER-2025] Cucumber. (2025). Gherkin Language Reference. URL: https://cucumber.io/docs/gherkin/reference/",
+      "url": "https://cucumber.io/docs/gherkin/reference/",
+      "title_guess": "Gherkin Language Reference",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "DELONG-2024",
+      "entry": "[DELONG-2024] DeLong, L. N., et al. (2024). Neurosymbolic AI for Reasoning over Knowledge Graphs: A Survey. URL: https://arxiv.org/abs/2302.07200",
+      "url": "https://arxiv.org/abs/2302.07200",
+      "title_guess": "Neurosymbolic AI for Reasoning over Knowledge Graphs: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "DESMET-DERAEDT-2025",
+      "entry": "[DESMET-DERAEDT-2025] De Smet, L., & De Raedt, L. (2025). Defining Neurosymbolic AI. URL: https://arxiv.org/abs/2507.11127",
+      "url": "https://arxiv.org/abs/2507.11127",
+      "title_guess": "Defining Neurosymbolic AI",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "DSPY-2023",
+      "entry": "[DSPY-2023] Khattab, O., et al. (2023). DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines. URL: https://arxiv.org/abs/2310.03714",
+      "url": "https://arxiv.org/abs/2310.03714",
+      "title_guess": "DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "FLAVELL-1979",
+      "entry": "[FLAVELL-1979] Flavell, J. H. (1979). Metacognition and Cognitive Monitoring. URL: https://jgregorymcverry.com/readings/flavell1979MetacognitionAndCogntiveMonitoring.pdf",
+      "url": "https://jgregorymcverry.com/readings/flavell1979MetacognitionAndCogntiveMonitoring.pdf",
+      "title_guess": "Metacognition and Cognitive Monitoring",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "FLEMING-2021",
+      "entry": "[FLEMING-2021] Fleming, S. M. (2021). Know Thyself: The Science of Self-Awareness. URL: https://www.hachettebookgroup.com/titles/stephen-m-fleming/know-thyself/9781549142475/?lens=basic-books",
+      "url": "https://www.hachettebookgroup.com/titles/stephen-m-fleming/know-thyself/9781549142475/?lens=basic-books",
+      "title_guess": "Know Thyself: The Science of Self-Awareness",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "FLEMING-DAW-2017",
+      "entry": "[FLEMING-DAW-2017] Fleming, S. M., & Daw, N. D. (2017). Self-Evaluation of Decision-Making: A General Bayesian Framework for Metacognitive Computation. URL: https://doi.org/10.1037/rev0000045",
+      "url": "https://doi.org/10.1037/rev0000045",
+      "title_guess": "Self-Evaluation of Decision-Making: A General Bayesian Framework for Metacognitive Computation",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "FUCHS-ET-AL-2008",
+      "entry": "[FUCHS-ET-AL-2008] Fuchs, N. E., Kaljurand, K., & Kuhn, T. (2008). Attempto Controlled English for Knowledge Representation. URL: https://attempto.ifi.uzh.ch/site/pubs/papers/reasoningweb2008_fuchs.pdf",
+      "url": "https://attempto.ifi.uzh.ch/site/pubs/papers/reasoningweb2008_fuchs.pdf",
+      "title_guess": "Attempto Controlled English for Knowledge Representation",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "FUCHS-SCHWITTER-1996",
+      "entry": "[FUCHS-SCHWITTER-1996] Fuchs, N. E., & Schwitter, R. (1996). Attempto Controlled English (ACE). URL: https://arxiv.org/abs/cmp-lg/9603003",
+      "url": "https://arxiv.org/abs/cmp-lg/9603003",
+      "title_guess": "Attempto Controlled English (ACE)",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "GAO-2022",
+      "entry": "[GAO-2022] Gao, L., et al. (2022). PAL: Program-aided Language Models. URL: https://arxiv.org/abs/2211.10435",
+      "url": "https://arxiv.org/abs/2211.10435",
+      "title_guess": "PAL: Program-aided Language Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "GAO-2023",
+      "entry": "[GAO-2023] Gao, Y., et al. (2023). Retrieval-Augmented Generation for Large Language Models: A Survey. URL: https://arxiv.org/abs/2312.10997",
+      "url": "https://arxiv.org/abs/2312.10997",
+      "title_guess": "Retrieval-Augmented Generation for Large Language Models: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "HARNAD-1990",
+      "entry": "[HARNAD-1990] Harnad, S. (1990). The Symbol Grounding Problem. URL: https://cogprints.org/2133/1/harnad90.sgproblem.html",
+      "url": "https://cogprints.org/2133/1/harnad90.sgproblem.html",
+      "title_guess": "The Symbol Grounding Problem",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "HDC-SURVEY-II",
+      "entry": "[HDC-SURVEY-II] Kleyko, D., et al. (2021). A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part II. URL: https://arxiv.org/abs/2112.15424",
+      "url": "https://arxiv.org/abs/2112.15424",
+      "title_guess": "A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part II",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "INTUITIONISM-SEP",
+      "entry": "[INTUITIONISM-SEP] Iemhoff, R. (2024). Intuitionism in the Philosophy of Mathematics. URL: https://plato.stanford.edu/entries/intuitionism",
+      "url": "https://plato.stanford.edu/entries/intuitionism",
+      "title_guess": "Intuitionism in the Philosophy of Mathematics",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "KAHNEMAN-2011",
+      "entry": "[KAHNEMAN-2011] Kahneman, D. (2011). Thinking, Fast and Slow. URL: https://cdn.penguin.co.uk/dam-assets/books/9780141033570/9780141033570-sample.pdf",
+      "url": "https://cdn.penguin.co.uk/dam-assets/books/9780141033570/9780141033570-sample.pdf",
+      "title_guess": "Thinking, Fast and Slow",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "KANERVA-2009",
+      "entry": "[KANERVA-2009] Kanerva, P. (2009). Hyperdimensional Computing: An Introduction to Computing in Distributed Representation with High-Dimensional Random Vectors. URL: https://redwood.berkeley.edu/wp-content/uploads/2018/01/kanerva2009hyperdimensional.pdf",
+      "url": "https://redwood.berkeley.edu/wp-content/uploads/2018/01/kanerva2009hyperdimensional.pdf",
+      "title_guess": "Hyperdimensional Computing: An Introduction to Computing in Distributed Representation with High-Dimensional Random Vectors",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "KEGAN-1994",
+      "entry": "[KEGAN-1994] Kegan, R. (1994). In Over Our Heads: The Mental Demands of Modern Life. URL: https://www.hup.harvard.edu/catalog.php?isbn=9780674445888",
+      "url": "https://www.hup.harvard.edu/catalog.php?isbn=9780674445888",
+      "title_guess": "In Over Our Heads: The Mental Demands of Modern Life",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "KG-SURVEY",
+      "entry": "[KG-SURVEY] Ji, S., et al. (2020). A Survey on Knowledge Graphs: Representation, Acquisition and Applications. URL: https://research.monash.edu/en/publications/a-survey-on-knowledge-graphs-representation-acquisition-and-appli/",
+      "url": "https://research.monash.edu/en/publications/a-survey-on-knowledge-graphs-representation-acquisition-and-appli/",
+      "title_guess": "A Survey on Knowledge Graphs: Representation, Acquisition and Applications",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "LEWIS-2020",
+      "entry": "[LEWIS-2020] Lewis, P., et al. (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks. URL: https://arxiv.org/abs/2005.11401",
+      "url": "https://arxiv.org/abs/2005.11401",
+      "title_guess": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "LUKACS-2013",
+      "entry": "[LUKACS-2013] Lukács, G. (2013). History and Class Consciousness. URL: https://mitpress.mit.edu/9780262525670/history-and-class-consciousness/",
+      "url": "https://mitpress.mit.edu/9780262525670/history-and-class-consciousness/",
+      "title_guess": "History and Class Consciousness",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "MEANING-SEP",
+      "entry": "[MEANING-SEP] Speaks, J. (2024). Theories of Meaning. URL: https://plato.stanford.edu/entries/meaning/",
+      "url": "https://plato.stanford.edu/entries/meaning/",
+      "title_guess": "Theories of Meaning",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "MOKHOV-2020",
+      "entry": "[MOKHOV-2020] Mokhov, A., Mitchell, N., & Peyton Jones, S. (2020). Build Systems à la Carte: Theory and Practice. URL: https://simon.peytonjones.org/assets/pdfs/build-systems-jfp.pdf",
+      "url": "https://simon.peytonjones.org/assets/pdfs/build-systems-jfp.pdf",
+      "title_guess": "Build Systems à la Carte: Theory and Practice",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "OAI-PRACTICAL-AGENTS-2025",
+      "entry": "[OAI-PRACTICAL-AGENTS-2025] OpenAI. (2025). A Practical Guide to Building AI Agents. URL: https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf",
+      "url": "https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf",
+      "title_guess": "A Practical Guide to Building AI Agents",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "PEARL-2009",
+      "entry": "[PEARL-2009] Pearl, J. (2009). Causality: Models, Reasoning, and Inference. URL: https://archive.illc.uva.nl/cil/uploaded_files/inlineitem/Pearl_2009_Causality.pdf",
+      "url": "https://archive.illc.uva.nl/cil/uploaded_files/inlineitem/Pearl_2009_Causality.pdf",
+      "title_guess": "Causality: Models, Reasoning, and Inference",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "PGMPY",
+      "entry": "[PGMPY] pgmpy project. (2025). Probabilistic Graphical Models in Python. URL: https://pgmpy.org/",
+      "url": "https://pgmpy.org/",
+      "title_guess": "Probabilistic Graphical Models in Python",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "POPPER-SEP",
+      "entry": "[POPPER-SEP] Thornton, S. (2024). Karl Popper. URL: https://plato.stanford.edu/entries/popper/",
+      "url": "https://plato.stanford.edu/entries/popper/",
+      "title_guess": "Karl Popper",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "PRAGMATICS-SEP",
+      "entry": "[PRAGMATICS-SEP] Bach, K. (2024). Pragmatics. URL: https://plato.stanford.edu/entries/pragmatics/",
+      "url": "https://plato.stanford.edu/entries/pragmatics/",
+      "title_guess": "Pragmatics",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "PYKEEN",
+      "entry": "[PYKEEN] PyKEEN Documentation. (2025). Knowledge Graph Embeddings Pipeline. URL: https://pykeen.readthedocs.io/",
+      "url": "https://pykeen.readthedocs.io/",
+      "title_guess": "Knowledge Graph Embeddings Pipeline",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "PYRO",
+      "entry": "[PYRO] Pyro Documentation. (2025). Deep Probabilistic Programming with PyTorch. URL: https://pyro.ai/",
+      "url": "https://pyro.ai/",
+      "title_guess": "Deep Probabilistic Programming with PyTorch",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "PYSHEAF",
+      "entry": "[PYSHEAF] PySheaf Repository. (2025). Sheaf Theoretical Data Analysis. URL: https://github.com/kb1dds/pysheaf",
+      "url": "https://github.com/kb1dds/pysheaf",
+      "title_guess": "Sheaf Theoretical Data Analysis",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "SCHICK-2023",
+      "entry": "[SCHICK-2023] Schick, T., et al. (2023). Toolformer: Language Models Can Teach Themselves to Use Tools. URL: https://arxiv.org/abs/2302.04761",
+      "url": "https://arxiv.org/abs/2302.04761",
+      "title_guess": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "SHEAF-SURVEY-2025",
+      "entry": "[SHEAF-SURVEY-2025] Ayzenberg, A., et al. (2025). Sheaf Theory: From Deep Geometry to Deep Learning. URL: https://arxiv.org/abs/2502.15476",
+      "url": "https://arxiv.org/abs/2502.15476",
+      "title_guess": "Sheaf Theory: From Deep Geometry to Deep Learning",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "TENPY",
+      "entry": "[TENPY] TeNPy Project. (2025). TeNPy Documentation and Repository. URL: https://tenpy.readthedocs.io/",
+      "url": "https://tenpy.readthedocs.io/",
+      "title_guess": "TeNPy Documentation and Repository",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "TENSOR-NET-SURVEY",
+      "entry": "[TENSOR-NET-SURVEY] Wang, M., et al. (2023). Tensor Networks Meet Neural Networks: A Survey. URL: https://arxiv.org/abs/2302.09019",
+      "url": "https://arxiv.org/abs/2302.09019",
+      "title_guess": "Tensor Networks Meet Neural Networks: A Survey",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "TENSORNETWORK-LIB",
+      "entry": "[TENSORNETWORK-LIB] Google. (2025). TensorNetwork: A Library for Tensor Network Manipulations. URL: https://github.com/google/TensorNetwork",
+      "url": "https://github.com/google/TensorNetwork",
+      "title_guess": "TensorNetwork: A Library for Tensor Network Manipulations",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "TORCHHD-2023",
+      "entry": "[TORCHHD-2023] Heddes, M., et al. (2023). Torchhd: An Open Source Python Library to Support Research on Hyperdimensional Computing and Vector Symbolic Architectures. URL: https://arxiv.org/abs/2205.09208",
+      "url": "https://arxiv.org/abs/2205.09208",
+      "title_guess": "Torchhd: An Open Source Python Library to Support Research on Hyperdimensional Computing and Vector Symbolic Architectures",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "WAN-2024",
+      "entry": "[WAN-2024] Wan, Z., et al. (2024). Towards Cognitive AI Systems: A Survey and Prospective on Neuro-Symbolic AI. URL: https://arxiv.org/abs/2401.01040",
+      "url": "https://arxiv.org/abs/2401.01040",
+      "title_guess": "Towards Cognitive AI Systems: A Survey and Prospective on Neuro-Symbolic AI",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "WILLARD-LOUF-2023",
+      "entry": "[WILLARD-LOUF-2023] Willard, B., & Louf, R. (2023). Efficient Guided Generation for Large Language Models. URL: https://arxiv.org/abs/2307.09702",
+      "url": "https://arxiv.org/abs/2307.09702",
+      "title_guess": "Efficient Guided Generation for Large Language Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "WOLFRAM-2002",
+      "entry": "[WOLFRAM-2002] Wolfram, S. (2002). A New Kind of Science: Computational Irreducibility. URL: https://www.wolframscience.com/nks/p737--computational-irreducibility/",
+      "url": "https://www.wolframscience.com/nks/p737--computational-irreducibility/",
+      "title_guess": "A New Kind of Science: Computational Irreducibility",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "WOLPERT-1997",
+      "entry": "[WOLPERT-1997] Wolpert, D. H., & Macready, W. G. (1997). No Free Lunch Theorems for Optimization. URL: https://www.cs.ubc.ca/~hutter/earg/papers07/00585893.pdf",
+      "url": "https://www.cs.ubc.ca/~hutter/earg/papers07/00585893.pdf",
+      "title_guess": "No Free Lunch Theorems for Optimization",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "WU-2023",
+      "entry": "[WU-2023] Wu, Q., et al. (2023). AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation. URL: https://arxiv.org/abs/2308.08155",
+      "url": "https://arxiv.org/abs/2308.08155",
+      "title_guess": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "XU-2024",
+      "entry": "[XU-2024] Xu, S., et al. (2024). AIOS Compiler: LLM as Interpreter for Natural Language Programming. URL: https://arxiv.org/abs/2405.06907",
+      "url": "https://arxiv.org/abs/2405.06907",
+      "title_guess": "AIOS Compiler: LLM as Interpreter for Natural Language Programming",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    },
+    {
+      "key": "YAO-2023",
+      "entry": "[YAO-2023] Yao, S., et al. (2023). ReAct: Synergizing Reasoning and Acting in Language Models. URL: https://arxiv.org/abs/2210.03629",
+      "url": "https://arxiv.org/abs/2210.03629",
+      "title_guess": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "source": "skills/check-reference/references/mrp-reference-catalog.txt"
+    }
+  ],
+  "url_checks": [
+    {
+      "key": "ANT-BEA-2024",
+      "url": "https://www.anthropic.com/research/building-effective-agents",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "Building Effective AI Agents \\ Anthropic",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/deb334f0ed5b7046"
+    },
+    {
+      "key": "ANT-CTX-2025",
+      "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "Effective context engineering for AI agents \\ Anthropic",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/42516bb950518fef"
+    },
+    {
+      "key": "ANT-SKILLS-2025",
+      "url": "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://claude.com/blog/equipping-agents-for-the-real-world-with-agent-skills",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "Equipping agents for the real world with Agent Skills \\ Anthropic | Claude",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/77ae700ce1f2f401"
+    },
+    {
+      "key": "BILETZKI-2023",
+      "url": "https://plato.stanford.edu/entries/wittgenstein/",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://plato.stanford.edu/entries/wittgenstein/",
+      "content_type": "text/html",
+      "page_title": "Ludwig Wittgenstein (Stanford Encyclopedia of Philosophy)",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/7cef0a9fe148d09b"
+    },
+    {
+      "key": "BRAULTBARON-2016",
+      "url": "https://dblp.org/rec/journals/csur/Brault-Baron16",
+      "ok": false,
+      "status": null,
+      "final_url": null,
+      "content_type": null,
+      "page_title": null,
+      "title_match": null,
+      "error": "HTTPSConnectionPool(host='dblp.org', port=443): Max retries exceeded with url: /rec/journals/csur/Brault-Baron16 (Caused by NameResolutionError(\"HTTPSConnection(host='dblp.org', port=443): Failed to resolve 'dblp.org' ([Errno -2] Name or service not known)\"))",
+      "cache_dir": ".tmp/cache/b5a4e87ee9139451"
+    },
+    {
+      "key": "CADAR-2013",
+      "url": "https://people.eecs.berkeley.edu/~ksen/papers/cacm13.pdf",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://people.eecs.berkeley.edu/~ksen/papers/cacm13.pdf",
+      "content_type": "application/pdf",
+      "page_title": null,
+      "title_match": null,
+      "error": null,
+      "cache_dir": ".tmp/cache/4e61e831a959ab03"
+    },
+    {
+      "key": "COUSOT-1977",
+      "url": "https://www.di.ens.fr/~cousot/publications.www/CousotCousot-POPL-77-ACM-p238--252-1977.pdf",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://www.di.ens.fr/~cousot/publications.www/CousotCousot-POPL-77-ACM-p238--252-1977.pdf",
+      "content_type": "application/pdf",
+      "page_title": null,
+      "title_match": null,
+      "error": null,
+      "cache_dir": ".tmp/cache/197f7fc8872f2f26"
+    },
+    {
+      "key": "DEMOURA-2008",
+      "url": "https://link.springer.com/content/pdf/10.1007/978-3-540-78800-3_24.pdf",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://link.springer.com/content/pdf/10.1007/978-3-540-78800-3_24.pdf",
+      "content_type": "application/pdf",
+      "page_title": null,
+      "title_match": null,
+      "error": null,
+      "cache_dir": ".tmp/cache/cc5da0746e62d23e"
+    },
+    {
+      "key": "GARCEZ-LAMB-2020",
+      "url": "https://arxiv.org/abs/2012.05876",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2012.05876",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[2012.05876] Neurosymbolic AI: The 3rd Wave",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/5c25b2c315c48849"
+    },
+    {
+      "key": "GOTTLOB-2001",
+      "url": "http://www.dbai.tuwien.ac.at/proj/hypertree/",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://www.dbai.tuwien.ac.at/proj/hypertree/",
+      "content_type": "text/html",
+      "page_title": "Hypertree",
+      "title_match": "mismatch",
+      "error": null,
+      "cache_dir": ".tmp/cache/f329f90ac6eee618"
+    },
+    {
+      "key": "HA-2018",
+      "url": "https://arxiv.org/abs/1803.10122",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/1803.10122",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[1803.10122] World Models",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/3ec27740a1222ac7"
+    },
+    {
+      "key": "HAFNER-2023",
+      "url": "https://arxiv.org/abs/2301.04104",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2301.04104",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[2301.04104] Mastering Diverse Domains through World Models",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/45c7ed3212dc79df"
+    },
+    {
+      "key": "HDC-SURVEY-I",
+      "url": "https://arxiv.org/abs/2111.06077",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2111.06077",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "[2111.06077] A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I: Models and Data Transformations",
+      "title_match": "match",
+      "error": null,
+      "cache_dir": ".tmp/cache/259c4924c4edd2e7"
+    },
+    {
+      "key": "KING-1976",
+      "url": "https://madhu.cs.illinois.edu/cs598-fall10/king76symbolicexecution.pdf",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://madhu.cs.illinois.edu/cs598-fall10/king76symbolicexecution.pdf",
+      "content_type": "application/pdf",
+      "page_title": null,
+      "title_match": null,
+      "error": null,
+      "cache_dir": ".tmp/cache/b83776f361c32705"
+    },
+    {
+      "key": "LECUN-2022",
+      "url": "https://openreview.net/pdf?id=BZ5a1r-kVsf",
+      "ok": false,
+      "status": 403,
+      "final_url": "https://openreview.net/pdf?id=BZ5a1r-kVsf",
+      "content_type": "text/html",
+      "page_title": "403 Forbidden",
+      "title_match": "mismatch",
+      "error": "HTTP 403",
+      "cache_dir": ".tmp/cache/3f48a33ff9bfcd76"
+    },
+    {
+      "key": "OAI-SKILLS-2026",
+      "url": "https://developers.openai.com/api/docs/guides/tools-skills/",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://developers.openai.com/api/docs/guides/tools-skills",
+      "content_type": "text/html; charset=utf-8",
+      "page_title": "Skills | OpenAI API",
+      "title_match": "mismatch",
+      "error": null,
+      "cache_dir": ".tmp/cache/99c4158a4721b76c"
+    },
+    {
+      "key": "VERGARI-2021",
+      "url": "https://proceedings.neurips.cc/paper/2021/hash/6e01383fd96a17ae51cc3e15447e7533-Abstract.html",
+      "ok": false,
+      "status": null,
+      "final_url": null,
+      "content_type": null,
+      "page_title": null,
+      "title_match": null,
+      "error": "HTTPSConnectionPool(host='proceedings.neurips.cc', port=443): Max retries exceeded with url: /paper/2021/hash/6e01383fd96a17ae51cc3e15447e7533-Abstract.html (Caused by NameResolutionError(\"HTTPSConnection(host='proceedings.neurips.cc', port=443): Failed to resolve 'proceedings.neurips.cc' ([Errno -2] Name or service not known)\"))",
+      "cache_dir": ".tmp/cache/2d103813813f9900"
+    },
+    {
+      "key": "WITTGENSTEIN-1953",
+      "url": "https://danielwharris.com/teaching/38080/readings/WittgensteinPI.pdf",
+      "ok": true,
+      "status": 200,
+      "final_url": "https://danielwharris.com/teaching/38080/readings/WittgensteinPI.pdf",
+      "content_type": "application/pdf",
+      "page_title": null,
+      "title_match": null,
+      "error": null,
+      "cache_dir": ".tmp/cache/a4294907584b1608"
+    }
+  ],
+  "content_checks": [
+    {
+      "key": "WITTGENSTEIN-1953",
+      "has_text": true,
+      "source_title": null,
+      "title_match": null,
+      "selected_terms": [
+        "meta-rational",
+        "pragmatics",
+        "starts",
+        "observation",
+        "practically",
+        "relevant",
+        "artefacts",
+        "operational",
+        "meaning",
+        "exhausted"
+      ],
+      "matched_terms": [
+        "observation",
+        "relevant",
+        "meaning",
+        "exhausted"
+      ],
+      "overlap_ratio": 0.4,
+      "best_snippet": "with games, calculi with fixed rules, but cannot say that someone who is using language must be playing such a game. —– But if someone says that our languages only approximate to such calculi, he is standing on the very brink of a misunderstanding. For then it may look as if what we were talking about in logic were an ideal language. As if our logic were, so to speak, a logic for a vacuum. a Whereas logic does not treat of language a or of thought a in the sense in which a natural science treat…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/a4294907584b1608",
+      "section_title": "From Judgment Regimes to Regime Induction",
+      "context": "Meta-rational pragmatics starts from the observation that, in many practically relevant artefacts, operational meaning is not exhausted by abstract denotation. A document, policy, specification, workflow, or knowledge source becomes actionable only relative to a judgment regime: what must be checked, what evidence is admissible, which uncertainties are acceptable, and what counts as acceptance, rejection, or deferred judgment in context [WITTGENSTEIN-1953] [BILETZKI-2023]. From this perspective, semantics is often better understood as a stabilized special case of constrained pragmatics rather than as its universal foundation. The architectural consequence is that an intelligent system should not assume that every task can be handled by one uniform reasoning style, one representational substrate, or one monolithic model. It should first determine the structural character of the local subproblem and only then decide how that subproblem is to be made computable."
+    },
+    {
+      "key": "BILETZKI-2023",
+      "has_text": true,
+      "source_title": "Ludwig Wittgenstein (Stanford Encyclopedia of Philosophy)",
+      "title_match": "match",
+      "selected_terms": [
+        "meta-rational",
+        "pragmatics",
+        "starts",
+        "observation",
+        "practically",
+        "relevant",
+        "artefacts",
+        "operational",
+        "meaning",
+        "exhausted"
+      ],
+      "matched_terms": [
+        "relevant",
+        "meaning"
+      ],
+      "overlap_ratio": 0.2,
+      "best_snippet": "--> Ludwig Wittgenstein (Stanford Encyclopedia of Philosophy) Stanford Encyclopedia of Philosophy Menu Browse Table of Contents What's New Random Entry Chronological Archives About Editorial Information About the SEP Editorial Board How to Cite the SEP Special Characters Advanced Tools Contact Support SEP Support the SEP PDFs for SEP Friends Make a Donation SEPIA for Libraries Entry Navigation Entry Contents Bibliography Academic Tools Friends PDF Preview Author and Citation Info Back to Top Lu…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/7cef0a9fe148d09b",
+      "section_title": "From Judgment Regimes to Regime Induction",
+      "context": "Meta-rational pragmatics starts from the observation that, in many practically relevant artefacts, operational meaning is not exhausted by abstract denotation. A document, policy, specification, workflow, or knowledge source becomes actionable only relative to a judgment regime: what must be checked, what evidence is admissible, which uncertainties are acceptable, and what counts as acceptance, rejection, or deferred judgment in context [WITTGENSTEIN-1953] [BILETZKI-2023]. From this perspective, semantics is often better understood as a stabilized special case of constrained pragmatics rather than as its universal foundation. The architectural consequence is that an intelligent system should not assume that every task can be handled by one uniform reasoning style, one representational substrate, or one monolithic model. It should first determine the structural character of the local subproblem and only then decide how that subproblem is to be made computable."
+    },
+    {
+      "key": "DEMOURA-2008",
+      "has_text": true,
+      "source_title": null,
+      "title_match": null,
+      "selected_terms": [
+        "tractable",
+        "computation",
+        "setting",
+        "mean",
+        "only",
+        "lower",
+        "runtime",
+        "means",
+        "problem",
+        "been"
+      ],
+      "matched_terms": [
+        "runtime",
+        "problem"
+      ],
+      "overlap_ratio": 0.2,
+      "best_snippet": "Z3: An Eﬃcient SMT Solver Leonardo de Moura and Nikolaj Bjørner Microsoft Research, One Microsoft Way, Redmond, WA, 98074, USA {leonardo,nbjorner}@microsoft.com Abstract. Satisﬁability Modulo Theories (SMT) problem is a decision problem for logical ﬁrst order formulas with respect to combinations of background theories such as: arithmetic, bit-vectors, arrays, and uninterpreted functions. Z3 is a new and eﬃcient SMT Solver freely available from Microsoft Research. It is used in various software…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/cc5da0746e62d23e",
+      "section_title": "Structural Regimes and the Meaning of Tractable Computation",
+      "context": "Tractable computation, in this setting, does not mean only lower runtime. It means that the problem has been transformed into a form for which a reliable local interpreter exists at acceptable cost. Sometimes this happens through exact formalization, as when a fragment becomes explicit enough for satisfiability checking or symbolic verification. Sometimes it happens through approximation, pruning, or narrowing before exact reasoning is attempted. Sometimes it happens through change of representation, where an apparently hard problem becomes manageable because its structure has been recast in graph form, factorized into local dependencies, or encoded compositionally. This is why classical ideas such as SMT solving, abstract interpretation, symbolic execution, bounded graph and hypergraph structure, and tractable circuit structure remain relevant. Their value is not nostalgic. Their value is that they instantiate different ways in which local tractability can be obtained once the right regime has been identified [DEMOURA-2008] [COUSOT-1977] [KING-1976] [CADAR-2013] [GOTTLOB-2001] [BRAULTBARON-2016] [VERGARI-2021]."
+    },
+    {
+      "key": "COUSOT-1977",
+      "has_text": true,
+      "source_title": null,
+      "title_match": null,
+      "selected_terms": [
+        "tractable",
+        "computation",
+        "setting",
+        "mean",
+        "only",
+        "lower",
+        "runtime",
+        "means",
+        "problem",
+        "been"
+      ],
+      "matched_terms": [],
+      "overlap_ratio": 0.0,
+      "best_snippet": null,
+      "verdict_hint": "mismatch",
+      "cache_dir": ".tmp/cache/197f7fc8872f2f26",
+      "section_title": "Structural Regimes and the Meaning of Tractable Computation",
+      "context": "Tractable computation, in this setting, does not mean only lower runtime. It means that the problem has been transformed into a form for which a reliable local interpreter exists at acceptable cost. Sometimes this happens through exact formalization, as when a fragment becomes explicit enough for satisfiability checking or symbolic verification. Sometimes it happens through approximation, pruning, or narrowing before exact reasoning is attempted. Sometimes it happens through change of representation, where an apparently hard problem becomes manageable because its structure has been recast in graph form, factorized into local dependencies, or encoded compositionally. This is why classical ideas such as SMT solving, abstract interpretation, symbolic execution, bounded graph and hypergraph structure, and tractable circuit structure remain relevant. Their value is not nostalgic. Their value is that they instantiate different ways in which local tractability can be obtained once the right regime has been identified [DEMOURA-2008] [COUSOT-1977] [KING-1976] [CADAR-2013] [GOTTLOB-2001] [BRAULTBARON-2016] [VERGARI-2021]."
+    },
+    {
+      "key": "KING-1976",
+      "has_text": true,
+      "source_title": null,
+      "title_match": null,
+      "selected_terms": [
+        "tractable",
+        "computation",
+        "setting",
+        "mean",
+        "only",
+        "lower",
+        "runtime",
+        "means",
+        "problem",
+        "been"
+      ],
+      "matched_terms": [
+        "computation",
+        "only",
+        "means",
+        "problem",
+        "been"
+      ],
+      "overlap_ratio": 0.5,
+      "best_snippet": "The symbolic execution of a program is described in this section in an ideal sense, and then, in Section 6, a particular practical system which has been built (an approximation to the ideal) is discussed. The term ideal is used for several reasons: 1. The assumption is made that programs deal only with integers and, in fact, only with integers having arbitrary magnitude. Machine register overflows are not considered. 2. The \"execution tree\" (defined later) resulting from symbolic execution of m…",
+      "verdict_hint": "aligned",
+      "cache_dir": ".tmp/cache/b83776f361c32705",
+      "section_title": "Structural Regimes and the Meaning of Tractable Computation",
+      "context": "Tractable computation, in this setting, does not mean only lower runtime. It means that the problem has been transformed into a form for which a reliable local interpreter exists at acceptable cost. Sometimes this happens through exact formalization, as when a fragment becomes explicit enough for satisfiability checking or symbolic verification. Sometimes it happens through approximation, pruning, or narrowing before exact reasoning is attempted. Sometimes it happens through change of representation, where an apparently hard problem becomes manageable because its structure has been recast in graph form, factorized into local dependencies, or encoded compositionally. This is why classical ideas such as SMT solving, abstract interpretation, symbolic execution, bounded graph and hypergraph structure, and tractable circuit structure remain relevant. Their value is not nostalgic. Their value is that they instantiate different ways in which local tractability can be obtained once the right regime has been identified [DEMOURA-2008] [COUSOT-1977] [KING-1976] [CADAR-2013] [GOTTLOB-2001] [BRAULTBARON-2016] [VERGARI-2021]."
+    },
+    {
+      "key": "CADAR-2013",
+      "has_text": true,
+      "source_title": null,
+      "title_match": null,
+      "selected_terms": [
+        "tractable",
+        "computation",
+        "setting",
+        "mean",
+        "only",
+        "lower",
+        "runtime",
+        "means",
+        "problem",
+        "been"
+      ],
+      "matched_terms": [
+        "computation",
+        "only",
+        "lower",
+        "runtime",
+        "problem",
+        "been"
+      ],
+      "overlap_ratio": 0.6,
+      "best_snippet": "Symbolic execution has gathered a lot of attention in recent years as an effective technique for generating highcoverage test suites and for finding deep errors in complex software applications. While the key idea behind symbolic execution was introduced more than three decades ago [5, 12, 22, 25], it has only recently been made practical, as a result of significant advances in constraint satisfiability [14], and of more scalable dynamic approaches which combine concrete and symbolic execution…",
+      "verdict_hint": "aligned",
+      "cache_dir": ".tmp/cache/4e61e831a959ab03",
+      "section_title": "Structural Regimes and the Meaning of Tractable Computation",
+      "context": "Tractable computation, in this setting, does not mean only lower runtime. It means that the problem has been transformed into a form for which a reliable local interpreter exists at acceptable cost. Sometimes this happens through exact formalization, as when a fragment becomes explicit enough for satisfiability checking or symbolic verification. Sometimes it happens through approximation, pruning, or narrowing before exact reasoning is attempted. Sometimes it happens through change of representation, where an apparently hard problem becomes manageable because its structure has been recast in graph form, factorized into local dependencies, or encoded compositionally. This is why classical ideas such as SMT solving, abstract interpretation, symbolic execution, bounded graph and hypergraph structure, and tractable circuit structure remain relevant. Their value is not nostalgic. Their value is that they instantiate different ways in which local tractability can be obtained once the right regime has been identified [DEMOURA-2008] [COUSOT-1977] [KING-1976] [CADAR-2013] [GOTTLOB-2001] [BRAULTBARON-2016] [VERGARI-2021]."
+    },
+    {
+      "key": "GOTTLOB-2001",
+      "has_text": true,
+      "source_title": "Hypertree",
+      "title_match": "mismatch",
+      "selected_terms": [
+        "tractable",
+        "computation",
+        "setting",
+        "mean",
+        "only",
+        "lower",
+        "runtime",
+        "means",
+        "problem",
+        "been"
+      ],
+      "matched_terms": [
+        "problem"
+      ],
+      "overlap_ratio": 0.1,
+      "best_snippet": "Hypertree Institut 184/2 Institut 184/2 43 652 2004-11-24T10:23:00Z 2006-06-06T12:00:00Z 1 304 1737 TU - Wien 14 4 2037 11.5606 Clean false false false MicrosoftInternetExplorer4 /* Style Definitions */ table.MsoNormalTable {mso-style-name:\"Table Normal\"; mso-tstyle-rowband-size:0; mso-tstyle-colband-size:0; mso-style-noshow:yes; mso-style-parent:\"\"; mso-padding-alt:0cm 5.4pt 0cm 5.4pt; mso-para-margin:0cm; mso-para-margin-bottom:.0001pt; mso-pagination:widow-orphan; font-size:10.0pt; font-fami…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/f329f90ac6eee618",
+      "section_title": "Structural Regimes and the Meaning of Tractable Computation",
+      "context": "Tractable computation, in this setting, does not mean only lower runtime. It means that the problem has been transformed into a form for which a reliable local interpreter exists at acceptable cost. Sometimes this happens through exact formalization, as when a fragment becomes explicit enough for satisfiability checking or symbolic verification. Sometimes it happens through approximation, pruning, or narrowing before exact reasoning is attempted. Sometimes it happens through change of representation, where an apparently hard problem becomes manageable because its structure has been recast in graph form, factorized into local dependencies, or encoded compositionally. This is why classical ideas such as SMT solving, abstract interpretation, symbolic execution, bounded graph and hypergraph structure, and tractable circuit structure remain relevant. Their value is not nostalgic. Their value is that they instantiate different ways in which local tractability can be obtained once the right regime has been identified [DEMOURA-2008] [COUSOT-1977] [KING-1976] [CADAR-2013] [GOTTLOB-2001] [BRAULTBARON-2016] [VERGARI-2021]."
+    },
+    {
+      "key": "BRAULTBARON-2016",
+      "has_text": false,
+      "source_title": null,
+      "title_match": null,
+      "selected_terms": [
+        "tractable",
+        "computation",
+        "setting",
+        "mean",
+        "only",
+        "lower",
+        "runtime",
+        "means",
+        "problem",
+        "been"
+      ],
+      "matched_terms": [],
+      "overlap_ratio": null,
+      "best_snippet": null,
+      "verdict_hint": "unresolved",
+      "cache_dir": ".tmp/cache/b5a4e87ee9139451",
+      "section_title": "Structural Regimes and the Meaning of Tractable Computation",
+      "context": "Tractable computation, in this setting, does not mean only lower runtime. It means that the problem has been transformed into a form for which a reliable local interpreter exists at acceptable cost. Sometimes this happens through exact formalization, as when a fragment becomes explicit enough for satisfiability checking or symbolic verification. Sometimes it happens through approximation, pruning, or narrowing before exact reasoning is attempted. Sometimes it happens through change of representation, where an apparently hard problem becomes manageable because its structure has been recast in graph form, factorized into local dependencies, or encoded compositionally. This is why classical ideas such as SMT solving, abstract interpretation, symbolic execution, bounded graph and hypergraph structure, and tractable circuit structure remain relevant. Their value is not nostalgic. Their value is that they instantiate different ways in which local tractability can be obtained once the right regime has been identified [DEMOURA-2008] [COUSOT-1977] [KING-1976] [CADAR-2013] [GOTTLOB-2001] [BRAULTBARON-2016] [VERGARI-2021]."
+    },
+    {
+      "key": "VERGARI-2021",
+      "has_text": false,
+      "source_title": null,
+      "title_match": null,
+      "selected_terms": [
+        "tractable",
+        "computation",
+        "setting",
+        "mean",
+        "only",
+        "lower",
+        "runtime",
+        "means",
+        "problem",
+        "been"
+      ],
+      "matched_terms": [],
+      "overlap_ratio": null,
+      "best_snippet": null,
+      "verdict_hint": "unresolved",
+      "cache_dir": ".tmp/cache/2d103813813f9900",
+      "section_title": "Structural Regimes and the Meaning of Tractable Computation",
+      "context": "Tractable computation, in this setting, does not mean only lower runtime. It means that the problem has been transformed into a form for which a reliable local interpreter exists at acceptable cost. Sometimes this happens through exact formalization, as when a fragment becomes explicit enough for satisfiability checking or symbolic verification. Sometimes it happens through approximation, pruning, or narrowing before exact reasoning is attempted. Sometimes it happens through change of representation, where an apparently hard problem becomes manageable because its structure has been recast in graph form, factorized into local dependencies, or encoded compositionally. This is why classical ideas such as SMT solving, abstract interpretation, symbolic execution, bounded graph and hypergraph structure, and tractable circuit structure remain relevant. Their value is not nostalgic. Their value is that they instantiate different ways in which local tractability can be obtained once the right regime has been identified [DEMOURA-2008] [COUSOT-1977] [KING-1976] [CADAR-2013] [GOTTLOB-2001] [BRAULTBARON-2016] [VERGARI-2021]."
+    },
+    {
+      "key": "ANT-BEA-2024",
+      "has_text": true,
+      "source_title": "Building Effective AI Agents \\ Anthropic",
+      "title_match": "match",
+      "selected_terms": [
+        "notion",
+        "agentic",
+        "skills",
+        "makes",
+        "architecture",
+        "implementable",
+        "realistic",
+        "skill",
+        "understood",
+        "merely"
+      ],
+      "matched_terms": [
+        "agentic",
+        "skills",
+        "makes",
+        "architecture",
+        "understood"
+      ],
+      "overlap_ratio": 0.5,
+      "best_snippet": "Skip to main content Skip to footer Research Economic Futures Commitments Learn News Try Claude Engineering at Anthropic Building effective agents Published Dec 19, 2024 We&#x27;ve worked with dozens of teams building LLM agents across industries. Consistently, the most successful implementations use simple, composable patterns rather than complex frameworks. Over the past year, we&#x27;ve worked with dozens of teams building large language model (LLM) agents across industries. Consistently, th…",
+      "verdict_hint": "aligned",
+      "cache_dir": ".tmp/cache/deb334f0ed5b7046",
+      "section_title": "Skills, Compilation, and the Agentic Virtual Machine",
+      "context": "The notion of agentic skills makes this architecture implementable in a realistic way. A skill should not be understood merely as a wrapper around a tool call. It is better defined as a bounded computational unit with explicit inputs, explicit outputs, declared assumptions, and limited side effects. In heavier execution modes, skills can behave like dependency-aware build steps. In more dynamic modes, the same skills can be assembled into short-lived plans and revised locally without forcing a global restart of the reasoning history. This design matters because regime induction needs stable local units on which structural decisions can act. Without explicit skills, the system remains a loose conversational flow. With explicit skills, it becomes possible to isolate subproblems, track dependencies, cache intermediate results, validate local behavior, and optimize recurring execution paths. This is also consistent with recent engineering guidance from major labs, which emphasizes simple composable agent patterns, explicit tools, reusable skills, and context engineering rather than unconstrained conversational autonomy [ANT-BEA-2024] [ANT-SKILLS-2025] [ANT-CTX-2025] [OAI-SKILLS-2026]."
+    },
+    {
+      "key": "ANT-SKILLS-2025",
+      "has_text": true,
+      "source_title": "Equipping agents for the real world with Agent Skills \\ Anthropic | Claude",
+      "title_match": "match",
+      "selected_terms": [
+        "notion",
+        "agentic",
+        "skills",
+        "makes",
+        "architecture",
+        "implementable",
+        "realistic",
+        "skill",
+        "understood",
+        "merely"
+      ],
+      "matched_terms": [
+        "skills",
+        "makes",
+        "skill"
+      ],
+      "overlap_ratio": 0.3,
+      "best_snippet": "Equipping agents for the real world with Agent Skills \\ Anthropic | Claude !function(o,c){var n=c.documentElement,t=\" w-mod-\";n.className+=t+\"js\",(\"ontouchstart\"in o||o.DocumentTouch&&c instanceof DocumentTouch)&&(n.className+=t+\"touch\")}(window,document); .anti-flicker, .anti-flicker * {visibility: hidden !important; opacity: 0 !important;} [data-wf-hidden-variation], [data-wf-hidden-variation] * { display: none !important; } if (localStorage.getItem('intellimize_data_tracking_type') !== 'optO…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/77ae700ce1f2f401",
+      "section_title": "Skills, Compilation, and the Agentic Virtual Machine",
+      "context": "The notion of agentic skills makes this architecture implementable in a realistic way. A skill should not be understood merely as a wrapper around a tool call. It is better defined as a bounded computational unit with explicit inputs, explicit outputs, declared assumptions, and limited side effects. In heavier execution modes, skills can behave like dependency-aware build steps. In more dynamic modes, the same skills can be assembled into short-lived plans and revised locally without forcing a global restart of the reasoning history. This design matters because regime induction needs stable local units on which structural decisions can act. Without explicit skills, the system remains a loose conversational flow. With explicit skills, it becomes possible to isolate subproblems, track dependencies, cache intermediate results, validate local behavior, and optimize recurring execution paths. This is also consistent with recent engineering guidance from major labs, which emphasizes simple composable agent patterns, explicit tools, reusable skills, and context engineering rather than unconstrained conversational autonomy [ANT-BEA-2024] [ANT-SKILLS-2025] [ANT-CTX-2025] [OAI-SKILLS-2026]."
+    },
+    {
+      "key": "ANT-CTX-2025",
+      "has_text": true,
+      "source_title": "Effective context engineering for AI agents \\ Anthropic",
+      "title_match": "match",
+      "selected_terms": [
+        "notion",
+        "agentic",
+        "skills",
+        "makes",
+        "architecture",
+        "implementable",
+        "realistic",
+        "skill",
+        "understood",
+        "merely"
+      ],
+      "matched_terms": [
+        "agentic",
+        "skills",
+        "makes",
+        "architecture",
+        "understood"
+      ],
+      "overlap_ratio": 0.5,
+      "best_snippet": "Skip to main content Skip to footer Research Economic Futures Commitments Learn News Try Claude Engineering at Anthropic Effective context engineering for AI agents Published Sep 29, 2025 Context is a critical but finite resource for AI agents. In this post, we explore strategies for effectively curating and managing the context that powers them. After a few years of prompt engineering being the focus of attention in applied AI, a new term has come to prominence: context engineering . Building…",
+      "verdict_hint": "aligned",
+      "cache_dir": ".tmp/cache/42516bb950518fef",
+      "section_title": "Skills, Compilation, and the Agentic Virtual Machine",
+      "context": "The notion of agentic skills makes this architecture implementable in a realistic way. A skill should not be understood merely as a wrapper around a tool call. It is better defined as a bounded computational unit with explicit inputs, explicit outputs, declared assumptions, and limited side effects. In heavier execution modes, skills can behave like dependency-aware build steps. In more dynamic modes, the same skills can be assembled into short-lived plans and revised locally without forcing a global restart of the reasoning history. This design matters because regime induction needs stable local units on which structural decisions can act. Without explicit skills, the system remains a loose conversational flow. With explicit skills, it becomes possible to isolate subproblems, track dependencies, cache intermediate results, validate local behavior, and optimize recurring execution paths. This is also consistent with recent engineering guidance from major labs, which emphasizes simple composable agent patterns, explicit tools, reusable skills, and context engineering rather than unconstrained conversational autonomy [ANT-BEA-2024] [ANT-SKILLS-2025] [ANT-CTX-2025] [OAI-SKILLS-2026]."
+    },
+    {
+      "key": "OAI-SKILLS-2026",
+      "has_text": true,
+      "source_title": "Skills | OpenAI API",
+      "title_match": "mismatch",
+      "selected_terms": [
+        "notion",
+        "agentic",
+        "skills",
+        "makes",
+        "architecture",
+        "implementable",
+        "realistic",
+        "skill",
+        "understood",
+        "merely"
+      ],
+      "matched_terms": [
+        "agentic",
+        "skills",
+        "skill"
+      ],
+      "overlap_ratio": 0.3,
+      "best_snippet": "@layer theme, base, components, utilities; Skills | OpenAI API @layer components{._Arrow_t2o77_1{--arrow-size: 6px;position:absolute;width:0;height:0}._Arrow_t2o77_1[data-side=top]{bottom:0;left:50%;border-top:var(--arrow-size) solid var(--gray-700);border-right:var(--arrow-size) solid transparent;border-left:var(--arrow-size) solid transparent;margin-right:-8px;transform:translate(-50%) translateY(100%)}._Arrow_t2o77_1[data-side=bottom]{top:0;left:50%;border-right:var(--arrow-size) solid trans…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/99c4158a4721b76c",
+      "section_title": "Skills, Compilation, and the Agentic Virtual Machine",
+      "context": "The notion of agentic skills makes this architecture implementable in a realistic way. A skill should not be understood merely as a wrapper around a tool call. It is better defined as a bounded computational unit with explicit inputs, explicit outputs, declared assumptions, and limited side effects. In heavier execution modes, skills can behave like dependency-aware build steps. In more dynamic modes, the same skills can be assembled into short-lived plans and revised locally without forcing a global restart of the reasoning history. This design matters because regime induction needs stable local units on which structural decisions can act. Without explicit skills, the system remains a loose conversational flow. With explicit skills, it becomes possible to isolate subproblems, track dependencies, cache intermediate results, validate local behavior, and optimize recurring execution paths. This is also consistent with recent engineering guidance from major labs, which emphasizes simple composable agent patterns, explicit tools, reusable skills, and context engineering rather than unconstrained conversational autonomy [ANT-BEA-2024] [ANT-SKILLS-2025] [ANT-CTX-2025] [OAI-SKILLS-2026]."
+    },
+    {
+      "key": "ANT-BEA-2024",
+      "has_text": true,
+      "source_title": "Building Effective AI Agents \\ Anthropic",
+      "title_match": "match",
+      "selected_terms": [
+        "perspective",
+        "clarifies",
+        "respective",
+        "roles",
+        "llms",
+        "classical",
+        "software",
+        "remain",
+        "useful",
+        "mainly"
+      ],
+      "matched_terms": [
+        "llms",
+        "software",
+        "useful"
+      ],
+      "overlap_ratio": 0.3,
+      "best_snippet": "Skip to main content Skip to footer Research Economic Futures Commitments Learn News Try Claude Engineering at Anthropic Building effective agents Published Dec 19, 2024 We&#x27;ve worked with dozens of teams building LLM agents across industries. Consistently, the most successful implementations use simple, composable patterns rather than complex frameworks. Over the past year, we&#x27;ve worked with dozens of teams building large language model (LLM) agents across industries. Consistently, th…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/deb334f0ed5b7046",
+      "section_title": "The Staged Ecology of LLMs, ML, Software, and Local Substrates",
+      "context": "This perspective also clarifies the respective roles of LLMs, classical ML, and classical software. LLMs remain useful, but mainly as high-level orchestrators for decomposition, schema induction, regime suggestion, interface translation, and partial synthesis. They are especially valuable when the artefact is messy and the first task is to move from informal structure to an explicit intermediate representation. At the same time, they remain weak as universal interpreters for exact reasoning, long-horizon consistency, and tractability-aware decomposition, which is one reason why current practical agent design emphasizes tools, context engineering, and structured interfaces [ANT-BEA-2024] [ANT-CTX-2025] [LECUN-2022]. Classical ML has a more targeted role: learned routers, detectors, boundary estimators, regime classifiers, confidence models, and specialized predictors for recurring local tasks. Classical software remains central whenever a subproblem has already been sufficiently stabilized to justify exact or near-exact procedures, such as solvers, planners, validators, graph algorithms, or domain-specific code. The emerging architecture is therefore not “LLMs versus classical methods.” It is a staged ecology in which LLMs help expose structure, ML helps detect and specialize regimes, and classical software executes where explicit structure justifies stronger guarantees."
+    },
+    {
+      "key": "ANT-CTX-2025",
+      "has_text": true,
+      "source_title": "Effective context engineering for AI agents \\ Anthropic",
+      "title_match": "match",
+      "selected_terms": [
+        "perspective",
+        "clarifies",
+        "respective",
+        "roles",
+        "llms",
+        "classical",
+        "software",
+        "remain",
+        "useful",
+        "mainly"
+      ],
+      "matched_terms": [
+        "llms",
+        "remain",
+        "useful"
+      ],
+      "overlap_ratio": 0.3,
+      "best_snippet": "Skip to main content Skip to footer Research Economic Futures Commitments Learn News Try Claude Engineering at Anthropic Effective context engineering for AI agents Published Sep 29, 2025 Context is a critical but finite resource for AI agents. In this post, we explore strategies for effectively curating and managing the context that powers them. After a few years of prompt engineering being the focus of attention in applied AI, a new term has come to prominence: context engineering . Building…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/42516bb950518fef",
+      "section_title": "The Staged Ecology of LLMs, ML, Software, and Local Substrates",
+      "context": "This perspective also clarifies the respective roles of LLMs, classical ML, and classical software. LLMs remain useful, but mainly as high-level orchestrators for decomposition, schema induction, regime suggestion, interface translation, and partial synthesis. They are especially valuable when the artefact is messy and the first task is to move from informal structure to an explicit intermediate representation. At the same time, they remain weak as universal interpreters for exact reasoning, long-horizon consistency, and tractability-aware decomposition, which is one reason why current practical agent design emphasizes tools, context engineering, and structured interfaces [ANT-BEA-2024] [ANT-CTX-2025] [LECUN-2022]. Classical ML has a more targeted role: learned routers, detectors, boundary estimators, regime classifiers, confidence models, and specialized predictors for recurring local tasks. Classical software remains central whenever a subproblem has already been sufficiently stabilized to justify exact or near-exact procedures, such as solvers, planners, validators, graph algorithms, or domain-specific code. The emerging architecture is therefore not “LLMs versus classical methods.” It is a staged ecology in which LLMs help expose structure, ML helps detect and specialize regimes, and classical software executes where explicit structure justifies stronger guarantees."
+    },
+    {
+      "key": "LECUN-2022",
+      "has_text": true,
+      "source_title": "403 Forbidden",
+      "title_match": "mismatch",
+      "selected_terms": [
+        "perspective",
+        "clarifies",
+        "respective",
+        "roles",
+        "llms",
+        "classical",
+        "software",
+        "remain",
+        "useful",
+        "mainly"
+      ],
+      "matched_terms": [],
+      "overlap_ratio": 0.0,
+      "best_snippet": "403 Forbidden 403 Forbidden nginx",
+      "verdict_hint": "mismatch",
+      "cache_dir": ".tmp/cache/3f48a33ff9bfcd76",
+      "section_title": "The Staged Ecology of LLMs, ML, Software, and Local Substrates",
+      "context": "This perspective also clarifies the respective roles of LLMs, classical ML, and classical software. LLMs remain useful, but mainly as high-level orchestrators for decomposition, schema induction, regime suggestion, interface translation, and partial synthesis. They are especially valuable when the artefact is messy and the first task is to move from informal structure to an explicit intermediate representation. At the same time, they remain weak as universal interpreters for exact reasoning, long-horizon consistency, and tractability-aware decomposition, which is one reason why current practical agent design emphasizes tools, context engineering, and structured interfaces [ANT-BEA-2024] [ANT-CTX-2025] [LECUN-2022]. Classical ML has a more targeted role: learned routers, detectors, boundary estimators, regime classifiers, confidence models, and specialized predictors for recurring local tasks. Classical software remains central whenever a subproblem has already been sufficiently stabilized to justify exact or near-exact procedures, such as solvers, planners, validators, graph algorithms, or domain-specific code. The emerging architecture is therefore not “LLMs versus classical methods.” It is a staged ecology in which LLMs help expose structure, ML helps detect and specialize regimes, and classical software executes where explicit structure justifies stronger guarantees."
+    },
+    {
+      "key": "HA-2018",
+      "has_text": true,
+      "source_title": "[1803.10122] World Models",
+      "title_match": "match",
+      "selected_terms": [
+        "architecture",
+        "world",
+        "models",
+        "neuro-symbolic",
+        "systems",
+        "probabilistic",
+        "circuits",
+        "vector-symbolic",
+        "representations",
+        "treated"
+      ],
+      "matched_terms": [
+        "world",
+        "models"
+      ],
+      "overlap_ratio": 0.2,
+      "best_snippet": "[1803.10122] World Models Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:1803.10122 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Search open search GO open navigation menu quick links Login He…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/3ec27740a1222ac7",
+      "section_title": "The Staged Ecology of LLMs, ML, Software, and Local Substrates",
+      "context": "Within this architecture, world models, neuro-symbolic systems, probabilistic circuits, and vector-symbolic representations should be treated as candidate local substrates, not universal foundations. World models are appropriate when the subproblem genuinely involves latent state evolution, internal rollout, or action-conditioned consequence [HA-2018] [HAFNER-2023]. Neuro-symbolic methods are appropriate when explicit compositional structure, local proof traces, or symbolic constraints materially improve performance, traceability, or governance [GARCEZ-LAMB-2020]. Probabilistic circuits are relevant when exact and tractable probabilistic inference is achievable under known structural restrictions [VERGARI-2021]. Vector-symbolic or hyperdimensional representations are important because they offer a possible middle layer between dense neural approximation and rigid symbolic data structures: they support role-filler binding, compositional manipulation, and compact structured representations with relatively simple algebraic operations [HDC-SURVEY-I]. Their significance here is not that they replace deep learning, but that they may offer better local substrates for regimes where compositional structure must remain manipulable and computationally light."
+    },
+    {
+      "key": "HAFNER-2023",
+      "has_text": true,
+      "source_title": "[2301.04104] Mastering Diverse Domains through World Models",
+      "title_match": "match",
+      "selected_terms": [
+        "architecture",
+        "world",
+        "models",
+        "neuro-symbolic",
+        "systems",
+        "probabilistic",
+        "circuits",
+        "vector-symbolic",
+        "representations",
+        "treated"
+      ],
+      "matched_terms": [
+        "world",
+        "models"
+      ],
+      "overlap_ratio": 0.2,
+      "best_snippet": "[2301.04104] Mastering Diverse Domains through World Models Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2301.04104 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Search open search GO open na…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/45c7ed3212dc79df",
+      "section_title": "The Staged Ecology of LLMs, ML, Software, and Local Substrates",
+      "context": "Within this architecture, world models, neuro-symbolic systems, probabilistic circuits, and vector-symbolic representations should be treated as candidate local substrates, not universal foundations. World models are appropriate when the subproblem genuinely involves latent state evolution, internal rollout, or action-conditioned consequence [HA-2018] [HAFNER-2023]. Neuro-symbolic methods are appropriate when explicit compositional structure, local proof traces, or symbolic constraints materially improve performance, traceability, or governance [GARCEZ-LAMB-2020]. Probabilistic circuits are relevant when exact and tractable probabilistic inference is achievable under known structural restrictions [VERGARI-2021]. Vector-symbolic or hyperdimensional representations are important because they offer a possible middle layer between dense neural approximation and rigid symbolic data structures: they support role-filler binding, compositional manipulation, and compact structured representations with relatively simple algebraic operations [HDC-SURVEY-I]. Their significance here is not that they replace deep learning, but that they may offer better local substrates for regimes where compositional structure must remain manipulable and computationally light."
+    },
+    {
+      "key": "GARCEZ-LAMB-2020",
+      "has_text": true,
+      "source_title": "[2012.05876] Neurosymbolic AI: The 3rd Wave",
+      "title_match": "match",
+      "selected_terms": [
+        "architecture",
+        "world",
+        "models",
+        "neuro-symbolic",
+        "systems",
+        "probabilistic",
+        "circuits",
+        "vector-symbolic",
+        "representations",
+        "treated"
+      ],
+      "matched_terms": [
+        "models",
+        "systems",
+        "representations"
+      ],
+      "overlap_ratio": 0.3,
+      "best_snippet": "[2012.05876] Neurosymbolic AI: The 3rd Wave Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2012.05876 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Search open search GO open navigation menu qu…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/5c25b2c315c48849",
+      "section_title": "The Staged Ecology of LLMs, ML, Software, and Local Substrates",
+      "context": "Within this architecture, world models, neuro-symbolic systems, probabilistic circuits, and vector-symbolic representations should be treated as candidate local substrates, not universal foundations. World models are appropriate when the subproblem genuinely involves latent state evolution, internal rollout, or action-conditioned consequence [HA-2018] [HAFNER-2023]. Neuro-symbolic methods are appropriate when explicit compositional structure, local proof traces, or symbolic constraints materially improve performance, traceability, or governance [GARCEZ-LAMB-2020]. Probabilistic circuits are relevant when exact and tractable probabilistic inference is achievable under known structural restrictions [VERGARI-2021]. Vector-symbolic or hyperdimensional representations are important because they offer a possible middle layer between dense neural approximation and rigid symbolic data structures: they support role-filler binding, compositional manipulation, and compact structured representations with relatively simple algebraic operations [HDC-SURVEY-I]. Their significance here is not that they replace deep learning, but that they may offer better local substrates for regimes where compositional structure must remain manipulable and computationally light."
+    },
+    {
+      "key": "VERGARI-2021",
+      "has_text": false,
+      "source_title": null,
+      "title_match": null,
+      "selected_terms": [
+        "architecture",
+        "world",
+        "models",
+        "neuro-symbolic",
+        "systems",
+        "probabilistic",
+        "circuits",
+        "vector-symbolic",
+        "representations",
+        "treated"
+      ],
+      "matched_terms": [],
+      "overlap_ratio": null,
+      "best_snippet": null,
+      "verdict_hint": "unresolved",
+      "cache_dir": ".tmp/cache/2d103813813f9900",
+      "section_title": "The Staged Ecology of LLMs, ML, Software, and Local Substrates",
+      "context": "Within this architecture, world models, neuro-symbolic systems, probabilistic circuits, and vector-symbolic representations should be treated as candidate local substrates, not universal foundations. World models are appropriate when the subproblem genuinely involves latent state evolution, internal rollout, or action-conditioned consequence [HA-2018] [HAFNER-2023]. Neuro-symbolic methods are appropriate when explicit compositional structure, local proof traces, or symbolic constraints materially improve performance, traceability, or governance [GARCEZ-LAMB-2020]. Probabilistic circuits are relevant when exact and tractable probabilistic inference is achievable under known structural restrictions [VERGARI-2021]. Vector-symbolic or hyperdimensional representations are important because they offer a possible middle layer between dense neural approximation and rigid symbolic data structures: they support role-filler binding, compositional manipulation, and compact structured representations with relatively simple algebraic operations [HDC-SURVEY-I]. Their significance here is not that they replace deep learning, but that they may offer better local substrates for regimes where compositional structure must remain manipulable and computationally light."
+    },
+    {
+      "key": "HDC-SURVEY-I",
+      "has_text": true,
+      "source_title": "[2111.06077] A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I: Models and Data Transformations",
+      "title_match": "match",
+      "selected_terms": [
+        "architecture",
+        "world",
+        "models",
+        "neuro-symbolic",
+        "systems",
+        "probabilistic",
+        "circuits",
+        "vector-symbolic",
+        "representations",
+        "treated"
+      ],
+      "matched_terms": [
+        "models",
+        "representations"
+      ],
+      "overlap_ratio": 0.2,
+      "best_snippet": "[2111.06077] A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I: Models and Data Transformations Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate > cs > arXiv:2111.06077 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID…",
+      "verdict_hint": "weak",
+      "cache_dir": ".tmp/cache/259c4924c4edd2e7",
+      "section_title": "The Staged Ecology of LLMs, ML, Software, and Local Substrates",
+      "context": "Within this architecture, world models, neuro-symbolic systems, probabilistic circuits, and vector-symbolic representations should be treated as candidate local substrates, not universal foundations. World models are appropriate when the subproblem genuinely involves latent state evolution, internal rollout, or action-conditioned consequence [HA-2018] [HAFNER-2023]. Neuro-symbolic methods are appropriate when explicit compositional structure, local proof traces, or symbolic constraints materially improve performance, traceability, or governance [GARCEZ-LAMB-2020]. Probabilistic circuits are relevant when exact and tractable probabilistic inference is achievable under known structural restrictions [VERGARI-2021]. Vector-symbolic or hyperdimensional representations are important because they offer a possible middle layer between dense neural approximation and rigid symbolic data structures: they support role-filler binding, compositional manipulation, and compact structured representations with relatively simple algebraic operations [HDC-SURVEY-I]. Their significance here is not that they replace deep learning, but that they may offer better local substrates for regimes where compositional structure must remain manipulable and computationally light."
+    }
+  ]
+}

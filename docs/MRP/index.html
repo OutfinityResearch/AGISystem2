@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-default-section="summary">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -7,354 +7,97 @@
     <meta name="theme-color" content="#f7fbff" />
     <meta
       name="description"
-      content="Meta Rational Pragmatics (MRP): articles on meta-rationality, scientific health, framing, and the discipline required to keep inquiry both ambitious and corrigible."
+      content="Meta Rational Pragmatics is a research article series centered on MRP-VM: a runtime for governed interpretation, regime selection, trustworthy local AI, and research automation."
     />
-
     <meta property="og:title" content="Meta Rational Pragmatics (MRP) — AGISystem2" />
     <meta
       property="og:description"
-      content="Articles on meta-rationality, framing, scientific health, and disciplined inquiry."
+      content="A research article series centered on MRP-VM and on the next step toward reliable, local, enterprise-ready AI."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://agisystem2.com/MRP/" />
-
     <title>Meta Rational Pragmatics (MRP) — AGISystem2</title>
+    <link rel="stylesheet" href="mrp-page.css" />
     <link rel="stylesheet" href="mrp-citation.css" />
-
     <style>
-      :root {
-        --bg0: #ece7dd;
-        --bg1: #f5f1e8;
-        --paper: #fffdf8;
-        --paper-line: rgba(64, 46, 24, 0.16);
-        --stroke: rgba(64, 46, 24, 0.18);
-        --stroke2: rgba(64, 46, 24, 0.1);
-        --text: rgba(28, 21, 14, 0.94);
-        --muted: rgba(55, 43, 31, 0.78);
-        --faint: rgba(79, 62, 44, 0.58);
-        --accent: #1b4f72;
-        --accent2: #7a5c2e;
-        --shadow: 0 18px 32px rgba(47, 36, 20, 0.08);
-        --shadow2: 0 10px 18px rgba(47, 36, 20, 0.06);
-        --radius: 12px;
-        --maxw: 1120px;
-        --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", serif;
+      .summary-grid,
+      .widget-grid,
+      .catalog-grid {
+        display: grid;
+        gap: 14px;
       }
 
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
-          "Apple Color Emoji", "Segoe UI Emoji";
-        color: var(--text);
-        background: linear-gradient(180deg, var(--bg0), var(--bg1));
-      }
-
-      a {
-        color: var(--accent);
-        text-decoration: none;
-      }
-
-      a:hover {
-        text-decoration: underline;
-      }
-
-      a:focus-visible {
-        outline: 2px solid rgba(10, 125, 255, 0.55);
-        outline-offset: 2px;
-      }
-
-      .skip-link {
-        position: absolute;
-        left: -999px;
-        top: 0;
-        padding: 10px 12px;
-        background: rgba(255, 255, 255, 0.95);
-        border: 1px solid var(--stroke);
-        border-radius: 12px;
-        z-index: 50;
-      }
-
-      .skip-link:focus {
-        left: 12px;
-        top: 12px;
-      }
-
-      .shell {
-        max-width: var(--maxw);
-        margin: 0 auto;
-        padding: 22px 18px 64px;
-      }
-
-      .topbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 14px;
-        border: 1px solid var(--stroke);
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow2);
-        position: sticky;
-        top: 14px;
-        z-index: 20;
-      }
-
-      .brand {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-        min-width: 0;
-      }
-
-      .brand strong {
-        font-weight: 720;
-        letter-spacing: 0.2px;
-        line-height: 1.15;
-      }
-
-      .crumbs {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 6px;
-        font-weight: 720;
-        letter-spacing: 0.2px;
-        line-height: 1.15;
-      }
-
-      .crumbs a {
-        color: var(--text);
-        text-decoration: none;
-      }
-
-      .crumbs a:hover,
-      .crumbs a:focus-visible {
-        text-decoration: underline;
-        text-underline-offset: 0.16em;
-      }
-
-      .crumb-sep,
-      .crumb-current {
-        color: var(--muted);
-      }
-
-      .brand span {
-        color: var(--muted);
-        font-size: 12.5px;
-      }
-
-      .top-links {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-      }
-
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 9px 11px;
-        border: 1px solid var(--stroke);
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.92);
-        color: var(--text);
-        font-size: 13px;
-        line-height: 1;
-      }
-
-      .pill.primary {
-        border-color: rgba(27, 79, 114, 0.2);
-        background: rgba(255, 255, 255, 0.96);
-      }
-
-      .hero {
+      .summary-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         margin-top: 18px;
-        padding: 28px;
+      }
+
+      .widget-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin-top: 18px;
+      }
+
+      .summary-card,
+      .widget-card,
+      .catalog-card,
+      .callout {
         border: 1px solid var(--paper-line);
-        border-radius: var(--radius);
-        background: var(--paper);
-        box-shadow: var(--shadow);
-        position: relative;
-        overflow: hidden;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.88);
+        box-shadow: var(--shadow2);
       }
 
-      .hero::before {
-        display: none;
+      .summary-card,
+      .widget-card,
+      .catalog-card {
+        padding: 18px;
       }
 
-      .hero > * {
-        position: relative;
-        z-index: 1;
-      }
-
-      .kicker {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 0;
-        border: none;
-        background: transparent;
-        color: var(--faint);
-        font-size: 11.5px;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-
-      .kicker b {
-        color: var(--accent2);
-      }
-
-      h1 {
-        margin: 12px 0 10px;
+      .summary-card h3,
+      .widget-card h3,
+      .catalog-card h3 {
+        margin: 0 0 10px;
         font-family: var(--serif);
-        font-size: clamp(28px, 3.4vw, 44px);
-        line-height: 1.06;
-        letter-spacing: -0.01em;
+        font-size: 23px;
+        line-height: 1.18;
         font-weight: 600;
       }
 
-      .lede {
+      .summary-card p,
+      .widget-card p,
+      .catalog-card p {
         margin: 0;
         color: var(--muted);
         font-family: var(--serif);
-        font-size: 18px;
-        line-height: 1.68;
-        max-width: 78ch;
+        font-size: 17px;
+        line-height: 1.72;
       }
 
-      .chip-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 16px;
-      }
-
-      .chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 10px;
-        border-radius: 999px;
-        border: 1px solid var(--stroke2);
-        background: rgba(255, 255, 255, 0.92);
-        color: rgba(2, 6, 23, 0.78);
-        font-size: 13px;
-      }
-
-      .chip i {
-        width: 8px;
-        height: 8px;
-        border-radius: 999px;
-        background: rgba(79, 243, 255, 0.8);
-        box-shadow: 0 0 0 3px rgba(79, 243, 255, 0.14);
-      }
-
-      .chip:nth-child(2) i {
-        background: rgba(255, 176, 32, 0.84);
-        box-shadow: 0 0 0 3px rgba(255, 176, 32, 0.14);
-      }
-
-      .chip:nth-child(3) i {
-        background: rgba(255, 79, 216, 0.8);
-        box-shadow: 0 0 0 3px rgba(255, 79, 216, 0.14);
-      }
-
-      .stack {
+      .catalog-grid {
+        grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
         margin-top: 18px;
-        padding: 20px;
-        border: 1px solid var(--paper-line);
-        border-radius: var(--radius);
-        background: var(--paper);
-        box-shadow: var(--shadow2);
       }
 
-      .intro-box {
-        padding: 18px;
-        border: 1px solid var(--paper-line);
-        border-radius: 10px;
-        background: rgba(255, 255, 255, 0.82);
-        color: rgba(2, 6, 23, 0.76);
-        line-height: 1.65;
-      }
-
-      .intro-box b {
-        color: var(--accent);
-      }
-
-      .section-title {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        margin: 26px 0 14px;
-      }
-
-      .section-title h2 {
-        margin: 0;
-        font-size: 22px;
-        line-height: 1.15;
-      }
-
-      .section-title span {
-        color: var(--faint);
-        font-size: 13px;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .article-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
-        gap: 16px;
-      }
-
-      .article-card {
+      .catalog-card {
         display: block;
-        padding: 20px;
-        border: 1px solid var(--paper-line);
-        border-radius: var(--radius);
-        background: var(--paper);
         color: inherit;
-        box-shadow: none;
-        transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+        text-decoration: none;
+        transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
       }
 
-      .article-card:hover {
-        text-decoration: none;
+      .catalog-card:hover {
         transform: translateY(-2px);
         border-color: rgba(27, 79, 114, 0.22);
-        box-shadow: var(--shadow2);
+        text-decoration: none;
       }
 
-      .article-card strong {
+      .catalog-card strong {
         display: inline-block;
+        margin-bottom: 10px;
         color: var(--faint);
         font-size: 11.5px;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-      }
-
-      .article-card h3 {
-        margin: 14px 0 10px;
-        font-family: var(--serif);
-        font-size: 26px;
-        line-height: 1.18;
-        letter-spacing: -0.01em;
-        font-weight: 600;
-      }
-
-      .article-card p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 16px;
-        line-height: 1.72;
       }
 
       .card-meta {
@@ -373,32 +116,72 @@
         font-size: 12px;
       }
 
-      footer {
+      .callout {
         margin-top: 18px;
         padding: 18px;
+      }
+
+      .callout p:last-child {
+        margin-bottom: 0;
+      }
+
+      .program-table {
+        width: 100%;
+        margin-top: 18px;
+        border-collapse: collapse;
         border: 1px solid var(--paper-line);
-        border-radius: var(--radius);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--shadow2);
         background: rgba(255, 255, 255, 0.92);
-        color: var(--faint);
+      }
+
+      .program-table th,
+      .program-table td {
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--paper-line);
+        text-align: left;
+        vertical-align: top;
+        font-family: var(--ui);
+        font-size: 14px;
         line-height: 1.6;
       }
 
-      footer p {
-        margin: 0;
+      .program-table th {
+        background: rgba(27, 79, 114, 0.08);
+        color: var(--text);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .program-table tr:last-child td {
+        border-bottom: none;
       }
 
       @media (max-width: 980px) {
-        .shell {
-          padding: 16px 12px 40px;
+        .summary-grid,
+        .widget-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .program-table,
+        .program-table tbody,
+        .program-table tr,
+        .program-table th,
+        .program-table td {
+          display: block;
+          width: 100%;
         }
 
-        .topbar {
-          flex-wrap: wrap;
-          top: 8px;
+        .program-table thead {
+          display: none;
         }
 
-        .hero {
-          padding: 22px 18px;
+        .program-table tr + tr {
+          border-top: 1px solid var(--paper-line);
         }
       }
     </style>
@@ -414,7 +197,7 @@
             <span class="crumb-sep">/</span>
             <span class="crumb-current">MRP</span>
           </nav>
-          <span>Meta Rational Pragmatics documentation track</span>
+          <span>Meta Rational Pragmatics article series</span>
         </div>
         <div class="top-links">
           <a class="pill" href="../index.html">Home</a>
@@ -424,17 +207,17 @@
       </div>
 
       <header class="hero">
-        <div class="kicker"><b>MRP</b> Meta Rational Pragmatics</div>
-        <h1>Foundational articles on reflexive inquiry, framing, and scientific health.</h1>
-        <p class="lede">
-          This section collects articles that sit one level above ordinary technical argument. It focuses on how inquiry
-          becomes trapped, how strong frameworks harden into dogma, and how disciplined self-critique can preserve
-          realism without drifting into collapse.
+        <div class="kicker"><b>MRP</b> Research Index</div>
+        <h1>Meta Rational Pragmatics</h1>
+        <p class="subtitle">
+          A research article series centered on MRP-VM: a runtime for governed interpretation, regime selection, and
+          more reliable local AI that can move advanced capability toward ordinary computers, enterprise use, and
+          research automation.
         </p>
-        <div class="chip-row" aria-label="MRP overview">
-          <span class="chip"><i></i>11 published articles</span>
-          <span class="chip"><i></i>Article series</span>
-          <span class="chip"><i></i>Author: Sînică Alboaie</span>
+        <div class="meta-row">
+          <span class="meta-pill">Author: Sînică Alboaie</span>
+          <span class="meta-pill">Primary focus: MRP-VM</span>
+          <span class="meta-pill">Status: Active research agenda</span>
         </div>
         <div class="citation-box" data-citation-box data-citation-key="Alboaie-2026" data-doc-title="Meta Rational Pragmatics (MRP)">
           <div class="citation-head">
@@ -450,180 +233,365 @@
         </div>
       </header>
 
-      <main class="stack" id="main">
-        <div class="intro-box">
-          <b>Editorial focus:</b> MRP is the documentation lane for articles about meta-rationality, institutional
-          epistemics, model fallibility, and the practical discipline required to keep scientific inquiry both strong
-          and corrigible.
-        </div>
+      <div class="layout" id="main">
+        <aside class="toc" aria-label="Article outline">
+          <header>
+            <strong>Outline</strong>
+            <span id="nav-readout">—</span>
+          </header>
+          <ul class="navlist">
+            <li>
+              <a href="#summary" data-step="01" aria-current="true">
+                <span class="toc-badge">01</span>
+                Executive Summary
+              </a>
+            </li>
+            <li>
+              <a href="#focus" data-step="02">
+                <span class="toc-badge">02</span>
+                Research Focus
+              </a>
+            </li>
+            <li>
+              <a href="#why-vm" data-step="03">
+                <span class="toc-badge">03</span>
+                Why MRP-VM
+              </a>
+            </li>
+            <li>
+              <a href="#program" data-step="04">
+                <span class="toc-badge">04</span>
+                Program Table
+              </a>
+            </li>
+            <li>
+              <a href="#articles" data-step="05">
+                <span class="toc-badge">05</span>
+                Published Articles
+              </a>
+            </li>
+          </ul>
+        </aside>
 
-        <div class="section-title">
-          <h2>Published Articles</h2>
-          <span>Current Index</span>
-        </div>
+        <main>
+          <article class="article">
+            <section id="summary">
+              <h2>Executive Summary</h2>
+              <p>
+                Meta Rational Pragmatics is not organized here as a loose philosophical appendix. The central research
+                focus of this track is the construction and refinement of MRP-VM: a runtime for governed
+                interpretation, explicit routes between execution regimes, auditable frames, and the gradual conversion
+                of broad neural competence into more structured and reusable forms.
+              </p>
+              <p>
+                This matters because we want a path toward AI that is more reliable, easier for firms to use, and less
+                dependent on permanently expensive inference. The scientific ambition is clear: bring advanced AI closer
+                to ordinary computers, make it more trustworthy in enterprise settings, and extend it toward serious
+                research automation rather than treating current LLM behavior as the final architecture.
+              </p>
+              <div class="summary-grid">
+                <div class="summary-card">
+                  <h3>Primary Object</h3>
+                  <p>
+                    MRP-VM as a runtime for governed interpretation, active frames, explicit routes, regime selection,
+                    and auditable execution.
+                  </p>
+                </div>
+                <div class="summary-card">
+                  <h3>Deployment Goal</h3>
+                  <p>
+                    Trustworthy local AI that becomes easier to operate in companies, more legible under audit, and more
+                    compatible with ordinary-computer deployment profiles.
+                  </p>
+                </div>
+                <div class="summary-card">
+                  <h3>Translation Logic</h3>
+                  <p>
+                    A fundable research agenda with visible milestones, direct enterprise relevance, and a credible path
+                    toward research automation as the next logical step after the LLM phase.
+                  </p>
+                </div>
+              </div>
+            </section>
 
-        <div class="article-grid">
-          <a href="meta-rational-pragmatics-competitive-direction.html" class="article-card">
-            <strong>Article 01</strong>
-            <h3>AGI Will Not Be One Thing</h3>
-            <p>
-              Useful intelligence may depend less on one universal regime than on the governed coordination of many
-              partially adequate ones.
-            </p>
-            <div class="card-meta">
-              <span>Sînică Alboaie</span>
-              <span>Strategic positioning</span>
-              <span>Trustworthy AI</span>
-            </div>
-          </a>
+            <section id="focus">
+              <h2>Research Focus</h2>
+              <p>
+                The majority of the research energy in this series is intended to flow into MRP-VM itself. We want to
+                open new research projects, funding proposals, and investor conversations around it because it
+                describes a concrete technical solution rather than a vague AI ambition. It gives a coherent object of
+                work around which theory, engineering, benchmarking, and translation can all accumulate.
+              </p>
+              <p>
+                In practical terms, MRP-VM is where we can unify agent skills, explicit decomposition, regime
+                selection, typed intermediates, validators, bounded workflows, smaller local execution units, and
+                controlled use of language models inside one architecture. That makes it the clearest bridge between
+                rigorous research and systems that firms can actually trust and use.
+              </p>
+              <div class="widget-grid">
+                <div class="widget-card">
+                  <h3>Why This Is Researchable</h3>
+                  <p>
+                    MRP-VM breaks down into explicit questions about runtime design, routing, symbolic and local
+                    execution, compiled skills, validation, provenance, and tractable interpreters.
+                  </p>
+                </div>
+                <div class="widget-card">
+                  <h3>Why This Is Fundable</h3>
+                  <p>
+                    The program is technically legible, stageable, and measurable. It can support grants, partnerships,
+                    and investment because it offers clear milestones rather than generic AGI rhetoric.
+                  </p>
+                </div>
+              </div>
+              <div class="callout">
+                <p>
+                  <b>Strategic thesis:</b> MRP-VM is the place where this series stops being only interpretive and
+                  becomes a build agenda for trustworthy, local, enterprise-ready AI.
+                </p>
+              </div>
+            </section>
 
-          <a href="meta-rational-pragmatics.html" class="article-card">
-            <strong>Article 02</strong>
-            <h3>Meta-Rational Pragmatics</h3>
-            <p>
-              Introductory chapter on why advanced AI needs a missing middle layer between natural-language fluidity and
-              formally disciplined execution, and why MRP-VM is framed as a runtime for policy-governed interpretation.
-            </p>
-            <div class="card-meta">
-              <span>Sînică Alboaie</span>
-              <span>Foundational introduction</span>
-              <span>MRP-VM</span>
-            </div>
-          </a>
+            <section id="why-vm">
+              <h2>Why MRP-VM Matters</h2>
+              <p>
+                We are interested in MRP-VM because it offers a path toward AI on ordinary computers in a technically
+                serious sense: not by shrinking intelligence into a slogan, but by moving more of the burden into
+                explicit skills, validators, symbolic fragments, compact learned modules, and regime-aware routing.
+              </p>
+              <p>
+                If that transition works, advanced AI becomes easier to trust, easier to operate, and easier for
+                companies to adopt. It becomes more compatible with CPU-friendly deployment profiles, with auditable
+                enterprise automation, and with research workflows where correctness, provenance, and controlled
+                execution matter as much as fluency.
+              </p>
+              <p>
+                That is also why this looks like the next logical step. The LLM era showed the power of
+                language-mediated intelligence. The next phase is to reorganize that power into systems that are more
+                modular, more stable, more usable, and more computationally real.
+              </p>
+            </section>
 
-          <a href="meta-rational-pragmatics-in-context.html" class="article-card">
-            <strong>Article 03</strong>
-            <h3>Meta-Rational Pragmatics in Context</h3>
-            <p>
-              Places meta-rational pragmatics in relation to older philosophical intuitions, neighboring approaches,
-              neuro-symbolic reification risks, and the pragmatic role of world models.
-            </p>
-            <div class="card-meta">
-              <span>Sînică Alboaie</span>
-              <span>Comparative context</span>
-              <span>World models</span>
-            </div>
-          </a>
+            <section id="program">
+              <h2>Program Table</h2>
+              <p>
+                The research program can be read as a set of concrete work packages rather than as a single abstract
+                vision.
+              </p>
+              <table class="program-table">
+                <thead>
+                  <tr>
+                    <th>Track</th>
+                    <th>What Gets Built</th>
+                    <th>Why It Matters</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>MRP-VM Kernel</td>
+                    <td>Goals, frames, routes, plugins, epochs, provenance, and auditable runtime control.</td>
+                    <td>Turns MRP into a concrete scientific and engineering object rather than a label.</td>
+                  </tr>
+                  <tr>
+                    <td>Skills and Typed Intermediates</td>
+                    <td>Explicit skill contracts, validators, reusable intermediate artefacts, and bounded workflows.</td>
+                    <td>Improves legibility, controllability, and systematic reuse across domains.</td>
+                  </tr>
+                  <tr>
+                    <td>Regime Selection</td>
+                    <td>Mechanisms for choosing between symbolic, retrieval, graph, learned, and hybrid execution.</td>
+                    <td>Moves intelligence from one opaque regime toward governed plurality.</td>
+                  </tr>
+                  <tr>
+                    <td>Local and Trustworthy Execution</td>
+                    <td>Smaller modules, symbolic fragments, caches, compact routers, and CPU-friendly execution paths.</td>
+                    <td>Supports reliable industrial deployment and reduces dependence on permanently expensive inference.</td>
+                  </tr>
+                  <tr>
+                    <td>Research Automation</td>
+                    <td>Systems that can assist literature work, analysis, synthesis, protocol handling, and structured inquiry.</td>
+                    <td>Extends the program from enterprise automation toward serious augmentation of research itself.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
 
-          <a href="meta-rationality-psychology-philosophy-executable-pragmatics.html" class="article-card">
-            <strong>Article 04</strong>
-            <h3>Meta-Rationality: Psychological Roots, Philosophical Lineages, and the Executable Turn</h3>
-            <p>
-              A short history of meta-rationality across psychology, web discourse, and philosophy, and an argument
-              that Meta-Rational Pragmatics gives the idea a legitimate executable and ML-oriented form.
-            </p>
-            <div class="card-meta">
-              <span>Sînică Alboaie</span>
-              <span>Intellectual history</span>
-              <span>Executable turn</span>
-            </div>
-          </a>
+            <section id="articles">
+              <h2>Published Articles</h2>
+              <p>
+                The articles below map the conceptual, architectural, and adjacent research layers of the program. Read
+                together, they define the MRP-VM direction with increasing specificity.
+              </p>
+              <div class="catalog-grid">
+                <a href="meta-rational-pragmatics-competitive-direction.html" class="catalog-card">
+                  <strong>Article 01</strong>
+                  <h3>AGI Will Not Be One Thing</h3>
+                  <p>
+                    Useful intelligence may depend less on one universal regime than on the governed coordination of many
+                    partially adequate ones.
+                  </p>
+                  <div class="card-meta">
+                    <span>Sînică Alboaie</span>
+                    <span>Strategic positioning</span>
+                    <span>Trustworthy AI</span>
+                  </div>
+                </a>
 
-          <a href="meta-rationality-difficulties-misunderstandings-risks.html" class="article-card">
-            <strong>Article 05</strong>
-            <h3>Meta-Rationality: Difficulties, Misunderstandings, and Internal Risks</h3>
-            <p>
-              Why meta-rationality is necessary when inquiry becomes trapped, why it is so often misunderstood, and how
-              it can fail through vagueness, performative complexity, or pseudo-rigorous evasion.
-            </p>
-            <div class="card-meta">
-              <span>Sînică Alboaie</span>
-              <span>Meta-rationality</span>
-              <span>Epistemic risks</span>
-            </div>
-          </a>
+                <a href="meta-rational-pragmatics.html" class="catalog-card">
+                  <strong>Article 02</strong>
+                  <h3>Meta-Rational Pragmatics</h3>
+                  <p>
+                    Introductory chapter on why advanced AI needs a missing middle layer between natural-language
+                    fluidity and formally disciplined execution, and why MRP-VM is framed as a runtime for
+                    policy-governed interpretation.
+                  </p>
+                  <div class="card-meta">
+                    <span>Sînică Alboaie</span>
+                    <span>Foundational introduction</span>
+                    <span>MRP-VM</span>
+                  </div>
+                </a>
 
-          <a href="meta-rationality-ai-scientific-inquiry.html" class="article-card">
-            <strong>Article 06</strong>
-            <h3>Meta-Rationality, AI, and the Health of Scientific Inquiry</h3>
-            <p>
-              A restrained account of how meta-rationality relates to science, where scientism begins, how AI may
-              amplify both pseudo-depth and neutrality, and why plural inquiry may matter at civilization scale.
-            </p>
-            <div class="card-meta">
-              <span>Sînică Alboaie</span>
-              <span>Science and scientism</span>
-              <span>AI and inquiry</span>
-            </div>
-          </a>
+                <a href="meta-rational-pragmatics-in-context.html" class="catalog-card">
+                  <strong>Article 03</strong>
+                  <h3>Meta-Rational Pragmatics in Context</h3>
+                  <p>
+                    Places meta-rational pragmatics in relation to older philosophical intuitions, neighboring
+                    approaches, neuro-symbolic reification risks, and the pragmatic role of world models.
+                  </p>
+                  <div class="card-meta">
+                    <span>Sînică Alboaie</span>
+                    <span>Comparative context</span>
+                    <span>World models</span>
+                  </div>
+                </a>
 
-          <a href="a-new-foundational-intuition-for-neuro-symbolic-ai.html" class="article-card">
-            <strong>Article 07</strong>
-            <h3>A New Foundational Intuition for Neuro-Symbolic AI</h3>
-            <p>
-              Reframes neuro-symbolic AI around governed plurality of partially adequate theories rather than one final
-              symbolic closure, and relocates rigor into managed interpretive control.
-            </p>
-            <div class="card-meta">
-              <span>Sînică Alboaie</span>
-              <span>Neuro-symbolic AI</span>
-              <span>Interpretive plurality</span>
-            </div>
-          </a>
+                <a href="meta-rationality-psychology-philosophy-executable-pragmatics.html" class="catalog-card">
+                  <strong>Article 04</strong>
+                  <h3>Meta-Rationality: Psychological Roots, Philosophical Lineages, and the Executable Turn</h3>
+                  <p>
+                    A short history of meta-rationality across psychology, web discourse, and philosophy, and an
+                    argument that Meta-Rational Pragmatics gives the idea a legitimate executable and ML-oriented form.
+                  </p>
+                  <div class="card-meta">
+                    <span>Sînică Alboaie</span>
+                    <span>Intellectual history</span>
+                    <span>Executable turn</span>
+                  </div>
+                </a>
 
-          <a href="executable-natural-language.html" class="article-card">
-            <strong>Article 08</strong>
-            <h3>Executable Natural Language</h3>
-            <p>
-              A structured survey of how natural language becomes executable across controlled languages, interpreter
-              runtimes, and constrained generation, and why this matters for executable pragmatics.
-            </p>
-            <div class="card-meta">
-              <span>Sînică Alboaie</span>
-              <span>Executable pragmatics</span>
-              <span>Language runtimes</span>
-            </div>
-          </a>
+                <a href="meta-rationality-difficulties-misunderstandings-risks.html" class="catalog-card">
+                  <strong>Article 05</strong>
+                  <h3>Meta-Rationality: Difficulties, Misunderstandings, and Internal Risks</h3>
+                  <p>
+                    Why meta-rationality is necessary when inquiry becomes trapped, why it is so often misunderstood,
+                    and how it can fail through vagueness, performative complexity, or pseudo-rigorous evasion.
+                  </p>
+                  <div class="card-meta">
+                    <span>Sînică Alboaie</span>
+                    <span>Meta-rationality</span>
+                    <span>Epistemic risks</span>
+                  </div>
+                </a>
 
-          <a href="regime-selection-tractable-computation-regime-induction.html" class="article-card">
-            <strong>Article 09</strong>
-            <h3>Regime Selection and Tractable Computation as Regime Induction</h3>
-            <p>
-              A staged architecture for structural regime induction, active theory frames, explicit skills, compilation,
-              and the reduction of local subproblems to tractable interpreters.
-            </p>
-            <div class="card-meta">
-              <span>Sînică Alboaie</span>
-              <span>Regime induction</span>
-              <span>Tractable interpreters</span>
-            </div>
-          </a>
+                <a href="meta-rationality-ai-scientific-inquiry.html" class="catalog-card">
+                  <strong>Article 06</strong>
+                  <h3>Meta-Rationality, AI, and the Health of Scientific Inquiry</h3>
+                  <p>
+                    A restrained account of how meta-rationality relates to science, where scientism begins, how AI may
+                    amplify both pseudo-depth and neutrality, and why plural inquiry may matter at civilization scale.
+                  </p>
+                  <div class="card-meta">
+                    <span>Sînică Alboaie</span>
+                    <span>Science and scientism</span>
+                    <span>AI and inquiry</span>
+                  </div>
+                </a>
 
-          <a href="mrp-vm-implementation-path.html" class="article-card">
-            <strong>Article 10</strong>
-            <h3>MRP-VM: An Implementation Path</h3>
-            <p>
-              A simplified implementation roadmap for MRP-VM as a staged runtime over goals, seeds, bounded frames,
-              regime plugins, and auditable epoch-based execution.
-            </p>
-            <div class="card-meta">
-              <span>Sînică Alboaie</span>
-              <span>MRP-VM</span>
-              <span>Implementation path</span>
-            </div>
-          </a>
+                <a href="a-new-foundational-intuition-for-neuro-symbolic-ai.html" class="catalog-card">
+                  <strong>Article 07</strong>
+                  <h3>A New Foundational Intuition for Neuro-Symbolic AI</h3>
+                  <p>
+                    Reframes neuro-symbolic AI around governed plurality of partially adequate theories rather than one
+                    final symbolic closure, and relocates rigor into managed interpretive control.
+                  </p>
+                  <div class="card-meta">
+                    <span>Sînică Alboaie</span>
+                    <span>Neuro-symbolic AI</span>
+                    <span>Interpretive plurality</span>
+                  </div>
+                </a>
 
-          <a href="related-research-meta-rational-executable-pragmatics.html" class="article-card">
-            <strong>Article 11</strong>
-            <h3>Related Research for Meta-Rational and Executable Pragmatics</h3>
-            <p>
-              A regrouped research map connecting executable natural language, engineered intuition, thinking
-              databases, and adjacent representational families relevant to MRP.
-            </p>
-            <div class="card-meta">
-              <span>Sînică Alboaie</span>
-              <span>Related research</span>
-              <span>Thinking databases</span>
-            </div>
-          </a>
-        </div>
+                <a href="executable-natural-language.html" class="catalog-card">
+                  <strong>Article 08</strong>
+                  <h3>Executable Natural Language</h3>
+                  <p>
+                    A structured survey of how natural language becomes executable across controlled languages,
+                    interpreter runtimes, and constrained generation, and why this matters for executable pragmatics.
+                  </p>
+                  <div class="card-meta">
+                    <span>Sînică Alboaie</span>
+                    <span>Executable pragmatics</span>
+                    <span>Language runtimes</span>
+                  </div>
+                </a>
 
-      </main>
+                <a href="regime-selection-tractable-computation-regime-induction.html" class="catalog-card">
+                  <strong>Article 09</strong>
+                  <h3>Regime Selection and Tractable Computation as Regime Induction</h3>
+                  <p>
+                    A staged architecture for structural regime induction, active theory frames, explicit skills,
+                    compilation, and the reduction of local subproblems to tractable interpreters.
+                  </p>
+                  <div class="card-meta">
+                    <span>Sînică Alboaie</span>
+                    <span>Regime induction</span>
+                    <span>Tractable interpreters</span>
+                  </div>
+                </a>
+
+                <a href="mrp-vm-implementation-path.html" class="catalog-card">
+                  <strong>Article 10</strong>
+                  <h3>MRP-VM: An Implementation Path</h3>
+                  <p>
+                    A simplified implementation roadmap for MRP-VM as a staged runtime over goals, seeds, bounded
+                    frames, regime plugins, and auditable epoch-based execution.
+                  </p>
+                  <div class="card-meta">
+                    <span>Sînică Alboaie</span>
+                    <span>MRP-VM</span>
+                    <span>Implementation path</span>
+                  </div>
+                </a>
+
+                <a href="related-research-meta-rational-executable-pragmatics.html" class="catalog-card">
+                  <strong>Article 11</strong>
+                  <h3>Related Research for Meta-Rational and Executable Pragmatics</h3>
+                  <p>
+                    A regrouped research map connecting executable natural language, engineered intuition, thinking
+                    databases, and adjacent representational families relevant to MRP.
+                  </p>
+                  <div class="card-meta">
+                    <span>Sînică Alboaie</span>
+                    <span>Related research</span>
+                    <span>Thinking databases</span>
+                  </div>
+                </a>
+              </div>
+            </section>
+          </article>
+        </main>
+      </div>
 
       <footer>
-        <p>MRP is part of the AGISystem2 documentation site and is maintained as a dedicated article series.</p>
+        <p>
+          MRP is maintained as a research article series inside AGISystem2. The main research horizon of the series is
+          the construction and refinement of MRP-VM as a concrete path toward reliable, local, enterprise-usable AI.
+        </p>
       </footer>
     </div>
+
+    <script src="mrp-outline.js"></script>
     <script src="mrp-citation.js"></script>
   </body>
 </html>
