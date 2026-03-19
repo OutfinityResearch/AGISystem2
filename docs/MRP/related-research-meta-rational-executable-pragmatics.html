@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en" data-default-section="why-related-research">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f7fbff" />
+    <meta
+      name="description"
+      content="A related research survey for Meta-Rational Pragmatics and executable pragmatics, covering executable natural language, engineered intuition, and adjacent representational families."
+    />
+    <meta
+      property="og:title"
+      content="Related Research for Meta-Rational and Executable Pragmatics — AGISystem2"
+    />
+    <meta
+      property="og:description"
+      content="An adjacent-research map connecting executable natural language, RAG, thinking databases, HDC, conceptual spaces, probabilistic models, and other regimes relevant to MRP."
+    />
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:url"
+      content="https://agisystem2.com/MRP/related-research-meta-rational-executable-pragmatics.html"
+    />
+    <title>Related Research for Meta-Rational and Executable Pragmatics — AGISystem2</title>
+    <link rel="stylesheet" href="mrp-page.css" />
+    <link rel="stylesheet" href="mrp-citation.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="../index.html">AGISystem2</a>
+            <span class="crumb-sep">/</span>
+            <a href="index.html">MRP</a>
+            <span class="crumb-sep">/</span>
+            <span class="crumb-current">Related Research for Meta-Rational and Executable Pragmatics</span>
+          </nav>
+          <span>Meta Rational Pragmatics article</span>
+        </div>
+        <div class="top-links">
+          <a class="pill" href="../index.html">Home</a>
+          <a class="pill" href="../research.html">Research</a>
+          <a class="pill primary" href="index.html">MRP Index</a>
+        </div>
+      </div>
+
+      <header class="hero">
+        <div class="kicker"><b>MRP Article 11</b> Related research</div>
+        <h1>Related Research for Meta-Rational and Executable Pragmatics</h1>
+        <p class="subtitle">
+          A regrouped survey of adjacent technical directions that matter for Meta-Rational Pragmatics: executable
+          natural language, engineered intuition, thinking databases, and representational families that may support
+          future regime selection.
+        </p>
+        <div class="meta-row">
+          <span class="meta-pill">Author: Sînică Alboaie</span>
+          <span class="meta-pill">Series: Meta Rational Pragmatics</span>
+          <span class="meta-pill">Focus: Adjacent research map</span>
+        </div>
+        <div class="citation-box" data-citation-box data-citation-key="Alboaie-2026">
+          <div class="citation-head">
+            <strong>Permalink & citation</strong>
+            <div class="citation-actions">
+              <button class="copy-button" type="button" data-copy-target="link">Copy link</button>
+              <button class="copy-button" type="button" data-copy-target="citation">Copy citation</button>
+            </div>
+          </div>
+          <a class="citation-link" data-doc-link href="#"></a>
+          <p class="citation-preview" data-citation-preview></p>
+          <span class="copy-status" data-copy-status aria-live="polite"></span>
+        </div>
+      </header>
+
+      <div class="layout" id="main">
+        <aside class="toc" aria-label="Article outline">
+          <header>
+            <strong>Outline</strong>
+            <span id="nav-readout">—</span>
+          </header>
+          <ul class="navlist">
+            <li>
+              <a href="#why-related-research" data-step="01" aria-current="true">
+                <span class="toc-badge">01</span>
+                Why Related Research Matters
+              </a>
+            </li>
+            <li>
+              <a href="#executable-languages" data-step="02">
+                <span class="toc-badge">02</span>
+                Executable Language Systems
+              </a>
+            </li>
+            <li>
+              <a href="#engineered-intuition" data-step="03">
+                <span class="toc-badge">03</span>
+                Engineered Intuition
+              </a>
+            </li>
+            <li>
+              <a href="#representation-families" data-step="04">
+                <span class="toc-badge">04</span>
+                Representation Families
+              </a>
+            </li>
+            <li>
+              <a href="#runtime-horizon" data-step="05">
+                <span class="toc-badge">05</span>
+                The Runtime Horizon
+              </a>
+            </li>
+            <li>
+              <a href="#references" data-step="06">
+                <span class="toc-badge">06</span>
+                References
+              </a>
+            </li>
+          </ul>
+        </aside>
+
+        <main>
+          <article class="article">
+            <section id="why-related-research">
+              <h2>Why Related Research Matters</h2>
+              <p>
+                This chapter is not a list of immediate commitments. It is a map of adjacent technical directions that
+                matter once Meta-Rational Pragmatics is taken seriously as an engineering program. If a trustworthy
+                runtime must recognize structure before choosing how to reason, then it becomes valuable to survey the
+                representational and computational families that might eventually support such regime selection in
+                practice [DEMOURA-2008] [AGISYSTEM2].
+              </p>
+              <p>
+                The role of related research here is therefore practical. It widens the space of possible interpreters,
+                intermediate forms, and fast or slow reasoning services that an MRP-oriented architecture may later
+                compose. The point is not to absorb everything. The point is to understand what kinds of structure can
+                be made computationally explicit when executable pragmatics becomes the design target.
+              </p>
+            </section>
+
+            <section id="executable-languages">
+              <h2>Executable Language Systems as a First Neighbor</h2>
+              <p>
+                Executable natural language is one of the clearest neighboring areas because it makes visible the shift
+                from fixed semantic compilation toward governed runtime interpretation. ACE and related controlled
+                languages represent the formal-semantics-first tradition [FUCHS-SCHWITTER-1996] [FUCHS-ET-AL-2008].
+                LMQL, CoRE, ReAct, PAL, DSPy, AutoGen, and guided generation systems show different ways in which
+                language-model runtimes can turn text into controlled behavior [BEURER-KELLNER-2022] [XU-2024]
+                [YAO-2023] [GAO-2022] [DSPY-2023] [WU-2023] [WILLARD-LOUF-2023].
+              </p>
+              <p>
+                Their relevance for Meta-Rational Pragmatics is direct. They show that the central problem is no longer
+                merely how to represent meaning, but how to govern the transition from textual flexibility to bounded
+                execution. In other words, they occupy the frontier where executable pragmatics becomes unavoidable.
+              </p>
+            </section>
+
+            <section id="engineered-intuition">
+              <h2>Engineered Intuition, RAG, and Thinking Databases</h2>
+              <p>
+                Large language models are the default practical analogue of fast intuition for current AI agents because
+                they can synthesize heterogeneous cues immediately. But fluent output is not equivalent to epistemically
+                controlled reasoning, and the literature on hallucination and framing bias makes that limitation hard to
+                ignore [BENDER-2021]. Retrieval-augmented generation helps, but standard RAG remains a retrieve-then-
+                compress pattern rather than a full account of governed intuition [LEWIS-2020] [GAO-2023].
+              </p>
+              <p>
+                Once an explicit IR exists, the knowledge base can support multiple specialized intuition engines rather
+                than one generic retrieval pipeline. Some may be retrieval-like, some abstraction-oriented, some
+                simulation-like, some case-based, some structurally constrained. HDC/VSA-style associative computation,
+                abstract interpretation, symbolic execution, heuristic search, and analogical recall all become
+                candidates for fast first-pass services as long as their outputs disclose coverage, epistemic status,
+                and residual uncertainty [HDC-SURVEY-I] [HDC-SURVEY-II] [KANERVA-2009] [COUSOT-1977] [KING-1976].
+              </p>
+              <p>
+                This is the point of a thinking database. It is not only searched; it is queried through executable
+                regimes that produce ranked contexts, conservative envelopes, candidate decompositions, and boundary
+                cases. Classical RAG then becomes one member of a broader family of fast interpretive services over an
+                explicit knowledge substrate.
+              </p>
+            </section>
+
+            <section id="representation-families">
+              <h2>Representation Families Worth Tracking</h2>
+              <p>
+                Several other research families matter because they offer different intermediate structures for future
+                regime selection. Conceptual spaces provide geometric representations of concepts and relations, useful
+                as a graded layer between raw language and rigid symbols [BECHBERGER-2017] [BECHBERGER-2018]. HDC and
+                vector symbolic architectures offer algebraic, compositional, and scalable structured encodings that may
+                support fast theory signatures or analogical recall [HDC-SURVEY-I] [HDC-SURVEY-II] [TORCHHD-2023].
+              </p>
+              <p>
+                Probabilistic graphical models and probabilistic programming remain relevant wherever uncertainty,
+                partial dependence, and explicit belief updates matter [PGMPY] [PYRO]. Causal modeling matters wherever
+                explanation and intervention must be kept distinct from correlation [PEARL-2009]. Knowledge graphs,
+                tensor methods, and sheaf-like approaches matter because local/global structure is often itself the
+                reason a problem should be routed to one regime rather than another [KG-SURVEY] [PYKEEN]
+                [TENSOR-NET-SURVEY] [TENSORNETWORK-LIB] [TENPY] [SHEAF-SURVEY-2025] [PYSHEAF].
+              </p>
+              <p>
+                The point is not that one of these families will dominate everything. The point is that structural
+                regime selection may require several intermediate representational media before exact symbolic
+                formalization is either possible or desirable.
+              </p>
+            </section>
+
+            <section id="runtime-horizon">
+              <h2>What This Means for Meta-Rational and Executable Pragmatics</h2>
+              <p>
+                Taken together, these adjacent directions clarify the horizon of executable pragmatics. Meta-Rational
+                Pragmatics needs more than one solver and more than one model class. It needs a runtime capable of
+                coordinating multiple representational and computational families under explicit policies of
+                interpretation, escalation, and validation.
+              </p>
+              <p>
+                That is why related research matters here. It shows that the design space is already populated with
+                viable partial answers: controlled natural languages, agent runtimes, guided generation, geometric
+                concept layers, associative high-dimensional encodings, probabilistic and causal models, graph systems,
+                and efficient execution substrates. The challenge is no longer to find one universal medium. It is to
+                make plurality tractable and governable inside a disciplined runtime.
+              </p>
+            </section>
+
+            <section id="references">
+              <h2>References</h2>
+              <ul class="refs">
+                <li>[AGISYSTEM2] AGISystem2. (2026). Research Index: CPU-centric ML, VSA/HDC, Conceptual Spaces, and Formal Reasoning.</li>
+                <li>[BECHBERGER-2017] Bechberger, L., & Kühnberger, K.-U. (2017). A Thorough Formalization of Conceptual Spaces.</li>
+                <li>[BECHBERGER-2018] Bechberger, L., & Kühnberger, K.-U. (2018). Formal Ways for Measuring Relations between Concepts in Conceptual Spaces.</li>
+                <li>[BENDER-2021] Bender, E. M., et al. (2021). On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?</li>
+                <li>[BEURER-KELLNER-2022] Beurer-Kellner, L., et al. (2022). Prompting Is Programming: A Query Language for Large Language Models.</li>
+                <li>[COUSOT-1977] Cousot, P., & Cousot, R. (1977). Abstract Interpretation.</li>
+                <li>[DEMOURA-2008] de Moura, L., & Bjørner, N. (2008). Z3: An Efficient SMT Solver.</li>
+                <li>[DSPY-2023] Khattab, O., et al. (2023). DSPy.</li>
+                <li>[FUCHS-SCHWITTER-1996] Fuchs, N. E., & Schwitter, R. (1996). Attempto Controlled English.</li>
+                <li>[FUCHS-ET-AL-2008] Fuchs, N. E., Kaljurand, K., & Kuhn, T. (2008). Attempto Controlled English for Knowledge Representation.</li>
+                <li>[GAO-2022] Gao, L., et al. (2022). PAL: Program-aided Language Models.</li>
+                <li>[GAO-2023] Gao, Y., et al. (2023). Retrieval-Augmented Generation for Large Language Models: A Survey.</li>
+                <li>[HDC-SURVEY-I] Kleyko, D., et al. (2021). A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I.</li>
+                <li>[HDC-SURVEY-II] Kleyko, D., et al. (2021). A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part II.</li>
+                <li>[KANERVA-2009] Kanerva, P. (2009). Hyperdimensional Computing.</li>
+                <li>[KG-SURVEY] Ji, S., et al. (2020). A Survey on Knowledge Graphs.</li>
+                <li>[KING-1976] King, J. C. (1976). Symbolic Execution and Program Testing.</li>
+                <li>[LEWIS-2020] Lewis, P., et al. (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks.</li>
+                <li>[PEARL-2009] Pearl, J. (2009). Causality.</li>
+                <li>[PGMPY] pgmpy project. (2025). Probabilistic Graphical Models in Python.</li>
+                <li>[PYSHEAF] PySheaf Repository. (2025). Sheaf Theoretical Data Analysis.</li>
+                <li>[PYKEEN] PyKEEN Documentation. (2025). Knowledge Graph Embeddings Pipeline.</li>
+                <li>[PYRO] Pyro Documentation. (2025). Deep Probabilistic Programming with PyTorch.</li>
+                <li>[SHEAF-SURVEY-2025] Ayzenberg, A., et al. (2025). Sheaf Theory: From Deep Geometry to Deep Learning.</li>
+                <li>[TENPY] TeNPy Project. (2025). TeNPy Documentation and Repository.</li>
+                <li>[TENSOR-NET-SURVEY] Wang, M., et al. (2023). Tensor Networks Meet Neural Networks: A Survey.</li>
+                <li>[TENSORNETWORK-LIB] Google. (2025). TensorNetwork: A Library for Tensor Network Manipulations.</li>
+                <li>[TORCHHD-2023] Heddes, M., et al. (2023). Torchhd.</li>
+                <li>[WILLARD-LOUF-2023] Willard, B., & Louf, R. (2023). Efficient Guided Generation for Large Language Models.</li>
+                <li>[WU-2023] Wu, Q., et al. (2023). AutoGen.</li>
+                <li>[XU-2024] Xu, S., et al. (2024). AIOS Compiler.</li>
+                <li>[YAO-2023] Yao, S., et al. (2023). ReAct.</li>
+              </ul>
+            </section>
+          </article>
+        </main>
+      </div>
+
+      <footer>
+        <p>This article is published in the Meta Rational Pragmatics article series of the AGISystem2 documentation site.</p>
+      </footer>
+    </div>
+
+    <script src="mrp-outline.js"></script>
+    <script src="mrp-citation.js"></script>
+  </body>
+</html>

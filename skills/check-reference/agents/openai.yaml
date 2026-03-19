@@ -1,0 +1,4 @@
+interface:
+  display_name: "checkReference"
+  short_description: "Validate citations in documents"
+  default_prompt: "Use $check-reference to inspect this document's citations and list missing, irrelevant, or unsupported references."

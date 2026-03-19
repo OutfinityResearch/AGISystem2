@@ -1,0 +1,76 @@
+[AGISYSTEM2] AGISystem2. (2026). Research Index: CPU-centric ML, VSA/HDC, Conceptual Spaces, and Formal Reasoning. URL: https://agisystem2.com/research.html
+[ANT-BEA-2024] Anthropic. (2024). Building Effective AI Agents. URL: https://www.anthropic.com/research/building-effective-agents
+[ANT-CTX-2025] Anthropic. (2025). Effective Context Engineering for AI Agents. URL: https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
+[ANT-SKILLS-2025] Anthropic. (2025). Equipping Agents for the Real World with Agent Skills. URL: https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills
+[BACH-2008] Bach, K. (2008). Speech Acts and Pragmatics. URL: https://philpapers.org/rec/BACSAA-6
+[BASSECHES-1984] Basseches, M. (1984). Dialectical Thinking and Adult Development. URL: https://books.google.com/books/about/Dialectical_Thinking_and_Adult_Developme.html?id=oIscAAAAMAAJ
+[BECHBERGER-2017] Bechberger, L., & Kühnberger, K.-U. (2017). A Thorough Formalization of Conceptual Spaces. URL: https://arxiv.org/abs/1706.06366
+[BECHBERGER-2018] Bechberger, L., & Kühnberger, K.-U. (2018). Formal Ways for Measuring Relations between Concepts in Conceptual Spaces. URL: https://arxiv.org/abs/1804.02393
+[BENDER-2021] Bender, E. M., et al. (2021). On the Dangers of Stochastic Parrots: Can Language Models Be Too Big? URL: https://s10251.pcdn.co/pdf/2021-bender-parrots.pdf
+[BEURER-KELLNER-2022] Beurer-Kellner, L., et al. (2022). Prompting Is Programming: A Query Language for Large Language Models. URL: https://arxiv.org/abs/2212.06094
+[BHUYAN-2024] Bhuyan, B. P., et al. (2024). Neuro-symbolic Artificial Intelligence: A Survey. URL: https://link.springer.com/article/10.1007/s00521-024-09960-z
+[BILETZKI-2023] Biletzki, A., & Matar, A. (2023). Ludwig Wittgenstein. URL: https://plato.stanford.edu/entries/wittgenstein/
+[BOMMASANI-2021] Bommasani, R., et al. (2021). On the Opportunities and Risks of Foundation Models. URL: https://arxiv.org/abs/2108.07258
+[BRAULTBARON-2016] Brault-Baron, J. (2016). Hypergraph Acyclicity Revisited. URL: https://arxiv.org/abs/1301.6565
+[BROOKS-1991] Brooks, R. A. (1991). Intelligence without Representation. URL: https://people.csail.mit.edu/brooks/papers/representation.pdf
+[CADAR-2013] Cadar, C., & Sen, K. (2013). Symbolic Execution for Software Testing: Three Decades Later. URL: https://people.eecs.berkeley.edu/~ksen/papers/cacm13.pdf
+[CHAPMAN-2018] Chapman, D. (2018). In the Cells of the Eggplant: Meta-rationality. URL: https://meaningness.com/eggplant
+[CHAPMAN-2026] Chapman, D. (2026). Meta-rationality Website. URL: https://metarationality.com/
+[CHEN-2022] Chen, C., et al. (2022). Reinforcement Learning with Transformer World Models. URL: https://arxiv.org/abs/2202.09481
+[COLELOUGH-2025] Colelough, B. C., & Regli, W. (2025). Neuro-Symbolic AI in 2024: A Systematic Review. URL: https://arxiv.org/abs/2501.05435
+[COUSOT-1977] Cousot, P., & Cousot, R. (1977). Abstract Interpretation: A Unified Lattice Model for Static Analysis of Programs. URL: https://www.di.ens.fr/~cousot/publications.www/CousotCousot-POPL-77-ACM-p238--252-1977.pdf
+[CUCUMBER-2025] Cucumber. (2025). Gherkin Language Reference. URL: https://cucumber.io/docs/gherkin/reference/
+[DELONG-2024] DeLong, L. N., et al. (2024). Neurosymbolic AI for Reasoning over Knowledge Graphs: A Survey. URL: https://arxiv.org/abs/2302.07200
+[DEMOURA-2008] de Moura, L., & Bjørner, N. (2008). Z3: An Efficient SMT Solver. URL: https://link.springer.com/content/pdf/10.1007/978-3-540-78800-3_24.pdf
+[DESMET-DERAEDT-2025] De Smet, L., & De Raedt, L. (2025). Defining Neurosymbolic AI. URL: https://arxiv.org/abs/2507.11127
+[DSPY-2023] Khattab, O., et al. (2023). DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines. URL: https://arxiv.org/abs/2310.03714
+[FLAVELL-1979] Flavell, J. H. (1979). Metacognition and Cognitive Monitoring. URL: https://jgregorymcverry.com/readings/flavell1979MetacognitionAndCogntiveMonitoring.pdf
+[FLEMING-2021] Fleming, S. M. (2021). Know Thyself: The Science of Self-Awareness. URL: https://metacogni.tion.org/know-thyself/
+[FLEMING-DAW-2017] Fleming, S. M., & Daw, N. D. (2017). Self-Evaluation of Decision-Making: A General Bayesian Framework for Metacognitive Computation. URL: https://doi.org/10.1037/rev0000045
+[FUCHS-ET-AL-2008] Fuchs, N. E., Kaljurand, K., & Kuhn, T. (2008). Attempto Controlled English for Knowledge Representation. URL: https://attempto.ifi.uzh.ch/site/pubs/papers/reasoningweb2008_fuchs.pdf
+[FUCHS-SCHWITTER-1996] Fuchs, N. E., & Schwitter, R. (1996). Attempto Controlled English (ACE). URL: https://arxiv.org/abs/cmp-lg/9603003
+[GAO-2022] Gao, L., et al. (2022). PAL: Program-aided Language Models. URL: https://arxiv.org/abs/2211.10435
+[GAO-2023] Gao, Y., et al. (2023). Retrieval-Augmented Generation for Large Language Models: A Survey. URL: https://arxiv.org/abs/2312.10997
+[GARCEZ-LAMB-2020] d'Avila Garcez, A., & Lamb, L. C. (2020). Neurosymbolic AI: The 3rd Wave. URL: https://arxiv.org/abs/2012.05876
+[GOTTLOB-2001] Gottlob, G., et al. (2001). The Complexity of Acyclic Conjunctive Queries. URL: http://www.dbai.tuwien.ac.at/proj/hypertree/
+[HA-2018] Ha, D., & Schmidhuber, J. (2018). World Models. URL: https://arxiv.org/abs/1803.10122
+[HAFNER-2023] Hafner, D., et al. (2023). Mastering Diverse Domains through World Models. URL: https://arxiv.org/abs/2301.04104
+[HARNAD-1990] Harnad, S. (1990). The Symbol Grounding Problem. URL: https://cogprints.org/2133/1/harnad90.sgproblem.html
+[HDC-SURVEY-I] Kleyko, D., et al. (2021). A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I. URL: https://arxiv.org/abs/2111.06077
+[HDC-SURVEY-II] Kleyko, D., et al. (2021). A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part II. URL: https://arxiv.org/abs/2112.15424
+[HERSCHE-2024] Hersche, M., et al. (2024). Vector Symbolic Architectures: A Survey and New Directions. URL: https://arxiv.org/abs/2412.05586
+[INTUITIONISM-SEP] Iemhoff, R. (2024). Intuitionism in the Philosophy of Mathematics. URL: https://plato.stanford.edu/entries/intuitionism
+[KAHNEMAN-2011] Kahneman, D. (2011). Thinking, Fast and Slow. URL: https://cdn.penguin.co.uk/dam-assets/books/9780141033570/9780141033570-sample.pdf
+[KANERVA-2009] Kanerva, P. (2009). Hyperdimensional Computing: An Introduction to Computing in Distributed Representation with High-Dimensional Random Vectors. URL: https://redwood.berkeley.edu/wp-content/uploads/2018/01/kanerva2009hyperdimensional.pdf
+[KEGAN-1994] Kegan, R. (1994). In Over Our Heads: The Mental Demands of Modern Life. URL: https://www.hup.harvard.edu/catalog.php?isbn=9780674445888
+[KG-SURVEY] Ji, S., et al. (2020). A Survey on Knowledge Graphs: Representation, Acquisition and Applications. URL: https://arxiv.org/abs/2002.03888
+[KING-1976] King, J. C. (1976). Symbolic Execution and Program Testing. URL: https://madhu.cs.illinois.edu/cs598-fall10/king76symbolicexecution.pdf
+[LECUN-2022] LeCun, Y. (2022). A Path Towards Autonomous Machine Intelligence. URL: https://openreview.net/pdf?id=BZ5a1r-kVsf
+[LEWIS-2020] Lewis, P., et al. (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks. URL: https://arxiv.org/abs/2005.11401
+[LUKACS-2013] Lukács, G. (2013). History and Class Consciousness. URL: https://mitpress.mit.edu/9780262525670/history-and-class-consciousness/
+[MEANING-SEP] Speaks, J. (2024). Theories of Meaning. URL: https://plato.stanford.edu/entries/meaning/
+[MOKHOV-2020] Mokhov, A., Mitchell, N., & Peyton Jones, S. (2020). Build Systems à la Carte: Theory and Practice. URL: https://simon.peytonjones.org/assets/pdfs/build-systems-jfp.pdf
+[OAI-PRACTICAL-AGENTS-2025] OpenAI. (2025). A Practical Guide to Building AI Agents. URL: https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf
+[OAI-SKILLS-2026] OpenAI. (2026). Skills in Agents SDK. URL: https://developers.openai.com/api/docs/guides/tools-skills/
+[PEARL-2009] Pearl, J. (2009). Causality: Models, Reasoning, and Inference. URL: https://archive.illc.uva.nl/cil/uploaded_files/inlineitem/Pearl_2009_Causality.pdf
+[PGMPY] pgmpy project. (2025). Probabilistic Graphical Models in Python. URL: https://pgmpy.org/
+[POPPER-SEP] Thornton, S. (2024). Karl Popper. URL: https://plato.stanford.edu/entries/popper/
+[PRAGMATICS-SEP] Bach, K. (2024). Pragmatics. URL: https://plato.stanford.edu/entries/pragmatics/
+[PYKEEN] PyKEEN Documentation. (2025). Knowledge Graph Embeddings Pipeline. URL: https://pykeen.readthedocs.io/
+[PYRO] Pyro Documentation. (2025). Deep Probabilistic Programming with PyTorch. URL: https://pyro.ai/
+[PYSHEAF] PySheaf Repository. (2025). Sheaf Theoretical Data Analysis. URL: https://github.com/kb1dds/pysheaf
+[SCHICK-2023] Schick, T., et al. (2023). Toolformer: Language Models Can Teach Themselves to Use Tools. URL: https://arxiv.org/abs/2302.04761
+[SHEAF-SURVEY-2025] Ayzenberg, A., et al. (2025). Sheaf Theory: From Deep Geometry to Deep Learning. URL: https://arxiv.org/abs/2502.15476
+[TENPY] TeNPy Project. (2025). TeNPy Documentation and Repository. URL: https://tenpy.readthedocs.io/
+[TENSOR-NET-SURVEY] Wang, M., et al. (2023). Tensor Networks Meet Neural Networks: A Survey. URL: https://arxiv.org/abs/2302.09019
+[TENSORNETWORK-LIB] Google. (2025). TensorNetwork: A Library for Tensor Network Manipulations. URL: https://github.com/google/TensorNetwork
+[TORCHHD-2023] Heddes, M., et al. (2023). Torchhd: An Open Source Python Library to Support Research on Hyperdimensional Computing and Vector Symbolic Architectures. URL: https://arxiv.org/abs/2205.09208
+[VERGARI-2021] Vergari, A., et al. (2021). A Compositional Atlas of Tractable Circuit Operations for Probabilistic Inference. URL: https://arxiv.org/abs/2102.01185
+[WAN-2024] Wan, Z., et al. (2024). Towards Cognitive AI Systems: A Survey and Prospective on Neuro-Symbolic AI. URL: https://arxiv.org/abs/2401.01040
+[WILLARD-LOUF-2023] Willard, B., & Louf, R. (2023). Efficient Guided Generation for Large Language Models. URL: https://arxiv.org/abs/2307.09702
+[WITTGENSTEIN-1953] Wittgenstein, L. (1953/2009). Philosophical Investigations. URL: https://danielwharris.com/teaching/38080/readings/WittgensteinPI.pdf
+[WOLFRAM-2002] Wolfram, S. (2002). A New Kind of Science: Computational Irreducibility. URL: https://www.wolframscience.com/nks/p737--computational-irreducibility/
+[WOLPERT-1997] Wolpert, D. H., & Macready, W. G. (1997). No Free Lunch Theorems for Optimization. URL: https://www.cs.ubc.ca/~hutter/earg/papers07/00585893.pdf
+[WU-2023] Wu, Q., et al. (2023). AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation. URL: https://arxiv.org/abs/2308.08155
+[XU-2024] Xu, S., et al. (2024). AIOS Compiler: LLM as Interpreter for Natural Language Programming. URL: https://arxiv.org/abs/2405.06907
+[YAO-2023] Yao, S., et al. (2023). ReAct: Synergizing Reasoning and Acting in Language Models. URL: https://arxiv.org/abs/2210.03629

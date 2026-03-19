@@ -13,7 +13,7 @@
     <meta property="og:title" content="Regime Selection and Tractable Computation as Regime Induction — AGISystem2" />
     <meta
       property="og:description"
-      content="A technical essay on structural regime induction, tractable interpreters, agentic skills, compilation, and staged AI architectures."
+      content="A technical article on structural regime induction, tractable interpreters, agentic skills, compilation, and staged AI architectures."
     />
     <meta property="og:type" content="article" />
     <meta
@@ -473,7 +473,7 @@
             <span class="crumb-sep">/</span>
             <span class="crumb-current">Regime Selection and Tractable Computation as Regime Induction</span>
           </nav>
-          <span>Meta Rational Pragmatics essay</span>
+          <span>Meta Rational Pragmatics article</span>
         </div>
         <div class="top-links">
           <a class="pill" href="../index.html">Home</a>
@@ -483,10 +483,10 @@
       </div>
 
       <header class="hero">
-        <div class="kicker"><b>MRP Essay 03</b> Regime induction and tractable interpreters</div>
+        <div class="kicker"><b>MRP Article 09</b> Regime induction and tractable interpreters</div>
         <h1>Regime Selection and Tractable Computation as Regime Induction</h1>
         <p class="subtitle">
-          A technical essay on structural regime induction, bounded active theory frames, explicit skills, staged
+          A technical article on structural regime induction, bounded active theory frames, explicit skills, staged
           compilation, and the reduction of local subproblems to tractable interpreters.
         </p>
         <div class="meta-row">
@@ -545,6 +545,12 @@
                 Implementation and Risks
               </a>
             </li>
+            <li>
+              <a href="#references" data-step="06">
+                <span class="toc-badge">06</span>
+                References
+              </a>
+            </li>
           </ul>
         </aside>
 
@@ -559,19 +565,19 @@
             <section id="tractability">
               <h2>Structural Regimes and the Meaning of Tractable Computation</h2>
               <p>A structural regime is not just a topic label. It is a hypothesis about the computational shape of the subproblem. Some subproblems are constraint-dominated and justify exact symbolic verification. Others are graph-structured and call for relational decomposition. Others are driven by graded similarity and are better handled geometrically or associatively. Others involve explicit uncertainty, local dependence, or latent state evolution and are better expressed probabilistically or through predictive models. Others are synthesis problems, where the relevant output is an executable procedure rather than a descriptive answer. This is why regime induction is more fundamental than simple tool choice. Before one can call a solver, a retrieval engine, a world model, or a compiler-like transform, one must first isolate the relevant entities, scopes, dependencies, invariants, and success criteria. Intelligence begins when the system succeeds in producing a bounded active theory frame within which solving has become meaningful.</p>
-              <p>Tractable computation, in this setting, does not mean only lower runtime. It means that the problem has been transformed into a form for which a reliable local interpreter exists at acceptable cost. Sometimes this happens through exact formalization, as when a fragment becomes explicit enough for satisfiability checking or symbolic verification. Sometimes it happens through approximation, pruning, or narrowing before exact reasoning is attempted. Sometimes it happens through change of representation, where an apparently hard problem becomes manageable because its structure has been recast in graph form, factorized into local dependencies, or encoded compositionally. This is why classical ideas such as SMT solving, abstract interpretation, symbolic execution, bounded graph structure, submodularity, and tractable circuit structure remain relevant. Their value is not nostalgic. Their value is that they instantiate different ways in which local tractability can be obtained once the right regime has been identified [DEMOURA-2008] [COUSOT-1977] [KING-1976] [CADAR-2013] [BODLAENDER-1998] [KRAUSE-2012] [VERGARI-2021].</p>
+              <p>Tractable computation, in this setting, does not mean only lower runtime. It means that the problem has been transformed into a form for which a reliable local interpreter exists at acceptable cost. Sometimes this happens through exact formalization, as when a fragment becomes explicit enough for satisfiability checking or symbolic verification. Sometimes it happens through approximation, pruning, or narrowing before exact reasoning is attempted. Sometimes it happens through change of representation, where an apparently hard problem becomes manageable because its structure has been recast in graph form, factorized into local dependencies, or encoded compositionally. This is why classical ideas such as SMT solving, abstract interpretation, symbolic execution, bounded graph and hypergraph structure, and tractable circuit structure remain relevant. Their value is not nostalgic. Their value is that they instantiate different ways in which local tractability can be obtained once the right regime has been identified [DEMOURA-2008] [COUSOT-1977] [KING-1976] [CADAR-2013] [GOTTLOB-2001] [BRAULTBARON-2016] [VERGARI-2021].</p>
             </section>
 
             <section id="skills-compilation">
               <h2>Skills, Compilation, and the Agentic Virtual Machine</h2>
-              <p>The notion of agentic skills makes this architecture implementable in a realistic way. A skill should not be understood merely as a wrapper around a tool call. It is better defined as a bounded computational unit with explicit inputs, explicit outputs, declared assumptions, and limited side effects. In heavier execution modes, skills can behave like dependency-aware build steps. In more dynamic modes, the same skills can be assembled into short-lived plans and revised locally without forcing a global restart of the reasoning history. This design matters because regime induction needs stable local units on which structural decisions can act. Without explicit skills, the system remains a loose conversational flow. With explicit skills, it becomes possible to isolate subproblems, track dependencies, cache intermediate results, validate local behavior, and optimize recurring execution paths. This is also consistent with recent engineering guidance from major labs, which emphasizes simple composable agent patterns, explicit tools, reusable skills, and context engineering rather than unconstrained conversational autonomy [ANTHROPIC-2024] [ANTHROPIC-2025] [OPENAI-2026].</p>
+              <p>The notion of agentic skills makes this architecture implementable in a realistic way. A skill should not be understood merely as a wrapper around a tool call. It is better defined as a bounded computational unit with explicit inputs, explicit outputs, declared assumptions, and limited side effects. In heavier execution modes, skills can behave like dependency-aware build steps. In more dynamic modes, the same skills can be assembled into short-lived plans and revised locally without forcing a global restart of the reasoning history. This design matters because regime induction needs stable local units on which structural decisions can act. Without explicit skills, the system remains a loose conversational flow. With explicit skills, it becomes possible to isolate subproblems, track dependencies, cache intermediate results, validate local behavior, and optimize recurring execution paths. This is also consistent with recent engineering guidance from major labs, which emphasizes simple composable agent patterns, explicit tools, reusable skills, and context engineering rather than unconstrained conversational autonomy [ANT-BEA-2024] [ANT-SKILLS-2025] [ANT-CTX-2025] [OAI-SKILLS-2026].</p>
               <p>Once skills are treated this way, a well-structured agentic system becomes more than a prompt plus tools. It becomes a high-level source language. Its skills, prompts, dependency graph, routing logic, validation hooks, and fallback policies together define an executable program that can in principle be analyzed, optimized, and partially compiled. This gives regime induction a concrete computational interpretation. Over repeated executions, the system can discover that some skill chains correspond to stable structural regimes, that some prompt-mediated steps can be replaced by deterministic code, that some routing decisions can be delegated to smaller trained classifiers, and that some recurrent subproblems deserve specialized interpreters. In that sense, compilation is not merely low-level optimization. It is the progressive conversion of expensive, prompt-heavy, weakly structured agent behavior into stronger and more reliable local competence. The long-term target is therefore not a single giant reasoning engine, but an agentic virtual machine that preserves the common execution grammar of the original skill system while replacing fragile runtime choices with more efficient and more auditable interpreters.</p>
             </section>
 
             <section id="staged-ecology">
               <h2>The Staged Ecology of LLMs, ML, Software, and Local Substrates</h2>
-              <p>This perspective also clarifies the respective roles of LLMs, classical ML, and classical software. LLMs remain useful, but mainly as high-level orchestrators for decomposition, schema induction, regime suggestion, interface translation, and partial synthesis. They are especially valuable when the artefact is messy and the first task is to move from informal structure to an explicit intermediate representation. At the same time, they remain weak as universal interpreters for exact reasoning, long-horizon consistency, and tractability-aware decomposition, which is one reason why current practical agent design emphasizes tools, context engineering, and structured interfaces [ANTHROPIC-2024] [LECUN-2022]. Classical ML has a more targeted role: learned routers, detectors, boundary estimators, regime classifiers, confidence models, and specialized predictors for recurring local tasks. Classical software remains central whenever a subproblem has already been sufficiently stabilized to justify exact or near-exact procedures, such as solvers, planners, validators, graph algorithms, or domain-specific code. The emerging architecture is therefore not “LLMs versus classical methods.” It is a staged ecology in which LLMs help expose structure, ML helps detect and specialize regimes, and classical software executes where explicit structure justifies stronger guarantees.</p>
-              <p>Within this architecture, world models, neuro-symbolic systems, probabilistic circuits, and vector-symbolic representations should be treated as candidate local substrates, not universal foundations. World models are appropriate when the subproblem genuinely involves latent state evolution, internal rollout, or action-conditioned consequence [HA-SCHMIDHUBER-2018] [HAFNER-2023]. Neuro-symbolic methods are appropriate when explicit compositional structure, local proof traces, or symbolic constraints materially improve performance, traceability, or governance [GARCEZ-LAMB-2020]. Probabilistic circuits are relevant when exact and tractable probabilistic inference is achievable under known structural restrictions [VERGARI-2021]. Vector-symbolic or hyperdimensional representations are important because they offer a possible middle layer between dense neural approximation and rigid symbolic data structures: they support role-filler binding, compositional manipulation, and compact structured representations with relatively simple algebraic operations [KLEYKO-2021] [HERSCHE-2024]. Their significance here is not that they replace deep learning, but that they may offer better local substrates for regimes where compositional structure must remain manipulable and computationally light.</p>
+              <p>This perspective also clarifies the respective roles of LLMs, classical ML, and classical software. LLMs remain useful, but mainly as high-level orchestrators for decomposition, schema induction, regime suggestion, interface translation, and partial synthesis. They are especially valuable when the artefact is messy and the first task is to move from informal structure to an explicit intermediate representation. At the same time, they remain weak as universal interpreters for exact reasoning, long-horizon consistency, and tractability-aware decomposition, which is one reason why current practical agent design emphasizes tools, context engineering, and structured interfaces [ANT-BEA-2024] [ANT-CTX-2025] [LECUN-2022]. Classical ML has a more targeted role: learned routers, detectors, boundary estimators, regime classifiers, confidence models, and specialized predictors for recurring local tasks. Classical software remains central whenever a subproblem has already been sufficiently stabilized to justify exact or near-exact procedures, such as solvers, planners, validators, graph algorithms, or domain-specific code. The emerging architecture is therefore not “LLMs versus classical methods.” It is a staged ecology in which LLMs help expose structure, ML helps detect and specialize regimes, and classical software executes where explicit structure justifies stronger guarantees.</p>
+              <p>Within this architecture, world models, neuro-symbolic systems, probabilistic circuits, and vector-symbolic representations should be treated as candidate local substrates, not universal foundations. World models are appropriate when the subproblem genuinely involves latent state evolution, internal rollout, or action-conditioned consequence [HA-2018] [HAFNER-2023]. Neuro-symbolic methods are appropriate when explicit compositional structure, local proof traces, or symbolic constraints materially improve performance, traceability, or governance [GARCEZ-LAMB-2020]. Probabilistic circuits are relevant when exact and tractable probabilistic inference is achievable under known structural restrictions [VERGARI-2021]. Vector-symbolic or hyperdimensional representations are important because they offer a possible middle layer between dense neural approximation and rigid symbolic data structures: they support role-filler binding, compositional manipulation, and compact structured representations with relatively simple algebraic operations [HDC-SURVEY-I] [HERSCHE-2024]. Their significance here is not that they replace deep learning, but that they may offer better local substrates for regimes where compositional structure must remain manipulable and computationally light.</p>
             </section>
 
             <section id="implementation-risks">
@@ -580,12 +586,37 @@
               <p>The main risks should also be stated explicitly. The first is premature compilation: transient workflow regularities may be frozen too early into rigid procedures. The second is level confusion: useful skill boundaries are not automatically the right semantic boundaries. The third is hidden fragility: some skills may appear explicit while still depending on ambiguous prompts or undocumented context conventions. The fourth is local optimization at the expense of global reliability or auditability. For this reason, compilation should be incremental, evidence-driven, versioned, reversible, and tied to tests, provenance, and rollback paths. The objective is not unconstrained self-modification. The objective is disciplined specialization under explicit control.</p>
               <p>The central claim can therefore be stated in a concise form. A mature meta-rational system does not primarily learn one universal semantics of the world. It learns how to induce structural regimes and how to reduce local subproblems to tractable interpreters. Agentic skills provide the practical substrate for this transition because they supply bounded computational units, explicit operational contracts, and a common execution grammar. Structural Regime Selection and Tractable Computation should therefore be understood not as a peripheral heuristic, but as one of the main computational consequences of meta-rational pragmatics.</p>
             </section>
+
+            <section id="references">
+              <h2>References</h2>
+              <ul class="refs">
+                <li>[ANT-BEA-2024] Anthropic. (2024). Building Effective AI Agents.</li>
+                <li>[ANT-CTX-2025] Anthropic. (2025). Effective Context Engineering for AI Agents.</li>
+                <li>[ANT-SKILLS-2025] Anthropic. (2025). Equipping Agents for the Real World with Agent Skills.</li>
+                <li>[BILETZKI-2023] Biletzki, A., & Matar, A. (2023). Ludwig Wittgenstein.</li>
+                <li>[BRAULTBARON-2016] Brault-Baron, J. (2016). Hypergraph Acyclicity Revisited.</li>
+                <li>[CADAR-2013] Cadar, C., & Sen, K. (2013). Symbolic Execution for Software Testing: Three Decades Later.</li>
+                <li>[COUSOT-1977] Cousot, P., & Cousot, R. (1977). Abstract Interpretation.</li>
+                <li>[DEMOURA-2008] de Moura, L., & Bjørner, N. (2008). Z3: An Efficient SMT Solver.</li>
+                <li>[GARCEZ-LAMB-2020] d'Avila Garcez, A., & Lamb, L. C. (2020). Neurosymbolic AI: The 3rd Wave.</li>
+                <li>[GOTTLOB-2001] Gottlob, G., et al. (2001). The Complexity of Acyclic Conjunctive Queries.</li>
+                <li>[HA-2018] Ha, D., & Schmidhuber, J. (2018). World Models.</li>
+                <li>[HAFNER-2023] Hafner, D., et al. (2023). Mastering Diverse Domains through World Models.</li>
+                <li>[HDC-SURVEY-I] Kleyko, D., et al. (2021). A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I.</li>
+                <li>[HERSCHE-2024] Hersche, M., et al. (2024). Vector Symbolic Architectures: A Survey and New Directions.</li>
+                <li>[KING-1976] King, J. C. (1976). Symbolic Execution and Program Testing.</li>
+                <li>[LECUN-2022] LeCun, Y. (2022). A Path Towards Autonomous Machine Intelligence.</li>
+                <li>[OAI-SKILLS-2026] OpenAI. (2026). Skills in Agents SDK.</li>
+                <li>[VERGARI-2021] Vergari, A., et al. (2021). A Compositional Atlas of Tractable Circuit Operations for Probabilistic Inference.</li>
+                <li>[WITTGENSTEIN-1953] Wittgenstein, L. (1953/2009). Philosophical Investigations.</li>
+              </ul>
+            </section>
           </article>
         </main>
       </div>
 
       <footer>
-        <p>This essay is published in the Meta Rational Pragmatics track of the AGISystem2 documentation site.</p>
+        <p>This article is published in the Meta Rational Pragmatics article series of the AGISystem2 documentation site.</p>
       </footer>
     </div>
 
