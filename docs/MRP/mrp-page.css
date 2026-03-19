@@ -101,19 +101,52 @@ button:focus-visible {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 6px;
-  font-weight: 700;
-  line-height: 1.15;
+  gap: 5px;
+  line-height: 1.1;
 }
 
 .crumbs a {
   color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+  border: 1px solid var(--stroke2);
+  border-radius: 999px;
+  background: rgba(247, 250, 253, 0.96);
+  font-size: 12px;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.crumbs a:hover,
+.crumbs a:focus-visible {
+  background: rgba(239, 246, 251, 0.98);
+  border-color: var(--stroke);
+  text-decoration: none;
 }
 
 .crumb-sep,
 .crumb-current {
   color: var(--muted);
   font-size: 12.5px;
+}
+
+.crumb-sep {
+  color: var(--faint);
+  font-size: 11px;
+  line-height: 1;
+}
+
+.crumb-current {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+  border: 1px solid rgba(29, 95, 139, 0.16);
+  border-radius: 999px;
+  background: rgba(236, 244, 250, 0.98);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 650;
 }
 
 .brand span {
