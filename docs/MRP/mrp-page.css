@@ -606,8 +606,23 @@ footer p:last-child {
   }
 
   .topbar {
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
     top: 8px;
+  }
+
+  .top-links {
+    width: 100%;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    flex-wrap: nowrap;
+  }
+
+  .pill {
+    white-space: nowrap;
   }
 
   .hero,
@@ -639,4 +654,46 @@ footer p:last-child {
   .program-table tr + tr {
     border-top: 1px solid var(--paper-line);
   }
+}
+
+.expandable-wrapper {
+  position: relative;
+}
+.expandable-content {
+  max-height: 110px;
+  overflow: hidden;
+  position: relative;
+  transition: max-height 0.3s ease;
+}
+.expandable-content::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), var(--paper));
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.expandable-wrapper.expanded .expandable-content {
+  max-height: 3000px;
+}
+.expandable-wrapper.expanded .expandable-content::after {
+  opacity: 0;
+}
+.view-more-btn {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  font-family: var(--ui);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 0;
+  margin-top: 4px;
+}
+.view-more-btn:hover {
+  text-decoration: underline;
 }

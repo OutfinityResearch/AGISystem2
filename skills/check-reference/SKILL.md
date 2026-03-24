@@ -26,10 +26,11 @@ Run:
 python3 skills/check-reference/scripts/check_reference.py <document-path>
 ```
 
-Use `--json` when you want machine-readable output:
+Use `--json` and redirect output to a temporary file in `.tmp/` when you want machine-readable output:
 
 ```bash
-python3 skills/check-reference/scripts/check_reference.py <document-path> --json
+mkdir -p .tmp/audit
+python3 skills/check-reference/scripts/check_reference.py <document-path> --json > .tmp/audit/$(basename <document-path>).json
 ```
 
 If the document cites keys from a shared bibliography stored elsewhere, pass that file too:

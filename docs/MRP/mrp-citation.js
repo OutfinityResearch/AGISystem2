@@ -18,6 +18,8 @@
 
   const canonicalUrl =
     document.querySelector('meta[property="og:url"]')?.getAttribute("content") || location.href;
+
+  
   const defaultTitle = document.title.replace(/\s+—\s+AGISystem2$/, "").trim();
 
   for (const box of document.querySelectorAll("[data-citation-box]")) {

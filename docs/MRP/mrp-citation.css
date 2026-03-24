@@ -1,9 +1,14 @@
 .citation-box {
+  display: none;
   margin-top: 18px;
   padding-top: 14px;
   border-top: 1px solid var(--paper-line);
   -webkit-user-select: text;
   user-select: text;
+}
+
+.citation-box.visible {
+  display: block;
 }
 
 .citation-link,

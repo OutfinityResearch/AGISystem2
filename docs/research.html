@@ -29,12 +29,7 @@
           </nav>
           <span>Technical research map around MRP-VM</span>
         </div>
-        <div class="top-links">
-          <a class="pill" href="MRP/index.html">MRP</a>
-          <a class="pill primary" href="research.html">Research</a>
-          <a class="pill" href="ai-assisted-research.html">AI-Assisted Research</a>
-          <a class="pill" href="index.html">Home</a>
-        </div>
+        <div id="site-top-links" data-active="research" data-basepath="."></div>
       </div>
 
       <header class="hero">
@@ -58,7 +53,7 @@
             <li>
               <a href="#summary" data-step="01" aria-current="true">
                 <span class="toc-badge">01</span>
-                Executive Summary
+                Overview
               </a>
             </li>
             <li>
@@ -85,7 +80,9 @@
         <main>
           <article class="article">
             <section id="summary">
-              <h2>Executive Summary</h2>
+              <h2>Overview</h2>
+              <div class="expandable-wrapper" data-expandable>
+                <div class="expandable-content">
               <p>
                 The research map exists to answer a practical question: what technical capabilities are needed if AI is
                 to become more reliable, more local, and more computationally disciplined than current model-centric
@@ -104,6 +101,11 @@
                 a broader ecosystem of tractable methods, symbolic fragments, compact learned modules, constrained
                 languages, and validation technologies.
               </p>
+                            </div>
+                <div class="expandable-actions">
+                  <button class="view-more-btn" type="button">View more..</button>
+                </div>
+              </div>
             </section>
 
             <section id="articles">
@@ -430,8 +432,8 @@
                     <div class="entry-note">Strategic foundations track. Published March 19, 2026.</div>
                   </a>
                 </li>
-                <li>
-                  <a href="research/european-research-initiatives.html">
+                
+                \1
                     <span class="entry-label">Strategic Foundations</span>
                     <h3>European Research Initiatives</h3>
                     <p>
@@ -505,14 +507,9 @@
         </main>
       </div>
 
-      <footer>
-        <p>
-          This research map is maintained as part of AGISystem2 and complements the
-          <a href="MRP/index.html">Meta Rational Pragmatics</a> article series.
-        </p>
-      </footer>
+      <div id="site-footer" data-type="research-map" data-basepath="."></div>
     </div>
 
     <script src="MRP/mrp-outline.js"></script>
-  </body>
+  <script src="./widgets/layout.js"></script>\n  </body>
 </html>

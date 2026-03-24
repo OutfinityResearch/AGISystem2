@@ -1,0 +1,238 @@
+import os
+
+new_content = """<!doctype html>
+<html lang="en" data-default-section="abstract">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f7fbff" />
+    <meta name="description" content="Toward a Practical System 2 for AI-Assisted Research: principles, failure modes, and architectural control for rigorous AI-assisted workflows." />
+    <meta property="og:title" content="Toward a Practical System 2 for AI-Assisted Research" />
+    <meta property="og:description" content="Principles, failure modes, and architectural controls for rigorous, auditable AI-assisted research." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/ai-assisted-research/practical-system-2.html" />
+    <title>Toward a Practical System 2 for AI-Assisted Research - AGISystem2</title>
+    <link rel="stylesheet" href="../MRP/mrp-page.css" />
+    <link rel="stylesheet" href="../MRP/mrp-citation.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="../index.html">AGISystem2</a>
+            <span class="crumb-sep">/</span>
+            <a href="../ai-assisted-research.html">AI-Assisted Research</a>
+            <span class="crumb-sep">/</span>
+            <span class="crumb-current">Toward a Practical System 2</span>
+          </nav>
+        </div>
+        <div id="site-top-links" data-active="ai-assisted" data-basepath=".."></div>
+      </div>
+
+      <header class="hero">
+        <div class="kicker"><b>Method article</b> Practical System 2 infrastructure for AI-assisted science</div>
+        <h1>Toward a Practical System 2 for AI-Assisted Research</h1>
+        <p class="subtitle">Validation, rigor, and architectural control over LLM generation.</p>
+        <div class="meta-row">
+          <span class="meta-pill">Published March 19, 2026</span>
+          <span class="meta-pill">Focus: Research automation</span>
+          <span class="meta-pill">Method: Generate fast, validate independently</span>
+        </div>
+        <div class="citation-box" data-citation-box data-citation-key="AGISystem2-2026">
+          <div class="citation-head">
+            <strong>Permalink & citation</strong>
+            <div class="citation-actions">
+              <button class="copy-button" type="button" data-copy-target="link">Copy link</button>
+              <button class="copy-button" type="button" data-copy-target="citation">Copy citation</button>
+            </div>
+          </div>
+          <a class="citation-link" data-doc-link href="#"></a>
+          <p class="citation-preview" data-citation-preview></p>
+          <span class="copy-status" data-copy-status aria-live="polite"></span>
+        </div>
+      </header>
+
+      <div class="layout" id="main">
+        <aside class="toc" aria-label="Article outline">
+          <header>
+            <strong>Outline</strong>
+            <span id="nav-readout">—</span>
+          </header>
+          <ul class="navlist">
+            <li><a href="#abstract" data-step="01" aria-current="true"><span class="toc-badge">01</span> Abstract</a></li>
+            <li><a href="#system1-limits" data-step="02"><span class="toc-badge">02</span> The Limits of Synthetic System 1</a></li>
+            <li><a href="#principles" data-step="03"><span class="toc-badge">03</span> Principles for AI-Assisted Research</a></li>
+            <li><a href="#failure-modes" data-step="04"><span class="toc-badge">04</span> Failure Modes and Architectural Mitigations</a></li>
+            <li><a href="#evaluation-signals" data-step="05"><span class="toc-badge">05</span> Evaluation Signals for Rigor</a></li>
+            <li><a href="#conclusion" data-step="06"><span class="toc-badge">06</span> Conclusion</a></li>
+            <li><a href="#references" data-step="07"><span class="toc-badge">07</span> References</a></li>
+          </ul>
+        </aside>
+
+        <main class="stack">
+          <article class="article">
+            <section id="abstract">
+              <h2>1. Abstract</h2>
+              <p>
+                The integration of Large Language Models (LLMs) into scientific and engineering workflows has fundamentally shifted the bottleneck of research. As text, code, and hypothesis generation become increasingly inexpensive and fluent, the primary constraint is no longer production, but epistemic control. Unconstrained agentic systems operate akin to a synthetic "System 1"—highly associative and generative, yet prone to hallucination, local optimization at the expense of global coherence, and a lack of durable provenance [Bender-2021] [Kahneman-2011].
+              </p>
+              <p>
+                To utilize AI effectively in high-stakes environments, generation must be decoupled from acceptance. This requires the development of a "System 2" architecture: a set of explicit governance mechanisms, deterministic validation gates, and structured intermediate representations that force LLM outputs into verifiable constraints. Based on insights drawn from the development of AGISystem2 and recent literature on multi-agent collaboration, this article outlines actionable principles and evaluation frameworks for rigorous AI-assisted research [Gottweis-2025] [Anthropic-2024].
+              </p>
+            </section>
+
+            <section id="system1-limits">
+              <h2>2. The Limits of Synthetic System 1</h2>
+              <p>
+                Human cognition is often described using dual-process theory. "System 1" is fast, automatic, and associative, while "System 2" is slow, deliberate, and capable of formal logic and constraint satisfaction [Kahneman-2011]. Contemporary auto-regressive LLMs excel at System 1 tasks. They rapidly synthesize patterns from latent space, enabling the drafting of complex codebases, the generation of research summaries, and the proposal of experimental variations.
+              </p>
+              <p>
+                However, scientific research relies heavily on System 2 mechanics: the maintenance of strict invariants, the adherence to formal semantic constraints, the tracing of evidence to primary sources, and the prevention of logical contradictions across long temporal horizons. When LLMs are utilized without structural constraints, they frequently exhibit "fluent-but-wrong" behavior. They construct plausible but non-functional APIs, hallucinate non-existent citations to justify arguments, and lose context over extended iteration cycles [Xu-2024] [Bender-2021].
+              </p>
+              <p>
+                Therefore, a practical architecture for AI-assisted research cannot rely solely on larger models or more sophisticated prompting techniques. It must externalize System 2 functions. It requires an environment where AI proposes, but formal systems—compilers, theorem provers, explicit human-in-the-loop review protocols, and constrained intermediate representations—dispose.
+              </p>
+            </section>
+
+            <section id="principles">
+              <h2>3. Principles for AI-Assisted Research</h2>
+              <p>
+                Constructing a rigorous AI-assisted workflow requires implementing governance structures that bound the agent's operational space. The following principles map abstract concerns into concrete architectural requirements.
+              </p>
+
+              <div class="table-wrap">
+                <table>
+                  <caption>Table 1. Core Principles of System 2 Governance</caption>
+                  <thead>
+                    <tr>
+                      <th>Principle</th>
+                      <th>Operational Implementation</th>
+                      <th>Epistemic Justification</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>1. Specifications as Governance</strong></td>
+                      <td>
+                        Utilize strict, version-controlled specification documents (e.g., DSLs, constrained natural language) to define intent and constraints before code or text generation begins.
+                      </td>
+                      <td>
+                        Mitigates semantic drift. It forces the system to conform to an explicit objective rather than allowing the model to silently reinterpret goals based on local context windows.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>2. Separation of Generation and Validation</strong></td>
+                      <td>
+                        LLMs act as proposers. Validation is strictly handled by independent deterministic systems (linters, test suites, static analyzers, or formal solvers). Narrative explanations from the LLM are ignored in the validation phase.
+                      </td>
+                      <td>
+                        Prevents confirmation bias where the generative model fabricates post-hoc rationalizations for incorrect outputs. Verification must rely on objective, non-associative criteria.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>3. First-Class Traceability</strong></td>
+                      <td>
+                        Maintain strict provenance mapping. Every generated claim, code block, or hypothesis must be algorithmically linked to its originating constraint, test case, or primary literature citation.
+                      </td>
+                      <td>
+                        Essential for auditability and reproducibility. If a foundational assumption is updated, the system must deterministically trace and flag all dependent downstream artifacts.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>4. Epistemic Redundancy</strong></td>
+                      <td>
+                        Deploy multiple, distinct agents (e.g., a "Generator" and an adversarial "Critic") operating on different temperature settings or base models to evaluate the same task independently [Gottweis-2025].
+                      </td>
+                      <td>
+                        Reduces correlated error. By utilizing diverse representation paths, the system approximates adversarial peer review, surfacing logical flaws prior to human intervention.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>5. Representational Commitments</strong></td>
+                      <td>
+                        Force the AI to output intermediate reasoning into typed structures (JSON schemas, Abstract Syntax Trees, or semantic graphs) rather than unstructured prose.
+                      </td>
+                      <td>
+                        Unstructured text hides ambiguity. Typed intermediate representations force the model to explicitly commit to logical relationships, making failures immediately parsable by programmatic gates.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section id="failure-modes">
+              <h2>4. Failure Modes and Architectural Mitigations</h2>
+              <p>
+                In practice, relying heavily on AI automation introduces specific recurring failure modes. Addressing these requires architectural interventions that prioritize epistemic integrity over pure throughput.
+              </p>
+
+              <p><strong>Failure Mode 1: Engineering Validation Substituting for Epistemic Truth</strong><br>
+              <em>The Problem:</em> Teams often equate a passing test suite with correct scientific logic. An AI can easily generate code that passes tests by implementing trivial or tautological solutions that fail to capture the underlying domain complexity.<br>
+              <em>The Mitigation:</em> Separate the generation of tests from the generation of implementation. Tests must be derived directly from the explicit specification by an independent mechanism, enforcing "negative tests" (tests designed to fail on naive implementations) to verify robustness.</p>
+
+              <p><strong>Failure Mode 2: Hallucinated Authority and Citation Contamination</strong><br>
+              <em>The Problem:</em> LLMs generate highly plausible academic citations that do not exist, or they misattribute claims to real papers, contaminating the research bibliography.<br>
+              <em>The Mitigation:</em> Implement a strict <strong>Citation Verification Protocol</strong>. Citations proposed by the model must be treated as untrusted candidates. A deterministic sub-system must ping external databases (e.g., Crossref, Semantic Scholar) to verify the DOI, authorship, and contextual relevance before the citation is admitted to the finalized artifact.</p>
+
+              <p><strong>Failure Mode 3: Premature Design Lock-in</strong><br>
+              <em>The Problem:</em> Because AI can generate functional prototypes instantly, researchers may accept the first working architecture, bypassing the exploration of conceptually superior, though harder-to-implement, alternatives.<br>
+              <em>The Mitigation:</em> Enforce an "exploration budget." The workflow must mandate the generation of multiple, structurally distinct approaches to a problem (e.g., solving a task via graph theory vs. probabilistic inference) and explicitly compare their trade-offs in a decision log before finalizing the implementation path.</p>
+            </section>
+
+            <section id="evaluation-signals">
+              <h2>5. Evaluation Signals for Rigor</h2>
+              <p>
+                If AI is to be used as a serious research instrument, evaluating the success of the workflow must extend beyond measuring speed. High throughput of incorrect data is detrimental. The following metrics are essential for evaluating the health of an AI-assisted research environment.
+              </p>
+
+              <ul>
+                <li><strong>Defect Density vs. Generation Volume:</strong> A critical metric. If the volume of code/text increases exponentially but the defect density (bugs, logical contradictions found post-commit) also rises, the validation gates are too loose.</li>
+                <li><strong>Cross-Artifact Consistency:</strong> Measuring the drift between the foundational specification, the actual implementation, and the generated documentation. High divergence indicates a failure in constraint enforcement (Principle 1).</li>
+                <li><strong>Primary-Source Verification Rate:</strong> The percentage of AI-generated factual claims or citations that pass automated programmatic verification against trusted external databases.</li>
+                <li><strong>Regression Control:</strong> Evaluating the system's ability to maintain global coherence. When a local module is refactored by an agent, what is the rate of unintended cascading failures in distant, supposedly isolated, subsystems?</li>
+              </ul>
+            </section>
+
+            <section id="conclusion">
+              <h2>6. Conclusion</h2>
+              <p>
+                The utility of AI in scientific and complex engineering tasks is undeniable. However, integrating these tools requires an acknowledgment of their fundamental architectural limitations. Large Language Models provide unparalleled generative capacity—a synthetic System 1—but they are epistemically unreliable.
+              </p>
+              <p>
+                Achieving a Practical System 2 for AI-assisted research demands the deliberate construction of friction. It requires the implementation of explicit specifications, deterministic validation gates, strict provenance tracking, and adversarial evaluation protocols. By framing AI not as an autonomous oracle, but as a high-throughput generator bound by strict external governance, research teams can harness acceleration without sacrificing the rigorous epistemic control required for scientific validity.
+              </p>
+            </section>
+
+            <section id="references">
+              <h2>7. References</h2>
+              <ul class="refs">
+                <li>[Anthropic-2024] Anthropic. (2024). <em>Building Effective AI Agents</em>. Engineering Guidelines.</li>
+                <li>[Bender-2021] Bender, E. M., et al. (2021). <em>On the Dangers of Stochastic Parrots: Can Language Models Be Too Big? </em> FAccT '21.</li>
+                <li>[Gottweis-2025] Gottweis, J., Natarajan, V., et al. (2025). <em>Accelerating scientific breakthroughs with an AI co-scientist</em>. Google Research.</li>
+                <li>[Kahneman-2011] Kahneman, D. (2011). <em>Thinking, Fast and Slow</em>. Farrar, Straus and Giroux.</li>
+                <li>[Xu-2024] Xu, S., et al. (2024). <em>AIOS Compiler: LLM as Interpreter for Natural Language Programming</em>.</li>
+              </ul>
+            </section>
+
+          </article>
+        </main>
+      </div>
+
+      <div id="site-footer" data-type="ai-assisted" data-basepath=".."></div>
+    </div>
+
+    <script src="../MRP/mrp-outline.js"></script>
+    <script src="../MRP/mrp-citation.js"></script>
+    <script src="../widgets/layout.js"></script>
+  </body>
+</html>"""
+
+with open('docs/ai-assisted-research/practical-system-2.html', 'w', encoding='utf-8') as f:
+    f.write(new_content)
+
+print("Done")

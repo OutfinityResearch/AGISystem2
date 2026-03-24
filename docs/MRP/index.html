@@ -33,12 +33,7 @@
           </nav>
           <span>Meta Rational Pragmatics article series</span>
         </div>
-        <div class="top-links">
-          <a class="pill primary" href="index.html">MRP</a>
-          <a class="pill" href="../research.html">Research</a>
-          <a class="pill" href="../ai-assisted-research.html">AI-Assisted Research</a>
-          <a class="pill" href="../index.html">Home</a>
-        </div>
+        <div id="site-top-links" data-active="mrp" data-basepath=".."></div>
       </div>
 
       <header class="hero">
@@ -74,7 +69,7 @@
             <li>
               <a href="#summary" data-step="01" aria-current="true">
                 <span class="toc-badge">01</span>
-                Executive Summary
+                Overview
               </a>
             </li>
             <li>
@@ -101,7 +96,9 @@
         <main>
           <article class="article">
             <section id="summary">
-              <h2>Executive Summary</h2>
+              <h2>Overview</h2>
+              <div class="expandable-wrapper" data-expandable>
+                <div class="expandable-content">
               <p>
                 Meta Rational Pragmatics is organized around one central technical object: MRP-VM. The main research
                 effort of this series is directed toward building and refining it as a runtime for governed
@@ -125,6 +122,11 @@
                 units, then advanced AI becomes more stable, more legible, more trustworthy, and more computationally
                 realistic. That is the opportunity this series is meant to define.
               </p>
+                            </div>
+                <div class="expandable-actions">
+                  <button class="view-more-btn" type="button">View more..</button>
+                </div>
+              </div>
             </section>
 
             <section id="articles">
@@ -281,6 +283,8 @@
 
             <section id="direction">
               <h2>Research Direction</h2>
+              <div class="expandable-wrapper" data-expandable>
+                <div class="expandable-content">
               <p>
                 MRP-VM gives this research program a coherent center. It allows us to connect theory, engineering,
                 benchmarks, productization, and translation into one architecture rather than scattering them across
@@ -299,6 +303,11 @@
                 development of runtimes that can coordinate multiple forms of execution under explicit control.
                 MRP-VM is our name for that step.
               </p>
+                            </div>
+                <div class="expandable-actions">
+                  <button class="view-more-btn" type="button">View more..</button>
+                </div>
+              </div>
             </section>
 
             <section id="program">
@@ -348,15 +357,10 @@
         </main>
       </div>
 
-      <footer>
-        <p>
-          MRP is maintained as a research article series inside AGISystem2. Its main horizon is the construction and
-          refinement of MRP-VM as a concrete path toward reliable, local, enterprise-usable AI.
-        </p>
-      </footer>
+      <div id="site-footer" data-type="mrp" data-basepath=".."></div>
     </div>
 
     <script src="mrp-outline.js"></script>
     <script src="mrp-citation.js"></script>
-  </body>
+  <script src="../widgets/layout.js"></script>\n  </body>
 </html>

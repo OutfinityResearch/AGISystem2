@@ -30,12 +30,7 @@
           </nav>
           <span>Research and engineering documentation</span>
         </div>
-        <div class="top-links">
-          <a class="pill" href="MRP/index.html">MRP</a>
-          <a class="pill" href="research.html">Research</a>
-          <a class="pill" href="ai-assisted-research.html">AI-Assisted Research</a>
-          <a class="pill primary" href="index.html">Home</a>
-        </div>
+        <div id="site-top-links" data-active="home" data-basepath="."></div>
       </div>
 
       <header class="hero">
@@ -59,7 +54,7 @@
             <li>
               <a href="#summary" data-step="01" aria-current="true">
                 <span class="toc-badge">01</span>
-                Executive Summary
+                Overview
               </a>
             </li>
             <li>
@@ -86,7 +81,9 @@
         <main>
           <article class="article">
             <section id="summary">
-              <h2>Executive Summary</h2>
+              <h2>Overview</h2>
+              <div class="expandable-wrapper" data-expandable>
+                <div class="expandable-content">
               <p>
                 AGISystem2 starts from a suspicion that has grown steadily stronger in our work: the future of AI will
                 not be secured by scaling large models. It will depend on whether intelligence can be made more
@@ -134,6 +131,11 @@
                 different question about AI: not only how capable models can become, but how intelligence itself might
                 be reorganized into systems that are more dependable, more local, and more computationally serious.
               </p>
+                            </div>
+                <div class="expandable-actions">
+                  <button class="view-more-btn" type="button">View more..</button>
+                </div>
+              </div>
             </section>
 
             <section id="start">
@@ -164,17 +166,15 @@
                     <div class="entry-note">Adjacency map for the broader research agenda. Published March 19, 2026.</div>
                   </a>
                 </li>
-                <li>
+                                <li>
                   <a href="ai-assisted-research.html">
-                    <span class="entry-label">Method Article</span>
-                    <h3>Toward a Practical System 2 for AI-Assisted Research</h3>
+                    <span class="entry-label">Research Methodologies</span>
+                    <h3>AI-Assisted Research</h3>
                     <p>
-                      Principles, failure modes, and evaluation signals for using AI in serious research workflows
-                      without collapsing rigor into surface fluency.
+                      Methodologies, principles, and architectural requirements for integrating AI into scientific and rigorous analytical workflows.
                     </p>
                     <div class="entry-note">
-                      Methodological companion for research automation and reviewer-grade control. Published March 19,
-                      2026.
+                      Section for research automation and reviewer-grade control. 2 published articles.
                     </div>
                   </a>
                 </li>
@@ -183,6 +183,8 @@
 
             <section id="direction">
               <h2>Research Direction</h2>
+              <div class="expandable-wrapper" data-expandable>
+                <div class="expandable-content">
               <p>
                 The primary build focus is the construction and refinement of MRP-VM as a real runtime for reliable AI.
                 That includes explicit decomposition, skill contracts, typed intermediates, validators, bounded
@@ -201,6 +203,11 @@
                 on ordinary hardware, remain legible under scrutiny, and carry more of its intelligence in reusable
                 structure rather than permanently expensive inference.
               </p>
+                            </div>
+                <div class="expandable-actions">
+                  <button class="view-more-btn" type="button">View more..</button>
+                </div>
+              </div>
             </section>
 
             <section id="experiments">
@@ -289,20 +296,9 @@
         </main>
       </div>
 
-      <footer>
-        <p>
-          Research conducted by
-          <a href="https://www.axiologic.net/" target="_blank" rel="noopener noreferrer">Axiologic Research</a>
-          within the European project
-          <a href="https://www.achilles-project.eu/" target="_blank" rel="noopener noreferrer">Achilles</a>.
-        </p>
-        <p>
-          Commercialization partnership with
-          <a href="https://lydiarx.com/" target="_blank" rel="noopener noreferrer">LydiaRX Venture Studio</a>.
-        </p>
-      </footer>
+      <div id="site-footer" data-type="default" data-basepath="."></div>
     </div>
 
     <script src="MRP/mrp-outline.js"></script>
-  </body>
+  <script src="./widgets/layout.js"></script>\n  </body>
 </html>

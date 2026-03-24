@@ -37,4 +37,20 @@
   );
 
   for (const section of sections) observer.observe(section);
+
+  document.querySelectorAll('[data-expandable]').forEach(wrapper => {
+    const btn = wrapper.querySelector('.view-more-btn');
+    if (btn) {
+      btn.addEventListener('click', () => {
+        const isExpanded = wrapper.classList.contains('expanded');
+        if (isExpanded) {
+          wrapper.classList.remove('expanded');
+          btn.textContent = 'View more..';
+        } else {
+          wrapper.classList.add('expanded');
+          btn.textContent = 'View less';
+        }
+      });
+    }
+  });
 })();
