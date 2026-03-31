@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f7fbff" />
+    <meta
+      name="description"
+      content="A review of model orchestration, routing, and how MRP-VM functions as a runtime for governed interpretation."
+    />
+
+    <meta
+      property="og:title"
+      content="Orchestration, Routing, and MRP-VM — AGISystem2"
+    />
+    <meta
+      property="og:description"
+      content="Reviewing how orchestration improves the cost–performance frontier and where MRP-VM sits in the landscape of model routing and ensembling."
+    />
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:url"
+      content="https://agisystem2.com/MRP/orchestration-routing-mrp-vm.html"
+    />
+
+    <title>Orchestration, Routing, and MRP-VM — AGISystem2</title>
+    <link rel="stylesheet" href="mrp-citation.css" />
+    <link rel="stylesheet" href="mrp-page.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="../index.html">AGISystem2</a>
+            <span class="crumb-sep">/</span>
+            <a href="index.html">MRP</a>
+            <span class="crumb-sep">/</span>
+            <span class="crumb-current">Orchestration, Routing, and MRP-VM</span>
+          </nav>
+          <span>Meta Rational Pragmatics article</span>
+        </div>
+        <div id="site-top-links" data-active="mrp" data-basepath=".."></div>
+      </div>
+
+      <header class="hero">
+        <div class="kicker"><b>MRP Article 14</b> Orchestration and routing</div>
+        <h1>Orchestration, Routing, and MRP-VM</h1>
+        <p class="subtitle">Reviewing model orchestration, routing, and the position of MRP-VM.</p>
+        <div class="meta-row">
+          <span class="meta-pill">Author: Sînică Alboaie</span>
+          <span class="meta-pill">Series: Meta Rational Pragmatics</span>
+          <span class="meta-pill">Focus: Orchestration and Routing</span>
+        </div>
+        <div class="citation-box" data-citation-box data-citation-key="Alboaie-2026">
+          <div class="citation-head">
+            <strong>Permalink & citation</strong>
+            <div class="citation-actions">
+              <button class="copy-button" type="button" data-copy-target="link">Copy link</button>
+              <button class="copy-button" type="button" data-copy-target="citation">Copy citation</button>
+            </div>
+          </div>
+          <a class="citation-link" data-doc-link href="#"></a>
+          <p class="citation-preview" data-citation-preview></p>
+          <span class="copy-status" data-copy-status aria-live="polite"></span>
+        </div>
+      </header>
+
+      <div class="layout" id="main">
+        <aside class="toc" aria-label="Article outline">
+          <header>
+            <strong>Outline</strong>
+            <span id="nav-readout">—</span>
+          </header>
+          <ul class="navlist">
+            <li>
+              <a href="#orchestration-results" data-step="01" aria-current="true">
+                <span class="toc-badge">01</span>
+                Orchestration Results
+              </a>
+            </li>
+            <li>
+              <a href="#cascade-performance" data-step="02">
+                <span class="toc-badge">02</span>
+                Cascade Performance
+              </a>
+            </li>
+            <li>
+              <a href="#ensembling-fusion" data-step="03">
+                <span class="toc-badge">03</span>
+                Ensembling and Fusion
+              </a>
+            </li>
+            <li>
+              <a href="#agent-mixtures" data-step="04">
+                <span class="toc-badge">04</span>
+                Agent Mixtures
+              </a>
+            </li>
+            <li>
+              <a href="#debate-reasoning" data-step="05">
+                <span class="toc-badge">05</span>
+                Debate and Reasoning
+              </a>
+            </li>
+            <li>
+              <a href="#production-routing" data-step="06">
+                <span class="toc-badge">06</span>
+                Production Routing
+              </a>
+            </li>
+            <li>
+              <a href="#decomposition-rival" data-step="07">
+                <span class="toc-badge">07</span>
+                Decomposition in RIVAL
+              </a>
+            </li>
+            <li>
+              <a href="#mrp-vm-integration" data-step="08">
+                <span class="toc-badge">08</span>
+                MRP-VM Integration
+              </a>
+            </li>
+            <li>
+              <a href="#restrained-conclusion" data-step="09">
+                <span class="toc-badge">09</span>
+                Restrained Conclusion
+              </a>
+            </li>
+          </ul>
+        </aside>
+
+        <main class="stack">
+          <article class="article">
+            <section id="orchestration-results">
+              <h2>Orchestration and Early Results</h2>
+              <p>
+                This study reviews a now substantial line of work showing that carefully orchestrated systems of language models can outperform a single model on specific benchmarks, improve cost–quality tradeoffs, and in some settings allow smaller or cheaper models to approach stronger baselines.
+              </p>
+              <p>
+                The strongest evidence does not show that orchestration has solved general intelligence. It shows something narrower and more useful: intelligence at inference time can often be improved by decomposition, routing, aggregation, verification, and selective escalation rather than by relying on one monolithic forward pass alone <a href="#FRUGALGPT-2023">[FRUGALGPT-2023]</a> <a href="#LLM-BLENDER-2023">[LLM-BLENDER-2023]</a> <a href="#MOA-2024">[MOA-2024]</a> <a href="#ROUTELLM-2024">[ROUTELLM-2024]</a>.
+              </p>
+            </section>
+
+            <section id="cascade-performance">
+              <h2>Performance through Cascades</h2>
+              <p>
+                A first clear result came from FrugalGPT. The core idea was not to make a small model intrinsically smarter, but to place models in a cascade and learn when cheap models are sufficient and when stronger ones should be invoked.
+              </p>
+              <p>
+                The reported result was strong: FrugalGPT could match the performance of the best individual model with up to 98% cost reduction, or exceed GPT-4 by 4% at the same cost on the evaluated setting <a href="#FRUGALGPT-2023">[FRUGALGPT-2023]</a>. This was an important demonstration that orchestration can improve the cost–performance frontier even when the underlying models themselves are unchanged.
+              </p>
+              <div class="callout">
+                <b>Main Limitation:</b> Such gains depend on a good mechanism for judging answer quality or query difficulty; without that, the cascade cannot decide reliably when to stop or escalate <a href="#FRUGALGPT-2023">[FRUGALGPT-2023]</a> <a href="#ROUTERBENCH-2024">[ROUTERBENCH-2024]</a> <a href="#CASCADE-ROUTING-2024">[CASCADE-ROUTING-2024]</a>.
+              </div>
+            </section>
+
+            <section id="ensembling-fusion">
+              <h2>Post-hoc Ensembling and Fusion</h2>
+              <p>
+                A second line of work is post-hoc ensembling and fusion. LLM-Blender combines multiple model outputs, ranks them with a learned pairwise ranker, and then fuses the best candidates into a final answer.
+              </p>
+              <p>
+                On MixInstruct, the framework reported the best overall performance among the compared methods, with an average GPT-Rank of 3.01 versus 3.90 for OpenAssistant, while its PairRanker also achieved the strongest correlation with the oracle ranking among the compared rankers <a href="#LLM-BLENDER-2023">[LLM-BLENDER-2023]</a>. The significance of this result is conceptual: different models often fail on different examples, so selection plus fusion can dominate any one model.
+              </p>
+              <p>
+                The limitation is practical: one pays for multiple generations, a ranking phase, and an additional fusion step, so latency and orchestration overhead are intrinsic to the method <a href="#LLM-BLENDER-2023">[LLM-BLENDER-2023]</a>.
+              </p>
+            </section>
+
+            <section id="agent-mixtures">
+              <h2>Mixture of Agents</h2>
+              <p>
+                The most visible recent results came from Mixture-of-Agents. In this architecture, several models first answer independently, and later layers refine responses using the outputs of earlier layers as auxiliary information.
+              </p>
+              <p>
+                The ICLR 2025 paper reports a 65.8% win rate on AlpacaEval 2.0 in the abstract, and the paper body reports 65.1% for the open-source MoA configuration versus 57.5% for GPT-4o on AlpacaEval 2.0, alongside strong results on Arena-Hard, MT-Bench, and FLASK <a href="#MOA-2024">[MOA-2024]</a>.
+              </p>
+              <p>
+                However, the follow-up paper Rethinking Mixture-of-Agents introduced an important correction: Self-MoA, which aggregates outputs from a single top-performing model rather than mixing many different models, outperformed standard MoA by 6.6% on AlpacaEval 2.0 and by 3.8% on average across MMLU, CRUX, and MATH <a href="#SELF-MOA-2025">[SELF-MOA-2025]</a>. The implication is precise: Diversity alone is not the source of gain; quality of constituent models matters at least as much as heterogeneity.
+              </p>
+            </section>
+
+            <section id="debate-reasoning">
+              <h2>Multiagent Debate and Reasoning</h2>
+              <p>
+                Improving Factuality and Reasoning in Language Models through Multiagent Debate showed that explicit debate among agents can materially improve reasoning and factuality. In the reported experiments, arithmetic accuracy improved from 67.0 to 81.8, GSM8K from 77.0 to 85.0, and biographies improved from 66.0 to 73.8 <a href="#MAD-2023">[MAD-2023]</a>.
+              </p>
+              <p>
+                These are real gains, showing that mutual critique and revision can recover from initial errors. Yet later work also narrowed the claim. Rethinking the Bounds of LLM Reasoning found that a strong single agent with a strong prompt and demonstrations can rival multi-agent discussion frameworks <a href="#BOUNDS-2024">[BOUNDS-2024]</a>.
+              </p>
+              <p>
+                The lesson is modest but useful: orchestration helps, but its benefit depends strongly on prompt quality, supporting examples, and the failure modes of the discussion protocol itself <a href="#MAD-2023">[MAD-2023]</a> <a href="#BOUNDS-2024">[BOUNDS-2024]</a>.
+              </p>
+            </section>
+
+            <section id="production-routing">
+              <h2>Routing and Cascading for Production</h2>
+              <p>
+                A more production-oriented family of results comes from routing and cascading. RouteLLM learns routers from preference data and reports cost savings of over 2×, while maintaining response quality and transferring across changed strong/weak model pairs at test time <a href="#ROUTELLM-2024">[ROUTELLM-2024]</a>.
+              </p>
+              <p>
+                RouterBench then supplied the first large benchmark for this setting, showing that monetary costs for comparable performance can vary by factors of 2–5× <a href="#ROUTERBENCH-2024">[ROUTERBENCH-2024]</a>. A Unified Approach to Routing and Cascading for LLMs took the next step by formalizing both routing and cascading, reporting that cascade routing outperformed baselines by up to 8% on RouterBench and 14% on SWE-Bench <a href="#CASCADE-ROUTING-2024">[CASCADE-ROUTING-2024]</a>.
+              </p>
+            </section>
+
+            <section id="decomposition-rival">
+              <h2>Decomposition and Refinement in RIVAL</h2>
+              <p>
+                RIVAL in video understanding combines a Multi-stage React Planner that decomposes the task into smaller stages with a Multi-agent Debate Refinement step. The paper reports 66.8% accuracy on an EgoSchema subset with a 72B model, surpassing prior GPT-4-based methods by 6.6% <a href="#RIVAL-2025">[RIVAL-2025]</a>.
+              </p>
+              <p>
+                This result matters as an architectural proof-of-concept: smaller models can become much more competitive when the system decomposes the task, retrieves only the needed evidence, and inserts a refinement loop before finalization.
+              </p>
+            </section>
+
+            <section id="mrp-vm-integration">
+              <h2>Distinguishing the MRP-VM Approach</h2>
+              <p>
+                This is the point at which MRP-VM should be distinguished from the literature above. The public framing of Meta-Rational Pragmatics presents it as a layer in which interpretation is governed, subproblems are made tractable, routes between forms of computation are selected explicitly, and execution becomes auditable; MRP-VM is correspondingly presented as a runtime for goals, frames, routes, plugins, and controlled execution <a href="#MRP-2026">[MRP-2026]</a>.
+              </p>
+              <p>
+                Under that interpretation, MRP-VM should not be understood primarily as another ensemble, debate wrapper, or router. A more accurate intuitive description is the following: A problem is recursively decomposed into smaller problems. For each smaller problem, the system continues decomposition until it can identify a plausible mode of interpretation or regime of resolution that is adequate for that fragment.
+              </p>
+              <p>
+                The process is meta-rational because the system does not assume in advance that one reasoning style is globally correct. It can backtrack, reconsider alternative theories of resolution encoded in the knowledge base, and compare several evaluation paths before committing to an answer.
+              </p>
+            </section>
+
+            <section id="restrained-conclusion">
+              <h2>Refining Engineering Objectives</h2>
+              <p>
+                The engineering objective of MRP-VM is not necessarily to be faster than a large frontier model in every setting. By decomposing tasks, choosing interpretive regimes explicitly, and combining small models with symbolic or constrained procedures, one can build systems that are cheaper, more inspectable, more explainable, and more deployable on modest hardware.
+              </p>
+              <p>
+                Ideally, every problem specification carries an explicit closure condition: a test, invariant, proof obligation, or evaluator. When such a validator exists, orchestration is much easier to trust. When no exact validator exists, the system falls back to approximate validation.
+              </p>
+              <p>
+                Smaller models do not magically become universally superior when multiplied. What has been demonstrated is that structured decomposition, selective routing, candidate fusion, debate, and explicit or approximate validation can move substantial parts of intelligence out of a single opaque inference step and into a more controllable computational process.
+              </p>
+              <div class="references-list stack">
+                <h3>References</h3>
+                <p id="FRUGALGPT-2023">
+                  [FRUGALGPT-2023] Lingjiao Chen, Matei Zaharia, James Zou. FrugalGPT: How to Use Large Language Models While Reducing Cost and Improving Performance. 2023.
+                </p>
+                <p id="LLM-BLENDER-2023">
+                  [LLM-BLENDER-2023] Dongfu Jiang, Xiang Ren, Bill Yuchen Lin. LLM-Blender: Ensembling Large Language Models with Pairwise Ranking and Generative Fusion. 2023.
+                </p>
+                <p id="MAD-2023">
+                  [MAD-2023] Yilun Du, Shuang Li, Antonio Torralba, Joshua B. Tenenbaum, Igor Mordatch. Improving Factuality and Reasoning in Language Models through Multiagent Debate. 2023.
+                </p>
+                <p id="ROUTERBENCH-2024">
+                  [ROUTERBENCH-2024] Qitian Jason Hu et al. RouterBench: A Benchmark for Multi-LLM Routing System. 2024.
+                </p>
+                <p id="MOA-2024">
+                  [MOA-2024] Junlin Wang et al. Mixture-of-Agents Enhances Large Language Model Capabilities. 2024.
+                </p>
+                <p id="BOUNDS-2024">
+                  [BOUNDS-2024] Qingxiu Wang et al. Rethinking the Bounds of LLM Reasoning: Are Multi-Agent Discussions the Only Answer? 2024.
+                </p>
+                <p id="ROUTELLM-2024">
+                  [ROUTELLM-2024] Isaac Ong et al. RouteLLM: Learning to Route LLMs with Preference Data. 2024.
+                </p>
+                <p id="CASCADE-ROUTING-2024">
+                  [CASCADE-ROUTING-2024] Jasper Dekoninck, Maximilian Baader, Martin Vechev. A Unified Approach to Routing and Cascading for LLMs. 2024.
+                </p>
+                <p id="SELF-MOA-2025">
+                  [SELF-MOA-2025] Wenzhe Li et al. Rethinking Mixture-of-Agents: Is Mixing Different Large Language Models Beneficial? 2025.
+                </p>
+                <p id="RIVAL-2025">
+                  [RIVAL-2025] Xing Xi et al. Rethinking Scale: How Multi-Agent Collaboration Enables Smaller Models to Rival GPT-4 in Video Understanding. 2025.
+                </p>
+                <p id="MRP-2026">
+                  [MRP-2026] AGISystem2. AGISystem2 — System 2 Engineering for AI. 2026.
+                </p>
+              </div>
+            </section>
+          </article>
+        </main>
+      </div>
+
+      <div id="site-footer" data-type="mrp" data-basepath=".."></div>
+    </div>
+
+    <script>
+      (() => {
+        const navLinks = Array.from(document.querySelectorAll(".navlist a"));
+        const navReadout = document.getElementById("nav-readout");
+        const sections = navLinks
+          .map((a) => document.querySelector(a.getAttribute("href")))
+          .filter(Boolean);
+
+        const setActive = (sectionId) => {
+          for (const a of navLinks) {
+            const isActive = a.getAttribute("href") === `#${sectionId}`;
+            a.setAttribute("aria-current", isActive ? "true" : "false");
+            if (isActive && navReadout) {
+              navReadout.textContent = `Active: ${a.dataset.step}`;
+            }
+          }
+        };
+
+        setActive((location.hash ? location.hash.slice(1) : "orchestration-results") || "orchestration-results");
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const visible = entries
+              .filter((entry) => entry.isIntersecting)
+              .sort((a, b) => (b.intersectionRatio || 0) - (a.intersectionRatio || 0))[0];
+            if (!visible) return;
+            setActive(visible.target.id);
+          },
+          { rootMargin: "-15% 0px -68% 0px", threshold: [0.08, 0.18, 0.32] }
+        );
+
+        for (const section of sections) observer.observe(section);
+      })();
+    </script>
+    <script src="mrp-citation.js"></script>
+  <script src="../widgets/layout.js"></script>
+  </body>
+</html>
