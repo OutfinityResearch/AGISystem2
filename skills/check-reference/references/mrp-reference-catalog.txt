@@ -73,3 +73,7 @@
 [WU-2023] Wu, Q., et al. (2023). AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation. URL: https://arxiv.org/abs/2308.08155
 [XU-2024] Xu, S., et al. (2024). AIOS Compiler: LLM as Interpreter for Natural Language Programming. URL: https://arxiv.org/abs/2405.06907
 [YAO-2023] Yao, S., et al. (2023). ReAct: Synergizing Reasoning and Acting in Language Models. URL: https://arxiv.org/abs/2210.03629
+[EBM-2006] LeCun, Y., et al. (2006). A Tutorial on Energy-Based Learning. URL: https://web.stanford.edu/class/cs379c/archive/2012/suggested_reading_list/documents/LeCunetal06.pdf
+[TEA-2024] Yuan, Y., et al. (2024). TEA: Test-time Energy Adaptation. URL: https://openaccess.thecvf.com/content/CVPR2024/papers/Yuan_TEA_Test-time_Energy_Adaptation_CVPR_2024_paper.pdf
+[TTT-2020] Sun, Y., et al. (2020). Test-Time Training with Self-Supervision for Generalization under Distribution Shifts. URL: https://proceedings.mlr.press/v119/sun20b/sun20b.pdf
+[VAPNIK-2006] Vapnik, V. (2006). Empirical Inference Science. URL: https://www.cs.columbia.edu/~jebara/6998/NSF-2006.pdf
