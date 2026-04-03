@@ -77,3 +77,12 @@
 [TEA-2024] Yuan, Y., et al. (2024). TEA: Test-time Energy Adaptation. URL: https://openaccess.thecvf.com/content/CVPR2024/papers/Yuan_TEA_Test-time_Energy_Adaptation_CVPR_2024_paper.pdf
 [TTT-2020] Sun, Y., et al. (2020). Test-Time Training with Self-Supervision for Generalization under Distribution Shifts. URL: https://proceedings.mlr.press/v119/sun20b/sun20b.pdf
 [VAPNIK-2006] Vapnik, V. (2006). Empirical Inference Science. URL: https://www.cs.columbia.edu/~jebara/6998/NSF-2006.pdf
+[AIDESCARTES-2023] Cornelio, C., et al. (2023). Combining Data and Theory for Derivable Scientific Discovery with AI-Descartes. URL: https://www.nature.com/articles/s41467-023-37236-y
+[AIHILBERT-2024] Cory-Wright, R., et al. (2024). Evolving Scientific Discovery by Unifying Data and Background Knowledge with AI-Hilbert. URL: https://www.nature.com/articles/s41467-024-50074-w
+[ASD-2023] Kramer, S., et al. (2023). Automated Scientific Discovery: From Equation Discovery to Autonomous Discovery Systems. URL: https://arxiv.org/abs/2305.02251
+[CHOLLET-2019] Chollet, F. (2019). On the Measure of Intelligence. URL: https://arxiv.org/abs/1911.01547
+[LASR-2024] Grayeli, A., et al. (2024). Symbolic Regression with a Learned Concept Library. URL: https://arxiv.org/abs/2409.09359
+[LLM-SCI-2025] Zhang, Y., et al. (2025). Exploring the Role of Large Language Models in the Scientific Method: From Hypothesis to Discovery. URL: https://www.nature.com/articles/s44387-025-00019-5
+[TRT-2026] Zhuang, Y., et al. (2026). Test-time Recursive Thinking: Self-Improvement without External Feedback. URL: https://arxiv.org/abs/2602.03094
+[WANG-2018] Wang, W., et al. (2018). A Formulation of Recursive Self-Improvement and Its Possible Efficiency. URL: https://arxiv.org/abs/1805.06610
+[YAMPOLSKIY-2015] Yampolskiy, R. V. (2015). From Seed AI to Technological Singularity via Recursively Self-Improving Software. URL: https://arxiv.org/abs/1502.06512
