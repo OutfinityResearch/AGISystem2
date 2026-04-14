@@ -1,16 +1,17 @@
 :root {
   --bg0: #f8fbfd;
   --bg1: #eef4f9;
-  --bg-mrp: #f1f4f9;
+  --bg-mrp: #e8f0f8;
   --bg-ruliology: #f6f2f9;
   --bg-ai-assisted: #f2f9f4;
   --bg-research: #f9f7f2;
   --bg-experiments: #f2f6f9;
-  --pill-mrp: #4a75a1;
+  --pill-mrp: #2b5a84;
   --pill-ruliology: #8e74a1;
   --pill-ai-assisted: #6b9e78;
   --pill-research: #a18e6b;
   --pill-experiments: #5b8ba1;
+  --pill-home: #666666;
   --paper: rgba(255, 255, 255, 0.96);
   --paper-soft: rgba(255, 255, 255, 0.9);
   --paper-line: rgba(43, 74, 104, 0.14);
@@ -49,7 +50,7 @@ body {
   min-height: 100vh;
 }
 
-body[data-section="mrp"] { background: linear-gradient(180deg, var(--bg-mrp), #e2eaf2); }
+body[data-section="mrp"] { background: linear-gradient(180deg, var(--bg-mrp), #d9e4f0); }
 body[data-section="ruliology"] { background: linear-gradient(180deg, var(--bg-ruliology), #ece6f2); }
 body[data-section="ai-assisted"] { background: linear-gradient(180deg, var(--bg-ai-assisted), #e8f2eb); }
 body[data-section="research"] { background: linear-gradient(180deg, var(--bg-research), #f2ece2); }
@@ -202,18 +203,28 @@ button:focus-visible {
   color: var(--text);
   font-size: 12.5px;
   line-height: 1;
+  transition: all 0.2s ease;
 }
 
+/* Base pill colors (Normal state) */
+.pill-mrp { background: var(--pill-mrp); color: white; border-color: var(--pill-mrp); }
+.pill-ruliology { background: var(--pill-ruliology); color: white; border-color: var(--pill-ruliology); }
+.pill-ai-assisted { background: var(--pill-ai-assisted); color: white; border-color: var(--pill-ai-assisted); }
+.pill-research { background: var(--pill-research); color: white; border-color: var(--pill-research); }
+.pill-experiments { background: var(--pill-experiments); color: white; border-color: var(--pill-experiments); }
+.pill-home { background: var(--pill-home); color: white; border-color: var(--pill-home); }
+
+/* Active pill colors (Inverted) */
 .pill.primary {
-  border-color: rgba(29, 95, 139, 0.22);
-  background: rgba(248, 251, 253, 0.98);
+  background: white !important;
+  font-weight: 700;
 }
-
-body[data-section="mrp"] .pill.primary { background: var(--bg-mrp); color: var(--pill-mrp); border-color: var(--pill-mrp); }
-body[data-section="ruliology"] .pill.primary { background: var(--bg-ruliology); color: var(--pill-ruliology); border-color: var(--pill-ruliology); }
-body[data-section="ai-assisted"] .pill.primary { background: var(--bg-ai-assisted); color: var(--pill-ai-assisted); border-color: var(--pill-ai-assisted); }
-body[data-section="research"] .pill.primary { background: var(--bg-research); color: var(--pill-research); border-color: var(--pill-research); }
-body[data-section="experiments"] .pill.primary { background: var(--bg-experiments); color: var(--pill-experiments); border-color: var(--pill-experiments); }
+.pill-mrp.primary { color: var(--pill-mrp); border-color: var(--pill-mrp); }
+.pill-ruliology.primary { color: var(--pill-ruliology); border-color: var(--pill-ruliology); }
+.pill-ai-assisted.primary { color: var(--pill-ai-assisted); border-color: var(--pill-ai-assisted); }
+.pill-research.primary { color: var(--pill-research); border-color: var(--pill-research); }
+.pill-experiments.primary { color: var(--pill-experiments); border-color: var(--pill-experiments); }
+.pill-home.primary { color: var(--pill-home); border-color: var(--pill-home); }
 
 .hero,
 .stack,
