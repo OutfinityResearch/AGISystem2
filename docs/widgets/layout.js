@@ -5,15 +5,18 @@
     if (topLinksContainer) {
       const active = topLinksContainer.getAttribute("data-active") || "home";
       const basepath = topLinksContainer.getAttribute("data-basepath") || ".";
+      document.body.setAttribute("data-section", active);
       
       const links = [
+        { id: "home", text: "Home", href: `${basepath}/index.html` },
         { id: "mrp", text: "MRP", href: `${basepath}/MRP/index.html` },
+        { id: "ruliology", text: "Ruliology", href: `${basepath}/ruliology/index.html` },
         { id: "ai-assisted", text: "AI-Assisted Research", href: `${basepath}/ai-assisted-research.html` },
         { id: "research", text: "Research", href: `${basepath}/research.html` },
-        { id: "home", text: "Home", href: `${basepath}/index.html` }
+        { id: "experiments", text: "Public Experiments", href: `${basepath}/public-experiments.html` }
       ];
 
-      let html = '<div class="top-links">';
+      let html = '<div class="top-links" style="justify-content: flex-start;">';
       links.forEach(l => {
         html += `<a class="pill ${l.id === active ? 'primary' : ''}" href="${l.href}">${l.text}</a>`;
       });
@@ -36,27 +39,34 @@
     }
 
     // Footer
-    const footerContainer = document.getElementById("site-footer");
+    let footerContainer = document.getElementById("site-footer");
+    if (!footerContainer) {
+        const shell = document.querySelector(".shell");
+        if (shell) {
+            footerContainer = document.createElement("div");
+            footerContainer.id = "site-footer";
+            const topLinks = document.querySelector("[data-basepath]");
+            const base = topLinks ? topLinks.getAttribute("data-basepath") : ".";
+            const active = topLinks ? topLinks.getAttribute("data-active") : "default";
+            footerContainer.setAttribute("data-basepath", base || ".");
+            footerContainer.setAttribute("data-type", active || "default");
+            shell.appendChild(footerContainer);
+        }
+    }
+
     if (footerContainer) {
       const type = footerContainer.getAttribute("data-type") || "default";
       const basepath = footerContainer.getAttribute("data-basepath") || ".";
       let html = '<footer>';
       
-      if (type === "mrp") {
-        html += '<p>This article is published in the Meta Rational Pragmatics article series of the AGISystem2 documentation site.</p>';
-      } else if (type === "research-map") {
-        html += `<p>This research map is maintained as part of AGISystem2 and complements the <a href="${basepath}/MRP/index.html">Meta Rational Pragmatics</a> article series.</p>`;
-      } else if (type === "ai-assisted") {
-        html += `<p>Research conducted by <a href="https://www.axiologic.net/" target="_blank" rel="noopener noreferrer">Axiologic Research</a> as part of the European research project <a href="https://www.achilles-project.eu/" target="_blank" rel="noopener noreferrer">Achilles</a>.</p>
-      <p>Commercialization partnership with <a href="https://lydiarx.com/" target="_blank" rel="noopener noreferrer">LydiaRX Venture Studio</a>.</p>
-      <p>This documentation was produced with AI assistance. Verify important claims by checking code, evaluation suites, tests, and cited sources directly.</p>`;
-      } else {
-        html += `<p>Research conducted by <a href="https://www.axiologic.net/" target="_blank" rel="noopener noreferrer">Axiologic Research</a> within the European project <a href="https://www.achilles-project.eu/" target="_blank" rel="noopener noreferrer">Achilles</a>.</p>
+      html += `<p>Research conducted by <a href="https://www.axiologic.net/" target="_blank" rel="noopener noreferrer">Axiologic Research</a> as part of the European research project <a href="https://www.achilles-project.eu/" target="_blank" rel="noopener noreferrer">Achilles</a>.</p>
       <p>Commercialization partnership with <a href="https://lydiarx.com/" target="_blank" rel="noopener noreferrer">LydiaRX Venture Studio</a>.</p>`;
-      }
+
+      html += `<p class="disclaimer">Disclaimer: This documentation was generated with AI assistance (LLMs) and may contain errors or hallucinations.</p>`;
+      html += `<p>&copy; Axiologic Research</p>`;
       
       html += '</footer>';
-      footerContainer.outerHTML = html;
+      footerContainer.innerHTML = html;
     }
   }
 

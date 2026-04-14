@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f7fbff" />
+    <meta
+      name="description"
+      content="Exploring rule spaces as a meta-science for identifying and selecting symbolic inductive biases in neuro-symbolic AI."
+    />
+    <title>Rule Spaces as Inductive Bias — AGISystem2</title>
+    <link rel="stylesheet" href="../MRP/mrp-citation.css" />
+    <link rel="stylesheet" href="../MRP/mrp-page.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="../index.html">AGISystem2</a>
+            <span class="crumb-sep">/</span>
+            <a href="index.html">Ruliology</a>
+            <span class="crumb-sep">/</span>
+            <span class="crumb-current">Inductive Bias</span>
+          </nav>
+        </div>
+        <div id="site-top-links" data-active="ruliology" data-basepath=".."></div>
+      </div>
+
+      <header class="hero">
+        <div class="kicker"><b>Ruliology Note 02</b> Exploratory Note</div>
+        <h1>Rule Spaces as Inductive Bias</h1>
+        <p class="subtitle">Comparative selection of computational regimes.</p>
+        <div class="meta-row">
+          <span class="meta-pill">Status: Exploratory Note</span>
+          <span class="meta-pill">TRL: 1</span>
+        </div>
+      </header>
+
+      <div class="layout" id="main">
+        <aside class="toc" aria-label="Article outline">
+          <header>
+            <strong>Outline</strong>
+            <span id="nav-readout">—</span>
+          </header>
+          <ul class="navlist">
+            <li><a href="#vision" data-step="01" aria-current="true"><span class="toc-badge">01</span> The Core Vision</a></li>
+            <li><a href="#traditions" data-step="02"><span class="toc-badge">02</span> Reifying Inductive Bias</a></li>
+            <li><a href="#ruliology" data-step="03"><span class="toc-badge">03</span> Ruliology as a Comparative Science</a></li>
+            <li><a href="#experiment" data-step="04"><span class="toc-badge">04</span> Discovery through Observation</a></li>
+            <li><a href="#references" data-step="05"><span class="toc-badge">05</span> References</a></li>
+          </ul>
+        </aside>
+
+        <main class="stack">
+          <article class="article">
+            <section id="vision">
+              <h2>The Core Vision</h2>
+              <p>
+                A central challenge in neuro-symbolic AI is the selection and justification of symbolic inductive bias. Currently, the choice of a symbolic regime—whether logic, equations, or procedural code—is often treated as an external design decision rather than one derived from the structure of the task itself.
+              </p>
+              <p>
+                Our proposal is that Ruliology can provide a foundational framework at this level. By studying classes of abstract rules and the macro-behaviors they generate, we can identify which symbolic formalisms are most appropriate for capturing the regularities of a given world [WOLFRAM-2026].
+              </p>
+            </section>
+
+            <section id="traditions">
+              <h2>Reifying Inductive Bias</h2>
+              <p>
+                Symbolic AI already possesses several robust local reifications of inductive bias. In **Inductive Logic Programming (ILP)**, bias is embodied in background predicates and hypothesis language [ILP-REVIEW-2021]. In **Symbolic Regression**, it is found in operator sets and structural priors [SR-REVIEW-2025]. In **Program Synthesis**, it is grammars and search strategies [PS-REVIEW-2025].
+              </p>
+              <p>
+                These methods are powerful, but they usually assume the surrounding formal regime in advance. If a task is cast in ILP, the logical regime has already been selected. Ruliology addresses the prior problem: how do we select among these candidate formalisms before committing to any one of them?
+              </p>
+            </section>
+
+            <section id="ruliology">
+              <h2>Ruliology as a Comparative Science</h2>
+              <p>
+                Wolfram characterizes Ruliology as the study of what abstract rules do. This shift relocates the discussion from formalism-internal bias to a broader comparative study of computable structure. We ask which classes of rules support locality, compositionality, or useful coarse-graining, and which ones are best captured by compact equations or discrete relations.
+              </p>
+              <p>
+                This comparative use of Ruliology helps categorize rule spaces. A rule space that reliably supports compact quantitative regularities makes symbolic regression a plausible downstream regime. A space supporting discrete compositional relations favors logic-based induction.
+              </p>
+            </section>
+
+            <section id="experiment">
+              <h2>Discovery through Observation</h2>
+              <p>
+                To test this mechanism, we've explored "weak-observer" frameworks. In these experiments, an observer with no prior knowledge of symbol semantics induces theory profiles from simple execution behavior.
+              </p>
+              <p>
+                In a Boolean world, the induced theory is dominated by concepts like involution and absorption, suggesting a logic-oriented regime. In a transformational world, the profile is dominated by composition and identity, suggesting a synthesis-oriented regime. This shows that structural signals relevant to regime selection can arise from the discovered theory itself rather than from an external human choice.
+              </p>
+            </section>
+
+            <section id="references">
+              <h2>References</h2>
+              <ul class="refs">
+                <li>[WOLFRAM-2026] Stephen Wolfram. What Is Ruliology? 2026.</li>
+                <li>[ILP-REVIEW-2021] Zheng Zhang et al. Inductive Logic Programming Techniques for Explainable AI. 2021.</li>
+                <li>[SR-REVIEW-2025] Junlan Dong, Jinghui Zhong. Recent Advances in Symbolic Regression. ACM. 2025.</li>
+                <li>[PS-REVIEW-2025] Zurabi Kobaladze et al. A Comparative Review of Program Synthesis Paradigms. 2025.</li>
+              </ul>
+            </section>
+          </article>
+        </main>
+      </div>
+      <div id="site-footer" data-type="ruliology" data-basepath=".."></div>
+    </div>
+    <script src="../widgets/layout.js"></script>
+  </body>
+</html>

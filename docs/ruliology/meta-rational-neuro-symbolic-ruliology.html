@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f7fbff" />
+    <meta
+      name="description"
+      content="Exploring how ruliology and neuro-symbolic AI can help organize local theories around observations."
+    />
+    <title>Neuro-Symbolic Rule Exploration — AGISystem2</title>
+    <link rel="stylesheet" href="../MRP/mrp-citation.css" />
+    <link rel="stylesheet" href="../MRP/mrp-page.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="../index.html">AGISystem2</a>
+            <span class="crumb-sep">/</span>
+            <a href="index.html">Ruliology</a>
+            <span class="crumb-sep">/</span>
+            <span class="crumb-current">Rule Exploration</span>
+          </nav>
+        </div>
+        <div id="site-top-links" data-active="ruliology" data-basepath=".."></div>
+      </div>
+
+      <header class="hero">
+        <div class="kicker"><b>Ruliology Note 03</b> Exploratory Note</div>
+        <h1>Neuro-Symbolic Rule Exploration</h1>
+        <p class="subtitle">Organizing theory space around observations.</p>
+        <div class="meta-row">
+          <span class="meta-pill">Status: Exploratory Note</span>
+          <span class="meta-pill">TRL: 1</span>
+        </div>
+      </header>
+
+      <div class="layout" id="main">
+        <aside class="toc" aria-label="Article outline">
+          <header>
+            <strong>Outline</strong>
+            <span id="nav-readout">—</span>
+          </header>
+          <ul class="navlist">
+            <li><a href="#problem" data-step="01" aria-current="true"><span class="toc-badge">01</span> The Problem</a></li>
+            <li><a href="#approach" data-step="02"><span class="toc-badge">02</span> The Approach</a></li>
+            <li><a href="#objects" data-step="03"><span class="toc-badge">03</span> Core Ruliologic Objects</a></li>
+            <li><a href="#pipeline" data-step="04"><span class="toc-badge">04</span> Pipeline and Roles</a></li>
+            <li><a href="#references" data-step="05"><span class="toc-badge">05</span> References</a></li>
+          </ul>
+        </aside>
+
+        <main class="stack">
+          <article class="article">
+            <section id="problem">
+              <h2>The Problem</h2>
+              <p>
+                When an AI system interprets text or raw data, it often jumps immediately to a single "final" theory. This is methodologically unsound because it conflates the actual phenomenon with our observation of it and our linguistic report of that observation.
+              </p>
+              <p>
+                A direct passage from text to theory lacks the necessary discipline for managing uncertainty. This architecture aims to solve that by constructing a bounded local region of theory space around available evidence, rather than seeking a single, privileged ontology.
+              </p>
+            </section>
+
+            <section id="approach">
+              <h2>The Approach</h2>
+              <p>
+                Our objective is not to find the "one true theory," but to manage a family of plausible local theories under explicit uncertainty. This is meta-rational: the system doesn't treat early abstractions as final. It preserves several candidates as long as the evidence, task, or cost model does not justify stronger commitment.
+              </p>
+              <p>
+                These theories are organized into a neighborhood where relations of refinement, coarsening, and refactorization are explicit. We treat rewriting as a family of local transformations, studying compositionality in the sense of categorical abstract rewriting [DUVAL-2011].
+              </p>
+            </section>
+
+            <section id="objects">
+              <h2>Core Ruliologic Objects</h2>
+              <p>
+                We introduce three fundamental objects:
+                <ul>
+                  <li><strong>Observational Hypotheses:</strong> Hypotheses about what was observed or asserted, including causal hints and provenance links.</li>
+                  <li><strong>Local Theory:</strong> A combination of state schema, rewrite templates, and a score profile covering stability and predictive adequacy.</li>
+                  <li><strong>Local Rulial Neighborhood:</strong> A family of theories together with the transformations between them. It records how one theory evolves into another through refinement or observer shift.</li>
+                </ul>
+                The neighborhood maintains a local geometry of theory space, ensuring that observer-relative equivalence is a first-class relation [WOLFRAM-2026].
+              </p>
+            </section>
+
+            <section id="pipeline">
+              <h2>Pipeline and Roles</h2>
+              <p>
+                This division of labor uses neuro-symbolic principles:
+                <ul>
+                  <li><strong>Neural Lifting:</strong> Using language models to propose structured observational hypotheses from text, handling lexical variation and underdetermined structures.</li>
+                  <li><strong>Symbolic Induction:</strong> Generating candidate rule systems and theories. Symbolic components dominate where rules and compositions must be auditable.</li>
+                  <li><strong>Rulial Exploration:</strong> Organizing theories into neighborhoods and computing robust invariants that are stable across multiple nearby models.</li>
+                </ul>
+                By localized and auditable roles for neural components, the architecture remains disciplined and explainable [MAO-2025].
+              </p>
+            </section>
+
+            <section id="references">
+              <h2>References</h2>
+              <ul class="refs">
+                <li>[WOLFRAM-2026] Stephen Wolfram. What Is Ruliology? 2026.</li>
+                <li>[MAO-2025] Jiayuan Mao, Tenenbaum, Wu. Neuro-Symbolic Concepts. 2025.</li>
+                <li>[DUVAL-2011] Dominique Duval et al. Categorical Abstract Rewriting Systems. 2011.</li>
+                <li>[FONG-SPIVAK-2019] Brendan Fong, David Spivak. Seven Sketches in Compositionality. 2019.</li>
+              </ul>
+            </section>
+          </article>
+        </main>
+      </div>
+      <div id="site-footer" data-type="ruliology" data-basepath=".."></div>
+    </div>
+    <script src="../widgets/layout.js"></script>
+  </body>
+</html>

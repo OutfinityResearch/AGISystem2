@@ -1,6 +1,16 @@
 :root {
   --bg0: #f8fbfd;
   --bg1: #eef4f9;
+  --bg-mrp: #f1f4f9;
+  --bg-ruliology: #f6f2f9;
+  --bg-ai-assisted: #f2f9f4;
+  --bg-research: #f9f7f2;
+  --bg-experiments: #f2f6f9;
+  --pill-mrp: #4a75a1;
+  --pill-ruliology: #8e74a1;
+  --pill-ai-assisted: #6b9e78;
+  --pill-research: #a18e6b;
+  --pill-experiments: #5b8ba1;
   --paper: rgba(255, 255, 255, 0.96);
   --paper-soft: rgba(255, 255, 255, 0.9);
   --paper-line: rgba(43, 74, 104, 0.14);
@@ -36,7 +46,14 @@ body {
     radial-gradient(780px 260px at 10% 0%, rgba(143, 196, 233, 0.12), transparent 70%),
     radial-gradient(760px 240px at 90% 0%, rgba(215, 232, 244, 0.24), transparent 72%),
     linear-gradient(180deg, var(--bg0), var(--bg1));
+  min-height: 100vh;
 }
+
+body[data-section="mrp"] { background: linear-gradient(180deg, var(--bg-mrp), #e2eaf2); }
+body[data-section="ruliology"] { background: linear-gradient(180deg, var(--bg-ruliology), #ece6f2); }
+body[data-section="ai-assisted"] { background: linear-gradient(180deg, var(--bg-ai-assisted), #e8f2eb); }
+body[data-section="research"] { background: linear-gradient(180deg, var(--bg-research), #f2ece2); }
+body[data-section="experiments"] { background: linear-gradient(180deg, var(--bg-experiments), #e2eaf2); }
 
 a {
   color: var(--accent);
@@ -150,7 +167,21 @@ button:focus-visible {
 }
 
 .brand span {
-  display: none;
+  display: block;
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.3;
+  max-width: 450px;
+}
+
+.brand span a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.brand span a:hover {
+  text-decoration: underline;
 }
 
 .top-links {
@@ -177,6 +208,12 @@ button:focus-visible {
   border-color: rgba(29, 95, 139, 0.22);
   background: rgba(248, 251, 253, 0.98);
 }
+
+body[data-section="mrp"] .pill.primary { background: var(--bg-mrp); color: var(--pill-mrp); border-color: var(--pill-mrp); }
+body[data-section="ruliology"] .pill.primary { background: var(--bg-ruliology); color: var(--pill-ruliology); border-color: var(--pill-ruliology); }
+body[data-section="ai-assisted"] .pill.primary { background: var(--bg-ai-assisted); color: var(--pill-ai-assisted); border-color: var(--pill-ai-assisted); }
+body[data-section="research"] .pill.primary { background: var(--bg-research); color: var(--pill-research); border-color: var(--pill-research); }
+body[data-section="experiments"] .pill.primary { background: var(--bg-experiments); color: var(--pill-experiments); border-color: var(--pill-experiments); }
 
 .hero,
 .stack,
@@ -696,4 +733,33 @@ footer p:last-child {
 }
 .view-more-btn:hover {
   text-decoration: underline;
+}
+.disclaimer {
+    border-top: 1px solid var(--paper-line);
+    padding-top: 10px;
+    margin-top: 10px;
+    font-style: italic;
+    opacity: 0.8;
+}
+
+/* Link Differentiation */
+.link-section h3::before {
+    content: "📁";
+    margin-right: 8px;
+    font-size: 0.8em;
+    vertical-align: middle;
+}
+
+.link-article h3::before {
+    content: "📄";
+    margin-right: 8px;
+    font-size: 0.8em;
+    vertical-align: middle;
+}
+
+.link-external h3::before {
+    content: "🌐";
+    margin-right: 8px;
+    font-size: 0.8em;
+    vertical-align: middle;
 }
