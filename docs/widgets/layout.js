@@ -18,7 +18,7 @@
 
       let html = '<div class="top-links" style="justify-content: flex-start;">';
       links.forEach(l => {
-        html += `<a class="pill ${l.id === active ? 'primary' : ''}" href="${l.href}">${l.text}</a>`;
+        html += `<a class="pill pill-${l.id} ${l.id === active ? 'primary' : ''}" href="${l.href}">${l.text}</a>`;
       });
       
       if (document.querySelector("[data-citation-box]")) {
