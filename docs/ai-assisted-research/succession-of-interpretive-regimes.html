@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en" data-default-section="introduction">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f7fbff" />
+    <meta name="description" content="Why scientific research is better described as an organized succession of local interpretive regimes." />
+    <meta property="og:title" content="Scientific Inquiry as a Succession of Interpretive Regimes — AGISystem2" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/ai-assisted-research/succession-of-interpretive-regimes.html" />
+    <title>Scientific Inquiry as a Succession of Interpretive Regimes — AGISystem2</title>
+    <link rel="stylesheet" href="../MRP/mrp-page.css" />
+    <link rel="stylesheet" href="../MRP/mrp-citation.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="../index.html">AGISystem2</a>
+            <span class="crumb-sep">/</span>
+            <a href="../ai-assisted-research.html">AI-Assisted Research</a>
+            <span class="crumb-sep">/</span>
+            <span class="crumb-current">Succession of Interpretive Regimes</span>
+          </nav>
+        </div>
+        <div id="site-top-links" data-active="ai-assisted" data-basepath=".."></div>
+      </div>
+
+      <header class="hero">
+        <div class="kicker"><b>Research Article</b> MRP Foundations</div>
+        <h1>Scientific Inquiry as a Succession of Interpretive Regimes</h1>
+        <p class="subtitle">Moving beyond monolithic models of scientific reasoning.</p>
+        <div class="meta-row">
+          <span class="meta-pill">Focus: Epistemic Stratification</span>
+          <span class="meta-pill">MRP Theory</span>
+        </div>
+        <div class="citation-box" data-citation-box data-citation-key="AGISystem2-2026-Regimes">
+          <div class="citation-head">
+            <strong>Permalink & citation</strong>
+            <div class="citation-actions">
+              <button class="copy-button" type="button" data-copy-target="link">Copy link</button>
+              <button class="copy-button" type="button" data-copy-target="citation">Copy citation</button>
+            </div>
+          </div>
+          <a class="citation-link" data-doc-link href="#"></a>
+          <p class="citation-preview" data-citation-preview></p>
+          <span class="copy-status" data-copy-status aria-live="polite"></span>
+        </div>
+      </header>
+
+      <div class="layout" id="main">
+        <aside class="toc" aria-label="Article outline">
+          <header>
+            <strong>Outline</strong>
+            <span id="nav-readout">—</span>
+          </header>
+          <ul class="navlist">
+            <li><a href="#introduction" data-step="01" aria-current="true"><span class="toc-badge">01</span> Introduction</a></li>
+            <li><a href="#local-discipline" data-step="02"><span class="toc-badge">02</span> The Structure of Local Discipline</a></li>
+            <li><a href="#regime-taxonomy" data-step="03"><span class="toc-badge">03</span> A Taxonomy of Interpretive Regimes</a></li>
+            <li><a href="#operational-stratification" data-step="04"><span class="toc-badge">04</span> Operational Stratification</a></li>
+            <li><a href="#conclusion" data-step="05"><span class="toc-badge">05</span> Conclusion</a></li>
+            <li><a href="#references" data-step="06"><span class="toc-badge">06</span> References</a></li>
+          </ul>
+        </aside>
+
+        <main class="stack">
+          <article class="article">
+            <section id="introduction">
+              <h2>Introduction</h2>
+              <p>Scientific research is often romanticized as a single, fluid process of discovery. However, for the purposes of automation and rigorous assistance, this monolithic view is counterproductive. Drawing on Meta-Rational Pragmatics (MRP), we argue that scientific inquiry is more accurately described as an organized succession of local <strong>interpretive regimes</strong>. Each regime stabilizes a particular relation among admissible objects, permitted transformations, and acceptable evidence. Understanding this stratification is essential for building research copilots that are more than just fluent text generators.</p>
+            </section>
+
+            <section id="local-discipline">
+              <h2>The Structure of Local Discipline</h2>
+              <p>What counts as "rigor" changes as a researcher moves from exploratory data analysis to formal hypothesis testing. A pattern discovered under exploratory criteria is not yet a causal explanation; a plausible synthesis of papers is not yet a validated conclusion. In each stage, the researcher operates under a different set of local constraints—a "local discipline."</p>
+              <p>Computational assistance often fails when it ignores these boundaries. Retrieval-augmented systems can improve synthesis [ASAI-2026], but they struggle with verification [SON-ETAL-2025] because the standards for "good synthesis" and "good verification" are epistemically distinct. A regime-sensitive approach acknowledges that different parts of scientific work are governed by different local standards, and that architectural separation is therefore epistemically appropriate.</p>
+            </section>
+
+            <section id="regime-taxonomy">
+              <h2>A Taxonomy of Interpretive Regimes</h2>
+              <p>To make the concept of interpretive regimes operational, we propose a taxonomy of bounded modes of inquiry, each with its own function and validation criteria:</p>
+              <ul>
+                <li><strong>Observational:</strong> Converts phenomena or documents into usable evidence structures.</li>
+                <li><strong>Exploratory:</strong> Searches for patterns, anomalies, and promising directions.</li>
+                <li><strong>Model-constructive:</strong> Proposes mechanisms and representational structures.</li>
+                <li><strong>Deductive-formal:</strong> Derives consequences and checks consistency.</li>
+                <li><strong>Experimental-interventional:</strong> Selects actions that discriminate among candidates.</li>
+                <li><strong>Critical-delimitative:</strong> Identifies artifacts and limits of validity.</li>
+              </ul>
+              <p>A single research project may move through many of these regimes, often iteratively. The role of the scientist—and potentially the copilot—is to manage the transitions between them, ensuring that the artifacts produced in one regime remain valid when exported to another.</p>
+            </section>
+
+            <section id="operational-stratification">
+              <h2>Operational Stratification</h2>
+              <p>The proposal that scientific reasoning is operationally stratified has direct consequences for AI systems design. If we treat science as a sequence of regimes, we can assign different computational mechanisms to different epistemic burdens. Large language models (LLMs) appear highly effective in heuristic exploration and synthesis [GOTTWEIS-ETAL-2025], while formal solvers and causal inference engines are better suited for deductive and interventional work [ZHANG-ETAL-2024].</p>
+              <p>This stratification allows for a more restrained and implementable direction for scientific AI. Instead of aiming for a general "artificial scientist," we can build systems that are experts at identifying the current regime and mobilizing the appropriate domain-specific background knowledge and validation tools.</p>
+            </section>
+
+            <section id="conclusion">
+              <h2>Conclusion</h2>
+              <p>Scientific reliability is not a monolithic property but a distributed one, enforced locally within each interpretive regime. By making this stratification explicit, the MRP framework provides a principled way to organize the various tools and methods of automated science. The future of research copilots lies not in universal intelligence, but in regime-sensitive orchestration.</p>
+            </section>
+
+            <section id="references">
+              <h2>References</h2>
+              <ul class="refs">
+                <li>[ASAI-2026] Asai, Akari; et al. Synthesizing scientific literature with retrieval-augmented language models. Nature. 2026.</li>
+                <li>[GOTTWEIS-ETAL-2025] Gottweis, Juraj; et al. Towards an AI co-scientist. arXiv. 2025.</li>
+                <li>[SON-ETAL-2025] Son, Guijin; et al. When AI Co-Scientists Fail: SPOT-a Benchmark for Automated Verification. arXiv. 2025.</li>
+                <li>[ZHANG-ETAL-2024] Zhang, Zhaozhi; et al. Adaptive Causal Experimental Design. OpenReview. 2024.</li>
+              </ul>
+            </section>
+          </article>
+        </main>
+      </div>
+
+      <div id="site-footer" data-type="ai-assisted" data-basepath=".."></div>
+    </div>
+
+    <script src="../MRP/mrp-outline.js"></script>
+    <script src="../MRP/mrp-citation.js"></script>
+    <script src="../widgets/layout.js"></script>
+  </body>
+</html>

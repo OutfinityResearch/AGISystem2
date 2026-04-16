@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en" data-default-section="introduction">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f7fbff" />
+    <meta name="description" content="An architectural proposal for research copilots designed as regime-sensitive systems." />
+    <meta property="og:title" content="Architectural Elements of Regime-Sensitive Research Copilots — AGISystem2" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/ai-assisted-research/regime-sensitive-architecture.html" />
+    <title>Architectural Elements of Regime-Sensitive Research Copilots — AGISystem2</title>
+    <link rel="stylesheet" href="../MRP/mrp-page.css" />
+    <link rel="stylesheet" href="../MRP/mrp-citation.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="../index.html">AGISystem2</a>
+            <span class="crumb-sep">/</span>
+            <a href="../ai-assisted-research.html">AI-Assisted Research</a>
+            <span class="crumb-sep">/</span>
+            <span class="crumb-current">Regime-Sensitive Architecture</span>
+          </nav>
+        </div>
+        <div id="site-top-links" data-active="ai-assisted" data-basepath=".."></div>
+      </div>
+
+      <header class="hero">
+        <div class="kicker"><b>Research Article</b> Systems Design</div>
+        <h1>Architectural Elements of Regime-Sensitive Research Copilots</h1>
+        <p class="subtitle">Designing for operational clarity and epistemic reliability.</p>
+        <div class="meta-row">
+          <span class="meta-pill">Focus: Systems Architecture</span>
+          <span class="meta-pill">Agent Orchestration</span>
+        </div>
+        <div class="citation-box" data-citation-box data-citation-key="AGISystem2-2026-Architecture">
+          <div class="citation-head">
+            <strong>Permalink & citation</strong>
+            <div class="citation-actions">
+              <button class="copy-button" type="button" data-copy-target="link">Copy link</button>
+              <button class="copy-button" type="button" data-copy-target="citation">Copy citation</button>
+            </div>
+          </div>
+          <a class="citation-link" data-doc-link href="#"></a>
+          <p class="citation-preview" data-citation-preview></p>
+          <span class="copy-status" data-copy-status aria-live="polite"></span>
+        </div>
+      </header>
+
+      <div class="layout" id="main">
+        <aside class="toc" aria-label="Article outline">
+          <header>
+            <strong>Outline</strong>
+            <span id="nav-readout">—</span>
+          </header>
+          <ul class="navlist">
+            <li><a href="#introduction" data-step="01" aria-current="true"><span class="toc-badge">01</span> Introduction</a></li>
+            <li><a href="#core-components" data-step="02"><span class="toc-badge">02</span> Core Components</a></li>
+            <li><a href="#orchestration" data-step="03"><span class="toc-badge">03</span> Meta-Pragmatic Orchestration</a></li>
+            <li><a href="#artifacts-transitions" data-step="04"><span class="toc-badge">04</span> Epistemic Artifacts and Transitions</a></li>
+            <li><a href="#conclusion" data-step="05"><span class="toc-badge">05</span> Conclusion</a></li>
+            <li><a href="#references" data-step="06"><span class="toc-badge">06</span> References</a></li>
+          </ul>
+        </aside>
+
+        <main class="stack">
+          <article class="article">
+            <section id="introduction">
+              <h2>Introduction</h2>
+              <p>If scientific reasoning is locally stratified, then a research copilot should not be organized around a single generic reasoning loop. It should instead be designed as a <strong>regime-sensitive system</strong> in which local interpreters operate under distinct admissibility conditions and exchange results through controlled transitions. This article outlines the core architectural elements required to implement such a system, moving beyond monolithic prompt engineering toward modular, auditable research workflows.</p>
+            </section>
+
+            <section id="core-components">
+              <h2>Core Components</h2>
+              <p>A regime-sensitive architecture decomposes the research task into several interacting elements:</p>
+              <ul>
+                <li><strong>Regime Interpreter:</strong> Executes transformations admissible in one local mode of inquiry (e.g., a symbolic regression engine for model-constructive work).</li>
+                <li><strong>Local Validator:</strong> Applies regime-specific tests of admissibility and quality, ensuring results meet the standards of the current mode.</li>
+                <li><strong>Domain Background:</strong> Provides the specific measurement conventions, model classes, and ontologies relevant to the scientific discipline.</li>
+                <li><strong>Provenance Tracker:</strong> Maintains a detailed audit trail of how artifacts were generated, transformed, and validated across regimes.</li>
+              </ul>
+            </section>
+
+            <section id="orchestration">
+              <h2>Meta-Pragmatic Orchestration</h2>
+              <p>The central coordinator of this system is the <strong>Meta-Pragmatic Orchestrator</strong>. Its role is not to "solve" the scientific problem directly, but to manage the trajectory of the inquiry. It chooses the next regime based on the current research goal, balances cost and risk, and ensures that the system doesn't attempt to apply exploratory heuristics where formal proof is required.</p>
+              <p>This approach is consistent with emerging engineering practices in multi-agent systems, where orchestration, tool execution, and memory are increasingly separated [OPENAI-AGENTS-2026]. By making the "meta-pragmatic" layer explicit, we gain clarity about what the system is doing at each step and why.</p>
+            </section>
+
+            <section id="artifacts-transitions">
+              <h2>Epistemic Artifacts and Transitions</h2>
+              <p>In this architecture, information is not just passed as raw text. It is structured into <strong>epistemic artifacts</strong>—hypotheses, models, anomalies, or datasets—that carry their own metadata and validation state. A <strong>Transition Operator</strong> is then responsible for translating an artifact from one regime into a form usable in another, checking that the translation preserves the necessary epistemic properties.</p>
+              <p>For example, a regularity discovered in an exploratory regime may be translated into a formal conjecture. The transition operator must ensure that the conjecture captures the regularity without importing unjustified assumptions from the exploratory phase. This regulated transfer is what maintains scientific reliability throughout the research lifecycle.</p>
+            </section>
+
+            <section id="conclusion">
+              <h2>Conclusion</h2>
+              <p>A regime-sensitive architecture offers a modest but implementable path toward reliable scientific AI. It replaces the "black box" of LLM reasoning with a transparent, structured process that reflects actual research practice. By focusing on regulated transitions and local validation, we can build copilots that truly assist in the production of rigorous scientific knowledge.</p>
+            </section>
+
+            <section id="references">
+              <h2>References</h2>
+              <ul class="refs">
+                <li>[OPENAI-AGENTS-2026] OpenAI. Agents SDK documentation. 2026.</li>
+                <li>[LU-ETAL-2026] Lu, Chris; et al. Towards end-to-end automation of AI research. Nature. 2026.</li>
+                <li>[TOM-ETAL-2024] Tom, George; et al. Self-Driving Laboratories for Chemistry and Materials Science. Chemical Reviews. 2024.</li>
+              </ul>
+            </section>
+          </article>
+        </main>
+      </div>
+
+      <div id="site-footer" data-type="ai-assisted" data-basepath=".."></div>
+    </div>
+
+    <script src="../MRP/mrp-outline.js"></script>
+    <script src="../MRP/mrp-citation.js"></script>
+    <script src="../widgets/layout.js"></script>
+  </body>
+</html>
