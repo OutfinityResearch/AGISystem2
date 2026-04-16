@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en" data-default-section="overview">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f7fbff" />
+    <meta name="description" content="Why internal heterogeneity in scientific work requires regime-specific validation." />
+    <meta property="og:title" content="Interpretive Regimes and Scientific Reliability — AGISystem2" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://agisystem2.com/ai-assisted-research/interpretive-regimes-scientific-reliability.html" />
+    <title>Interpretive Regimes and Scientific Reliability — AGISystem2</title>
+    <link rel="stylesheet" href="../MRP/mrp-page.css" />
+    <link rel="stylesheet" href="../MRP/mrp-citation.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="../index.html">AGISystem2</a>
+            <span class="crumb-sep">/</span>
+            <a href="../ai-assisted-research.html">AI-Assisted Research</a>
+            <span class="crumb-sep">/</span>
+            <span class="crumb-current">Interpretive Regimes and Scientific Reliability</span>
+          </nav>
+        </div>
+        <div id="site-top-links" data-active="ai-assisted" data-basepath=".."></div>
+      </div>
+
+      <header class="hero">
+        <div class="kicker"><b>Research Article</b> Scientific Reliability</div>
+        <h1>Interpretive Regimes and Scientific Reliability</h1>
+        <p class="subtitle">Why local standards matter for automated inquiry.</p>
+        <div class="meta-row">
+          <span class="meta-pill">Focus: Reliability, Validation</span>
+        </div>
+        <div class="citation-box" data-citation-box data-citation-key="Alboaie-2026-Reliability">
+          <div class="citation-head">
+            <strong>Permalink & citation</strong>
+            <div class="citation-actions">
+              <button class="copy-button" type="button" data-copy-target="link">Copy link</button>
+              <button class="copy-button" type="button" data-copy-target="citation">Copy citation</button>
+            </div>
+          </div>
+          <a class="citation-link" data-doc-link href="#"></a>
+          <p class="citation-preview" data-citation-preview></p>
+          <span class="copy-status" data-copy-status aria-live="polite"></span>
+        </div>
+      </header>
+
+      <div class="layout" id="main">
+        <aside class="toc" aria-label="Article outline">
+          <header>
+            <strong>Outline</strong>
+            <span id="nav-readout">—</span>
+          </header>
+          <ul class="navlist">
+            <li><a href="#overview" data-step="01" aria-current="true"><span class="toc-badge">01</span> Overview</a></li>
+            <li><a href="#internal-heterogeneity" data-step="02"><span class="toc-badge">02</span> The Internal Heterogeneity of Science</a></li>
+            <li><a href="#validation-crisis" data-step="03"><span class="toc-badge">03</span> The Validation Crisis in Automated Research</a></li>
+            <li><a href="#regime-specific-validation" data-step="04"><span class="toc-badge">04</span> Regime-Specific Validation</a></li>
+            <li><a href="#consequences" data-step="05"><span class="toc-badge">05</span> Scientific Reliability</a></li>
+            <li><a href="#references" data-step="06"><span class="toc-badge">06</span> References</a></li>
+          </ul>
+        </aside>
+
+        <main class="stack">
+          <article class="article">
+            <section id="overview">
+              <h2>Overview</h2>
+              <p>Scientific work is governed by local standards. Treating scientific reasoning as a monolithic language process hides the epistemic heterogeneity of research. This article argues that to build reliable scientific AI, we must make these local interpretive regimes explicit and develop validation procedures tailored to the epistemic burdens of each regime. Current end-to-end automation systems [LU-ETAL-2026] excel at generating plausible output, but they frequently fail at the critical checking required for scientific adequacy [SON-ETAL-2025]. The failure is structural: when scientific reasoning is collapsed into generic continuation, the discipline required to translate results across different interpretive boundaries is lost.</p>
+            </section>
+
+            <section id="internal-heterogeneity">
+              <h2>The Internal Heterogeneity of Science</h2>
+              <p>Scientific practice is often described in broad phases like observation, hypothesis, experiment, and theory. While useful, this vocabulary is too coarse for computational purposes. What matters computationally is the local criteria governing what counts as a relevant object, what counts as an admissible operation, and what kind of check is sufficient at that stage. A pattern discovered through exploratory criteria is not yet a causal explanation [ZHANG-ETAL-2025]; a plausible literature synthesis is not yet a validated result [ASAI-2026]. Each stage of scientific work has different admissibility criteria for evidence, transformations, and conclusions. Generic AI agents that collapse these distinctions fail because they do not respect the operational structure of scientific discipline.</p>
+            </section>
+
+            <section id="validation-crisis">
+              <h2>The Validation Crisis in Automated Research</h2>
+              <p>The core challenge in contemporary automated research is not hypothesis generation, but hypothesis verification. Empirical evidence suggests that local plausibility and scientific adequacy remain importantly distinct [SON-ETAL-2025]. Automated systems often produce results that are linguistically clear but scientifically fragile because they lack explicit constraint tracking. This is a validation crisis: as AI systems participate in hypothesis, interpretation, and review, failures of provenance and reproducibility become increasingly consequential. The reliance on retrospective natural-language checking as the primary validator is insufficient for maintaining scientific rigour [ECKMANN-2026].</p>
+            </section>
+
+            <section id="regime-specific-validation">
+              <h2>Regime-Specific Validation</h2>
+              <p>Validation procedures cannot be outsourced entirely to LLMs. A research copilot must utilize regime-specific validators that match the nature of the inquiry: formal consistency checkers for deductive-formal stages, causal discrimination engines for experimental-interventional stages, and robust metadata/provenance auditors for observational stages. Explicit validation is a prerequisite for scientific adequacy. If an AI system operates within a model-constructive regime, its output must be validated against the constraints of that model class, rather than just linguistic coherence.</p>
+            </section>
+
+            <section id="consequences">
+              <h2>Scientific Reliability</h2>
+              <p>The reliability of a scientific trajectory depends on whether intermediate artifacts remain meaningful when translated across regimes. A copilot becomes scientifically useful when it manages these transitions, tracks provenance, and alerts the user when a transition is under-justified. This is the path to truly trustworthy scientific automation. Scientific AI must transition from a model of generic generation to one of governed orchestration, where validity is enforced locally at each step of the inquiry process. True scientific reliability, in this view, is a distributed property enforced by explicit validators, not a monolithic outcome of model training.</p>
+            </section>
+
+            <section id="references">
+              <h2>References</h2>
+              <ul class="refs">
+                <li>[ASAI-2026] Asai, Akari; et al. Synthesizing scientific literature with retrieval-augmented language models. Nature. 2026.</li>
+                <li>[ECKMANN-2026] Eckmann, P. et al. Use as directed? A comparison of software tools intended to check rigor and transparency. PLOS One. 2026.</li>
+                <li>[LU-ETAL-2026] Lu, Chris; et al. Towards end-to-end automation of AI research. Nature. 2026.</li>
+                <li>[SON-ETAL-2025] Son, Guijin; et al. When AI Co-Scientists Fail: SPOT-a Benchmark for Automated Verification. arXiv. 2025.</li>
+                <li>[ZHANG-ETAL-2025] Zhang, Yu; et al. Exploring the role of large language models in the scientific method. Nature Reviews Physics. 2025.</li>
+              </ul>
+            </section>
+          </article>
+        </main>
+      </div>
+
+      <div id="site-footer" data-type="default" data-basepath=".."></div>
+    </div>
+
+    <script src="../MRP/mrp-outline.js"></script>
+    <script src="../MRP/mrp-citation.js"></script>
+    <script src="../widgets/layout.js"></script>
+  </body>
+</html>
